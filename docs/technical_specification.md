@@ -505,6 +505,8 @@ Methodological and research outputs from models below **Production Certified** s
 
 ## 22. Global Benchmark and Validation Programme
 
+The comparative benchmark position is documented in `docs/tier1_benchmark.md`. The platform aims first to match mature specialist methods, then to exceed fragmented workflows through integration, governance, diagnostics, reproducibility, and validated methodological improvements. Breadth of implementation alone is not evidence of statistical superiority.
+
 For every model certified for production, the platform executes a benchmark programme:
 1.  **Datasets:** Reproduce at least $20$ published reference clinical trials/networks.
 2.  **Inference Matching:** Compare Bayesian outcomes against `multinma` and CmdStan reference models.

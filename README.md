@@ -1,6 +1,8 @@
 # Advanced Bias-Adjusted Network Meta-Analysis (NMA) Benchmark
 
-This repository contains the implementation and benchmarking framework for an advanced design-stratified network meta-analysis (NMA) pooling model. The model incorporates study-level covariate meta-regression, Hartung-Knapp-Sidik-Jonkman (HKSJ) covariance scaling, and continuous risk-of-bias (RoB) down-weighting.
+This repository contains the implementation and benchmarking framework for an advanced design-stratified network meta-analysis (NMA) pooling model. The model incorporates study-level covariate meta-regression, Hartung-Knapp-Sidik-Jonkman (HKSJ) covariance scaling, and scoped risk-of-bias sensitivity weighting.
+
+The tier-one methods benchmark is documented in `docs/tier1_benchmark.md`. The current package should be read as a prototype plus validation harness, not as a claim that every native estimator already outperforms mature specialist software such as `netmeta`, `multinma`, `MBNMAdose`, or `crossnma`.
 
 ## Methods & Estimands
 
@@ -34,7 +36,7 @@ Running the simulation benchmark over 200 iterations (1,000 model fits) on synth
 | HKSJ + Downweighted Bias-Adjusted NMA | 0.1187 | 0.1808 | 87.50% | 0.1413 |
 | Full Advanced Bias-Adjusted NMA (HKSJ + Weighting + Regression) | **0.0925** | **0.1451** | **95.00%** | 0.1294 |
 
-*Note: The Full Advanced model restores nominal 95% confidence interval coverage, minimizes RMSE, and significantly reduces estimation bias under design confounding.*
+*Note: These are synthetic benchmark results for the repository's configured simulation design. They do not establish general superiority over specialist NMA packages; reference matching and broader simulation validation are required before any certification claim.*
 
 ## Quick Start
 
