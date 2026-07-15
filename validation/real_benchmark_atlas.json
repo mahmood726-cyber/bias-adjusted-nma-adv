@@ -38,7 +38,7 @@
     {
       "artifact": "validation/survival/sglt2_hf_reported_hr_benchmark.toml",
       "artifact_schema_version": "survival_hr_benchmark/v1",
-      "artifact_sha256": "3bfc6065972313c06382362a429a6082258cd67fa845e4ade462d6dae61eea8a",
+      "artifact_sha256": "2ceaaecf37edf85f7f449665f2bccbd394d2c973bf087d577251868c1cfb8618",
       "artifact_status": "local_pass",
       "certification_effect": "none",
       "domain": "reported_survival_hr_pairwise",
@@ -63,7 +63,7 @@
     {
       "artifact": "validation/survival/pcsk9_mace_reported_hr_benchmark.toml",
       "artifact_schema_version": "survival_hr_benchmark/v1",
-      "artifact_sha256": "8cfba87dc59a7019e595892adc0fc9e5e34044c036746352bfebf96910c9d0d7",
+      "artifact_sha256": "9094f5c77e6a866d58c7536c58d0d7fc2372f945a32cbe14ca17592c5477663f",
       "artifact_status": "local_pass",
       "certification_effect": "none",
       "domain": "reported_survival_hr_pairwise",
@@ -88,7 +88,7 @@
     {
       "artifact": "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
       "artifact_schema_version": "ctgov_hr_network_benchmark/v1",
-      "artifact_sha256": "7dd8e3dee31ab286713d19d2637591bde97363ea71beee5e0ce1a01bd59b88ab",
+      "artifact_sha256": "f29606cdaca0b734c13e212af46ce4d86b0aa50a8446f326fc6f2a0077a6d6da",
       "artifact_status": "local_pass",
       "certification_effect": "none",
       "domain": "reported_hr_star_network",

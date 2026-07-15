@@ -7,6 +7,7 @@ from bias_nma_adv.real_meta import (
     fixed_effect_log_or_reference,
     load_arm_event_rows,
     run_real_meta_benchmark,
+    sha256_file,
     study_log_or_effects,
     validate_real_meta_source_manifest,
 )
@@ -16,6 +17,15 @@ from bias_nma_adv.data import ValidationError
 ROOT = Path(__file__).resolve().parents[1]
 SGLT2_EVENTS = ROOT / "validation" / "real_meta" / "sglt2_hf_primary_events.csv"
 SGLT2_SOURCES = ROOT / "validation" / "real_meta" / "sglt2_hf_primary_sources.toml"
+
+
+def test_text_artifact_sha256_is_line_ending_canonical(tmp_path):
+    lf = tmp_path / "artifact_lf.json"
+    crlf = tmp_path / "artifact_crlf.json"
+    lf.write_bytes(b'{\n  "nct_id": "NCT03036124"\n}\n')
+    crlf.write_bytes(b'{\r\n  "nct_id": "NCT03036124"\r\n}\r\n')
+
+    assert sha256_file(lf) == sha256_file(crlf)
 
 
 def test_sglt2_hf_fixture_is_source_backed_real_data():

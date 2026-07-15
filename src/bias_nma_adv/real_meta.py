@@ -21,6 +21,19 @@ from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
 from bias_nma_adv.pairwise import PairwiseMetaResult, fit_pairwise_meta
 
 
+TEXT_HASH_EXTENSIONS = {
+    ".csv",
+    ".json",
+    ".md",
+    ".py",
+    ".r",
+    ".toml",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
+
+
 @dataclass(frozen=True)
 class ArmEventRow:
     study_id: str
@@ -66,11 +79,11 @@ class StudyLogOREffect:
 
 
 def sha256_file(path: str | Path) -> str:
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    source = Path(path)
+    payload = source.read_bytes()
+    if source.suffix.lower() in TEXT_HASH_EXTENSIONS:
+        payload = payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def load_arm_event_rows(path: str | Path) -> list[ArmEventRow]:

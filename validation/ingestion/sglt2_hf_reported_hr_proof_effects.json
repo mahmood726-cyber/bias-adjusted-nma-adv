@@ -4,7 +4,7 @@
   "checked_at": "2026-07-15T00:00:00Z",
   "evidence_mode": "reported_hr_pubmed_abstract",
   "identity_verification_report": "validation/source_checks/sglt2_hf_reported_hr_source_check.json",
-  "identity_verification_sha256": "5da15dc05d0177483347f12e62bcd710cdf3e1eb587c2f597139aa807c3e5e5e",
+  "identity_verification_sha256": "7096e532721fb1b866e0d9048d7ccc8533aeeda8d2545d43d9df5a5cb254c214",
   "limitations": [
     "proof-carrying records validate source snippets and uncertainty only",
     "reported PubMed abstract HRs are not Kaplan-Meier reconstruction",
@@ -170,5 +170,5 @@
   "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
   "status": "local_pass",
   "token_verification_report": "validation/source_checks/sglt2_hf_reported_hr_tokens.json",
-  "token_verification_sha256": "e7c09ba32d17fabd7d7511ccdfe9303f8f6af812caf49a65e8ba917d40ff9280"
+  "token_verification_sha256": "7ddfb4688cdfe937d4c4fb79399fbaaece856ad10774b3b7ec099601b917dcb1"
 }

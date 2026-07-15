@@ -8,9 +8,9 @@ effect_scale = "log_hr"
 source_manifest = "validation/survival/sglt2_hf_reported_hrs.toml"
 source_manifest_sha256 = "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1ff06"
 source_verification_report = "validation/source_checks/sglt2_hf_reported_hr_tokens.json"
-source_verification_report_sha256 = "e7c09ba32d17fabd7d7511ccdfe9303f8f6af812caf49a65e8ba917d40ff9280"
+source_verification_report_sha256 = "7ddfb4688cdfe937d4c4fb79399fbaaece856ad10774b3b7ec099601b917dcb1"
 source_identity_report = "validation/source_checks/sglt2_hf_reported_hr_source_check.json"
-source_identity_report_sha256 = "5da15dc05d0177483347f12e62bcd710cdf3e1eb587c2f597139aa807c3e5e5e"
+source_identity_report_sha256 = "7096e532721fb1b866e0d9048d7ccc8533aeeda8d2545d43d9df5a5cb254c214"
 n_studies = 4
 limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
 
