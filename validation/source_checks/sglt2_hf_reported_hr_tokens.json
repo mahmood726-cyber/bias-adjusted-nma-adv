@@ -1,0 +1,94 @@
+{
+  "benchmark_id": "sglt2_hf_reported_hr",
+  "checked_at": "2026-07-15T00:00:00Z",
+  "manifest": "validation/survival/sglt2_hf_reported_hrs.toml",
+  "manifest_sha256": "9f1ca5831d7e30ed02160f3e7ffe1e4544487a72c20f037ce2b53246c8ef4434",
+  "records": [
+    {
+      "abstract_sha256": "1027c177002f313f913a64e63223935585ad152f2df949ceb8d3c43aae8f18a5",
+      "ci_lower": "0.65",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.85",
+      "ci_upper_token_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "hf_primary",
+      "pmid": "31535829",
+      "reported_hr": "0.74",
+      "source_terms": [
+        "dapagliflozin",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "DAPA-HF",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "134f318b30cd034505acee6a5336c3690d940d126ffc62e4f6e1b30cf57891c1",
+      "ci_lower": "0.65",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.86",
+      "ci_upper_token_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "hf_primary",
+      "pmid": "32865377",
+      "reported_hr": "0.75",
+      "source_terms": [
+        "empagliflozin",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "EMPEROR-Reduced",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "fdfd871338e9c06f1c7689c6bed1054ea6663b654bb1930da767b6b1cd40559f",
+      "ci_lower": "0.73",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.92",
+      "ci_upper_token_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "hf_primary",
+      "pmid": "36027570",
+      "reported_hr": "0.82",
+      "source_terms": [
+        "dapagliflozin",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "DELIVER",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "b14a13cbbb2d5fc79960ab083ac87dbdd1906caae2f58cebff7fcac1c9084e2e",
+      "ci_lower": "0.69",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.90",
+      "ci_upper_token_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "hf_primary",
+      "pmid": "34449189",
+      "reported_hr": "0.79",
+      "source_terms": [
+        "empagliflozin",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "EMPEROR-Preserved",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

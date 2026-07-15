@@ -1,0 +1,109 @@
+import copy
+from pathlib import Path
+
+import pytest
+
+from bias_nma_adv.data import ValidationError
+from bias_nma_adv.real_meta import sha256_file
+from bias_nma_adv.survival_benchmark import (
+    SurvivalHRManifest,
+    SurvivalHRVerificationReport,
+    load_survival_hr_manifest,
+    load_survival_hr_verification_report,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+MANIFEST = ROOT / "validation" / "survival" / "sglt2_hf_reported_hrs.toml"
+REPORT = ROOT / "validation" / "source_checks" / "sglt2_hf_reported_hr_tokens.json"
+VERIFY_SCRIPT = ROOT / "scripts" / "verify_pubmed_survival_hrs.py"
+
+
+def test_survival_hr_manifest_is_source_bounded_and_pubmed_only():
+    manifest = load_survival_hr_manifest(MANIFEST)
+
+    assert manifest.benchmark_id == "sglt2_hf_reported_hr"
+    assert manifest.evidence_mode == "reported_hr_pubmed_abstract"
+    assert manifest.status == "candidate_source_verified"
+    assert manifest.manifest_sha256 == sha256_file(MANIFEST)
+    assert len(manifest.studies) == 4
+    assert {study.study_id for study in manifest.studies} == {
+        "DAPA-HF",
+        "EMPEROR-Reduced",
+        "DELIVER",
+        "EMPEROR-Preserved",
+    }
+    for study in manifest.studies:
+        assert study.source_type == "pubmed_abstract"
+        assert study.km_reconstruction_status == "not_digitized"
+        assert study.reuse_origin == "wasserstein_method_pattern_only"
+        assert study.effect_direction == "active_vs_control"
+        assert study.source_url.startswith("https://pubmed.ncbi.nlm.nih.gov/")
+
+
+def test_survival_hr_manifest_rejects_uncertified_km_import(tmp_path):
+    bad = tmp_path / "bad_survival_manifest.toml"
+    bad.write_text(
+        MANIFEST.read_text(encoding="utf-8").replace(
+            'km_reconstruction_status = "not_digitized"',
+            'km_reconstruction_status = "complete"',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValidationError, match="KM reconstruction cannot be marked complete"):
+        load_survival_hr_manifest(bad)
+
+
+def test_survival_hr_manifest_rejects_ci_that_excludes_hr():
+    raw = copy.deepcopy(load_survival_hr_manifest(MANIFEST).__dict__)
+    raw["schema_version"] = "survival_hr_manifest/v1"
+    raw["studies"] = [copy.deepcopy(study.__dict__) for study in raw["studies"]]
+    raw["studies"][0]["ci_lower"] = "0.80"
+
+    with pytest.raises(ValidationError, match="reported HR is not contained"):
+        SurvivalHRManifest.from_mapping(raw)
+
+
+def test_survival_hr_verification_snapshot_matches_manifest():
+    manifest = load_survival_hr_manifest(MANIFEST)
+    report = load_survival_hr_verification_report(REPORT)
+
+    assert report.status == "verified"
+    assert report.benchmark_id == manifest.benchmark_id
+    assert report.manifest == "validation/survival/sglt2_hf_reported_hrs.toml"
+    assert report.manifest_sha256 == sha256_file(MANIFEST)
+    assert VERIFY_SCRIPT.is_file()
+    assert len(report.records) == len(manifest.studies)
+
+    expected = {
+        (study.study_id, study.pmid, study.outcome_id, study.reported_hr, study.ci_lower, study.ci_upper)
+        for study in manifest.studies
+    }
+    observed = {
+        (record.study_id, record.pmid, record.outcome_id, record.reported_hr, record.ci_lower, record.ci_upper)
+        for record in report.records
+    }
+    assert observed == expected
+
+    for record in report.records:
+        assert record.evidence_scope == "pubmed_abstract_reported_hr_tokens"
+        assert len(record.abstract_sha256) == 64
+        assert record.hr_token_found is True
+        assert record.ci_lower_token_found is True
+        assert record.ci_upper_token_found is True
+        assert record.hazard_ratio_anchor_found is True
+        assert record.tokens_near_hazard_ratio_anchor is True
+        assert record.source_terms_near_hazard_ratio_anchor is True
+        assert record.verified is True
+
+
+def test_survival_hr_report_rejects_unverified_record_marked_verified():
+    raw = copy.deepcopy(load_survival_hr_verification_report(REPORT).__dict__)
+    raw["schema_version"] = "survival_hr_verification/v1"
+    raw["records"] = [copy.deepcopy(record.__dict__) for record in raw["records"]]
+    raw["records"][0]["tokens_near_hazard_ratio_anchor"] = False
+
+    with pytest.raises(ValidationError, match="verified HR record is missing abstract token evidence"):
+        SurvivalHRVerificationReport.from_mapping(raw)

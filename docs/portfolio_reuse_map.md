@@ -81,7 +81,7 @@ It is a reuse plan, not a certification claim. Any imported method must be porte
 ## Next Implementation Order
 
 1. Add Python multi-arm GLS parity tests using the `allmeta` fixture and an explicit `netmeta` artifact.
-2. Add a survival KM benchmark manifest schema before importing any `wasserstein` output.
+2. Extend the new survival HR manifest into an OA Kaplan-Meier reconstruction manifest before importing any `wasserstein` output.
 3. Port the transportability collapsibility guards and support certificate behind an experimental API.
 4. Add an ingestion provenance validator that rejects mismatched PMID/OA PDF rows.
 5. Only then expand the real-meta benchmark set beyond the current SGLT2 heart-failure fixture.
