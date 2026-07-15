@@ -9,13 +9,41 @@ import string
 import tomllib
 from typing import Any
 
+from bias_nma_adv.ctgov_hr_network import (
+    CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION,
+    CTGovHRNetworkVerificationReport,
+    load_ctgov_hr_network_manifest,
+    validate_ctgov_hr_network_source_bundle,
+)
+from bias_nma_adv.data import ValidationError
+from bias_nma_adv.event_count_verification import (
+    EVENT_COUNT_VERIFICATION_SCHEMA_VERSION,
+    EventCountVerificationReport,
+)
 from bias_nma_adv.real_meta import sha256_file
+from bias_nma_adv.source_verification import (
+    SOURCE_VERIFICATION_SCHEMA_VERSION,
+    SourceVerificationReport,
+)
+from bias_nma_adv.survival_benchmark import (
+    SURVIVAL_HR_VERIFICATION_SCHEMA_VERSION,
+    SurvivalHRVerificationReport,
+    load_survival_hr_manifest,
+    validate_survival_hr_identity_bundle,
+    validate_survival_hr_source_bundle,
+)
 
 
 BENCHMARK_REGISTRY_SCHEMA_VERSION = "source_benchmark_registry/v1"
 ALLOWED_SOURCE_POLICIES = {
     "clinicaltrials_gov + pubmed_abstract only",
     "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+}
+SUPPORTED_SOURCE_CHECK_SCHEMA_VERSIONS = {
+    SOURCE_VERIFICATION_SCHEMA_VERSION,
+    EVENT_COUNT_VERIFICATION_SCHEMA_VERSION,
+    SURVIVAL_HR_VERIFICATION_SCHEMA_VERSION,
+    CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION,
 }
 
 
@@ -214,7 +242,7 @@ def validate_source_benchmark_entry(entry: SourceBenchmarkEntry, *, repo_root: s
     for source_check_path in entry.source_checks:
         expected_sha = entry.source_check_sha256[source_check_path]
         source_check = _load_json_with_hash(root, source_check_path, expected_sha)
-        _validate_source_check_payload(entry, source_check)
+        _validate_source_check_payload(entry, source_check, repo_root=root)
 
 
 def discover_source_backed_benchmark_artifacts(repo_root: str | Path) -> tuple[str, ...]:
@@ -268,13 +296,127 @@ def _validate_artifact_payload(entry: SourceBenchmarkEntry, artifact: dict[str, 
             raise BenchmarkRegistryError(f"{entry.id}: artifact limitations missing required term {term!r}.")
 
 
-def _validate_source_check_payload(entry: SourceBenchmarkEntry, source_check: dict[str, Any]) -> None:
+def _validate_source_check_payload(
+    entry: SourceBenchmarkEntry,
+    source_check: dict[str, Any],
+    *,
+    repo_root: Path,
+) -> None:
     if str(source_check.get("benchmark_id", "")) != entry.id:
         raise BenchmarkRegistryError(f"{entry.id}: source-check benchmark_id mismatch.")
     if str(source_check.get("status", "")) != "verified":
         raise BenchmarkRegistryError(f"{entry.id}: source-check status must be verified.")
     if str(source_check.get("certification_effect", "")) != "none":
         raise BenchmarkRegistryError(f"{entry.id}: source-check certification_effect must be none.")
+    schema_version = str(source_check.get("schema_version", ""))
+    if schema_version not in SUPPORTED_SOURCE_CHECK_SCHEMA_VERSIONS:
+        raise BenchmarkRegistryError(f"{entry.id}: unsupported source-check schema_version {schema_version!r}.")
+    try:
+        if schema_version == SOURCE_VERIFICATION_SCHEMA_VERSION:
+            report = SourceVerificationReport.from_mapping(source_check)
+            _validate_source_verification_reference(entry, report)
+            _validate_identity_bundle_when_applicable(entry, report, repo_root=repo_root)
+        elif schema_version == EVENT_COUNT_VERIFICATION_SCHEMA_VERSION:
+            report = EventCountVerificationReport.from_mapping(source_check)
+            _validate_event_count_reference(entry, report)
+        elif schema_version == SURVIVAL_HR_VERIFICATION_SCHEMA_VERSION:
+            report = SurvivalHRVerificationReport.from_mapping(source_check)
+            _validate_survival_hr_reference(entry, report, repo_root=repo_root)
+        elif schema_version == CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION:
+            report = CTGovHRNetworkVerificationReport.from_mapping(source_check)
+            _validate_ctgov_hr_network_reference(entry, report, repo_root=repo_root)
+    except ValidationError as exc:
+        raise BenchmarkRegistryError(f"{entry.id}: specialized source-check validation failed: {exc}") from exc
+
+
+def _validate_source_verification_reference(
+    entry: SourceBenchmarkEntry,
+    report: SourceVerificationReport,
+) -> None:
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.source_manifest,
+        report.source_manifest_sha256,
+        label="source verification",
+    )
+
+
+def _validate_event_count_reference(
+    entry: SourceBenchmarkEntry,
+    report: EventCountVerificationReport,
+) -> None:
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.source_manifest,
+        report.source_manifest_sha256,
+        label="event-count verification source manifest",
+    )
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.dataset,
+        report.dataset_sha256,
+        label="event-count verification dataset",
+    )
+
+
+def _validate_identity_bundle_when_applicable(
+    entry: SourceBenchmarkEntry,
+    report: SourceVerificationReport,
+    *,
+    repo_root: Path,
+) -> None:
+    if entry.evidence_mode != "reported_hr_pubmed_abstract":
+        return
+    manifest = load_survival_hr_manifest(repo_root / report.source_manifest)
+    validate_survival_hr_identity_bundle(manifest, report)
+
+
+def _validate_survival_hr_reference(
+    entry: SourceBenchmarkEntry,
+    report: SurvivalHRVerificationReport,
+    *,
+    repo_root: Path,
+) -> None:
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.manifest,
+        report.manifest_sha256,
+        label="survival HR verification manifest",
+    )
+    manifest = load_survival_hr_manifest(repo_root / report.manifest)
+    validate_survival_hr_source_bundle(manifest, report)
+
+
+def _validate_ctgov_hr_network_reference(
+    entry: SourceBenchmarkEntry,
+    report: CTGovHRNetworkVerificationReport,
+    *,
+    repo_root: Path,
+) -> None:
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.manifest,
+        report.manifest_sha256,
+        label="CT.gov HR verification manifest",
+    )
+    manifest = load_ctgov_hr_network_manifest(repo_root / report.manifest)
+    validate_ctgov_hr_network_source_bundle(manifest, report)
+
+
+def _assert_registered_source_manifest_sha(
+    entry: SourceBenchmarkEntry,
+    rel_path: str,
+    observed_sha: str,
+    *,
+    label: str,
+) -> None:
+    expected_sha = entry.source_manifest_sha256.get(rel_path)
+    if expected_sha is None:
+        raise BenchmarkRegistryError(f"{entry.id}: {label} references unregistered source artifact {rel_path!r}.")
+    if observed_sha != expected_sha:
+        raise BenchmarkRegistryError(
+            f"{entry.id}: {label} SHA-256 mismatch for {rel_path}: expected {expected_sha}, got {observed_sha}."
+        )
 
 
 def _load_toml_with_hash(root: Path, rel_path: str, expected_sha: str) -> dict[str, Any]:

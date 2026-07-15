@@ -29,7 +29,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests.
 - `src/bias_nma_adv/km_reconstruction.py`: Fail-closed screen for open-access Kaplan-Meier reconstruction results before they can enter survival validation artifacts.
 - `src/bias_nma_adv/ctgov_hr_network.py`: Source-verified ClinicalTrials.gov reported-HR network benchmark support.
-- `src/bias_nma_adv/benchmark_registry.py`: Machine-readable registry validator for local source-backed benchmark artifacts and their source-check hashes.
+- `src/bias_nma_adv/benchmark_registry.py`: Machine-readable registry validator for local source-backed benchmark artifacts, source-check semantics, and pinned hashes.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
 - `tests/`: Unit and integration test suite.
 - `reproduce.py`: Benchmark script running 200 simulation iterations.
@@ -38,7 +38,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.
-- `validation/benchmark_registry.toml`: Canonical inventory of local source-backed benchmark artifacts. Every entry must retain `certification_effect = "none"` until an external reference run passes.
+- `validation/benchmark_registry.toml`: Canonical inventory of local source-backed benchmark artifacts. Every entry must retain `certification_effect = "none"` until an external reference run passes, and every source-check report is revalidated against its specialized schema.
 - `validation/source_checks/`: Public-source identity snapshots and PubMed abstract event-count token checks.
 - `validation/survival/`: Source-backed survival HR benchmark manifests; current entries verify reported HR tokens from PubMed abstracts and explicitly do not claim KM reconstruction yet.
 - `validation/networks/`: Source-backed network benchmark manifests and generated artifacts, including the CT.gov T2D MACE reported-HR star network.

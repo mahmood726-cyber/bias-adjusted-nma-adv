@@ -7,7 +7,7 @@ This note records which nearby repositories can materially help this project bec
 
 It is a reuse plan, not a certification claim. Any imported method must be ported or wrapped with source-backed tests before it can support a platform capability.
 
-Current gate: source-backed benchmark artifacts imported or inspired by these repositories must be registered in `validation/benchmark_registry.toml` or covered by an equivalent machine-readable validation gate. The registry must pin artifact hashes, source manifests, source-check reports, limitations, and `certification_effect = "none"` until a separate external reference run passes.
+Current gate: source-backed benchmark artifacts imported or inspired by these repositories must be registered in `validation/benchmark_registry.toml` or covered by an equivalent machine-readable validation gate. The registry must pin artifact hashes, source manifests, source-check reports, limitations, and `certification_effect = "none"` until a separate external reference run passes. Source-check files must pass their specialized validators, not just hash matching.
 
 ## Immediate Reuse Candidates
 

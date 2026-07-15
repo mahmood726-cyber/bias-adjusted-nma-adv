@@ -1,5 +1,7 @@
 import copy
+import json
 from pathlib import Path
+import shutil
 import tomllib
 
 import pytest
@@ -14,6 +16,7 @@ from bias_nma_adv.benchmark_registry import (
     validate_source_benchmark_entry,
     validate_source_benchmark_registry,
 )
+from bias_nma_adv.real_meta import sha256_file
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -92,3 +95,49 @@ def test_source_benchmark_registry_rejects_missing_required_limitation():
 
     with pytest.raises(BenchmarkRegistryError, match="limitations missing"):
         validate_source_benchmark_entry(bad, repo_root=ROOT)
+
+
+def test_source_benchmark_registry_rejects_malformed_source_check_even_when_hash_matches(tmp_path):
+    registry = load_source_benchmark_registry(REGISTRY)
+    entry = next(item for item in registry.benchmarks if item.id == "sglt2_hf_primary_log_or")
+    _copy_entry_files(tmp_path, entry)
+
+    report_relpath = "validation/source_checks/sglt2_hf_primary_event_counts.json"
+    report_path = tmp_path / report_relpath
+    payload = json.loads(report_path.read_text(encoding="utf-8"))
+    payload["records"][0]["active_count_token_found"] = False
+    report_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+    raw = copy.deepcopy(entry.__dict__)
+    raw["source_check_sha256"][report_relpath] = sha256_file(report_path)
+    drifted = SourceBenchmarkEntry.from_mapping(raw)
+
+    with pytest.raises(BenchmarkRegistryError, match="specialized source-check validation failed"):
+        validate_source_benchmark_entry(drifted, repo_root=tmp_path)
+
+
+def test_source_benchmark_registry_rejects_source_check_manifest_hash_drift(tmp_path):
+    registry = load_source_benchmark_registry(REGISTRY)
+    entry = next(item for item in registry.benchmarks if item.id == "sglt2_hf_primary_log_or")
+    _copy_entry_files(tmp_path, entry)
+
+    report_relpath = "validation/source_checks/sglt2_hf_primary_source_check.json"
+    report_path = tmp_path / report_relpath
+    payload = json.loads(report_path.read_text(encoding="utf-8"))
+    payload["source_manifest_sha256"] = "a" * 64
+    report_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+    raw = copy.deepcopy(entry.__dict__)
+    raw["source_check_sha256"][report_relpath] = sha256_file(report_path)
+    drifted = SourceBenchmarkEntry.from_mapping(raw)
+
+    with pytest.raises(BenchmarkRegistryError, match="source verification SHA-256 mismatch"):
+        validate_source_benchmark_entry(drifted, repo_root=tmp_path)
+
+
+def _copy_entry_files(root: Path, entry: SourceBenchmarkEntry) -> None:
+    for relpath in (entry.artifact_path, *entry.source_manifests, *entry.source_checks):
+        src = ROOT / relpath
+        dst = root / relpath
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
