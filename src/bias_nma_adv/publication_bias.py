@@ -2,7 +2,26 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+import math
+
 import numpy as np
+import scipy.stats
+
+
+@dataclass(frozen=True)
+class EggerRegressionDiagnostic:
+    """Small-study-effect regression diagnostic on reported study effects."""
+
+    k: int
+    intercept: float
+    intercept_se: float
+    t_value: float
+    p_value: float
+    slope: float
+    residual_df: int
+    warnings: tuple[str, ...]
+
 
 class RegistryPublicationBiasAuditor:
     """Audits NMA networks against ClinicalTrials.gov registries to detect unpublished trials and outcome switching."""
@@ -78,3 +97,74 @@ class RegistryPublicationBiasAuditor:
         # Shrinkage factor: (1 - UTR)
         shrinkage = 1.0 - utr
         return effect_estimate * max(0.0, shrinkage)
+
+
+def egger_regression_diagnostic(
+    effects: np.ndarray,
+    standard_errors: np.ndarray,
+    *,
+    min_recommended_studies: int = 10,
+) -> EggerRegressionDiagnostic:
+    """Run Egger's regression diagnostic without changing model weights.
+
+    The regression is `effect / SE = intercept + slope * (1 / SE) + error`.
+    A non-zero intercept is a small-study-effect signal, not proof of
+    publication bias and not a treatment-effect correction.
+    """
+
+    y = np.asarray(effects, dtype=float).reshape(-1)
+    se = np.asarray(standard_errors, dtype=float).reshape(-1)
+    if y.shape != se.shape:
+        raise ValueError("effects and standard_errors must have the same length.")
+    if y.size < 3:
+        raise ValueError("Egger regression requires at least three studies.")
+    if not np.all(np.isfinite(y)):
+        raise ValueError("all effects must be finite.")
+    if not np.all(np.isfinite(se)) or np.any(se <= 0.0):
+        raise ValueError("all standard errors must be finite and positive.")
+
+    precision = 1.0 / se
+    standard_normal_deviate = y / se
+    design = np.column_stack([np.ones_like(precision), precision])
+    xtx = design.T @ design
+    try:
+        xtx_inv = np.linalg.inv(xtx)
+    except np.linalg.LinAlgError as exc:
+        raise ValueError("Egger regression design is singular.") from exc
+
+    coefficients = xtx_inv @ design.T @ standard_normal_deviate
+    fitted = design @ coefficients
+    residual = standard_normal_deviate - fitted
+    residual_df = int(y.size - 2)
+    residual_variance = float((residual @ residual) / residual_df)
+    covariance = residual_variance * xtx_inv
+    intercept_se = math.sqrt(max(float(covariance[0, 0]), 0.0))
+    if intercept_se == 0.0:
+        if coefficients[0] > 0.0:
+            t_value = math.inf
+        elif coefficients[0] < 0.0:
+            t_value = -math.inf
+        else:
+            t_value = 0.0
+        p_value = 0.0 if t_value else 1.0
+    else:
+        t_value = float(coefficients[0] / intercept_se)
+        p_value = float(2.0 * scipy.stats.t.sf(abs(t_value), residual_df))
+
+    warnings: list[str] = []
+    if y.size < min_recommended_studies:
+        warnings.append(
+            "Egger regression is underpowered with fewer than "
+            f"{min_recommended_studies} studies."
+        )
+
+    return EggerRegressionDiagnostic(
+        k=int(y.size),
+        intercept=float(coefficients[0]),
+        intercept_se=float(intercept_se),
+        t_value=float(t_value),
+        p_value=float(p_value),
+        slope=float(coefficients[1]),
+        residual_df=residual_df,
+        warnings=tuple(warnings),
+    )

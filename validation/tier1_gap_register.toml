@@ -30,6 +30,7 @@ missing_capabilities = [
 implemented_capabilities = [
   "multiarm_gls_influence_leverage_diagnostics",
   "fixed_effect_node_splitting_smoke_diagnostics",
+  "egger_small_study_effect_diagnostic",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",

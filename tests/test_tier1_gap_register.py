@@ -36,6 +36,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         "fixed_effect_node_splitting_smoke_diagnostics"
         in by_id["feature_completeness"].implemented_capabilities
     )
+    assert (
+        "egger_small_study_effect_diagnostic"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
     assert "optimizer_stress_matrix" in by_id["numerical_stability"].missing_capabilities
     assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
@@ -58,6 +62,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "feature_completeness": [
                 "multiarm_gls_influence_leverage_diagnostics",
                 "fixed_effect_node_splitting_smoke_diagnostics",
+                "egger_small_study_effect_diagnostic",
             ]
         },
         "blocked_claims": [

@@ -112,6 +112,7 @@ def test_validation_status_composes_all_current_gates():
         "feature_completeness": [
             "multiarm_gls_influence_leverage_diagnostics",
             "fixed_effect_node_splitting_smoke_diagnostics",
+            "egger_small_study_effect_diagnostic",
         ]
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
