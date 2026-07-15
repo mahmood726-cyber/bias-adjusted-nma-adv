@@ -23,6 +23,10 @@ from bias_nma_adv.grand_benchmark_plan import (
     summarize_grand_benchmark_plan,
     validate_grand_benchmark_plan,
 )
+from bias_nma_adv.simulation_matrix import (
+    summarize_simulation_matrix,
+    validate_simulation_matrix,
+)
 
 
 VALIDATION_STATUS_SCHEMA_VERSION = "validation_status/v1"
@@ -52,6 +56,7 @@ def build_validation_status(
     root = Path(repo_root).resolve()
     registry_path = root / "validation" / "benchmark_registry.toml"
     grand_benchmark_plan_path = root / "validation" / "grand_benchmark_plan.toml"
+    simulation_matrix_path = root / "validation" / "simulation_matrix.toml"
     reference_targets_path = root / "validation" / "reference_targets.toml"
     reference_runs_path = root / "validation" / "reference_runs"
 
@@ -60,6 +65,10 @@ def build_validation_status(
     grand_benchmark_plan = validate_grand_benchmark_plan(
         grand_benchmark_plan_path,
         source_registry=registry,
+    )
+    simulation_matrix = validate_simulation_matrix(
+        simulation_matrix_path,
+        grand_benchmark_plan_path=grand_benchmark_plan_path,
     )
 
     targets = load_reference_targets(reference_targets_path)
@@ -94,6 +103,10 @@ def build_validation_status(
         "grand_benchmark_plan": {
             "plan": _relpath(grand_benchmark_plan_path, root),
             **summarize_grand_benchmark_plan(grand_benchmark_plan),
+        },
+        "simulation_matrix": {
+            "matrix": _relpath(simulation_matrix_path, root),
+            **summarize_simulation_matrix(simulation_matrix),
         },
         "reference_targets": {
             "registry": _relpath(reference_targets_path, root),

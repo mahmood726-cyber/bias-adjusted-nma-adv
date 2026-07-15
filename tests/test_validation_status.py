@@ -50,6 +50,13 @@ def test_validation_status_composes_all_current_gates():
     assert grand_plan["simulation_scenario_status_counts"] == {"planned": 3}
     assert grand_plan["certification_effect"] == "none"
 
+    simulation_matrix = report["simulation_matrix"]
+    assert simulation_matrix["matrix"] == "validation/simulation_matrix.toml"
+    assert simulation_matrix["n_jobs"] == 1
+    assert simulation_matrix["job_status_counts"] == {"active": 1}
+    assert simulation_matrix["execution_mode_counts"] == {"smoke": 1}
+    assert simulation_matrix["certification_effect"] == "none"
+
     reference_targets = report["reference_targets"]
     assert reference_targets["registry"] == "validation/reference_targets.toml"
     assert reference_targets["status_counts"] == {

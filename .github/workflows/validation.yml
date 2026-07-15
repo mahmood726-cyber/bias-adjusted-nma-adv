@@ -28,8 +28,17 @@ jobs:
       - name: Write validation status
         run: python scripts\write_validation_status.py --output validation_status.json
 
+      - name: Run simulation matrix smoke
+        run: python scripts\run_simulation_matrix.py --output simulation_matrix_report.json
+
       - name: Upload validation status artifact
         uses: actions/upload-artifact@v4
         with:
           name: validation-status
           path: validation_status.json
+
+      - name: Upload simulation matrix artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulation-matrix-report
+          path: simulation_matrix_report.json

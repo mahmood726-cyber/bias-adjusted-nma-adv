@@ -1,0 +1,34 @@
+schema_version = "simulation_matrix/v1"
+checked_at = "2026-07-15"
+purpose = "Executable, non-certifying simulation smoke matrix for operating-characteristic checks."
+grand_benchmark_plan = "validation/grand_benchmark_plan.toml"
+source_policy = "simulation_only_no_real_data"
+uses_real_data = false
+certification_effect = "none"
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_smoke"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "smoke"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 3
+n_studies = 8
+n_treatments = 3
+design_ratio = 0.5
+true_heterogeneity = 0.25
+true_bias = 0.4
+true_bias_interaction = 0.2
+covariate_effect = 0.3
+seed = 20260715
+min_successful_iterations = 1
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Simulation smoke output checks execution and metric shape only; it is not real clinical validation, tier-one parity, or superiority evidence."
