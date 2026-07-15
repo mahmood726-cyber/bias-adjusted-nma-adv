@@ -2,6 +2,8 @@ import copy
 import json
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 import tomllib
 
 import pytest
@@ -21,6 +23,7 @@ from bias_nma_adv.real_meta import sha256_file
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "validation" / "benchmark_registry.toml"
+VALIDATE_SCRIPT = ROOT / "scripts" / "validate_benchmark_registry.py"
 
 
 def test_source_benchmark_registry_validates_all_registered_artifacts():
@@ -95,6 +98,27 @@ def test_source_benchmark_registry_rejects_missing_required_limitation():
 
     with pytest.raises(BenchmarkRegistryError, match="limitations missing"):
         validate_source_benchmark_entry(bad, repo_root=ROOT)
+
+
+def test_validate_benchmark_registry_script_emits_machine_readable_summary():
+    completed = subprocess.run(
+        [sys.executable, str(VALIDATE_SCRIPT), "--root", str(ROOT), "--json"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(completed.stdout)
+
+    assert payload["status"] == "passed"
+    assert payload["certification_effect"] == "none"
+    assert payload["registry"] == "validation/benchmark_registry.toml"
+    assert payload["n_benchmarks"] == 4
+    assert set(payload["benchmark_ids"]) == {
+        "sglt2_hf_primary_log_or",
+        "sglt2_hf_reported_hr",
+        "pcsk9_mace_reported_hr",
+        "t2d_mace_ctgov_hr_network",
+    }
 
 
 def test_source_benchmark_registry_rejects_malformed_source_check_even_when_hash_matches(tmp_path):

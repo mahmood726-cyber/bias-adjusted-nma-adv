@@ -46,6 +46,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, and later tier-one NMA packages.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
 - `scripts/preflight_multiarm_netmeta_adapter.py`: Regenerates the non-certifying `netmeta` multi-arm adapter preflight report.
+- `scripts/validate_benchmark_registry.py`: Validates every registered local source-backed benchmark and emits an optional JSON summary for CI/Overmind-style gates.
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.
 - `scripts/verify_survival_sources.py`: Regenerates CT.gov/PubMed identity snapshots for survival reported-HR manifests.
