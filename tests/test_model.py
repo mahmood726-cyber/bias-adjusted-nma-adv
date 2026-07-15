@@ -126,3 +126,30 @@ def test_meta_regression():
 
     # The effects should differ due to meta-regression slope
     assert abs(eff_neg - eff_pos) > 1e-4
+
+
+def test_sandwich_variance():
+    dataset = EvidenceDataset()
+    dataset.add_study("S1", "rct", rob_weight=1.0)
+    dataset.add_arm("S1", "arm1", "A", 100)
+    dataset.add_arm("S1", "arm2", "B", 100)
+    dataset.add_outcome_ad("S1", "arm1", "O1", "binary", 15)
+    dataset.add_outcome_ad("S1", "arm2", "O1", "binary", 25)
+
+    dataset.add_study("S2", "rct", rob_weight=1.0)
+    dataset.add_arm("S2", "arm1", "A", 100)
+    dataset.add_arm("S2", "arm2", "B", 100)
+    dataset.add_outcome_ad("S2", "arm1", "O1", "binary", 12)
+    dataset.add_outcome_ad("S2", "arm2", "O1", "binary", 28)
+
+    pooler_model = AdvancedBiasAdjustedNMAPooler(hksj=False, variance_type="model")
+    fit_model = pooler_model.fit(dataset, "O1", reference_treatment="A")
+
+    pooler_sand = AdvancedBiasAdjustedNMAPooler(hksj=False, variance_type="sandwich")
+    fit_sand = pooler_sand.fit(dataset, "O1", reference_treatment="A")
+
+    # Estimates should be identical, but standard errors should differ
+    assert abs(fit_model.treatment_effects["B"] - fit_sand.treatment_effects["B"]) < 1e-9
+    assert fit_model.treatment_ses["B"] != fit_sand.treatment_ses["B"]
+    assert fit_sand.treatment_ses["B"] > 0.0
+

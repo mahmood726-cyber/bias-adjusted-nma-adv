@@ -117,12 +117,15 @@ class _StudyBlock:
 class AdvancedBiasAdjustedNMAPooler:
     """Frequentist advanced bias-adjusted NMA with meta-regression, HKSJ, and scoped down-weighting."""
 
-    def __init__(self, hksj: bool = True, hksj_df: str = "studies", down_weight: bool = True):
+    def __init__(self, hksj: bool = True, hksj_df: str = "studies", down_weight: bool = True, variance_type: str = "model"):
         if hksj_df not in {"studies", "contrasts"}:
             raise ValueError("hksj_df must be 'studies' or 'contrasts'.")
+        if variance_type not in {"model", "sandwich"}:
+            raise ValueError("variance_type must be 'model' or 'sandwich'.")
         self.hksj = hksj
         self.hksj_df = hksj_df
         self.down_weight = down_weight
+        self.variance_type = variance_type
 
     def fit(
         self,
@@ -183,7 +186,7 @@ class AdvancedBiasAdjustedNMAPooler:
 
         # 6. Fit GLS with Shrinkage Prior
         beta, cov = self._estimate_gls_with_shrinkage(
-            y, x, v, tau, param_names, bias_prior_sd
+            y, x, v, tau, param_names, bias_prior_sd, blocks, self.variance_type
         )
 
         # 7. Hartung-Knapp-Sidik-Jonkman adjustment
@@ -559,7 +562,9 @@ class AdvancedBiasAdjustedNMAPooler:
         v: np.ndarray,
         tau: float,
         param_names: tuple[str, ...],
-        bias_prior_sd: float
+        bias_prior_sd: float,
+        blocks: list[_StudyBlock],
+        variance_type: str = "model"
     ) -> tuple[np.ndarray, np.ndarray]:
         m = v + np.eye(v.shape[0], dtype=float) * (tau * tau)
         m_inv = np.linalg.inv(m)
@@ -577,7 +582,30 @@ class AdvancedBiasAdjustedNMAPooler:
                 p_matrix[idx, idx] = bias_precision
 
         post_info = info + p_matrix
-        cov = np.linalg.pinv(post_info)
-        beta = cov @ (xt_m_inv @ y)
+        cov_model = np.linalg.pinv(post_info)
+        beta = cov_model @ (xt_m_inv @ y)
+
+        if variance_type == "sandwich":
+            # Meat: Sum_s X_s^T M_s^-1 e_s e_s^T M_s^-1 X_s
+            meat = np.zeros_like(info)
+            cursor = 0
+            for block in blocks:
+                size = len(block.y)
+                m_s = block.v + np.eye(size, dtype=float) * (tau * tau)
+                m_s_inv = np.linalg.inv(m_s)
+
+                x_s = x[cursor : cursor + size]
+                y_s = y[cursor : cursor + size]
+                e_s = y_s - x_s @ beta
+
+                outer = np.outer(e_s, e_s)
+                meat_s = x_s.T @ m_s_inv @ outer @ m_s_inv @ x_s
+                meat += meat_s
+
+                cursor += size
+
+            cov = cov_model @ meat @ cov_model
+        else:
+            cov = cov_model
 
         return beta, cov

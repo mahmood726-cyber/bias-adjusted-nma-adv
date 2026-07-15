@@ -123,11 +123,13 @@ def run_benchmark_simulation(
 
     # Storage for results
     methods = {
-        "standard_nma": [],
-        "standard_bias_adj": [],
-        "hksj_bias_adj": [],
-        "hksj_weighted_bias_adj": [],
-        "full_advanced_bias_adj": []
+      "standard_nma": [],
+      "standard_bias_adj": [],
+      "hksj_bias_adj": [],
+      "hksj_weighted_bias_adj": [],
+      "full_advanced_bias_adj": [],
+      "sandwich_bias_adj": [],
+      "sandwich_weighted_bias_adj": []
     }
 
     iterations_run = 0
@@ -209,6 +211,39 @@ def run_benchmark_simulation(
             methods["standard_bias_adj"].pop()
             methods["hksj_bias_adj"].pop()
             methods["hksj_weighted_bias_adj"].pop()
+            continue
+
+        # 6. Sandwich Bias Adjusted NMA (prior bias + robust sandwich variance, no downweighting, no meta-regression)
+        pooler_sand = AdvancedBiasAdjustedNMAPooler(hksj=False, down_weight=False, variance_type="sandwich")
+        try:
+            fit_sand = pooler_sand.fit(
+                dataset, "O1", reference_treatment=ref_trt, reference_design="rct", covariates=[]
+            )
+            est, se, cil, ciu = fit_sand.contrast(target_trt, ref_trt)
+            methods["sandwich_bias_adj"].append((est, se, cil, ciu))
+        except ValidationError:
+            methods["standard_nma"].pop()
+            methods["standard_bias_adj"].pop()
+            methods["hksj_bias_adj"].pop()
+            methods["hksj_weighted_bias_adj"].pop()
+            methods["full_advanced_bias_adj"].pop()
+            continue
+
+        # 7. Sandwich + Downweighted Bias Adjusted NMA (prior bias + robust sandwich variance + down-weighting)
+        pooler_sand_w = AdvancedBiasAdjustedNMAPooler(hksj=False, down_weight=True, variance_type="sandwich")
+        try:
+            fit_sand_w = pooler_sand_w.fit(
+                dataset, "O1", reference_treatment=ref_trt, reference_design="rct", covariates=[]
+            )
+            est, se, cil, ciu = fit_sand_w.contrast(target_trt, ref_trt)
+            methods["sandwich_weighted_bias_adj"].append((est, se, cil, ciu))
+        except ValidationError:
+            methods["standard_nma"].pop()
+            methods["standard_bias_adj"].pop()
+            methods["hksj_bias_adj"].pop()
+            methods["hksj_weighted_bias_adj"].pop()
+            methods["full_advanced_bias_adj"].pop()
+            methods["sandwich_bias_adj"].pop()
             continue
 
         iterations_run += 1

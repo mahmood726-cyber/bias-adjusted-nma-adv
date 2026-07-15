@@ -571,6 +571,20 @@
           "rmse": 0.1451,
           "coverage": 0.9500,
           "mean_se": 0.1294
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.1407,
+          "mse": 0.0395,
+          "rmse": 0.1988,
+          "coverage": 0.7400,
+          "mean_se": 0.1246
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.1187,
+          "mse": 0.0327,
+          "rmse": 0.1808,
+          "coverage": 0.8000,
+          "mean_se": 0.1225
         }
       }
     };
@@ -627,7 +641,9 @@
       "standard_bias_adj": "Standard Bias-Adjusted NMA",
       "hksj_bias_adj": "HKSJ Bias-Adjusted NMA",
       "hksj_weighted_bias_adj": "HKSJ + Downweighted Bias-Adj",
-      "full_advanced_bias_adj": "Full Advanced Bias-Adjusted NMA"
+      "full_advanced_bias_adj": "Full Advanced Bias-Adjusted NMA",
+      "sandwich_bias_adj": "Sandwich Bias-Adjusted NMA",
+      "sandwich_weighted_bias_adj": "Sandwich + Downweighted Bias-Adj"
     };
 
     Object.entries(config.methods_summary).forEach(([mName, metrics]) => {
@@ -652,7 +668,9 @@
       name: name === 'full_advanced_bias_adj' ? 'Full Advanced' :
             name === 'hksj_weighted_bias_adj' ? 'HKSJ+Weight' :
             name === 'hksj_bias_adj' ? 'HKSJ' :
-            name === 'standard_bias_adj' ? 'Std Bias' : 'Naive',
+            name === 'standard_bias_adj' ? 'Std Bias' :
+            name === 'sandwich_bias_adj' ? 'Sandwich' :
+            name === 'sandwich_weighted_bias_adj' ? 'Sand+Weight' : 'Naive',
       val: m.coverage,
       color: m.coverage >= 0.95 ? 'var(--success-color)' :
              m.coverage >= 0.85 ? 'var(--warning-color)' : 'var(--danger-color)'
@@ -673,7 +691,7 @@
     });
 
     // Draw Bars
-    const barWidth = 35;
+    const barWidth = 20;
     const barGap = (width - barWidth * chartData.length) / (chartData.length + 1);
 
     chartData.forEach((d, idx) => {
