@@ -28,6 +28,7 @@ It is a reuse plan, not a certification claim. Any imported method must be porte
 1. **Survival KM validation lane**
    - Use `wasserstein` as the starting point for OA paper KM extraction.
    - Required artifacts: PMID, NCT ID when present, OA URL or PMC ID, source figure/table location, extracted curve CSV, reconstructed IPD hash, reference HR source, reproduced HR, and discrepancy.
+   - Current guard: this repository now has an OA-only KM reconstruction screen that blocks text-only HR and synthetic-IPD fallbacks before they can enter validation artifacts.
    - Certification target: match known HRs and confidence intervals across a prespecified set of OA survival RCTs.
 
 2. **Transportability support lane**
@@ -81,7 +82,7 @@ It is a reuse plan, not a certification claim. Any imported method must be porte
 ## Next Implementation Order
 
 1. Run and hash the external `netmeta` multi-arm adapter when R and `netmeta` are available; keep the current preflight as a skip until then.
-2. Extend the new survival HR manifest into an OA Kaplan-Meier reconstruction manifest before importing any `wasserstein` output.
+2. Add the first real OA Kaplan-Meier source manifest and curve/IPD hashes that pass the new KM reconstruction screen.
 3. Port the transportability collapsibility guards and support certificate behind an experimental API.
 4. Add an ingestion provenance validator that rejects mismatched PMID/OA PDF rows.
 5. Only then expand the real-meta benchmark set beyond the current SGLT2 heart-failure fixture.

@@ -58,6 +58,8 @@ Current adapter preflights: `validation/reference_runs/pairwise_metafor_meta_pre
 
 Current local multi-arm artifact: `validation/multiarm/netmeta_portfolio_multiarm_benchmark.toml` deterministically replays the governed arm-level fixture in `validation/multiarm/netmeta_portfolio_multiarm_arms.csv`. It is useful for regression testing multi-arm covariance handling, but it carries `certification_effect = "none"` until an external `netmeta` adapter actually runs and passes with package versions, output hashes, and a prespecified tolerance.
 
+Current KM reconstruction guard: `validation/survival/km_reconstruction_policy.toml` and `src/bias_nma_adv/km_reconstruction.py` define the survival lane's first fail-closed screen. Open-access paper figure provenance is required, text-only HR outputs are rejected, and synthetic IPD fallbacks are blocked before a result can enter a validation artifact.
+
 ### Phase 1: Match Tier One
 
 For each module, reproduce the established implementation before claiming improvement.
@@ -125,6 +127,7 @@ Winners should be reported separately for statistical accuracy, uncertainty cali
 | Benchmark thresholds | Static specification | This document and `docs/technical_specification.md` | Must be implemented as machine-readable validation criteria before certification |
 | Reference-run preflight | Dynamic local environment check | `validation/reference_runs/*.toml` | Unavailable or failed adapters are recorded but cannot certify a module |
 | Multi-arm fixture replay | Static algorithmic fixture plus dynamic local recomputation | `validation/multiarm/*` and `tests/test_multiarm_artifact.py` | Validates local covariance handling on a small fixture; not clinical evidence and not external `netmeta` parity |
+| KM reconstruction policy | Static screen plus local unit fixtures | `validation/survival/km_reconstruction_policy.toml` and `tests/test_km_reconstruction_policy.py` | Blocks text-only and synthetic-IPD survival outputs; does not digitize any OA curve yet |
 | Source-identity snapshots | Dynamic public API check | `validation/source_checks/*source_check.json` | Verifies public-record identity and reachability, not numeric extraction |
 | Event-count snapshots | Dynamic public API check | `validation/source_checks/*event_counts.json` | Verifies exact abstract count tokens and nearby treatment terms, not full paper extraction |
 | Reported-HR snapshots | Dynamic public API check | `validation/source_checks/*reported_hr_tokens.json` | Verifies HR/CI abstract tokens near a hazard-ratio anchor, not survival model fitting |

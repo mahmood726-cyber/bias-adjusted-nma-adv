@@ -1,0 +1,39 @@
+schema_version = "km_reconstruction_policy/v1"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+certification_effect = "none"
+reuse_origin = "wasserstein_method_pattern_only"
+required_source_type = "open_access_paper"
+synthetic_ipd_policy = "blocked"
+min_curve_points = 10
+blocked_hr_methods = [
+  "text_synthetic_ipd",
+  "text_derived_only",
+  "derived_event_rate",
+  "median_ratio_fallback",
+  "none",
+]
+blocked_orientation_methods = [
+  "text_synthetic_ipd",
+  "text_only",
+  "closest_to_1_prior",
+  "none",
+]
+blocked_warning_terms = [
+  "Synthetic IPD",
+  "text-derived HR only",
+  "no reliable curve pair",
+  "curve extraction failed",
+]
+required_result_fields = [
+  "hr",
+  "hr_method",
+  "orientation_method",
+  "total_ipd_records",
+  "curve1_times",
+  "curve1_survivals",
+  "curve2_times",
+  "curve2_survivals",
+  "n_curves_found",
+  "verification_level",
+  "verification_hash",
+]
