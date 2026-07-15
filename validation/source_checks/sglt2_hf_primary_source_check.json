@@ -1,0 +1,154 @@
+{
+  "benchmark_id": "sglt2_hf_primary_log_or",
+  "checked_at": "2026-07-15T00:00:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03036124",
+      "details": {
+        "brief_title": "Study to Evaluate the Effect of Dapagliflozin on the Incidence of Worsening Heart Failure or Cardiovascular Death in Patients With Chronic Heart Failure",
+        "nct_id": "NCT03036124",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03036124",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03036124",
+      "response_sha256": "74218a58d7b371ba526f58ce56581e8ee854c78f03ed7f20831a4ff29a41b29b",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "DAPA-HF",
+      "title": "Study to Evaluate the Effect of Dapagliflozin on the Incidence of Worsening Heart Failure or Cardiovascular Death in Patients With Chronic Heart Failure"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31535829&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "1027c177002f313f913a64e63223935585ad152f2df949ceb8d3c43aae8f18a5",
+        "article_title": "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction.",
+        "journal": "N Engl J Med",
+        "pmid": "31535829"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31535829",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31535829/",
+      "response_sha256": "d86f142d100d12573e1bc9993fbf40729a81ab213219aa50b1d716709bcb2b4c",
+      "source_type": "pubmed_abstract",
+      "study_id": "DAPA-HF",
+      "title": "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03057977",
+      "details": {
+        "brief_title": "EMPagliflozin outcomE tRial in Patients With chrOnic heaRt Failure With Reduced Ejection Fraction (EMPEROR-Reduced)",
+        "nct_id": "NCT03057977",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03057977",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03057977",
+      "response_sha256": "99a39fff74ed46797c987bbe638bac3204700c77e15b4755f42d29558a289ab3",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EMPEROR-Reduced",
+      "title": "EMPagliflozin outcomE tRial in Patients With chrOnic heaRt Failure With Reduced Ejection Fraction (EMPEROR-Reduced)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32865377&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "134f318b30cd034505acee6a5336c3690d940d126ffc62e4f6e1b30cf57891c1",
+        "article_title": "Cardiovascular and Renal Outcomes with Empagliflozin in Heart Failure.",
+        "journal": "N Engl J Med",
+        "pmid": "32865377"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32865377",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32865377/",
+      "response_sha256": "6519ae8338ccd9e7fb161e306e177ad9a66f171c96ee4da655099894e0ff9ea8",
+      "source_type": "pubmed_abstract",
+      "study_id": "EMPEROR-Reduced",
+      "title": "Cardiovascular and Renal Outcomes with Empagliflozin in Heart Failure."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03619213",
+      "details": {
+        "brief_title": "Dapagliflozin Evaluation to Improve the LIVEs of Patients With PReserved Ejection Fraction Heart Failure.",
+        "nct_id": "NCT03619213",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03619213",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03619213",
+      "response_sha256": "97afa1022cf235031c75226df79448e65f3bb4a8ce74e12e384e84cc162294f1",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "DELIVER",
+      "title": "Dapagliflozin Evaluation to Improve the LIVEs of Patients With PReserved Ejection Fraction Heart Failure."
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=36027570&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "fdfd871338e9c06f1c7689c6bed1054ea6663b654bb1930da767b6b1cd40559f",
+        "article_title": "Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction.",
+        "journal": "N Engl J Med",
+        "pmid": "36027570"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "36027570",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/36027570/",
+      "response_sha256": "dc08c7ab7f6bbc362609a3289933d82906b3e850a2a2fac0185761b6fe5af947",
+      "source_type": "pubmed_abstract",
+      "study_id": "DELIVER",
+      "title": "Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03057951",
+      "details": {
+        "brief_title": "EMPagliflozin outcomE tRial in Patients With chrOnic heaRt Failure With Preserved Ejection Fraction (EMPEROR-Preserved)",
+        "nct_id": "NCT03057951",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03057951",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03057951",
+      "response_sha256": "c40d2506f7754aaf3366d2e054f88d5383254212159691a6f35cf2538307a706",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EMPEROR-Preserved",
+      "title": "EMPagliflozin outcomE tRial in Patients With chrOnic heaRt Failure With Preserved Ejection Fraction (EMPEROR-Preserved)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=34449189&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "b14a13cbbb2d5fc79960ab083ac87dbdd1906caae2f58cebff7fcac1c9084e2e",
+        "article_title": "Empagliflozin in Heart Failure with a Preserved Ejection Fraction.",
+        "journal": "N Engl J Med",
+        "pmid": "34449189"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "34449189",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/34449189/",
+      "response_sha256": "6aa150f130383577608a2ceaeb9d3d7329eda3f870a9438e7b8407f7c2904970",
+      "source_type": "pubmed_abstract",
+      "study_id": "EMPEROR-Preserved",
+      "title": "Empagliflozin in Heart Failure with a Preserved Ejection Fraction."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/real_meta/sglt2_hf_primary_sources.toml",
+  "source_manifest_sha256": "f94dbbf54637a1d7afb26acd39f888cf7ae145273b9c353f2da38f3d5c728bf3",
+  "status": "verified"
+}

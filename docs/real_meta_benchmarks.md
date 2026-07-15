@@ -21,6 +21,8 @@ Dataset: `validation/real_meta/sglt2_hf_primary_events.csv`
 
 Source manifest: `validation/real_meta/sglt2_hf_primary_sources.toml`
 
+Source identity snapshot: `validation/source_checks/sglt2_hf_primary_source_check.json`
+
 Outcome: primary composite outcome in each trial, harmonized as worsening heart failure or cardiovascular death / cardiovascular death or heart-failure hospitalization.
 
 Scale currently tested: log odds ratio, because the current arm-level binary model estimates log-odds contrasts.
@@ -36,6 +38,7 @@ Current tests:
 
 - validate all rows against the allowed source boundary;
 - validate a separate source manifest requiring matching trial labels, NCT IDs, PMIDs, outcomes, arm counts, and admissible PubMed/ClinicalTrials.gov URLs;
+- validate a source-identity snapshot showing the CT.gov and PubMed public records were reachable and matched the manifest identifiers at verification time;
 - compute an independent inverse-variance fixed-effect log-odds-ratio reference;
 - compute source-backed study-level log-odds-ratio effects with NCT/PMID provenance;
 - run the experimental pairwise bridge as fixed effect and REML-HKSJ with prediction interval;
@@ -64,7 +67,7 @@ Limitations:
 - this is a pairwise class meta-analysis, not a full multi-treatment NMA;
 - the current benchmark uses first-event binary counts, not time-to-event hazard ratios;
 - the REML heterogeneity estimate is zero on this four-study fixture, so this is not evidence of random-effects superiority;
-- PubMed/CT.gov source IDs are recorded, but full extraction provenance should later include machine-captured source snippets or checksums;
+- PubMed/CT.gov source identity is verified by public API snapshots, but full event-count extraction provenance should later include machine-captured source snippets or source-location checksums;
 - this benchmark does not yet have a passed external `metafor`, `meta`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference run.
 
 ## Static-Vs-Dynamic Hardcode Disclosure
@@ -73,6 +76,7 @@ Limitations:
 | --- | --- | --- | --- |
 | Trial arm counts | Static fixture | `sglt2_hf_primary_events.csv` plus `sglt2_hf_primary_sources.toml` | Treated as extracted source-backed data, not simulated output |
 | Source manifest | Static fixture | PubMed abstract URLs and ClinicalTrials.gov record URLs | Machine-checked for identifier, outcome, source-type, and arm-count consistency |
+| Source identity snapshot | Dynamic public API check | `scripts/verify_real_meta_sources.py` against ClinicalTrials.gov API and PubMed EFetch | Verifies identity and reachability only, not event-count extraction |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
 | Pairwise bridge result | Dynamic computation | `bias_nma_adv.pairwise.fit_pairwise_meta` | Recomputed by tests from source-backed study-level effects |
 | External pairwise reference run | Dynamic local environment preflight | `validation/reference_runs/pairwise_metafor_meta_preflight.toml` | Recorded as unavailable and has `certification_effect = "none"` |

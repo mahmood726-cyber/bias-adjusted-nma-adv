@@ -32,8 +32,10 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/reference_targets.toml`: Machine-readable reference targets required before tier-one parity or production certification claims.
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.
+- `validation/source_checks/`: Public-source identity snapshots generated from ClinicalTrials.gov and PubMed APIs.
 - `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, and later tier-one NMA packages.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
+- `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `docs/portfolio_reuse_map.md`: Local portfolio scan describing reusable methods and hard stops before porting them.
 - `e156-submission/`: Micro-publication artifacts.
 

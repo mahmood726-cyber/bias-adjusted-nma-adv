@@ -48,6 +48,7 @@ Thumbs.db
 output/
 *.log
 *.json
+!validation/source_checks/*.json
 
 # Sentinel findings
 PROGRESS.md
