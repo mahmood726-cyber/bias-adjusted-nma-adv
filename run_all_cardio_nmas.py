@@ -210,7 +210,23 @@ def main():
     print(" -> NUTS parameter samples:")
     print(nuts_samples)
 
+    # 9. Sponsorship Bias and Attrition Auditor
+    print("\n[Sponsor Auditor] Auditing trial collaborator classes and participant flow...")
+    from bias_nma_adv.sponsor_bias import RegistrySponsorAuditor
+    sponsor_auditor = RegistrySponsorAuditor()
+    # Register TWILIGHT (NCT02870140): Industry funded, low attrition (1% LTFU)
+    sponsor_auditor.register_trial_flow("NCT02870140", "industry", randomized=7119, lost_to_follow_up=71)
+    
+    twilight_lar = sponsor_auditor.calculate_attrition_ratio("NCT02870140")
+    twilight_sbs = sponsor_auditor.calculate_sponsorship_bias_score("NCT02870140")
+    adj_quality = sponsor_auditor.adjust_doi_welton_quality("NCT02870140", base_quality=1.0)
+    
+    print(f" -> TWILIGHT (NCT02870140): Sponsor class: {twilight_sbs:.1f} (1.0=industry)")
+    print(f" -> Attrition Ratio: {twilight_lar:.4f} (Lost-to-Follow-Up)")
+    print(f" -> Adjusted Doi-Welton Quality Weight: {adj_quality:.4f} (Base: 1.0)")
+
 if __name__ == "__main__":
     main()
+
 
 

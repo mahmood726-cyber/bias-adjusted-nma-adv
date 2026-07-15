@@ -191,6 +191,38 @@ def test_no_u_turn_sampler():
     assert samples.shape == (15, 1)
     assert np.mean(np.abs(samples)) < 2.0
 
+def test_registry_sponsor_auditor():
+    from bias_nma_adv.sponsor_bias import RegistrySponsorAuditor
+    auditor = RegistrySponsorAuditor()
+    
+    # 1. Register trials
+    # NIH funded, no attrition
+    auditor.register_trial_flow("NCT111", "other", randomized=1000, lost_to_follow_up=10)
+    # Industry funded, high attrition (10%)
+    auditor.register_trial_flow("NCT222", "industry", randomized=1000, lost_to_follow_up=100)
+    
+    # 2. Check attrition ratio
+    lar1 = auditor.calculate_attrition_ratio("NCT111")
+    lar2 = auditor.calculate_attrition_ratio("NCT222")
+    assert np.isclose(lar1, 0.01)
+    assert np.isclose(lar2, 0.10)
+    
+    # 3. Check sponsor bias score
+    sbs1 = auditor.calculate_sponsorship_bias_score("NCT111")
+    sbs2 = auditor.calculate_sponsorship_bias_score("NCT222")
+    assert sbs1 == 0.0
+    assert sbs2 == 1.0
+    
+    # 4. Check quality weight adjustment
+    q1 = auditor.adjust_doi_welton_quality("NCT111", 1.0)
+    q2 = auditor.adjust_doi_welton_quality("NCT222", 1.0)
+    
+    # NCT111 should remain close to 1.0 (no penalty)
+    assert np.isclose(q1, 1.0)
+    # NCT222 should be heavily penalized (industry + attrition)
+    assert q2 < 0.80
+
+
 
 
 
