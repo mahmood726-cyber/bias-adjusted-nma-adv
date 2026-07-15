@@ -1,4 +1,4 @@
-"""Advanced Bias-Adjusted NMA pooling with Stratified Heterogeneity, Topological Regularization, and Doi-Welton Hybrid Coupling."""
+"""Advanced Bias-Adjusted NMA pooling with Kenward-Roger corrections, directional priors, Sweeting's corrections, and sensitivity analysis."""
 
 from __future__ import annotations
 
@@ -33,7 +33,8 @@ class AdvancedNMAFitResult:
     covariate_effects_ses: dict[str, float]
     study_specific_biases: dict[str, float]
     study_specific_biases_ses: dict[str, float]
-    warnings: tuple[str, ...]
+    weight_sensitivity_stds: dict[str, float] = field(default_factory=dict)
+    warnings: tuple[str, ...] = field(default_factory=tuple)
 
     def contrast(
         self,
@@ -132,7 +133,8 @@ class AdvancedBiasAdjustedNMAPooler:
         variance_type: str = "model",
         random_effects: str | bool = True,  # True, False, or "stratified"
         treatment_shrinkage_lambda: float = 0.0,
-        study_specific_bias: bool = False
+        study_specific_bias: bool = False,
+        bias_prior_mean: float = 0.0
     ):
         if hksj_df not in {"studies", "contrasts"}:
             raise ValueError("hksj_df must be 'studies' or 'contrasts'.")
@@ -147,6 +149,7 @@ class AdvancedBiasAdjustedNMAPooler:
         self.random_effects = random_effects
         self.treatment_shrinkage_lambda = treatment_shrinkage_lambda
         self.study_specific_bias = study_specific_bias
+        self.bias_prior_mean = bias_prior_mean
 
     def fit(
         self,
@@ -239,6 +242,7 @@ class AdvancedBiasAdjustedNMAPooler:
 
         # Build block-wise random-effects covariance matrix M
         m = v.copy()
+        tot_size = y.shape[0]
         cursor = 0
         for block in blocks:
             size = block.y.shape[0]
@@ -250,10 +254,50 @@ class AdvancedBiasAdjustedNMAPooler:
         beta, cov = self._estimate_gls_with_shrinkage_coupled(
             y, x, m, param_names, blocks, bias_prior_sd,
             self.treatment_shrinkage_lambda, treatment_centralities,
-            self.variance_type
+            self.variance_type, self.bias_prior_mean
         )
 
-        # 7. Hartung-Knapp-Sidik-Jonkman adjustment
+        # 7. Kenward-Roger Style Covariance Correction for plug-in heterogeneity uncertainty
+        if self.random_effects and y.shape[0] > x.shape[1]:
+            try:
+                m_inv = np.linalg.inv(m)
+                # Indicator diagonal matrices for design strata
+                n_designs = len(unique_designs)
+                d_matrices = []
+                for g in range(n_designs):
+                    d_g = np.zeros(tot_size, dtype=float)
+                    c = 0
+                    for block in blocks:
+                        size = block.y.shape[0]
+                        if design_to_idx[block.design] == g:
+                            d_g[c : c + size] = 1.0
+                        c += size
+                    d_matrices.append(d_g)
+
+                # Projection matrix: P = M^-1 - M^-1 X (X^T M^-1 X + P_prior)^-1 X^T M^-1
+                proj = m_inv - m_inv @ x @ cov @ x.T @ m_inv
+                fisher_info = np.zeros((n_designs, n_designs))
+                for g in range(n_designs):
+                    for h in range(n_designs):
+                        val = 0.5 * np.sum((proj ** 2) * np.outer(d_matrices[h], d_matrices[g]))
+                        fisher_info[g, h] = val
+
+                cov_taus = np.linalg.pinv(fisher_info)
+                cov_correction = np.zeros_like(cov)
+
+                for g in range(n_designs):
+                    m_inv_dg_m_inv = (m_inv * d_matrices[g]) @ m_inv
+                    d_phi_g = cov @ (x.T @ m_inv_dg_m_inv @ x) @ cov
+                    for h in range(n_designs):
+                        m_inv_dh_m_inv = (m_inv * d_matrices[h]) @ m_inv
+                        d_phi_h = cov @ (x.T @ m_inv_dh_m_inv @ x) @ cov
+                        cov_correction += cov_taus[g, h] * (d_phi_g @ np.linalg.pinv(cov) @ d_phi_h)
+
+                cov = cov + cov_correction
+            except Exception as e:
+                warnings_list.append(f"Kenward-Roger covariance correction failed: {str(e)}")
+
+        # 8. Hartung-Knapp-Sidik-Jonkman adjustment
         n_contrasts = int(y.shape[0])
         n_studies = len(blocks)
         n_params = len(param_names)
@@ -274,7 +318,57 @@ class AdvancedBiasAdjustedNMAPooler:
             q_factor = max(1.0, q_stat / df)
             cov = cov * q_factor
 
-        # 8. Extract parameter estimates and standard errors
+        # 9. Quality-Weight Sensitivity Perturbation Analysis
+        weight_sensitivity_stds = {}
+        if self.down_weight and len(blocks) > 1:
+            perturbed_effects = {t: [] for t in parameter_treatments}
+            # Run 30 fast perturbations
+            for p_seed in range(30):
+                rng = np.random.default_rng(p_seed)
+                p_blocks = []
+                for b in blocks:
+                    noise = rng.uniform(-0.1, 0.1)
+                    new_w = float(np.clip(b.rob_weight * (1.0 + noise), 0.01, 1.0))
+                    new_v = b.v * (b.rob_weight / new_w)
+                    p_blocks.append(_StudyBlock(
+                        study_id=b.study_id,
+                        design=b.design,
+                        rob_weight=new_w,
+                        covariates=b.covariates,
+                        y=b.y,
+                        v=new_v,
+                        trt_plus=b.trt_plus,
+                        trt_minus=b.trt_minus
+                    ))
+                try:
+                    p_y, p_x, p_v = self._assemble_design(
+                        p_blocks, param_names, reference_treatment, reference_design, cov_names, self.study_specific_bias
+                    )
+                    p_m = p_v.copy()
+                    c_idx = 0
+                    for pb in p_blocks:
+                        sz = pb.y.shape[0]
+                        tau = taus_dict[pb.design]
+                        p_m[c_idx : c_idx + sz, c_idx : c_idx + sz] += np.eye(sz, dtype=float) * (tau * tau)
+                        c_idx += sz
+
+                    p_beta, _ = self._estimate_gls_with_shrinkage_coupled(
+                        p_y, p_x, p_m, param_names, p_blocks, bias_prior_sd,
+                        self.treatment_shrinkage_lambda, treatment_centralities,
+                        self.variance_type, self.bias_prior_mean
+                    )
+                    for idx, name in enumerate(param_names):
+                        if name.startswith("trt_") and "_x_" not in name:
+                            trt = name[4:]
+                            perturbed_effects[trt].append(float(p_beta[idx]))
+                except Exception:
+                    continue
+
+            for t in parameter_treatments:
+                if perturbed_effects[t]:
+                    weight_sensitivity_stds[t] = float(np.std(perturbed_effects[t]))
+
+        # 10. Extract parameter estimates and standard errors
         treatment_effects = {reference_treatment: 0.0}
         treatment_ses = {reference_treatment: 0.0}
         design_biases = {reference_design: 0.0}
@@ -326,6 +420,7 @@ class AdvancedBiasAdjustedNMAPooler:
             covariate_effects_ses=covariate_effects_ses,
             study_specific_biases=study_specific_biases,
             study_specific_biases_ses=study_specific_biases_ses,
+            weight_sensitivity_stds=weight_sensitivity_stds,
             warnings=tuple(warnings_list)
         )
 
@@ -351,7 +446,29 @@ class AdvancedBiasAdjustedNMAPooler:
             rob_weight = study.rob_weight if (study and self.down_weight) else 1.0
             covariates = study.covariates if study else {}
 
-            cc = self._study_continuity_correction(outcomes, arm_lookup, measure_type)
+            # Sweeting's Adaptive Continuity Correction for Rare/Zero events
+            has_zero = False
+            for outcome in outcomes:
+                arm = arm_lookup.get((outcome.study_id, outcome.arm_id))
+                if arm and outcome.measure_type == "binary":
+                    events = outcome.value
+                    non_events = float(arm.n) - outcome.value
+                    if events <= 0.0 or non_events <= 0.0:
+                        has_zero = True
+                        break
+
+            cc = {}
+            if has_zero and measure_type == "binary":
+                total_n = sum(arm_lookup[(o.study_id, o.arm_id)].n for o in outcomes if (o.study_id, o.arm_id) in arm_lookup)
+                for outcome in outcomes:
+                    arm = arm_lookup.get((outcome.study_id, outcome.arm_id))
+                    if arm:
+                        # Sweeting's correction proportional to arm size
+                        cc[arm.arm_id] = (float(arm.n) / max(total_n, 1.0)) * 1.0
+            else:
+                for outcome in outcomes:
+                    cc[outcome.arm_id] = 0.0
+
             arm_effects = []
             for outcome in outcomes:
                 if outcome.measure_type != measure_type:
@@ -365,7 +482,7 @@ class AdvancedBiasAdjustedNMAPooler:
                     value=outcome.value,
                     se=outcome.se,
                     measure_type=measure_type,
-                    cc=cc
+                    cc=cc.get(arm.arm_id, 0.0)
                 )
                 variance = variance / rob_weight
 
@@ -400,20 +517,6 @@ class AdvancedBiasAdjustedNMAPooler:
                 trt_minus=tuple(baseline["treatment_id"] for _ in nonbaseline)
             ))
         return blocks
-
-    @staticmethod
-    def _study_continuity_correction(outcomes: list[OutcomeADRecord], arm_lookup: dict, measure_type: str) -> float:
-        if measure_type != "binary":
-            return 0.0
-        for outcome in outcomes:
-            arm = arm_lookup.get((outcome.study_id, outcome.arm_id))
-            if not arm:
-                continue
-            events = outcome.value
-            non_events = float(arm.n) - outcome.value
-            if events <= 0.0 or non_events <= 0.0:
-                return 0.5
-        return 0.0
 
     @staticmethod
     def _arm_measure_and_variance(
@@ -680,14 +783,16 @@ class AdvancedBiasAdjustedNMAPooler:
         bias_prior_sd: float,
         treatment_shrinkage_lambda: float,
         treatment_centralities: dict[str, float],
-        variance_type: str
+        variance_type: str,
+        bias_prior_mean: float
     ) -> tuple[np.ndarray, np.ndarray]:
         m_inv = np.linalg.inv(m)
         xt_m_inv = x.T @ m_inv
         info = xt_m_inv @ x
 
-        # Prior precision matrix (P)
+        # Prior precision matrix (P) and prior mean vector (mu)
         p_matrix = np.zeros((x.shape[1], x.shape[1]), dtype=float)
+        mu_vector = np.zeros(x.shape[1], dtype=float)
         
         # Map study IDs to their quality weights
         study_rob = {b.study_id: b.rob_weight for b in blocks}
@@ -697,24 +802,25 @@ class AdvancedBiasAdjustedNMAPooler:
                 # Doi-Welton Hybrid coupling: precision inversely proportional to quality
                 s_id = name[11:]
                 rob = study_rob.get(s_id, 1.0)
-                # If rob = 1.0 (perfect), prior variance is 0 (extremely high precision)
-                # If rob = 0.0, prior variance is bias_prior_sd^2
                 prior_var = (bias_prior_sd * bias_prior_sd) * (1.0 - rob)
                 p_matrix[idx, idx] = 1.0 / (prior_var + 1e-6)
+                mu_vector[idx] = bias_prior_mean
             elif name.startswith("bias_") or "_x_" in name:
                 # Standard design bias / interaction term
                 p_matrix[idx, idx] = 1.0 / (bias_prior_sd * bias_prior_sd)
+                if name.startswith("bias_"):
+                    mu_vector[idx] = bias_prior_mean
             elif name.startswith("trt_") and "_x_" not in name:
                 # Topological Regularization: penalize sparse treatments
                 trt = name[4:]
                 centrality = treatment_centralities.get(trt, 1.0)
-                # If centrality is 1.0 (highly central), penalty is 0.0
-                # If centrality is small, penalty increases
                 p_matrix[idx, idx] = treatment_shrinkage_lambda * (1.0 - centrality)
 
         post_info = info + p_matrix
         cov_model = np.linalg.pinv(post_info)
-        beta = cov_model @ (xt_m_inv @ y)
+        
+        # Regularized GLS solver with non-zero prior means: beta = (X^T M^-1 X + P)^-1 (X^T M^-1 y + P mu)
+        beta = cov_model @ (xt_m_inv @ y + p_matrix @ mu_vector)
 
         if variance_type == "sandwich":
             meat = np.zeros_like(info)
