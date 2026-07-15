@@ -1,10 +1,14 @@
 from pathlib import Path
 
+import pytest
+
 from bias_nma_adv.real_meta import (
+    ArmEventRow,
     fixed_effect_log_or_reference,
     load_arm_event_rows,
     run_real_meta_benchmark,
 )
+from bias_nma_adv.data import ValidationError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +45,62 @@ def test_fixed_effect_reference_is_clinically_directional():
 
     assert reference.estimate < 0.0
     assert reference.ci_low < reference.estimate < reference.ci_high
+
+
+def test_real_meta_rows_fail_closed_on_within_study_identifier_mismatch():
+    rows = load_arm_event_rows(SGLT2_EVENTS)
+    bad_rows = []
+    for row in rows:
+        if row.study_id == "DAPA-HF" and row.arm_role == "control":
+            bad_rows.append(
+                ArmEventRow(
+                    study_id=row.study_id,
+                    trial=row.trial,
+                    nct_id="NCT03057977",
+                    pmid=row.pmid,
+                    outcome_id=row.outcome_id,
+                    outcome_label=row.outcome_label,
+                    arm_role=row.arm_role,
+                    treatment=row.treatment,
+                    events=row.events,
+                    n=row.n,
+                )
+            )
+        else:
+            bad_rows.append(row)
+
+    from bias_nma_adv.real_meta import _validate_study_pairs
+
+    with pytest.raises(ValidationError, match="mixed nct_id"):
+        _validate_study_pairs(bad_rows)
+
+
+def test_real_meta_rows_fail_closed_on_duplicate_treatments_in_contrast():
+    rows = load_arm_event_rows(SGLT2_EVENTS)
+    bad_rows = []
+    for row in rows:
+        if row.study_id == "DAPA-HF" and row.arm_role == "control":
+            bad_rows.append(
+                ArmEventRow(
+                    study_id=row.study_id,
+                    trial=row.trial,
+                    nct_id=row.nct_id,
+                    pmid=row.pmid,
+                    outcome_id=row.outcome_id,
+                    outcome_label=row.outcome_label,
+                    arm_role=row.arm_role,
+                    treatment="SGLT2i",
+                    events=row.events,
+                    n=row.n,
+                )
+            )
+        else:
+            bad_rows.append(row)
+
+    from bias_nma_adv.real_meta import _validate_study_pairs
+
+    with pytest.raises(ValidationError, match="distinct treatments"):
+        _validate_study_pairs(bad_rows)
 
 
 def test_real_meta_benchmark_runs_frequentist_and_bayesian_models():

@@ -105,9 +105,24 @@ def _validate_study_pairs(rows: list[ArmEventRow]) -> None:
         roles = [row.arm_role for row in study_rows]
         if roles.count("active") != 1 or roles.count("control") != 1:
             raise ValidationError(f"{study_id}: expected exactly one active and one control arm.")
+
+        _require_single_value(study_rows, "trial", study_id)
+        _require_single_value(study_rows, "nct_id", study_id)
+        _require_single_value(study_rows, "pmid", study_id)
+        _require_single_value(study_rows, "outcome_label", study_id)
+
         outcomes = {row.outcome_id for row in study_rows}
         if len(outcomes) != 1:
             raise ValidationError(f"{study_id}: mixed outcome IDs are not allowed in one contrast.")
+        treatments = {row.treatment for row in study_rows}
+        if len(treatments) != len(study_rows):
+            raise ValidationError(f"{study_id}: active and control arms must use distinct treatments.")
+
+
+def _require_single_value(rows: list[ArmEventRow], field_name: str, study_id: str) -> None:
+    values = {getattr(row, field_name) for row in rows}
+    if len(values) != 1:
+        raise ValidationError(f"{study_id}: mixed {field_name} values are not allowed in one contrast.")
 
 
 def build_dataset_from_arm_events(rows: list[ArmEventRow]) -> EvidenceDataset:
