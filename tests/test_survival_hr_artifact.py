@@ -8,7 +8,9 @@ from bias_nma_adv.survival_benchmark import (
     load_survival_hr_manifest,
     load_survival_hr_verification_report,
     validate_survival_hr_source_bundle,
+    validate_survival_hr_identity_bundle,
 )
+from bias_nma_adv.source_verification import load_source_verification_report
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,8 +23,10 @@ def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens()
 
     manifest_path = ROOT / artifact["source_manifest"]
     source_check_path = ROOT / artifact["source_verification_report"]
+    identity_check_path = ROOT / artifact["source_identity_report"]
     assert sha256_file(manifest_path) == artifact["source_manifest_sha256"]
     assert sha256_file(source_check_path) == artifact["source_verification_report_sha256"]
+    assert sha256_file(identity_check_path) == artifact["source_identity_report_sha256"]
     assert artifact["schema_version"] == "survival_hr_benchmark/v1"
     assert artifact["status"] == "local_pass"
     assert artifact["certification_effect"] == "none"
@@ -32,15 +36,20 @@ def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens()
 
     manifest = load_survival_hr_manifest(manifest_path)
     report = load_survival_hr_verification_report(source_check_path)
+    identity_report = load_source_verification_report(identity_check_path)
     source_bundle = validate_survival_hr_source_bundle(manifest, report)
+    identity_bundle = validate_survival_hr_identity_bundle(manifest, identity_report)
     assert source_bundle == artifact["source_bundle"]
+    assert identity_bundle == artifact["source_identity_bundle"]
 
     recomputed = run_survival_hr_benchmark(
         manifest_path,
         verification_report_path=source_check_path,
+        identity_report_path=identity_check_path,
     )
     assert recomputed["source_manifest_sha256"] == artifact["source_manifest_sha256"]
     assert recomputed["source_verification_report_sha256"] == artifact["source_verification_report_sha256"]
+    assert recomputed["source_identity_report_sha256"] == artifact["source_identity_report_sha256"]
     assert recomputed["model_config"] == artifact["model_config"]
 
     expected_effects = {effect.study_id: effect for effect in survival_hr_log_effects(manifest)}

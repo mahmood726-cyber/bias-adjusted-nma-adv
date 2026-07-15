@@ -20,6 +20,9 @@ from bias_nma_adv.data import ValidationError
 from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
 from bias_nma_adv.pairwise import PairwiseMetaResult, fit_pairwise_meta
 from bias_nma_adv.real_meta import sha256_file
+from bias_nma_adv.source_verification import SourceVerificationReport
+from bias_nma_adv.source_verification import load_source_verification_report
+from bias_nma_adv.source_verification import summarize_source_verification
 
 
 SURVIVAL_HR_MANIFEST_SCHEMA_VERSION = "survival_hr_manifest/v1"
@@ -488,6 +491,50 @@ def validate_survival_hr_source_bundle(
     }
 
 
+def validate_survival_hr_identity_bundle(
+    manifest: SurvivalHRManifest,
+    report: SourceVerificationReport,
+) -> dict[str, Any]:
+    """Validate that survival HR entries are tied to CT.gov and PubMed identities."""
+
+    if report.benchmark_id != manifest.benchmark_id:
+        raise ValidationError("survival HR identity benchmark_id does not match manifest.")
+    if manifest.manifest_sha256 is not None and report.source_manifest_sha256 != manifest.manifest_sha256:
+        raise ValidationError("survival HR identity source_manifest_sha256 does not match manifest file.")
+    if report.certification_effect != "none":
+        raise ValidationError("survival HR identity verification cannot certify model performance.")
+    if report.status != "verified":
+        raise ValidationError("survival HR identity verification must be verified before benchmarking.")
+
+    expected = {
+        (study.study_id, "clinicaltrials_gov", study.nct_id)
+        for study in manifest.studies
+    } | {
+        (study.study_id, "pubmed_abstract", study.pmid)
+        for study in manifest.studies
+    }
+    observed = {
+        (record.study_id, record.source_type, record.identifier)
+        for record in report.records
+    }
+    if observed != expected:
+        raise ValidationError("survival HR identity records do not match manifest studies.")
+
+    for record in report.records:
+        if record.source_type == "clinicaltrials_gov" and record.details.get("nct_id") != record.identifier:
+            raise ValidationError(f"{record.study_id}: CT.gov identity details do not match identifier.")
+        if record.source_type == "pubmed_abstract" and record.details.get("pmid") != record.identifier:
+            raise ValidationError(f"{record.study_id}: PubMed identity details do not match identifier.")
+
+    return {
+        "benchmark_id": manifest.benchmark_id,
+        "manifest_sha256": manifest.manifest_sha256,
+        "verification_status": report.status,
+        "certification_effect": report.certification_effect,
+        "source_counts": summarize_source_verification(report),
+    }
+
+
 def survival_hr_log_effects(manifest: SurvivalHRManifest) -> list[SurvivalHRLogEffect]:
     """Derive study-level log-HR effects from source-verified reported HR entries."""
 
@@ -498,12 +545,17 @@ def run_survival_hr_benchmark(
     manifest_path: str | Path,
     *,
     verification_report_path: str | Path,
+    identity_report_path: str | Path | None = None,
 ) -> dict[str, Any]:
     """Run deterministic pairwise pooling on source-verified reported survival HRs."""
 
     manifest = load_survival_hr_manifest(manifest_path)
     verification_report = load_survival_hr_verification_report(verification_report_path)
     source_bundle = validate_survival_hr_source_bundle(manifest, verification_report)
+    identity_bundle = None
+    if identity_report_path is not None:
+        identity_report = load_source_verification_report(identity_report_path)
+        identity_bundle = validate_survival_hr_identity_bundle(manifest, identity_report)
     effects = survival_hr_log_effects(manifest)
     estimates = np.asarray([effect.estimate for effect in effects], dtype=float)
     variances = np.asarray([effect.variance for effect in effects], dtype=float)
@@ -529,6 +581,9 @@ def run_survival_hr_benchmark(
         "source_verification_report": _path_as_posix(verification_report_path),
         "source_verification_report_sha256": sha256_file(verification_report_path),
         "source_bundle": source_bundle,
+        "source_identity_report": _path_as_posix(identity_report_path) if identity_report_path is not None else "",
+        "source_identity_report_sha256": sha256_file(identity_report_path) if identity_report_path is not None else "",
+        "source_identity_bundle": identity_bundle or {},
         "model_config": {
             "pairwise_fixed_effect_method": "FE",
             "pairwise_random_effect_method": "REML",

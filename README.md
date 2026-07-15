@@ -44,6 +44,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/preflight_multiarm_netmeta_adapter.py`: Regenerates the non-certifying `netmeta` multi-arm adapter preflight report.
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.
+- `scripts/verify_survival_sources.py`: Regenerates CT.gov/PubMed identity snapshots for survival reported-HR manifests.
 - `scripts/verify_pubmed_survival_hrs.py`: Regenerates PubMed abstract reported-HR token snapshots for survival benchmark manifests.
 - `scripts/write_multiarm_benchmark.py`: Writes the deterministic multi-arm GLS fixture replay artifact from the governed arm-level CSV.
 - `scripts/write_survival_hr_benchmark.py`: Writes the deterministic reported-HR pairwise benchmark artifact from a verified survival source snapshot.

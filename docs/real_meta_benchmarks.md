@@ -27,7 +27,9 @@ PubMed abstract event-count snapshot: `validation/source_checks/sglt2_hf_primary
 
 Reported survival HR manifest: `validation/survival/sglt2_hf_reported_hrs.toml`
 
-Reported survival HR snapshot: `validation/source_checks/sglt2_hf_reported_hr_tokens.json`
+Reported survival HR source-identity snapshot: `validation/source_checks/sglt2_hf_reported_hr_source_check.json`
+
+Reported survival HR token snapshot: `validation/source_checks/sglt2_hf_reported_hr_tokens.json`
 
 Reported survival HR benchmark: `validation/survival/sglt2_hf_reported_hr_benchmark.toml`
 
@@ -99,7 +101,8 @@ Limitations:
 | Source identity snapshot | Dynamic public API check | `scripts/verify_real_meta_sources.py` against ClinicalTrials.gov API and PubMed EFetch | Verifies identity and reachability only, not event-count extraction |
 | Event-count snapshot | Dynamic public API check | `scripts/verify_pubmed_event_counts.py` against PubMed EFetch abstracts | Verifies exact `events of n` tokens and nearby active/control terms in abstracts, not full paper extraction |
 | Reported HR snapshot | Dynamic public API check | `scripts/verify_pubmed_survival_hrs.py` against PubMed EFetch abstracts | Verifies HR/CI tokens near the hazard-ratio anchor and treatment terms, not KM digitization |
-| Reported HR benchmark | Dynamic computation | `scripts/write_survival_hr_benchmark.py` plus `bias_nma_adv.survival_benchmark` | Recomputes log-HR study effects and pairwise pooling from the verified reported-HR source snapshot |
+| Reported HR source identity | Dynamic public API check | `scripts/verify_survival_sources.py` and `validation/source_checks/sglt2_hf_reported_hr_source_check.json` | Verifies CT.gov NCT IDs and PubMed PMIDs before reported HR tokens are benchmarked |
+| Reported HR benchmark | Dynamic computation | `scripts/write_survival_hr_benchmark.py` plus `bias_nma_adv.survival_benchmark` | Recomputes log-HR study effects and pairwise pooling from verified identity and reported-HR source snapshots |
 | Source-check certification effect | Static contract | `certification_effect = "none"` in source-check artifacts | Source-token verification cannot certify model performance or tier-one parity |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
 | Pairwise bridge result | Dynamic computation | `bias_nma_adv.pairwise.fit_pairwise_meta` | Recomputed by tests from source-backed study-level effects |

@@ -15,6 +15,7 @@ from bias_nma_adv.survival_benchmark import run_survival_hr_benchmark
 
 DEFAULT_MANIFEST = Path("validation/survival/sglt2_hf_reported_hrs.toml")
 DEFAULT_SOURCE_CHECK = Path("validation/source_checks/sglt2_hf_reported_hr_tokens.json")
+DEFAULT_IDENTITY_CHECK = Path("validation/source_checks/sglt2_hf_reported_hr_source_check.json")
 DEFAULT_OUTPUT = Path("validation/survival/sglt2_hf_reported_hr_benchmark.toml")
 
 
@@ -25,6 +26,10 @@ def format_toml_value(value: Any) -> str:
         return repr(value)
     if isinstance(value, list):
         return "[" + ", ".join(format_toml_value(item) for item in value) + "]"
+    if isinstance(value, dict):
+        return "{" + ", ".join(
+            f"{key} = {format_toml_value(item)}" for key, item in sorted(value.items())
+        ) + "}"
     return '"' + str(value).replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
@@ -49,6 +54,8 @@ def artifact_to_toml(artifact: dict[str, Any]) -> str:
         "source_manifest_sha256",
         "source_verification_report",
         "source_verification_report_sha256",
+        "source_identity_report",
+        "source_identity_report_sha256",
         "n_studies",
         "limitations",
     ]
@@ -56,6 +63,7 @@ def artifact_to_toml(artifact: dict[str, Any]) -> str:
         lines.append(f"{key} = {format_toml_value(artifact[key])}")
 
     append_table(lines, "source_bundle", artifact["source_bundle"])
+    append_table(lines, "source_identity_bundle", artifact["source_identity_bundle"])
     append_table(lines, "model_config", artifact["model_config"])
 
     for effect in artifact["study_effects"]:
@@ -75,12 +83,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--source-check", type=Path, default=DEFAULT_SOURCE_CHECK)
+    parser.add_argument("--identity-check", type=Path, default=DEFAULT_IDENTITY_CHECK)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
 
     artifact = run_survival_hr_benchmark(
         args.manifest,
         verification_report_path=args.source_check,
+        identity_report_path=args.identity_check,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(artifact_to_toml(artifact), encoding="utf-8", newline="\n")

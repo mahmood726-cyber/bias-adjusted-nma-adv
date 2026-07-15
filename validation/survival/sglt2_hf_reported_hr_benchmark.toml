@@ -9,6 +9,8 @@ source_manifest = "validation/survival/sglt2_hf_reported_hrs.toml"
 source_manifest_sha256 = "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1ff06"
 source_verification_report = "validation/source_checks/sglt2_hf_reported_hr_tokens.json"
 source_verification_report_sha256 = "e7c09ba32d17fabd7d7511ccdfe9303f8f6af812caf49a65e8ba917d40ff9280"
+source_identity_report = "validation/source_checks/sglt2_hf_reported_hr_source_check.json"
+source_identity_report_sha256 = "5da15dc05d0177483347f12e62bcd710cdf3e1eb587c2f597139aa807c3e5e5e"
 n_studies = 4
 limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
 
@@ -18,6 +20,13 @@ manifest_sha256 = "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1f
 verification_status = "verified"
 certification_effect = "none"
 n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "sglt2_hf_reported_hr"
+manifest_sha256 = "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1ff06"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
 
 [model_config]
 pairwise_fixed_effect_method = "FE"

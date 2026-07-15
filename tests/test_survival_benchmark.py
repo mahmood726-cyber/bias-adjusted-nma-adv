@@ -10,14 +10,22 @@ from bias_nma_adv.survival_benchmark import (
     SurvivalHRVerificationReport,
     load_survival_hr_manifest,
     load_survival_hr_verification_report,
+    validate_survival_hr_identity_bundle,
     validate_survival_hr_source_bundle,
+)
+from bias_nma_adv.source_verification import (
+    SourceVerificationReport,
+    load_source_verification_report,
+    summarize_source_verification,
 )
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "validation" / "survival" / "sglt2_hf_reported_hrs.toml"
 REPORT = ROOT / "validation" / "source_checks" / "sglt2_hf_reported_hr_tokens.json"
+IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "sglt2_hf_reported_hr_source_check.json"
 VERIFY_SCRIPT = ROOT / "scripts" / "verify_pubmed_survival_hrs.py"
+IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
 
 
 def test_survival_hr_manifest_is_source_bounded_and_pubmed_only():
@@ -128,6 +136,51 @@ def test_survival_hr_verification_snapshot_matches_manifest():
         assert record.verified is True
 
 
+def test_survival_hr_identity_snapshot_matches_manifest():
+    manifest = load_survival_hr_manifest(MANIFEST)
+    report = load_source_verification_report(IDENTITY_REPORT)
+
+    assert report.status == "verified"
+    assert report.certification_effect == "none"
+    assert report.benchmark_id == manifest.benchmark_id
+    assert report.source_manifest == "validation/survival/sglt2_hf_reported_hrs.toml"
+    assert report.source_manifest_sha256 == sha256_file(MANIFEST)
+    assert summarize_source_verification(report) == {
+        "clinicaltrials_gov": 4,
+        "pubmed_abstract": 4,
+    }
+    assert IDENTITY_VERIFY_SCRIPT.is_file()
+
+    expected = {
+        (study.study_id, "clinicaltrials_gov", study.nct_id)
+        for study in manifest.studies
+    } | {
+        (study.study_id, "pubmed_abstract", study.pmid)
+        for study in manifest.studies
+    }
+    observed = {
+        (record.study_id, record.source_type, record.identifier)
+        for record in report.records
+    }
+    assert observed == expected
+
+    for record in report.records:
+        assert record.http_status == 200
+        assert record.identity_verified is True
+        assert record.evidence_scope == "identity_and_reachability"
+        assert len(record.response_sha256) == 64
+        if record.source_type == "clinicaltrials_gov":
+            assert record.details["nct_id"] == record.identifier
+            assert record.details["overall_status"] == "COMPLETED"
+        if record.source_type == "pubmed_abstract":
+            assert record.details["pmid"] == record.identifier
+            assert record.details["abstract_present"] is True
+            assert len(record.details["abstract_sha256"]) == 64
+
+    bundle = validate_survival_hr_identity_bundle(manifest, report)
+    assert bundle["source_counts"] == {"clinicaltrials_gov": 4, "pubmed_abstract": 4}
+
+
 def test_survival_hr_report_rejects_unverified_record_marked_verified():
     raw = copy.deepcopy(load_survival_hr_verification_report(REPORT).__dict__)
     raw["schema_version"] = "survival_hr_verification/v1"
@@ -178,3 +231,15 @@ def test_survival_hr_source_bundle_rejects_manifest_hash_drift():
 
     with pytest.raises(ValidationError, match="manifest_sha256"):
         validate_survival_hr_source_bundle(manifest, report)
+
+
+def test_survival_hr_identity_bundle_rejects_record_drift():
+    manifest = load_survival_hr_manifest(MANIFEST)
+    raw = copy.deepcopy(load_source_verification_report(IDENTITY_REPORT).__dict__)
+    raw["schema_version"] = "source_verification/v1"
+    raw["records"] = [copy.deepcopy(record.__dict__) for record in raw["records"]]
+    raw["records"][0]["identifier"] = "NCT00000000"
+    report = SourceVerificationReport.from_mapping(raw)
+
+    with pytest.raises(ValidationError, match="identity records do not match"):
+        validate_survival_hr_identity_bundle(manifest, report)
