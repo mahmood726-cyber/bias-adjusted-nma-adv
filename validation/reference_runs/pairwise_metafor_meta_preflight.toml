@@ -1,0 +1,28 @@
+schema_version = "reference_run/v1"
+target_id = "pairwise_metafor_meta"
+adapter_id = "r_metafor_meta_pairwise_preflight"
+reference_method = "metafor and meta"
+status = "unavailable"
+certification_effect = "none"
+checked_at = "2026-07-15T00:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/pairwise_metafor_meta.R", "--events", "validation/real_meta/sglt2_hf_primary_events.csv", "--output", "validation/reference_runs/pairwise_metafor_meta_output.json"]
+executable = "Rscript"
+executable_found = false
+package_versions = {}
+input_artifacts = [
+  "validation/real_meta/sglt2_hf_primary_events.csv",
+  "validation/real_meta/sglt2_hf_primary_sources.toml",
+  "validation/real_meta/sglt2_hf_primary_benchmark.toml",
+  "external/r/pairwise_metafor_meta.R",
+]
+output_artifacts = []
+tolerance = ""
+skip_reason = "Rscript is not available on PATH in this environment; no metafor/meta parity was run."
+
+[input_sha256]
+"validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
+"validation/real_meta/sglt2_hf_primary_sources.toml" = "f94dbbf54637a1d7afb26acd39f888cf7ae145273b9c353f2da38f3d5c728bf3"
+"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "1b70bdf21afa752ad2805bd7e34330ea7fed8bfa506b23da41204cc74ecfb456"
+"external/r/pairwise_metafor_meta.R" = "2b35b074cd30acc80dede4337fcf37b16cf98e0dc80520e3b082763e96fea156"
+
+[output_sha256]

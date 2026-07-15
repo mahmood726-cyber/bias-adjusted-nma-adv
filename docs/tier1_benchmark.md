@@ -50,6 +50,10 @@ Failure modes that must remain explicit:
 
 The executable reference-target registry is `validation/reference_targets.toml`. It is intentionally conservative: every target starts as `planned`, and certification tests fail closed if a module is promoted without evidence artifacts. Real-world validation data must come from ClinicalTrials.gov records, PubMed abstracts, or open-access papers only.
 
+External reference adapters must also emit machine-readable run reports under `validation/reference_runs/`. A skipped or unavailable adapter is recorded as `certification_effect = "none"` and cannot count as reference-matching evidence. A report becomes a certification candidate only when it has `status = "passed"`, package versions, input and output artifact hashes, and a prespecified tolerance.
+
+Current adapter preflight: `validation/reference_runs/pairwise_metafor_meta_preflight.toml` records that the planned `metafor`/`meta` pairwise adapter could not run because `Rscript` was not available on PATH in this environment. That is an honest skip, not a parity claim.
+
 ### Phase 1: Match Tier One
 
 For each module, reproduce the established implementation before claiming improvement.
@@ -115,6 +119,7 @@ Winners should be reported separately for statistical accuracy, uncertainty cali
 | Package versions | Dynamic | CRAN or package site metadata checked on 2026-07-15 | May drift and must be refreshed before release claims |
 | Platform capability status | Static repository review | Current repository files and tests checked on 2026-07-15 | Current implementation is not certified as tier-one parity |
 | Benchmark thresholds | Static specification | This document and `docs/technical_specification.md` | Must be implemented as machine-readable validation criteria before certification |
+| Reference-run preflight | Dynamic local environment check | `validation/reference_runs/*.toml` | Unavailable or failed adapters are recorded but cannot certify a module |
 | Statistical results | Dynamic | Future benchmark artefacts | No superiority claim is made here without generated benchmark outputs |
 
 ## References

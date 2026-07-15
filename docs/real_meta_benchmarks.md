@@ -47,6 +47,10 @@ Current tests:
 
 Current local benchmark contract: `validation/real_meta/sglt2_hf_primary_benchmark.toml`.
 
+External reference preflight: `validation/reference_runs/pairwise_metafor_meta_preflight.toml`.
+
+The external `metafor`/`meta` parity adapter is planned at `external/r/pairwise_metafor_meta.R`, but the current preflight is `unavailable` because `Rscript` is not available on PATH in this environment. This benchmark therefore remains a local source-backed validation artifact, not a reference-matched artifact.
+
 | Engine | Estimate | SE / posterior SD | 95% interval |
 | --- | ---: | ---: | ---: |
 | Independent fixed-effect logOR | -0.268984 | 0.036297 | -0.340125 to -0.197843 |
@@ -61,7 +65,7 @@ Limitations:
 - the current benchmark uses first-event binary counts, not time-to-event hazard ratios;
 - the REML heterogeneity estimate is zero on this four-study fixture, so this is not evidence of random-effects superiority;
 - PubMed/CT.gov source IDs are recorded, but full extraction provenance should later include machine-captured source snippets or checksums;
-- this benchmark does not compare against `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` yet.
+- this benchmark does not yet have a passed external `metafor`, `meta`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference run.
 
 ## Static-Vs-Dynamic Hardcode Disclosure
 
@@ -71,6 +75,7 @@ Limitations:
 | Source manifest | Static fixture | PubMed abstract URLs and ClinicalTrials.gov record URLs | Machine-checked for identifier, outcome, source-type, and arm-count consistency |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
 | Pairwise bridge result | Dynamic computation | `bias_nma_adv.pairwise.fit_pairwise_meta` | Recomputed by tests from source-backed study-level effects |
+| External pairwise reference run | Dynamic local environment preflight | `validation/reference_runs/pairwise_metafor_meta_preflight.toml` | Recorded as unavailable and has `certification_effect = "none"` |
 | Candidate frequentist result | Dynamic computation | `AdvancedBiasAdjustedNMAPooler` | Recomputed by tests from the CSV rows |
 | Candidate Bayesian result | Dynamic seeded computation | `BayesianNMAMCMCSampler` with seed 20260715 | Recomputed by tests with tolerance for sampler behavior |
 | Certification status | Static contract | `sglt2_hf_primary_benchmark.toml` | `certification_effect = "none"` until external reference matching exists |
