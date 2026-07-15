@@ -480,6 +480,23 @@
         <div class="math-block">\Sigma_{\text{adjusted}} = q \cdot \Sigma_0</div>
         <p>Confidence intervals are computed using the Student-t distribution with $df = n_{\text{studies}} - p$ degrees of freedom instead of normal approximations.</p>
       </div>
+
+      <div class="card" style="margin-top: 1.5rem;">
+        <h2>4. Continuous vs Binary Outcome Agnosticism</h2>
+        <p>Our estimator processes both data types by mapping them to contrast vectors and blocked covariance matrices:</p>
+        <ul>
+          <li><strong>Binary:</strong> Estimates log-odds ratios using empirical cell counts: $y_{ik} = \ln(\text{odds}_k) - \ln(\text{odds}_i)$ with corresponding variance blocks $V_i$.</li>
+          <li><strong>Continuous:</strong> Directly accepts mean differences $y_{ik} = \mu_k - \mu_i$ and propagates standard error squares $V_i = \text{SE}_k^2 + \text{SE}_i^2$.</li>
+        </ul>
+        <p>Once contrast vectors and covariance blocks are computed, the downstream GLS fitting engine behaves identically, preserving mathematical properties across both endpoints.</p>
+      </div>
+
+      <div class="card" style="margin-top: 1.5rem;">
+        <h2>5. RCT-Only Adjustments (ClinicalTrials.gov)</h2>
+        <p>When pooling exclusively RCT evidence (e.g. from ClinicalTrials.gov), design stratification (RCT vs NRS) is irrelevant. However, study-specific biases still manifest due to individual trial risk-of-bias. We formulate a study-specific coupled bias prior:</p>
+        <div class="math-block">\sigma^2_{\text{bias}, s} = \sigma^2_{\text{bias\_base}} \cdot (1 - w_s)</div>
+        <p>Where $w_s \in (0, 1]$ represents the trial quality score. Low-risk/perfect RCTs ($w_s = 1.0$) force the study bias to 0, while high-risk/flawed RCTs ($w_s < 1.0$) allow the estimator to fit and subtract a study-specific bias term, adjusting the pooled treatment contrast toward the true unconfounded effect.</p>
+      </div>
     </div>
 
     <footer class="footer">
@@ -585,6 +602,27 @@
           "rmse": 0.1808,
           "coverage": 0.8000,
           "mean_se": 0.1225
+        },
+        "stratified_re_nma": {
+          "bias": 0.1076,
+          "mse": 0.0306,
+          "rmse": 0.1749,
+          "coverage": 0.8700,
+          "mean_se": 0.1350
+        },
+        "topological_regularization": {
+          "bias": 0.1356,
+          "mse": 0.0379,
+          "rmse": 0.1946,
+          "coverage": 0.8750,
+          "mean_se": 0.1482
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.0958,
+          "mse": 0.0285,
+          "rmse": 0.1688,
+          "coverage": 0.9250,
+          "mean_se": 0.1664
         }
       }
     };
@@ -643,7 +681,10 @@
       "hksj_weighted_bias_adj": "HKSJ + Downweighted Bias-Adj",
       "full_advanced_bias_adj": "Full Advanced Bias-Adjusted NMA",
       "sandwich_bias_adj": "Sandwich Bias-Adjusted NMA",
-      "sandwich_weighted_bias_adj": "Sandwich + Downweighted Bias-Adj"
+      "sandwich_weighted_bias_adj": "Sandwich + Downweighted Bias-Adj",
+      "stratified_re_nma": "Stratified RE Heterogeneity NMA",
+      "topological_regularization": "Topologically Regularized NMA",
+      "study_specific_bias_coupled": "Doi-Welton Coupled Study-Specific Bias"
     };
 
     Object.entries(config.methods_summary).forEach(([mName, metrics]) => {
@@ -665,12 +706,15 @@
     // Draw SVG Chart
     const svg = document.getElementById('coverageChart');
     const chartData = Object.entries(config.methods_summary).map(([name, m]) => ({
-      name: name === 'full_advanced_bias_adj' ? 'Full Advanced' :
-            name === 'hksj_weighted_bias_adj' ? 'HKSJ+Weight' :
+      name: name === 'full_advanced_bias_adj' ? 'Full Adv' :
+            name === 'hksj_weighted_bias_adj' ? 'HKSJ+Wt' :
             name === 'hksj_bias_adj' ? 'HKSJ' :
             name === 'standard_bias_adj' ? 'Std Bias' :
-            name === 'sandwich_bias_adj' ? 'Sandwich' :
-            name === 'sandwich_weighted_bias_adj' ? 'Sand+Weight' : 'Naive',
+            name === 'sandwich_bias_adj' ? 'Sand' :
+            name === 'sandwich_weighted_bias_adj' ? 'Sand+Wt' :
+            name === 'stratified_re_nma' ? 'Strat RE' :
+            name === 'topological_regularization' ? 'Topo Reg' :
+            name === 'study_specific_bias_coupled' ? 'Coupled' : 'Naive',
       val: m.coverage,
       color: m.coverage >= 0.95 ? 'var(--success-color)' :
              m.coverage >= 0.85 ? 'var(--warning-color)' : 'var(--danger-color)'
@@ -691,7 +735,7 @@
     });
 
     // Draw Bars
-    const barWidth = 20;
+    const barWidth = 14;
     const barGap = (width - barWidth * chartData.length) / (chartData.length + 1);
 
     chartData.forEach((d, idx) => {

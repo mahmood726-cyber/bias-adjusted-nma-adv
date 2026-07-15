@@ -15,7 +15,7 @@ def main():
     n_treatments = 4
     
     print(f"Parameters:\n - Iterations: {n_iterations}\n - Studies per dataset: {n_studies}\n - Treatments: {n_treatments}")
-    print("Running simulation (this fits 1,000 NMA models)...")
+    print("Running simulation (this fits 2,000 NMA models)...")
     
     results = run_benchmark_simulation(
         n_iterations=n_iterations,

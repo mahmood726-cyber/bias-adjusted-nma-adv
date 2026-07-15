@@ -129,7 +129,10 @@ def run_benchmark_simulation(
       "hksj_weighted_bias_adj": [],
       "full_advanced_bias_adj": [],
       "sandwich_bias_adj": [],
-      "sandwich_weighted_bias_adj": []
+      "sandwich_weighted_bias_adj": [],
+      "stratified_re_nma": [],
+      "topological_regularization": [],
+      "study_specific_bias_coupled": []
     }
 
     iterations_run = 0
@@ -244,6 +247,63 @@ def run_benchmark_simulation(
             methods["hksj_weighted_bias_adj"].pop()
             methods["full_advanced_bias_adj"].pop()
             methods["sandwich_bias_adj"].pop()
+            continue
+
+        # 8. Stratified RE NMA (stratified REML heterogeneity + design bias adjustment + HKSJ, no downweighting)
+        pooler_strat = AdvancedBiasAdjustedNMAPooler(random_effects="stratified", hksj=True, down_weight=False)
+        try:
+            fit_strat = pooler_strat.fit(
+                dataset, "O1", reference_treatment=ref_trt, reference_design="rct", covariates=[]
+            )
+            est, se, cil, ciu = fit_strat.contrast(target_trt, ref_trt)
+            methods["stratified_re_nma"].append((est, se, cil, ciu))
+        except ValidationError:
+            methods["standard_nma"].pop()
+            methods["standard_bias_adj"].pop()
+            methods["hksj_bias_adj"].pop()
+            methods["hksj_weighted_bias_adj"].pop()
+            methods["full_advanced_bias_adj"].pop()
+            methods["sandwich_bias_adj"].pop()
+            methods["sandwich_weighted_bias_adj"].pop()
+            continue
+
+        # 9. Topological Regularization NMA (treatment shrinkage based on centrality + HKSJ)
+        pooler_topo = AdvancedBiasAdjustedNMAPooler(treatment_shrinkage_lambda=0.5, hksj=True, down_weight=False)
+        try:
+            fit_topo = pooler_topo.fit(
+                dataset, "O1", reference_treatment=ref_trt, reference_design="rct", covariates=[]
+            )
+            est, se, cil, ciu = fit_topo.contrast(target_trt, ref_trt)
+            methods["topological_regularization"].append((est, se, cil, ciu))
+        except ValidationError:
+            methods["standard_nma"].pop()
+            methods["standard_bias_adj"].pop()
+            methods["hksj_bias_adj"].pop()
+            methods["hksj_weighted_bias_adj"].pop()
+            methods["full_advanced_bias_adj"].pop()
+            methods["sandwich_bias_adj"].pop()
+            methods["sandwich_weighted_bias_adj"].pop()
+            methods["stratified_re_nma"].pop()
+            continue
+
+        # 10. Study-Specific Bias Coupled (Doi-Welton Hybrid study-specific bias with quality shrinkage coupling + HKSJ)
+        pooler_coupled = AdvancedBiasAdjustedNMAPooler(study_specific_bias=True, hksj=True, down_weight=True)
+        try:
+            fit_coupled = pooler_coupled.fit(
+                dataset, "O1", reference_treatment=ref_trt, reference_design="rct", covariates=[]
+            )
+            est, se, cil, ciu = fit_coupled.contrast(target_trt, ref_trt, design="rct")
+            methods["study_specific_bias_coupled"].append((est, se, cil, ciu))
+        except ValidationError:
+            methods["standard_nma"].pop()
+            methods["standard_bias_adj"].pop()
+            methods["hksj_bias_adj"].pop()
+            methods["hksj_weighted_bias_adj"].pop()
+            methods["full_advanced_bias_adj"].pop()
+            methods["sandwich_bias_adj"].pop()
+            methods["sandwich_weighted_bias_adj"].pop()
+            methods["stratified_re_nma"].pop()
+            methods["topological_regularization"].pop()
             continue
 
         iterations_run += 1

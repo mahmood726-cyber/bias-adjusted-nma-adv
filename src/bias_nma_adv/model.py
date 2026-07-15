@@ -1,4 +1,4 @@
-"""Advanced Bias-Adjusted NMA pooling with Meta-Regression, HKSJ, and Scoped Down-Weighting."""
+"""Advanced Bias-Adjusted NMA pooling with Stratified Heterogeneity, Topological Regularization, and Doi-Welton Hybrid Coupling."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import math
 from dataclasses import dataclass, field
 import numpy as np
 import scipy.stats
-from scipy.optimize import minimize_scalar
+from scipy.optimize import minimize, minimize_scalar
 
 from bias_nma_adv.data import EvidenceDataset, ValidationError, StudyRecord, OutcomeADRecord, ArmRecord
 
@@ -19,7 +19,7 @@ class AdvancedNMAFitResult:
     parameter_names: tuple[str, ...]
     parameter_estimates: np.ndarray
     parameter_cov: np.ndarray
-    tau: float
+    taus: dict[str, float]  # Design stratum to heterogeneity tau
     df: int
     hksj: bool
     q_factor: float
@@ -31,6 +31,8 @@ class AdvancedNMAFitResult:
     design_biases_ses: dict[str, float]
     covariate_effects: dict[str, float]
     covariate_effects_ses: dict[str, float]
+    study_specific_biases: dict[str, float]
+    study_specific_biases_ses: dict[str, float]
     warnings: tuple[str, ...]
 
     def contrast(
@@ -40,6 +42,7 @@ class AdvancedNMAFitResult:
         *,
         design: str | None = None,
         covariates: dict[str, float] | None = None,
+        study_id: str | None = None,
         alpha: float = 0.05
     ) -> tuple[float, float, float, float]:
         """Calculate the estimated difference between treatment_a and treatment_b.
@@ -50,7 +53,7 @@ class AdvancedNMAFitResult:
         design_name = design or self.reference_design
 
         # Construct coefficient vector for contrast
-        coeff = self._contrast_coeff(treatment_a, treatment_b, design_name, cov_dict)
+        coeff = self._contrast_coeff(treatment_a, treatment_b, design_name, cov_dict, study_id)
         effect = float(coeff @ self.parameter_estimates)
         variance = float(coeff @ self.parameter_cov @ coeff)
         se = math.sqrt(max(variance, 0.0))
@@ -72,7 +75,8 @@ class AdvancedNMAFitResult:
         treatment_a: str,
         treatment_b: str,
         design: str,
-        covariates: dict[str, float]
+        covariates: dict[str, float],
+        study_id: str | None
     ) -> np.ndarray:
         coeff = np.zeros(len(self.parameter_names), dtype=float)
 
@@ -80,8 +84,11 @@ class AdvancedNMAFitResult:
         self._set_param_coeff(coeff, f"trt_{treatment_a}", 1.0)
         self._set_param_coeff(coeff, f"trt_{treatment_b}", -1.0)
 
-        # 2. Design bias main effects
-        if design != self.reference_design:
+        # 2. Study-specific bias
+        if study_id is not None:
+            self._set_param_coeff(coeff, f"bias_study_{study_id}", 1.0)
+        elif design != self.reference_design:
+            # Fallback to design bias
             self._set_param_coeff(coeff, f"bias_{design}", 1.0)
 
         # 3. Covariate interactions
@@ -90,8 +97,8 @@ class AdvancedNMAFitResult:
             self._set_param_coeff(coeff, f"trt_{treatment_a}_x_{cov_name}", val)
             self._set_param_coeff(coeff, f"trt_{treatment_b}_x_{cov_name}", -val)
 
-            # Design-by-covariate interaction
-            if design != self.reference_design:
+            # Design-by-covariate interaction (only relevant if not study-specific)
+            if study_id is None and design != self.reference_design:
                 self._set_param_coeff(coeff, f"bias_{design}_x_{cov_name}", val)
 
         return coeff
@@ -115,17 +122,31 @@ class _StudyBlock:
 
 
 class AdvancedBiasAdjustedNMAPooler:
-    """Frequentist advanced bias-adjusted NMA with meta-regression, HKSJ, and scoped down-weighting."""
+    """Frequentist advanced bias-adjusted NMA pooling engine."""
 
-    def __init__(self, hksj: bool = True, hksj_df: str = "studies", down_weight: bool = True, variance_type: str = "model"):
+    def __init__(
+        self,
+        hksj: bool = True,
+        hksj_df: str = "studies",
+        down_weight: bool = True,
+        variance_type: str = "model",
+        random_effects: str | bool = True,  # True, False, or "stratified"
+        treatment_shrinkage_lambda: float = 0.0,
+        study_specific_bias: bool = False
+    ):
         if hksj_df not in {"studies", "contrasts"}:
             raise ValueError("hksj_df must be 'studies' or 'contrasts'.")
         if variance_type not in {"model", "sandwich"}:
             raise ValueError("variance_type must be 'model' or 'sandwich'.")
+        if random_effects not in {True, False, "stratified"}:
+            raise ValueError("random_effects must be True, False, or 'stratified'.")
         self.hksj = hksj
         self.hksj_df = hksj_df
         self.down_weight = down_weight
         self.variance_type = variance_type
+        self.random_effects = random_effects
+        self.treatment_shrinkage_lambda = treatment_shrinkage_lambda
+        self.study_specific_bias = study_specific_bias
 
     def fit(
         self,
@@ -133,7 +154,6 @@ class AdvancedBiasAdjustedNMAPooler:
         outcome_id: str,
         reference_treatment: str,
         reference_design: str = "rct",
-        random_effects: bool = True,
         bias_prior_sd: float = 1.0,
         covariates: list[str] | None = None
     ) -> AdvancedNMAFitResult:
@@ -156,37 +176,81 @@ class AdvancedBiasAdjustedNMAPooler:
             t for t in sorted(all_treatments) if t != reference_treatment
         )
 
-        # 3. Non-reference designs
+        # Compute degree centralities for topological regularization
+        treatment_degrees = {t: 0 for t in all_treatments}
+        for block in blocks:
+            study_trts = set(block.trt_plus) | set(block.trt_minus)
+            for t in study_trts:
+                treatment_degrees[t] += 1
+        max_deg = max(treatment_degrees.values()) if treatment_degrees else 1
+        treatment_centralities = {t: deg / max_deg for t, deg in treatment_degrees.items()}
+
+        # 3. Non-reference designs & studies for bias adjustment
         all_designs = {b.design for b in blocks}
         parameter_designs = tuple(
             d for d in sorted(all_designs) if d != reference_design
         )
 
+        nrs_studies = tuple(
+            b.study_id for b in blocks if b.design != reference_design
+        )
+
         # 4. Construct parameter mapping and design matrix
         param_names = self._build_parameter_names(
-            parameter_treatments, parameter_designs, cov_names
+            parameter_treatments,
+            parameter_designs,
+            cov_names,
+            self.study_specific_bias,
+            nrs_studies
         )
         y, x, v = self._assemble_design(
-            blocks, param_names, reference_treatment, reference_design, cov_names
+            blocks,
+            param_names,
+            reference_treatment,
+            reference_design,
+            cov_names,
+            self.study_specific_bias
         )
 
         warnings_list: list[str] = []
-        if np.linalg.matrix_rank(x) < x.shape[1]:
+        
+        # Checking rank of X (with a fallback regularization standard)
+        if np.linalg.matrix_rank(x) < x.shape[1] and not (self.treatment_shrinkage_lambda > 0.0 or self.study_specific_bias):
             raise ValidationError(
                 f"Design matrix for outcome '{outcome_id}' is rank-deficient; "
-                "parameters are not jointly identifiable. Simplify covariates or designs."
+                "parameters are not jointly identifiable. Simplify covariates or enable shrinkage."
             )
 
-        # 5. REML heterogeneity optimization
-        tau = 0.0
-        if random_effects and y.shape[0] > x.shape[1]:
-            tau = self._optimize_tau_reml(y, x, v)
-        elif random_effects:
+        # 5. Stratified or Single REML heterogeneity optimization
+        unique_designs = sorted(list(all_designs))
+        design_to_idx = {d: idx for idx, d in enumerate(unique_designs)}
+        taus_dict = {d: 0.0 for d in unique_designs}
+
+        if self.random_effects == "stratified" and y.shape[0] > x.shape[1]:
+            taus_vec = self._optimize_tau_reml_stratified(y, x, v, blocks, design_to_idx)
+            for d, idx in design_to_idx.items():
+                taus_dict[d] = float(taus_vec[idx])
+        elif self.random_effects is True and y.shape[0] > x.shape[1]:
+            tau_val = self._optimize_tau_reml(y, x, v)
+            for d in unique_designs:
+                taus_dict[d] = tau_val
+        elif self.random_effects:
             warnings_list.append("Insufficient degrees of freedom for random effects; tau fixed at 0.0.")
 
-        # 6. Fit GLS with Shrinkage Prior
-        beta, cov = self._estimate_gls_with_shrinkage(
-            y, x, v, tau, param_names, bias_prior_sd, blocks, self.variance_type
+        # Build block-wise random-effects covariance matrix M
+        m = v.copy()
+        cursor = 0
+        for block in blocks:
+            size = block.y.shape[0]
+            tau = taus_dict[block.design]
+            m[cursor : cursor + size, cursor : cursor + size] += np.eye(size, dtype=float) * (tau * tau)
+            cursor += size
+
+        # 6. Fit GLS with Prior Shrinkage (coupled by RoB quality and topology)
+        beta, cov = self._estimate_gls_with_shrinkage_coupled(
+            y, x, m, param_names, blocks, bias_prior_sd,
+            self.treatment_shrinkage_lambda, treatment_centralities,
+            self.variance_type
         )
 
         # 7. Hartung-Knapp-Sidik-Jonkman adjustment
@@ -201,8 +265,6 @@ class AdvancedBiasAdjustedNMAPooler:
         else:
             df = max(1, n_contrasts - n_params)
 
-        # Residual weighted sum of squares
-        m = v + np.eye(v.shape[0]) * (tau * tau)
         m_inv = np.linalg.inv(m)
         resid = y - x @ beta
         q_stat = float(resid.T @ m_inv @ resid)
@@ -219,6 +281,8 @@ class AdvancedBiasAdjustedNMAPooler:
         design_biases_ses = {reference_design: 0.0}
         covariate_effects = {}
         covariate_effects_ses = {}
+        study_specific_biases = {}
+        study_specific_biases_ses = {}
 
         for idx, name in enumerate(param_names):
             est = float(beta[idx])
@@ -228,6 +292,10 @@ class AdvancedBiasAdjustedNMAPooler:
                 trt = name[4:]
                 treatment_effects[trt] = est
                 treatment_ses[trt] = se
+            elif name.startswith("bias_study_"):
+                s_id = name[11:]
+                study_specific_biases[s_id] = est
+                study_specific_biases_ses[s_id] = se
             elif name.startswith("bias_") and "_x_" not in name:
                 bias_d = name[5:]
                 design_biases[bias_d] = est
@@ -244,7 +312,7 @@ class AdvancedBiasAdjustedNMAPooler:
             parameter_names=param_names,
             parameter_estimates=beta,
             parameter_cov=cov,
-            tau=tau,
+            taus=taus_dict,
             df=df,
             hksj=self.hksj,
             q_factor=q_factor,
@@ -256,6 +324,8 @@ class AdvancedBiasAdjustedNMAPooler:
             design_biases_ses=design_biases_ses,
             covariate_effects=covariate_effects,
             covariate_effects_ses=covariate_effects_ses,
+            study_specific_biases=study_specific_biases,
+            study_specific_biases_ses=study_specific_biases_ses,
             warnings=tuple(warnings_list)
         )
 
@@ -297,7 +367,6 @@ class AdvancedBiasAdjustedNMAPooler:
                     measure_type=measure_type,
                     cc=cc
                 )
-                # Apply scoped down-weighting: inflate arm variance
                 variance = variance / rob_weight
 
                 arm_effects.append({
@@ -389,7 +458,6 @@ class AdvancedBiasAdjustedNMAPooler:
                 for right in study_trts[i + 1 :]:
                     edges.add((left, right))
 
-        # BFS components finder
         adj = {t: set() for t in treatments}
         for u, v in edges:
             adj[u].add(v)
@@ -429,7 +497,9 @@ class AdvancedBiasAdjustedNMAPooler:
     def _build_parameter_names(
         parameter_treatments: tuple[str, ...],
         parameter_designs: tuple[str, ...],
-        cov_names: list[str]
+        cov_names: list[str],
+        study_specific_bias: bool,
+        nrs_studies: tuple[str, ...]
     ) -> tuple[str, ...]:
         names: list[str] = []
 
@@ -437,18 +507,24 @@ class AdvancedBiasAdjustedNMAPooler:
         for trt in parameter_treatments:
             names.append(f"trt_{trt}")
 
-        # 2. Design bias main effects
-        for design in parameter_designs:
-            names.append(f"bias_{design}")
+        # 2. Bias terms (Study-specific or design-level)
+        if study_specific_bias:
+            for s_id in nrs_studies:
+                names.append(f"bias_study_{s_id}")
+        else:
+            for design in parameter_designs:
+                names.append(f"bias_{design}")
 
-        # 3. Covariate interactions
+        # 3. Covariate interactions (only if not study-specific bias, which absorbs all study covariates)
         for cov in cov_names:
             # Treatment interactions
             for trt in parameter_treatments:
                 names.append(f"trt_{trt}_x_{cov}")
+            
             # Design bias interactions
-            for design in parameter_designs:
-                names.append(f"bias_{design}_x_{cov}")
+            if not study_specific_bias:
+                for design in parameter_designs:
+                    names.append(f"bias_{design}_x_{cov}")
 
         return tuple(names)
 
@@ -458,7 +534,8 @@ class AdvancedBiasAdjustedNMAPooler:
         param_names: tuple[str, ...],
         reference_treatment: str,
         reference_design: str,
-        cov_names: list[str]
+        cov_names: list[str],
+        study_specific_bias: bool
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         y_parts = []
         x_parts = []
@@ -480,11 +557,16 @@ class AdvancedBiasAdjustedNMAPooler:
                 if trt_minus != reference_treatment:
                     x_block[row_idx, param_to_idx[f"trt_{trt_minus}"]] -= 1.0
 
-                # B. Design Bias Main Effects
+                # B. Bias Terms
                 if block.design != reference_design:
-                    bias_name = f"bias_{block.design}"
-                    if bias_name in param_to_idx:
-                        x_block[row_idx, param_to_idx[bias_name]] += 1.0
+                    if study_specific_bias:
+                        bias_name = f"bias_study_{block.study_id}"
+                        if bias_name in param_to_idx:
+                            x_block[row_idx, param_to_idx[bias_name]] += 1.0
+                    else:
+                        bias_name = f"bias_{block.design}"
+                        if bias_name in param_to_idx:
+                            x_block[row_idx, param_to_idx[bias_name]] += 1.0
 
                 # C. Covariate Interactions
                 for cov in cov_names:
@@ -500,8 +582,8 @@ class AdvancedBiasAdjustedNMAPooler:
                         if trt_cov_minus in param_to_idx:
                             x_block[row_idx, param_to_idx[trt_cov_minus]] -= cov_val
 
-                    # Design interactions
-                    if block.design != reference_design:
+                    # Design interactions (only if not study-specific)
+                    if not study_specific_bias and block.design != reference_design:
                         bias_cov_name = f"bias_{block.design}_x_{cov}"
                         if bias_cov_name in param_to_idx:
                             x_block[row_idx, param_to_idx[bias_cov_name]] += cov_val
@@ -511,7 +593,6 @@ class AdvancedBiasAdjustedNMAPooler:
         y = np.concatenate(y_parts, axis=0)
         x = np.vstack(x_parts)
 
-        # Block-diagonal covariance matrix
         tot_size = sum(block.shape[0] for block in v_parts)
         v = np.zeros((tot_size, tot_size), dtype=float)
         cursor = 0
@@ -523,76 +604,124 @@ class AdvancedBiasAdjustedNMAPooler:
         return y, x, v
 
     def _optimize_tau_reml(self, y: np.ndarray, x: np.ndarray, v: np.ndarray) -> float:
-        # Objective: minimize negative REML log-likelihood
-        # Brent's method is ideal for univariate optimization
         def obj(t):
-            return self._reml_nll(t, y, x, v)
+            m = v + np.eye(v.shape[0], dtype=float) * (t * t)
+            try:
+                m_inv = np.linalg.inv(m)
+            except np.linalg.LinAlgError:
+                return float("inf")
+            xt_m_inv = x.T @ m_inv
+            info = xt_m_inv @ x
+            sign_m, logdet_m = np.linalg.slogdet(m)
+            sign_info, logdet_info = np.linalg.slogdet(info)
+            if sign_m <= 0 or sign_info <= 0:
+                return float("inf")
+            beta = np.linalg.pinv(info) @ (xt_m_inv @ y)
+            resid = y - x @ beta
+            q_stat = float(resid.T @ m_inv @ resid)
+            return 0.5 * (logdet_m + logdet_info + q_stat)
 
         res = minimize_scalar(obj, bounds=(0.0, 10.0), method="bounded")
         if res.success:
             return float(max(res.x, 0.0))
         return 0.0
 
-    @staticmethod
-    def _reml_nll(tau: float, y: np.ndarray, x: np.ndarray, v: np.ndarray) -> float:
-        m = v + np.eye(v.shape[0], dtype=float) * (tau * tau)
-        try:
-            m_inv = np.linalg.inv(m)
-        except np.linalg.LinAlgError:
-            return float("inf")
-
-        xt_m_inv = x.T @ m_inv
-        info = xt_m_inv @ x
-
-        sign_m, logdet_m = np.linalg.slogdet(m)
-        sign_info, logdet_info = np.linalg.slogdet(info)
-        if sign_m <= 0 or sign_info <= 0:
-            return float("inf")
-
-        beta = np.linalg.pinv(info) @ (xt_m_inv @ y)
-        resid = y - x @ beta
-        q_stat = float(resid.T @ m_inv @ resid)
-
-        return 0.5 * (logdet_m + logdet_info + q_stat)
-
-    @staticmethod
-    def _estimate_gls_with_shrinkage(
+    def _optimize_tau_reml_stratified(
+        self,
         y: np.ndarray,
         x: np.ndarray,
         v: np.ndarray,
-        tau: float,
-        param_names: tuple[str, ...],
-        bias_prior_sd: float,
         blocks: list[_StudyBlock],
-        variance_type: str = "model"
-    ) -> tuple[np.ndarray, np.ndarray]:
-        m = v + np.eye(v.shape[0], dtype=float) * (tau * tau)
-        m_inv = np.linalg.inv(m)
+        design_to_idx: dict[str, int]
+    ) -> np.ndarray:
+        n_designs = len(design_to_idx)
+        
+        def obj(taus):
+            m = v.copy()
+            cursor = 0
+            for block in blocks:
+                size = block.y.shape[0]
+                d_idx = design_to_idx.get(block.design, 0)
+                tau = taus[d_idx]
+                m[cursor : cursor + size, cursor : cursor + size] += np.eye(size, dtype=float) * (tau * tau)
+                cursor += size
 
+            try:
+                m_inv = np.linalg.inv(m)
+            except np.linalg.LinAlgError:
+                return float("inf")
+
+            xt_m_inv = x.T @ m_inv
+            info = xt_m_inv @ x
+            sign_m, logdet_m = np.linalg.slogdet(m)
+            sign_info, logdet_info = np.linalg.slogdet(info)
+            if sign_m <= 0 or sign_info <= 0:
+                return float("inf")
+
+            beta = np.linalg.pinv(info) @ (xt_m_inv @ y)
+            resid = y - x @ beta
+            q_stat = float(resid.T @ m_inv @ resid)
+            return 0.5 * (logdet_m + logdet_info + q_stat)
+
+        x0 = np.full(n_designs, 0.1, dtype=float)
+        bounds = [(0.0, 10.0) for _ in range(n_designs)]
+        res = minimize(obj, x0, bounds=bounds, method="L-BFGS-B")
+        if res.success:
+            return np.maximum(res.x, 0.0)
+        return x0
+
+    @staticmethod
+    def _estimate_gls_with_shrinkage_coupled(
+        y: np.ndarray,
+        x: np.ndarray,
+        m: np.ndarray,
+        param_names: tuple[str, ...],
+        blocks: list[_StudyBlock],
+        bias_prior_sd: float,
+        treatment_shrinkage_lambda: float,
+        treatment_centralities: dict[str, float],
+        variance_type: str
+    ) -> tuple[np.ndarray, np.ndarray]:
+        m_inv = np.linalg.inv(m)
         xt_m_inv = x.T @ m_inv
         info = xt_m_inv @ x
 
-        # Prior precision matrix (P) for ridge penalty
-        # Applied to bias and interaction terms, but NOT to main treatment effects
+        # Prior precision matrix (P)
         p_matrix = np.zeros((x.shape[1], x.shape[1]), dtype=float)
-        bias_precision = 1.0 / (bias_prior_sd * bias_prior_sd)
+        
+        # Map study IDs to their quality weights
+        study_rob = {b.study_id: b.rob_weight for b in blocks}
 
         for idx, name in enumerate(param_names):
-            if name.startswith("bias_") or "_x_" in name:
-                p_matrix[idx, idx] = bias_precision
+            if name.startswith("bias_study_"):
+                # Doi-Welton Hybrid coupling: precision inversely proportional to quality
+                s_id = name[11:]
+                rob = study_rob.get(s_id, 1.0)
+                # If rob = 1.0 (perfect), prior variance is 0 (extremely high precision)
+                # If rob = 0.0, prior variance is bias_prior_sd^2
+                prior_var = (bias_prior_sd * bias_prior_sd) * (1.0 - rob)
+                p_matrix[idx, idx] = 1.0 / (prior_var + 1e-6)
+            elif name.startswith("bias_") or "_x_" in name:
+                # Standard design bias / interaction term
+                p_matrix[idx, idx] = 1.0 / (bias_prior_sd * bias_prior_sd)
+            elif name.startswith("trt_") and "_x_" not in name:
+                # Topological Regularization: penalize sparse treatments
+                trt = name[4:]
+                centrality = treatment_centralities.get(trt, 1.0)
+                # If centrality is 1.0 (highly central), penalty is 0.0
+                # If centrality is small, penalty increases
+                p_matrix[idx, idx] = treatment_shrinkage_lambda * (1.0 - centrality)
 
         post_info = info + p_matrix
         cov_model = np.linalg.pinv(post_info)
         beta = cov_model @ (xt_m_inv @ y)
 
         if variance_type == "sandwich":
-            # Meat: Sum_s X_s^T M_s^-1 e_s e_s^T M_s^-1 X_s
             meat = np.zeros_like(info)
             cursor = 0
             for block in blocks:
                 size = len(block.y)
-                m_s = block.v + np.eye(size, dtype=float) * (tau * tau)
-                m_s_inv = np.linalg.inv(m_s)
+                m_s_inv = m_inv[cursor : cursor + size, cursor : cursor + size]
 
                 x_s = x[cursor : cursor + size]
                 y_s = y[cursor : cursor + size]
