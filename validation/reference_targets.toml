@@ -99,7 +99,7 @@ evidence_artifacts = []
 [[targets]]
 id = "pairwise_metafor_meta"
 domain = "pairwise_meta_analysis"
-module = "planned:pairwise_bridge"
+module = "src/bias_nma_adv/pairwise.py"
 reference_method = "metafor and meta"
 status = "planned"
 acceptance_criteria = [
