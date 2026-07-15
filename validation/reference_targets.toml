@@ -125,7 +125,7 @@ evidence_artifacts = []
 [[targets]]
 id = "transportability_support_topology"
 domain = "transportability"
-module = "planned:transportability"
+module = "src/bias_nma_adv/transportability.py"
 reference_method = "metafor/statsmodels meta-regression anchors plus topological support fixtures"
 status = "planned"
 acceptance_criteria = [

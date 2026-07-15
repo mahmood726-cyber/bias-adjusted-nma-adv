@@ -22,6 +22,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
   - `data.py`: Structured data classes and validation schemas.
   - `ingestion.py`: Source-backed ingestion provenance checks for PubMed, ClinicalTrials.gov, and open-access paper rows.
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
+- `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.
 - `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
 - `tests/`: Unit and integration test suite.
