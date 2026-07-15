@@ -23,4 +23,4 @@ notes = ["This local fixture validates multi-arm covariance handling against net
 "external/r/multiarm_netmeta_fixture.R" = "367c107d645c6d9f2fab8e54889956cd0e255190fd3694b637d09f534b55d685"
 
 [output_sha256]
-"validation/reference_runs/multiarm_netmeta_output.json" = "92325cb2c40a1bd17bad936d9fb2d7779993c6b3bbcbcaac38d52ca9434fedee"
+"validation/reference_runs/multiarm_netmeta_output.json" = "8ee2588a3851b8994e304d361dc1077e6594245018d48d9c7dd5ecfa27ed1d3d"

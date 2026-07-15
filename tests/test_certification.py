@@ -1,5 +1,4 @@
 import copy
-import hashlib
 from pathlib import Path
 
 import pytest
@@ -16,6 +15,7 @@ from bias_nma_adv.certification import (
     summarize_reference_run_reports,
     summarize_reference_targets,
 )
+from bias_nma_adv.real_meta import sha256_file
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,15 +25,6 @@ PAIRWISE_R_ADAPTER = ROOT / "external" / "r" / "pairwise_metafor_meta.R"
 PAIRWISE_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_reference_adapters.py"
 MULTIARM_R_ADAPTER = ROOT / "external" / "r" / "multiarm_netmeta_fixture.R"
 MULTIARM_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_multiarm_netmeta_adapter.py"
-
-
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
 
 def test_reference_targets_registry_is_valid():
     targets = load_reference_targets(TARGETS_PATH)

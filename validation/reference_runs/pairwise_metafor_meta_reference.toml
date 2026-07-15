@@ -24,4 +24,4 @@ notes = ["metafor KNHA uses the unfloored q factor here; the Python artifact doc
 "external/r/pairwise_metafor_meta.R" = "23f443b5a046cc273fc75af5dd09bcfb95fa09828ee59385de987167522bb6ea"
 
 [output_sha256]
-"validation/reference_runs/pairwise_metafor_meta_output.json" = "78119c3184fb4d661b1b0475fde61c68e50b7bd6aceae985882b4a889bb06be8"
+"validation/reference_runs/pairwise_metafor_meta_output.json" = "d38797b7b38d3443278d1365c380d32d5d0a234977c78b5fb9965a61a97d0632"
