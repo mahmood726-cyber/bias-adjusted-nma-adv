@@ -1,0 +1,135 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "sglt2_hf_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/sglt2_hf_reported_hrs.toml"
+source_manifest_sha256 = "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1ff06"
+source_verification_report = "validation/source_checks/sglt2_hf_reported_hr_tokens.json"
+source_verification_report_sha256 = "e7c09ba32d17fabd7d7511ccdfe9303f8f6af812caf49a65e8ba917d40ff9280"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "sglt2_hf_reported_hr"
+manifest_sha256 = "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1ff06"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "DAPA-HF"
+trial = "Dapagliflozin in HFrEF"
+nct_id = "NCT03036124"
+pmid = "31535829"
+outcome_id = "hf_primary"
+outcome_label = "worsening heart failure or cardiovascular death"
+active_treatment = "dapagliflozin"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.74
+ci_lower = 0.65
+ci_upper = 0.85
+estimate = -0.3011050927839216
+variance = 0.004683478976527634
+se = 0.06843594798443019
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "EMPEROR-Reduced"
+trial = "Empagliflozin in HFrEF"
+nct_id = "NCT03057977"
+pmid = "32865377"
+outcome_id = "hf_primary"
+outcome_label = "cardiovascular death or hospitalization for heart failure"
+active_treatment = "empagliflozin"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.75
+ci_lower = 0.65
+ci_upper = 0.86
+estimate = -0.2876820724517809
+variance = 0.005100771608957223
+se = 0.07141968642438318
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "DELIVER"
+trial = "Dapagliflozin in HFmrEF/HFpEF"
+nct_id = "NCT03619213"
+pmid = "36027570"
+outcome_id = "hf_primary"
+outcome_label = "worsening heart failure or cardiovascular death"
+active_treatment = "dapagliflozin"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.82
+ci_lower = 0.73
+ci_upper = 0.92
+estimate = -0.19845093872383832
+variance = 0.0034826072342792665
+se = 0.05901361905763166
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "EMPEROR-Preserved"
+trial = "Empagliflozin in HFpEF"
+nct_id = "NCT03057951"
+pmid = "34449189"
+outcome_id = "hf_primary"
+outcome_label = "cardiovascular death or hospitalization for heart failure"
+active_treatment = "empagliflozin"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.79
+ci_lower = 0.69
+ci_upper = 0.9
+estimate = -0.23572233352106983
+variance = 0.0045944897222524785
+se = 0.06778266535223057
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.25042639951734724
+se = 0.03307057536504742
+ci_low = -0.31524353618085776
+ci_high = -0.18560926285383675
+tau2 = 0.0
+q = 1.6432491887958656
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [213.5164916959673, 196.04877000255166, 287.1411941481688, 217.65202676517112]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.25042639951734724
+se = 0.03307057536504742
+ci_low = -0.3556717299014488
+ci_high = -0.1451810691332457
+tau2 = 0.0
+q = 1.6432491887958656
+df = 3
+hksj = true
+hksj_q_factor = 1.0
+weights = [213.5164916959673, 196.04877000255166, 287.1411941481688, 217.65202676517112]
+warnings = []
+pi_low = -0.3556717299014488
+pi_high = -0.1451810691332457

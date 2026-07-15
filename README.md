@@ -41,6 +41,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.
 - `scripts/verify_pubmed_survival_hrs.py`: Regenerates PubMed abstract reported-HR token snapshots for survival benchmark manifests.
+- `scripts/write_survival_hr_benchmark.py`: Writes the deterministic reported-HR pairwise benchmark artifact from a verified survival source snapshot.
 - `docs/portfolio_reuse_map.md`: Local portfolio scan describing reusable methods and hard stops before porting them.
 - `docs/review_artifact_policy.md`: Scope guard for historical review transcripts that contain hypotheses or critique, not certified evidence.
 - `e156-submission/`: Micro-publication artifacts.

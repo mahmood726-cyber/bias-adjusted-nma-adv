@@ -10,6 +10,7 @@ from bias_nma_adv.survival_benchmark import (
     SurvivalHRVerificationReport,
     load_survival_hr_manifest,
     load_survival_hr_verification_report,
+    validate_survival_hr_source_bundle,
 )
 
 
@@ -165,3 +166,15 @@ def test_survival_hr_report_rejects_certification_effect():
 
     with pytest.raises(ValidationError, match="cannot certify model performance"):
         SurvivalHRVerificationReport.from_mapping(raw)
+
+
+def test_survival_hr_source_bundle_rejects_manifest_hash_drift():
+    manifest = load_survival_hr_manifest(MANIFEST)
+    raw = copy.deepcopy(load_survival_hr_verification_report(REPORT).__dict__)
+    raw["schema_version"] = "survival_hr_verification/v1"
+    raw["manifest_sha256"] = "a" * 64
+    raw["records"] = [copy.deepcopy(record.__dict__) for record in raw["records"]]
+    report = SurvivalHRVerificationReport.from_mapping(raw)
+
+    with pytest.raises(ValidationError, match="manifest_sha256"):
+        validate_survival_hr_source_bundle(manifest, report)

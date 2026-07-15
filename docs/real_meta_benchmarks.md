@@ -29,6 +29,8 @@ Reported survival HR manifest: `validation/survival/sglt2_hf_reported_hrs.toml`
 
 Reported survival HR snapshot: `validation/source_checks/sglt2_hf_reported_hr_tokens.json`
 
+Reported survival HR benchmark: `validation/survival/sglt2_hf_reported_hr_benchmark.toml`
+
 Outcome: primary composite outcome in each trial, harmonized as worsening heart failure or cardiovascular death / cardiovascular death or heart-failure hospitalization.
 
 Scale currently tested: log odds ratio, because the current arm-level binary model estimates log-odds contrasts.
@@ -47,6 +49,8 @@ Current tests:
 - validate a source-identity snapshot showing the CT.gov and PubMed public records were reachable and matched the manifest identifiers at verification time;
 - validate a PubMed abstract event-count snapshot showing the exact arm-level count tokens and nearby active/control treatment terms were present in the public abstracts at verification time;
 - validate a reported survival HR snapshot showing the abstract HR and confidence-interval tokens are present near the hazard-ratio anchor and treatment terms;
+- derive log-HR study effects from the verified reported HR and 95% CI tokens;
+- run the experimental pairwise bridge as fixed effect and REML-HKSJ on the reported log-HR scale;
 - compute an independent inverse-variance fixed-effect log-odds-ratio reference;
 - compute source-backed study-level log-odds-ratio effects with NCT/PMID provenance;
 - run the experimental pairwise bridge as fixed effect and REML-HKSJ with prediction interval;
@@ -70,10 +74,17 @@ The external `metafor`/`meta` parity adapter is planned at `external/r/pairwise_
 | Candidate frequentist model | -0.268984 | 0.036297 | -0.340125 to -0.197843 |
 | Candidate Bayesian MCMC | -0.260798 | 0.049688 | -0.357244 to -0.164967 |
 
+Reported HR benchmark on the log-HR scale:
+
+| Engine | Estimate | SE | 95% interval |
+| --- | ---: | ---: | ---: |
+| Experimental pairwise fixed effect | -0.250426 | 0.033071 | -0.315244 to -0.185609 |
+| Experimental pairwise REML-HKSJ | -0.250426 | 0.033071 | -0.355672 to -0.145181 |
+
 Limitations:
 
 - this is a pairwise class meta-analysis, not a full multi-treatment NMA;
-- the current benchmark uses first-event binary counts, not time-to-event hazard ratios;
+- the arm-level model benchmark uses first-event binary counts; the separate reported-HR benchmark uses published HR tokens but does not fit a survival NMA;
 - the reported HR snapshot verifies source tokens only; it does not yet fit a survival NMA or reconstruct IPD from Kaplan-Meier figures;
 - the REML heterogeneity estimate is zero on this four-study fixture, so this is not evidence of random-effects superiority;
 - PubMed/CT.gov source identity is verified by public API snapshots, and the arm counts are checked against exact PubMed abstract count tokens; full paper/table extraction, time-to-event HR extraction, and independent dual extraction remain future work;
@@ -88,6 +99,7 @@ Limitations:
 | Source identity snapshot | Dynamic public API check | `scripts/verify_real_meta_sources.py` against ClinicalTrials.gov API and PubMed EFetch | Verifies identity and reachability only, not event-count extraction |
 | Event-count snapshot | Dynamic public API check | `scripts/verify_pubmed_event_counts.py` against PubMed EFetch abstracts | Verifies exact `events of n` tokens and nearby active/control terms in abstracts, not full paper extraction |
 | Reported HR snapshot | Dynamic public API check | `scripts/verify_pubmed_survival_hrs.py` against PubMed EFetch abstracts | Verifies HR/CI tokens near the hazard-ratio anchor and treatment terms, not KM digitization |
+| Reported HR benchmark | Dynamic computation | `scripts/write_survival_hr_benchmark.py` plus `bias_nma_adv.survival_benchmark` | Recomputes log-HR study effects and pairwise pooling from the verified reported-HR source snapshot |
 | Source-check certification effect | Static contract | `certification_effect = "none"` in source-check artifacts | Source-token verification cannot certify model performance or tier-one parity |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
 | Pairwise bridge result | Dynamic computation | `bias_nma_adv.pairwise.fit_pairwise_meta` | Recomputed by tests from source-backed study-level effects |

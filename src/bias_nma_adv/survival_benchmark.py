@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from dataclasses import asdict
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 import json
+import math
 from pathlib import Path
 import re
 import string
@@ -12,13 +14,17 @@ import tomllib
 from typing import Any
 from urllib.parse import urlparse
 
+import numpy as np
+
 from bias_nma_adv.data import ValidationError
 from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
+from bias_nma_adv.pairwise import PairwiseMetaResult, fit_pairwise_meta
 from bias_nma_adv.real_meta import sha256_file
 
 
 SURVIVAL_HR_MANIFEST_SCHEMA_VERSION = "survival_hr_manifest/v1"
 SURVIVAL_HR_VERIFICATION_SCHEMA_VERSION = "survival_hr_verification/v1"
+NORMAL_975 = 1.959963984540054
 
 _NCT_RE = re.compile(r"^NCT\d{8}$")
 _PMID_RE = re.compile(r"^\d{1,9}$")
@@ -143,6 +149,58 @@ class SurvivalHRStudy:
             raise ValidationError(f"{self.study_id}: CI lower bound exceeds upper bound.")
         if not (ci_low <= hr <= ci_high):
             raise ValidationError(f"{self.study_id}: reported HR is not contained in its confidence interval.")
+
+
+@dataclass(frozen=True)
+class SurvivalHRLogEffect:
+    """One study-level log-HR effect derived from a source-verified reported HR."""
+
+    study_id: str
+    trial: str
+    nct_id: str
+    pmid: str
+    outcome_id: str
+    outcome_label: str
+    active_treatment: str
+    control_treatment: str
+    effect_direction: str
+    effect_scale: str
+    reported_hr: float
+    ci_lower: float
+    ci_upper: float
+    estimate: float
+    variance: float
+    se: float
+    variance_source: str
+
+    @classmethod
+    def from_study(cls, study: SurvivalHRStudy) -> "SurvivalHRLogEffect":
+        hr = float(study.reported_hr)
+        ci_lower = float(study.ci_lower)
+        ci_upper = float(study.ci_upper)
+        estimate = math.log(hr)
+        se = (math.log(ci_upper) - math.log(ci_lower)) / (2.0 * NORMAL_975)
+        if se <= 0.0 or not math.isfinite(se):
+            raise ValidationError(f"{study.study_id}: reported HR confidence interval yields invalid SE.")
+        return cls(
+            study_id=study.study_id,
+            trial=study.trial,
+            nct_id=study.nct_id,
+            pmid=study.pmid,
+            outcome_id=study.outcome_id,
+            outcome_label=study.outcome_label,
+            active_treatment=study.active_treatment,
+            control_treatment=study.control_treatment,
+            effect_direction=study.effect_direction,
+            effect_scale="log_hr",
+            reported_hr=hr,
+            ci_lower=ci_lower,
+            ci_upper=ci_upper,
+            estimate=estimate,
+            variance=se * se,
+            se=se,
+            variance_source="reported_95_ci_log_scale",
+        )
 
 
 @dataclass(frozen=True)
@@ -379,6 +437,144 @@ def load_survival_hr_verification_report(path: str | Path) -> SurvivalHRVerifica
 
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     return SurvivalHRVerificationReport.from_mapping(payload)
+
+
+def validate_survival_hr_source_bundle(
+    manifest: SurvivalHRManifest,
+    report: SurvivalHRVerificationReport,
+) -> dict[str, Any]:
+    """Validate that a reported-HR manifest is backed by its source-token report."""
+
+    if report.benchmark_id != manifest.benchmark_id:
+        raise ValidationError("survival HR verification benchmark_id does not match manifest.")
+    if manifest.manifest_sha256 is not None and report.manifest_sha256 != manifest.manifest_sha256:
+        raise ValidationError("survival HR verification manifest_sha256 does not match manifest file.")
+    if report.certification_effect != "none":
+        raise ValidationError("survival HR source verification cannot certify model performance.")
+    if report.status != "verified":
+        raise ValidationError("survival HR source verification must be verified before benchmarking.")
+    report_by_study = {record.study_id: record for record in report.records}
+    manifest_ids = {study.study_id for study in manifest.studies}
+    if set(report_by_study) != manifest_ids:
+        raise ValidationError("survival HR verification studies do not match manifest studies.")
+
+    for study in manifest.studies:
+        record = report_by_study[study.study_id]
+        if not record.verified:
+            raise ValidationError(f"{study.study_id}: survival HR source record is not verified.")
+        expected = (
+            study.pmid,
+            study.outcome_id,
+            study.reported_hr,
+            study.ci_lower,
+            study.ci_upper,
+        )
+        observed = (
+            record.pmid,
+            record.outcome_id,
+            record.reported_hr,
+            record.ci_lower,
+            record.ci_upper,
+        )
+        if observed != expected:
+            raise ValidationError(f"{study.study_id}: survival HR verification record does not match manifest.")
+
+    return {
+        "benchmark_id": manifest.benchmark_id,
+        "manifest_sha256": manifest.manifest_sha256,
+        "verification_status": report.status,
+        "certification_effect": report.certification_effect,
+        "n_studies": len(manifest.studies),
+    }
+
+
+def survival_hr_log_effects(manifest: SurvivalHRManifest) -> list[SurvivalHRLogEffect]:
+    """Derive study-level log-HR effects from source-verified reported HR entries."""
+
+    return [SurvivalHRLogEffect.from_study(study) for study in manifest.studies]
+
+
+def run_survival_hr_benchmark(
+    manifest_path: str | Path,
+    *,
+    verification_report_path: str | Path,
+) -> dict[str, Any]:
+    """Run deterministic pairwise pooling on source-verified reported survival HRs."""
+
+    manifest = load_survival_hr_manifest(manifest_path)
+    verification_report = load_survival_hr_verification_report(verification_report_path)
+    source_bundle = validate_survival_hr_source_bundle(manifest, verification_report)
+    effects = survival_hr_log_effects(manifest)
+    estimates = np.asarray([effect.estimate for effect in effects], dtype=float)
+    variances = np.asarray([effect.variance for effect in effects], dtype=float)
+    fixed = fit_pairwise_meta(estimates, variances, method="FE")
+    reml_hksj = fit_pairwise_meta(
+        estimates,
+        variances,
+        method="REML",
+        hksj=True,
+        hksj_floor=True,
+        prediction_interval=True,
+    )
+    return {
+        "schema_version": "survival_hr_benchmark/v1",
+        "benchmark_id": manifest.benchmark_id,
+        "status": "local_pass",
+        "certification_effect": "none",
+        "source_policy": manifest.source_policy,
+        "evidence_mode": manifest.evidence_mode,
+        "effect_scale": "log_hr",
+        "source_manifest": _path_as_posix(manifest_path),
+        "source_manifest_sha256": sha256_file(manifest_path),
+        "source_verification_report": _path_as_posix(verification_report_path),
+        "source_verification_report_sha256": sha256_file(verification_report_path),
+        "source_bundle": source_bundle,
+        "model_config": {
+            "pairwise_fixed_effect_method": "FE",
+            "pairwise_random_effect_method": "REML",
+            "pairwise_hksj": True,
+            "pairwise_hksj_floor": True,
+            "pairwise_prediction_interval": True,
+            "pairwise_prediction_interval_df": "k_minus_1",
+            "level": 0.95,
+        },
+        "n_studies": len(effects),
+        "study_effects": [asdict(effect) for effect in effects],
+        "candidate": {
+            "pairwise_fixed_effect": _pairwise_result_payload(fixed),
+            "pairwise_reml_hksj": _pairwise_result_payload(reml_hksj),
+        },
+        "limitations": [
+            "reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized",
+            "this is a pairwise class meta-analysis, not a multi-treatment survival NMA",
+            "source-token verification does not certify model performance or tier-one parity",
+        ],
+    }
+
+
+def _pairwise_result_payload(result: PairwiseMetaResult) -> dict[str, Any]:
+    payload = {
+        "method": result.method,
+        "estimate": result.estimate,
+        "se": result.se,
+        "ci_low": result.ci_low,
+        "ci_high": result.ci_high,
+        "tau2": result.tau2,
+        "q": result.q,
+        "df": result.df,
+        "hksj": result.hksj,
+        "hksj_q_factor": result.hksj_q_factor,
+        "weights": list(result.weights),
+        "warnings": list(result.warnings),
+    }
+    if result.prediction_interval is not None:
+        payload["pi_low"] = float(result.prediction_interval[0])
+        payload["pi_high"] = float(result.prediction_interval[1])
+    return payload
+
+
+def _path_as_posix(path: str | Path) -> str:
+    return Path(path).as_posix()
 
 
 def _positive_decimal(value: str, study_id: str, field_name: str) -> Decimal:
