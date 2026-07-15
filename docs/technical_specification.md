@@ -3,7 +3,7 @@
 
 ## 1. Scope and Design Principles
 
-The platform performs Bayesian and frequentist network network meta-analysis (NMA) of randomized and non-randomized comparative studies. The core engines preserve randomization, within-study treatment contrasts, correlations from multi-arm trials, and between-study heterogeneity.
+The platform performs Bayesian and frequentist network meta-analysis (NMA) of randomized and non-randomized comparative studies. The core engines preserve randomization, within-study treatment contrasts, correlations from multi-arm trials, and between-study heterogeneity.
 
 Bias-related information is incorporated through transparent sensitivity analyses or explicitly specified probabilistic bias models. Study weights are not modified using arbitrary sponsorship, attrition or registry penalty constants.
 
@@ -66,7 +66,7 @@ The platform supports a generalized linear model (GLM) framework. The outcome li
 | **Multinomial states** | Multinomial | Multinomial logit | State probabilities |
 | **Time-to-event** | Flexible survival likelihood | Hazard / cumulative hazard | HR, RMST, or survival difference |
 
-Student-$t$ continuous models are specified to target individual observations when patient-level data are available, or study-level treatment contrasts/arm summaries when aggregate-level data are analysed.
+Student-$t$ continuous models are specified to target individual observations when patient-level data are available. For aggregate summaries, they require an appropriate sampling model based on reported means, standard errors and degrees of freedom rather than treating the summary statistics as raw observations.
 
 ---
 
@@ -205,7 +205,7 @@ where:
 
 ### 9.2 Zero-Event Policy
 *   Double-zero studies contribute no direct contrast information under conventional relative-effect models. They may be retained in compatible arm-based likelihoods when they inform absolute risks or other hierarchical parameters. Their inclusion policy is reported for every analysis.
-*   Studies with zero events in one arm are modeled using exact likelihoods to avoid bias introduced by continuity corrections.
+*   Studies with zero events in one arm are modelled using arm-level binomial likelihoods without continuity correction, or validated conditional likelihood methods where applicable.
 
 ---
 
@@ -285,7 +285,7 @@ Where appropriate, the engine supports selection models, robust Bayesian meta-an
 C-TMLE is an optional individual-participant-data module for observational comparisons or randomized studies requiring adjustment for informative missingness, non-adherence or treatment crossover. It is not applied automatically to aggregate randomized-trial NMA.
 
 ### Diagnostics
-*   **Propensity Weights:** Reports equivalent propensity cohort size metrics where explicit inverse-probability weights are used. Clever-covariate distributions, positivity, truncation and influence-curve behaviour are assessed separately.
+*   **Propensity Weights:** Reports equivalent sample size derived from explicit inverse-probability weights, where such weights are used. Clever-covariate distributions, positivity, truncation and influence-curve behaviour are assessed separately.
 *   **Influence Curves:** Computes influence-curve variance and standard error.
 *   **Truncation:** Monitors the proportion of propensity scores truncated.
 *   **Cross-Validation:** Monitors cross-validated nuisance-model loss.
@@ -331,7 +331,7 @@ The platform generates evidence certainty calculations compatible with CINeMA an
 *   **Study Contribution Matrix:** The engine first computes the estimator or hat matrix and then derives non-negative study and direct-comparison contribution percentages using an explicitly documented evidence-flow algorithm. Raw signed matrix coefficients are not interpreted directly as percentage contributions.
 *   **Risk of Bias Propagation:** Projects RoB 2 categories (**low risk**, **some concerns**, and **high risk**) across the network using the contribution percentages.
 *   **ROB-MEN Assessments:** Integrates the registry auditor alongside structured assessments of known unpublished studies, selectively unavailable outcomes, small-study effects, comparison-specific reporting patterns, the likely direction of missing evidence, and direct-evidence contribution percentages.
-*   **Equivalence Limits:** Evaluates confidence intervals against clinically important equivalence margins.
+*   **Equivalence Limits:** Evaluates confidence or credible intervals, as appropriate, against prespecified clinically important equivalence margins.
 
 ### 18.3 Model Certification Levels
 Every model fitted by the platform receives a certification level:
@@ -369,7 +369,12 @@ For every model certified for production, the platform executes a benchmark prog
 
 ### 20.1 Reproducible Analysis Bundle
 Every execution yields a reproducible bundle containing:
-*   Clean, un-redacted model code (compiled `.stan` files).
+*   Original `.stan` source files.
+*   Generated C++ source where retained.
+*   Compiled executable checksum.
+*   CmdStan version, compiler version and flags.
+*   Operating system and processor architecture.
+*   Dependency lockfile hash and model executable hash.
 *   Cryptographic hash of the input dataset.
 *   Priors, configuration parameters, and seeds.
 *   Reviewer overrides and qualitative risk assessments.
@@ -413,43 +418,100 @@ bias_nma/
 
 ## 21. Machine-Generated Build and Validation Status
 
-```json
-{
-  "build_metadata": {
-    "commit_hash": "a53b7c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b",
-    "build_date": "2026-07-15T16:41:48Z",
-    "ci_workflow_id": "run-validation-99882",
-    "validation_engine_version": "v1.0.0-beta"
-  },
-  "test_suite_summary": {
-    "total_tests": 24,
-    "passed": 24,
-    "failed": 0,
-    "skipped": 0,
-    "code_coverage_pct": 98.4,
-    "static_analysis": "PASS"
-  },
-  "module_certification_registry": [
-    {
-      "module": "bias_nma.models.standard_nma",
-      "certification_level": "Reference Matched",
-      "validation_reference": "netmeta-v2.8-comparison"
-    },
-    {
-      "module": "bias_nma.models.multinomial",
-      "certification_level": "Numerically Verified",
-      "validation_reference": "log-likelihood-gradients-analytical"
-    },
-    {
-      "module": "bias_nma.models.bias_adjustment",
-      "certification_level": "Numerically Verified",
-      "validation_reference": "probabilistic-bias-prior-sampling"
-    },
-    {
-      "module": "bias_nma.models.bias_adjustment.ctmle",
-      "certification_level": "Numerically Verified",
-      "validation_reference": "ctmle-gradient-validation"
-    }
-  ]
-}
-```
+This section is generated automatically by the continuous-integration workflow. It must not be edited manually. A build is described as verified only when the associated machine-readable reports and immutable artefacts are available.
+
+### 21.1 Build Metadata
+
+The build report records:
+
+- complete Git commit SHA;
+- repository and branch or tag;
+- UTC build timestamp;
+- continuous-integration provider and immutable run identifier;
+- operating system and processor architecture;
+- Python, R, CmdStan and compiler versions;
+- dependency lockfile hash;
+- container image digest, where applicable;
+- validation-engine version.
+
+Illustrative or placeholder identifiers must not be presented as actual build results.
+
+### 21.2 Test-Suite Summary
+
+The report separates:
+
+- unit tests;
+- integration tests;
+- numerical-gradient tests;
+- regression tests;
+- reference-software comparisons;
+- simulation-based calibration tests;
+- performance and numerical-stress tests;
+- failure-mode and invalid-input tests.
+
+For each category, it reports:
+
+- total tests;
+- passed tests;
+- failed tests;
+- skipped or expected-failure tests;
+- execution duration;
+- associated report or artefact hash.
+
+Code coverage is reported separately as line and branch coverage. High code coverage is not interpreted as evidence of statistical validity.
+
+### 21.3 Model-Certification Evidence
+
+Each certification entry contains:
+
+- module and model version;
+- certification level;
+- reference implementation and exact version;
+- reference datasets;
+- analysis configuration;
+- comparison metrics;
+- prespecified numerical tolerances;
+- observed numerical differences;
+- simulation scenarios and performance criteria;
+- validation-report checksum;
+- validation date;
+- independent reviewer or reproducing group, where applicable;
+- known limitations and unsupported data conditions.
+
+A model cannot receive a certification level based solely on passing unit tests or achieving high code coverage.
+
+### 21.4 Deployment Status
+
+The report states clearly which modules are:
+
+- experimental;
+- numerically verified;
+- reference matched;
+- simulation validated;
+- externally reproduced;
+- production certified.
+
+Modules below Production Certified status are restricted to development, research or validation use and cannot generate outputs labelled as suitable for clinical, regulatory or health-technology-assessment decision-making.
+
+If no module is Production Certified, the report must state:
+
+> No modules in this build currently hold Production Certified status. Clinical and HTA reporting is disabled.
+
+### 21.5 Reproducibility Artefacts
+
+Each build publishes or securely retains:
+
+- original `.stan` source files;
+- generated C++ source where retained;
+- compiled executable checksums;
+- compiler options;
+- complete dependency manifests;
+- benchmark datasets permitted for redistribution;
+- reference outputs;
+- numerical-tolerance definitions;
+- simulation seeds and configurations;
+- code-coverage reports;
+- static-analysis reports;
+- benchmark and validation logs.
+
+Any statement that the working tree is clean, tests have passed or validation checks are clear must be derived directly from the continuous-integration system and linked to an immutable report.
