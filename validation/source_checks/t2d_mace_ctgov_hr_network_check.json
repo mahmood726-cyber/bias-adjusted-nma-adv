@@ -1,0 +1,276 @@
+{
+  "benchmark_id": "t2d_mace_ctgov_hr_network",
+  "certification_effect": "none",
+  "checked_at": "2026-07-15T00:00:00Z",
+  "manifest": "validation/networks/t2d_mace_ctgov_hrs.toml",
+  "manifest_sha256": "d74c2278b6513a09a0c0a170c33e830a0e68d3a2199f288a500c1255f39bec87",
+  "records": [
+    {
+      "ci_lower": "0.88",
+      "ci_tokens_found": true,
+      "ci_upper": "1.09",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Percentage of Participants With First Confirmed Cardiovascular (CV) Event of Major Adverse Cardiovascular Event (MACE) Plus (Per Protocol Population)",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT00790205",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "major adverse cardiovascular",
+        "plus",
+        "per protocol"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.98",
+      "response_sha256": "7daa6cf62a3fcac85a0ff122dda5329b4ecf254f0c22bac56e7355671bd97b9c",
+      "source_terms": [
+        "sitagliptin",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "TECOS",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.78",
+      "ci_tokens_found": true,
+      "ci_upper": "1.12",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Major Adverse Cardiovascular Events (MACE) Composite of Cardiovascular (CV) Death, Non-Fatal Myocardial Infarction (MI), and Non-Fatal Stroke",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT01032629",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "major adverse cardiovascular"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.93",
+      "response_sha256": "1c56920c4bbe455b3c6aed05c0c62306eee3a1a1d4354cd1066a65214f650304",
+      "source_terms": [
+        "canagliflozin",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "CANVAS",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.74",
+      "ci_tokens_found": true,
+      "ci_upper": "0.99",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Time to the First Occurrence of Any of the Following Adjudicated Components of the Primary Composite Endpoint (3-point MACE): CV Death (Including Fatal Stroke and Fatal MI), Non-fatal MI (Excluding Silent MI), and Non-fatal Stroke.",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT01131676",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "primary composite"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.86",
+      "response_sha256": "18d9a7c0f98315603cfa2d50acfb396ff2b31daf91ca9f141225119b01644fa5",
+      "source_terms": [
+        "empagliflozin",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "EMPA-REG-OUTCOME",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.832",
+      "ci_tokens_found": true,
+      "ci_upper": "1.004",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Primary Efficacy Outcome MACE Events",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT01144338",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "primary efficacy",
+        "mace"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.91",
+      "response_sha256": "83b6cb0d6460568225088c206b556218567faa500e54eaa5bc31dbd130d84776",
+      "source_terms": [
+        "exenatide",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "EXSCEL",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.79",
+      "ci_tokens_found": true,
+      "ci_upper": "0.99",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Number of Participants Who Experienced an Event For Time, From Randomization to First Occurrence of Cardiovascular Death, Non-fatal Myocardial Infarction, or Non-fatal Stroke (a Composite Cardiovascular Outcome)",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT01394952",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "composite cardiovascular"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.88",
+      "response_sha256": "ef72289842b7e6c684848093f0e95acfc938de45a96b910239f9a449f9b526fc",
+      "source_terms": [
+        "dulaglutide",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "REWIND",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.89",
+      "ci_tokens_found": true,
+      "ci_upper": "1.17",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Time to the First Occurrence of Any of the Following Adjudication-confirmed Components of the Primary Composite Endpoint 3-point Major Adverse Cardiovascular (CV) Events (3-point MACE): CV Death, Non-fatal Myocardial Infarction (MI) or Non-fatal Stroke.",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT01897532",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "primary",
+        "composite"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "1.02",
+      "response_sha256": "d252a4760d7c369b3b6a254e3b56e8156c9c15674ba217e636c5c464cffea8dd",
+      "source_terms": [
+        "linagliptin",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "CARMELINA",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.848",
+      "ci_tokens_found": true,
+      "ci_upper": "1.114",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Time to First Occurrence of MACE (Composite Endpoint of Major Adverse Cardiovascular Events [Cardiovascular Death, Non-fatal Myocardial Infarction or Non-fatal Stroke]) (On-Treatment + 365-day Approach) (Overall Cardiovascular Study)",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT01986881",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "first occurrence",
+        "mace"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.97",
+      "response_sha256": "a66d83bb076659a449bf78fb985a597e0db3c9e1883c20513bf3597f35402c4c",
+      "source_terms": [
+        "ertugliflozin",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "VERTIS-CV",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.67",
+      "ci_tokens_found": true,
+      "ci_upper": "0.95",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Major Adverse Cardiac Event (MACE)",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT02065791",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "major adverse cardiac"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.80",
+      "response_sha256": "92817900703e774706f4630e8ee141d90c8900fd12d75e87c72532a1e07fce68",
+      "source_terms": [
+        "canagliflozin",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "CREDENCE",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.68",
+      "ci_tokens_found": true,
+      "ci_upper": "0.90",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Time to First Occurrence of Major Adverse Cardiovascular Events (MACE) During Cardiovascular (CV) Follow-up Time Period",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT02465515",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "major adverse cardiovascular"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.78",
+      "response_sha256": "3ec44b498fa83a82531b1cd2d7ae4a7be27a677d00f33670a6956dda229c9fc0",
+      "source_terms": [
+        "albiglutide",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "HARMONY-Outcomes",
+      "verified": true
+    },
+    {
+      "ci_lower": "0.77",
+      "ci_tokens_found": true,
+      "ci_upper": "0.96",
+      "evidence_scope": "clinicaltrials_gov_reported_hr_analysis",
+      "hazard_ratio_analysis_found": true,
+      "matched_outcome_title": "Number of Participants From Randomization to First Occurrence of a Major Adverse Cardiovascular Event (MACE), a Composite Endpoint Consisting of: Cardiovascular (CV) Death/Non-fatal Myocardial Infarction/Non-fatal Stroke",
+      "matched_param_type": "Hazard Ratio (HR)",
+      "nct_id": "NCT03914326",
+      "nct_id_found": true,
+      "outcome_id": "mace_primary",
+      "outcome_search_terms": [
+        "major adverse cardiovascular"
+      ],
+      "outcome_terms_found": true,
+      "reported_hr": "0.86",
+      "response_sha256": "4f71faa36dd9de147a308dee9a732cc50a909c72dd07f0affb2f92116deca1ef",
+      "source_terms": [
+        "semaglutide",
+        "placebo"
+      ],
+      "source_terms_found": true,
+      "status_completed": true,
+      "study_id": "PIONEER-6",
+      "verified": true
+    }
+  ],
+  "schema_version": "ctgov_hr_network_verification/v1",
+  "status": "verified"
+}

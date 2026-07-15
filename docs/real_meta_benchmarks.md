@@ -145,6 +145,56 @@ Limitations:
 - with only two studies, the HKSJ interval is intentionally conservative and should not be treated as a superiority result;
 - this benchmark does not yet have a passed external `metafor`, `meta`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference run.
 
+## Benchmark 3: Type 2 Diabetes MACE-Class Star Network
+
+CT.gov reported-HR network manifest: `validation/networks/t2d_mace_ctgov_hrs.toml`
+
+CT.gov reported-HR source snapshot: `validation/source_checks/t2d_mace_ctgov_hr_network_check.json`
+
+CT.gov reported-HR network benchmark: `validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml`
+
+Outcome: trial-defined major adverse cardiovascular event or MACE-like cardiovascular composite. TECOS is explicitly recorded as the CT.gov MACE Plus per-protocol analysis because that is the public CT.gov record matching the verified HR and CI.
+
+Scale currently tested: log hazard ratio, derived from ClinicalTrials.gov reported HR and 95% CI records.
+
+Network: placebo-centered star network with three analyst-defined active class labels.
+
+| Class | Trials |
+| --- | --- |
+| DPP-4 inhibitor | TECOS, CARMELINA |
+| GLP-1 RA | EXSCEL, REWIND, HARMONY Outcomes, PIONEER-6 |
+| SGLT2 inhibitor | CANVAS, EMPA-REG OUTCOME, VERTIS-CV, CREDENCE |
+
+Current tests:
+
+- validate the manifest schema, source boundary, treatment labels, NCT IDs, HR/CI containment, and no certification effect;
+- verify every HR/CI against live ClinicalTrials.gov API results snapshots using NCT identity, completed status, outcome-title terms, exact HR/CI fields, and drug/placebo source terms;
+- recompute study-level log-HR effects from the verified CT.gov HR/CI values;
+- fit a fixed-effect contrast-GLS NMA and a generalized-DL random-effects contrast-GLS NMA;
+- recompute the generated benchmark artifact from the manifest and source snapshot;
+- require `certification_effect = "none"` because source verification does not prove model performance or tier-one parity.
+
+Current local benchmark results:
+
+| Model | Treatment class vs placebo | HR | 95% interval |
+| --- | --- | ---: | ---: |
+| Fixed GLS | DPP-4 inhibitor | 0.995 | 0.915 to 1.082 |
+| Fixed GLS | GLP-1 RA | 0.869 | 0.822 to 0.918 |
+| Fixed GLS | SGLT2 inhibitor | 0.895 | 0.827 to 0.967 |
+| Random GLS | DPP-4 inhibitor | 0.995 | 0.915 to 1.082 |
+| Random GLS | GLP-1 RA | 0.869 | 0.822 to 0.918 |
+| Random GLS | SGLT2 inhibitor | 0.895 | 0.827 to 0.967 |
+
+The random-effects artifact currently estimates `tau2 = 0.0` with `Q = 6.8785` and `df = 7`, so random and fixed GLS estimates coincide in this fixture.
+
+Limitations:
+
+- this is a placebo-centered star network, so closed-loop inconsistency and node-splitting cannot be assessed;
+- class labels are analyst-defined groupings and do not prove class exchangeability or clinical superiority;
+- composite outcome definitions are similar but not identical across trials;
+- CT.gov results records are verified, but this is not yet external `netmeta`, `multinma`, or CmdStan parity;
+- no clinical, regulatory, or HTA decision claim is made from this local artifact.
+
 ## Static-Vs-Dynamic Hardcode Disclosure
 
 | Item | Static or dynamic | Evidence source | Disclosure |
@@ -157,6 +207,9 @@ Limitations:
 | Reported HR snapshot | Dynamic public API check | `scripts/verify_pubmed_survival_hrs.py` against PubMed EFetch abstracts | Verifies HR/CI tokens near the hazard-ratio anchor and treatment terms, not KM digitization |
 | Reported HR source identity | Dynamic public API check | `scripts/verify_survival_sources.py` and `validation/source_checks/sglt2_hf_reported_hr_source_check.json` | Verifies CT.gov NCT IDs and PubMed PMIDs before reported HR tokens are benchmarked |
 | Reported HR benchmark | Dynamic computation | `scripts/write_survival_hr_benchmark.py` plus `bias_nma_adv.survival_benchmark` | Recomputes log-HR study effects and pairwise pooling from verified identity and reported-HR source snapshots |
+| CT.gov reported-HR network manifest | Static fixture | `validation/networks/t2d_mace_ctgov_hrs.toml` | Stores NCT IDs, class labels, drug terms, outcome-search terms, and HR/CI values that must be verified before use |
+| CT.gov reported-HR network snapshot | Dynamic public API check | `scripts/verify_ctgov_hr_network.py` against ClinicalTrials.gov API v2 | Verifies NCT identity, completed status, exact HR/CI analysis fields, outcome-title terms, and drug/placebo terms |
+| CT.gov reported-HR network benchmark | Dynamic computation | `scripts/write_ctgov_hr_network_benchmark.py` plus `bias_nma_adv.ctgov_hr_network` | Recomputes log-HR study effects and fixed/random contrast-GLS NMA from the verified CT.gov source snapshot |
 | Source-check certification effect | Static contract | `certification_effect = "none"` in source-check artifacts | Source-token verification cannot certify model performance or tier-one parity |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
 | Pairwise bridge result | Dynamic computation | `bias_nma_adv.pairwise.fit_pairwise_meta` | Recomputed by tests from source-backed study-level effects |

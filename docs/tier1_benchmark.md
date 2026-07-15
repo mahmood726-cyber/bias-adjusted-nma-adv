@@ -60,6 +60,8 @@ Current local multi-arm artifact: `validation/multiarm/netmeta_portfolio_multiar
 
 Current KM reconstruction guard: `validation/survival/km_reconstruction_policy.toml` and `src/bias_nma_adv/km_reconstruction.py` define the survival lane's first fail-closed screen. Open-access paper figure provenance is required, text-only HR outputs are rejected, and synthetic IPD fallbacks are blocked before a result can enter a validation artifact.
 
+Current real network artifact: `validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml` recomputes a ClinicalTrials.gov-reported HR star network for type 2 diabetes cardiovascular outcome trials from `validation/networks/t2d_mace_ctgov_hrs.toml` and `validation/source_checks/t2d_mace_ctgov_hr_network_check.json`. It is useful as a source-governed multi-treatment regression test, but it carries `certification_effect = "none"` because the network is placebo-centered, has no closed loops for inconsistency assessment, uses analyst-defined class labels, and has not passed external `netmeta`/`multinma` reference matching.
+
 ### Phase 1: Match Tier One
 
 For each module, reproduce the established implementation before claiming improvement.
@@ -128,6 +130,7 @@ Winners should be reported separately for statistical accuracy, uncertainty cali
 | Reference-run preflight | Dynamic local environment check | `validation/reference_runs/*.toml` | Unavailable or failed adapters are recorded but cannot certify a module |
 | Multi-arm fixture replay | Static algorithmic fixture plus dynamic local recomputation | `validation/multiarm/*` and `tests/test_multiarm_artifact.py` | Validates local covariance handling on a small fixture; not clinical evidence and not external `netmeta` parity |
 | KM reconstruction policy | Static screen plus local unit fixtures | `validation/survival/km_reconstruction_policy.toml` and `tests/test_km_reconstruction_policy.py` | Blocks text-only and synthetic-IPD survival outputs; does not digitize any OA curve yet |
+| CT.gov reported-HR network | Static manifest plus dynamic CT.gov source snapshot | `validation/networks/t2d_mace_ctgov_hrs.toml`, `validation/source_checks/t2d_mace_ctgov_hr_network_check.json`, and `tests/test_ctgov_hr_network.py` | Verifies public CT.gov HR/CI records and recomputes a local star-network GLS artifact; not reference matching or clinical guidance |
 | Source-identity snapshots | Dynamic public API check | `validation/source_checks/*source_check.json` | Verifies public-record identity and reachability, not numeric extraction |
 | Event-count snapshots | Dynamic public API check | `validation/source_checks/*event_counts.json` | Verifies exact abstract count tokens and nearby treatment terms, not full paper extraction |
 | Reported-HR snapshots | Dynamic public API check | `validation/source_checks/*reported_hr_tokens.json` | Verifies HR/CI abstract tokens near a hazard-ratio anchor, not survival model fitting |
