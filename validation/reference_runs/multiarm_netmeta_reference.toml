@@ -1,0 +1,26 @@
+schema_version = "reference_run/v1"
+target_id = "multiarm_gls_netmeta_portfolio_fixture"
+adapter_id = "r_netmeta_multiarm_output_validation"
+reference_method = "netmeta"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-15T00:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/multiarm_netmeta_fixture.R", "--arms", "validation/multiarm/netmeta_portfolio_multiarm_arms.csv", "--output", "validation/reference_runs/multiarm_netmeta_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", netmeta = "3.5.0", meta = "8.5.0"}
+input_artifacts = ["validation/multiarm/netmeta_portfolio_multiarm_arms.csv", "validation/multiarm/netmeta_portfolio_multiarm_benchmark.toml", "external/r/multiarm_netmeta_fixture.R"]
+output_artifacts = ["validation/reference_runs/multiarm_netmeta_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["multiarm_fixed_effect_estimates", "multiarm_random_effect_estimates", "multiarm_standard_errors", "random_effect_tau2_q_df"]
+max_abs_difference = 2.1316282072803006e-14
+notes = ["This local fixture validates multi-arm covariance handling against netmeta outputs; it is not clinical evidence."]
+
+[input_sha256]
+"validation/multiarm/netmeta_portfolio_multiarm_arms.csv" = "4350855d567dc6fef36fa45c81451fead0809b9aa3a9008b1a13ac778a069e5a"
+"validation/multiarm/netmeta_portfolio_multiarm_benchmark.toml" = "435425b142e19a02de764c3ad5c6ead16a93250cef8bb5ae2a9ee1a7d6b585d5"
+"external/r/multiarm_netmeta_fixture.R" = "367c107d645c6d9f2fab8e54889956cd0e255190fd3694b637d09f534b55d685"
+
+[output_sha256]
+"validation/reference_runs/multiarm_netmeta_output.json" = "92325cb2c40a1bd17bad936d9fb2d7779993c6b3bbcbcaac38d52ca9434fedee"

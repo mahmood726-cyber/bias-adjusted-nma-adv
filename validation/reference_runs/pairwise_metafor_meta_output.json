@@ -1,0 +1,67 @@
+{
+  "schema_version": "pairwise_metafor_meta/v1",
+  "effect_scale": "log_or",
+  "package_versions": {
+    "R": "4.6.0",
+    "metafor": "5.0.1",
+    "meta": "8.5.0"
+  },
+  "study_effects": [
+    {
+      "study_id": "DAPA-HF",
+      "nct_id": "NCT03036124",
+      "pmid": 31535829,
+      "yi": -0.323985185323152,
+      "vi": 0.00562102218971607,
+      "sei": 0.0749734765748266,
+      "_row": "DAPA-HF"
+    },
+    {
+      "study_id": "DELIVER",
+      "nct_id": "NCT03619213",
+      "pmid": 36027570,
+      "yi": -0.212874660110696,
+      "vi": 0.0043708050921773,
+      "sei": 0.0661120646491796,
+      "_row": "DELIVER"
+    },
+    {
+      "study_id": "EMPEROR-Preserved",
+      "nct_id": "NCT03057951",
+      "pmid": 34449189,
+      "yi": -0.248396802220566,
+      "vi": 0.00515710819234374,
+      "sei": 0.0718130085175641,
+      "_row": "EMPEROR-Preserved"
+    },
+    {
+      "study_id": "EMPEROR-Reduced",
+      "nct_id": "NCT03057977",
+      "pmid": 32865377,
+      "yi": -0.313447183305092,
+      "vi": 0.00631210800062205,
+      "sei": 0.0794487759542087,
+      "_row": "EMPEROR-Reduced"
+    }
+  ],
+  "metafor": {
+    "fixed_effect": {
+      "estimate": -0.268983621896991,
+      "se": 0.0362970503704532,
+      "ci_low": -0.340124533368115,
+      "ci_high": -0.197842710425867,
+      "tau2": 0,
+      "q": 1.65386175414389,
+      "df": 3
+    },
+    "reml_hksj": {
+      "estimate": -0.268983621896991,
+      "se": 0.0269500955231179,
+      "ci_low": -0.354750853821581,
+      "ci_high": -0.183216389972401,
+      "tau2": 0,
+      "q": 1.65386175414389,
+      "df": 3
+    }
+  }
+}

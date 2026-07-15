@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 from pathlib import Path
+import os
 import shutil
 import subprocess
 from datetime import UTC, datetime
@@ -47,8 +48,29 @@ def toml_path(path: Path) -> str:
     return path.as_posix()
 
 
+def find_rscript() -> str | None:
+    """Find Rscript from PATH or standard Windows Program Files R installs."""
+
+    path_hit = shutil.which("Rscript")
+    if path_hit:
+        return path_hit
+    candidates: list[Path] = []
+    for env_name in ("ProgramFiles", "ProgramFiles(x86)"):
+        program_root = os.environ.get(env_name)
+        if not program_root:
+            continue
+        r_root = Path(program_root) / "R"
+        if r_root.is_dir():
+            candidates.extend(sorted(r_root.glob("R-*\\bin\\Rscript.exe"), reverse=True))
+            candidates.extend(sorted(r_root.glob("R-*\\bin\\x64\\Rscript.exe"), reverse=True))
+    for candidate in candidates:
+        if candidate.is_file():
+            return str(candidate)
+    return None
+
+
 def build_report(root: Path, checked_at: str) -> str:
-    rscript = shutil.which("Rscript")
+    rscript = find_rscript()
     input_paths = [
         DEFAULT_EVENTS,
         DEFAULT_SOURCES,

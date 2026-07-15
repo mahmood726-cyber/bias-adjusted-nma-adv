@@ -51,6 +51,7 @@ output/
 !validation/source_checks/*.json
 !validation/ingestion/
 !validation/ingestion/*.json
+!validation/reference_runs/*.json
 
 # Sentinel findings
 PROGRESS.md

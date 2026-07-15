@@ -1,0 +1,67 @@
+{
+  "schema_version": "multiarm_netmeta_fixture/v1",
+  "effect_scale": "log_or",
+  "package_versions": {
+    "R": "4.6.0",
+    "netmeta": "3.5.0",
+    "meta": "8.5.0"
+  },
+  "fixtures": [
+    {
+      "fixture_id": "consistent",
+      "reference_treatment": "A",
+      "treatments": ["A", "B", "C"],
+      "tau2": 0,
+      "q": 1.91524553797609,
+      "df": 5,
+      "common": {
+        "B": {
+          "estimate": 0.592555965856887,
+          "se": 0.2043271462928
+        },
+        "C": {
+          "estimate": 0.484129805453179,
+          "se": 0.215505712329412
+        }
+      },
+      "random": {
+        "B": {
+          "estimate": 0.592555965856887,
+          "se": 0.2043271462928
+        },
+        "C": {
+          "estimate": 0.484129805453179,
+          "se": 0.215505712329412
+        }
+      }
+    },
+    {
+      "fixture_id": "heterogeneous",
+      "reference_treatment": "A",
+      "treatments": ["A", "B", "C"],
+      "tau2": 0.892199816457631,
+      "q": 45.1375162628079,
+      "df": 6,
+      "common": {
+        "B": {
+          "estimate": 0.00387849446439953,
+          "se": 0.16047528587689
+        },
+        "C": {
+          "estimate": 0.234150461843201,
+          "se": 0.205642034779959
+        }
+      },
+      "random": {
+        "B": {
+          "estimate": 0.0805775133564202,
+          "se": 0.466058791086225
+        },
+        "C": {
+          "estimate": 0.358493324152201,
+          "se": 0.526295204891273
+        }
+      }
+    }
+  ]
+}

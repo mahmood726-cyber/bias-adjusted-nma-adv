@@ -2,13 +2,13 @@ schema_version = "reference_run/v1"
 target_id = "multiarm_gls_netmeta_portfolio_fixture"
 adapter_id = "r_netmeta_multiarm_preflight"
 reference_method = "netmeta"
-status = "unavailable"
+status = "failed"
 certification_effect = "none"
 checked_at = "2026-07-15T00:00:00Z"
 command = ["Rscript", "--vanilla", "external/r/multiarm_netmeta_fixture.R", "--arms", "validation/multiarm/netmeta_portfolio_multiarm_arms.csv", "--output", "validation/reference_runs/multiarm_netmeta_output.json"]
 executable = "Rscript"
-executable_found = false
-package_versions = {}
+executable_found = true
+package_versions = {R = "4.6.0", jsonlite = "2.0.0", meta = "8.5.0", netmeta = "3.5.0"}
 input_artifacts = [
   "validation/multiarm/netmeta_portfolio_multiarm_arms.csv",
   "validation/multiarm/netmeta_portfolio_multiarm_benchmark.toml",
@@ -16,11 +16,11 @@ input_artifacts = [
 ]
 output_artifacts = []
 tolerance = ""
-skip_reason = "Rscript is not available on PATH in this environment; no netmeta multi-arm parity was run."
+skip_reason = "Reference adapter prerequisites are available, but this preflight does not execute the parity adapter. Run the command and validate output before certification."
 
 [input_sha256]
 "validation/multiarm/netmeta_portfolio_multiarm_arms.csv" = "4350855d567dc6fef36fa45c81451fead0809b9aa3a9008b1a13ac778a069e5a"
 "validation/multiarm/netmeta_portfolio_multiarm_benchmark.toml" = "435425b142e19a02de764c3ad5c6ead16a93250cef8bb5ae2a9ee1a7d6b585d5"
-"external/r/multiarm_netmeta_fixture.R" = "9f7f5eca43eae8762b4b230529f01ae6bfe26611e6e1bc28bdf7389c80a2ce8b"
+"external/r/multiarm_netmeta_fixture.R" = "367c107d645c6d9f2fab8e54889956cd0e255190fd3694b637d09f534b55d685"
 
 [output_sha256]

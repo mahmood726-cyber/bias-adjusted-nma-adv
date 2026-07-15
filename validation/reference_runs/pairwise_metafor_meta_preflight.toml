@@ -2,13 +2,13 @@ schema_version = "reference_run/v1"
 target_id = "pairwise_metafor_meta"
 adapter_id = "r_metafor_meta_pairwise_preflight"
 reference_method = "metafor and meta"
-status = "unavailable"
+status = "failed"
 certification_effect = "none"
 checked_at = "2026-07-15T00:00:00Z"
 command = ["Rscript", "--vanilla", "external/r/pairwise_metafor_meta.R", "--events", "validation/real_meta/sglt2_hf_primary_events.csv", "--output", "validation/reference_runs/pairwise_metafor_meta_output.json"]
 executable = "Rscript"
-executable_found = false
-package_versions = {}
+executable_found = true
+package_versions = {R = "4.6.0", jsonlite = "2.0.0", meta = "8.5.0", metafor = "5.0.1"}
 input_artifacts = [
   "validation/real_meta/sglt2_hf_primary_events.csv",
   "validation/real_meta/sglt2_hf_primary_sources.toml",
@@ -17,12 +17,12 @@ input_artifacts = [
 ]
 output_artifacts = []
 tolerance = ""
-skip_reason = "Rscript is not available on PATH in this environment; no metafor/meta parity was run."
+skip_reason = "Reference adapter prerequisites are available, but this preflight does not execute the parity adapter. Run the command and validate output before certification."
 
 [input_sha256]
 "validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
 "validation/real_meta/sglt2_hf_primary_sources.toml" = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d"
 "validation/real_meta/sglt2_hf_primary_benchmark.toml" = "ade990172f79c9e7358fba7f3d8cb15efb95d7597d052c77ca096ae6d98aaef2"
-"external/r/pairwise_metafor_meta.R" = "2b35b074cd30acc80dede4337fcf37b16cf98e0dc80520e3b082763e96fea156"
+"external/r/pairwise_metafor_meta.R" = "23f443b5a046cc273fc75af5dd09bcfb95fa09828ee59385de987167522bb6ea"
 
 [output_sha256]

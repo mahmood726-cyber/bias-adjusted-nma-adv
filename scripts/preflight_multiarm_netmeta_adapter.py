@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from datetime import UTC, datetime
 import hashlib
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -50,8 +51,29 @@ def quote_toml(value: str) -> str:
     return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
+def find_rscript() -> str | None:
+    """Find Rscript from PATH or standard Windows Program Files R installs."""
+
+    path_hit = shutil.which("Rscript")
+    if path_hit:
+        return path_hit
+    candidates: list[Path] = []
+    for env_name in ("ProgramFiles", "ProgramFiles(x86)"):
+        program_root = os.environ.get(env_name)
+        if not program_root:
+            continue
+        r_root = Path(program_root) / "R"
+        if r_root.is_dir():
+            candidates.extend(sorted(r_root.glob("R-*\\bin\\Rscript.exe"), reverse=True))
+            candidates.extend(sorted(r_root.glob("R-*\\bin\\x64\\Rscript.exe"), reverse=True))
+    for candidate in candidates:
+        if candidate.is_file():
+            return str(candidate)
+    return None
+
+
 def build_report(root: Path, checked_at: str) -> str:
-    rscript = shutil.which("Rscript")
+    rscript = find_rscript()
     input_paths = [
         DEFAULT_ARMS,
         DEFAULT_BENCHMARK,
@@ -76,7 +98,7 @@ def build_report(root: Path, checked_at: str) -> str:
         )
         if r_version.returncode == 0 and r_version.stdout.strip():
             package_versions["R"] = r_version.stdout.strip()
-        for package_name in ("netmeta", "jsonlite"):
+        for package_name in ("netmeta", "meta", "jsonlite"):
             version = r_package_version(rscript, package_name)
             if version is None:
                 missing.append(package_name)

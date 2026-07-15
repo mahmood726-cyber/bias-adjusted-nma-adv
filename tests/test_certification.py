@@ -100,16 +100,17 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert sum(summary.values()) == 2
-    assert set(summary) <= {"unavailable", "failed"}
+    assert summary == {"failed": 2, "passed": 2}
 
-    by_target = {report.target_id: report for report in reports}
-    assert set(by_target) == {
-        "pairwise_metafor_meta",
-        "multiarm_gls_netmeta_portfolio_fixture",
+    by_adapter = {report.adapter_id: report for report in reports}
+    assert set(by_adapter) == {
+        "r_metafor_meta_pairwise_preflight",
+        "r_metafor_meta_pairwise_output_validation",
+        "r_netmeta_multiarm_preflight",
+        "r_netmeta_multiarm_output_validation",
     }
 
-    report = by_target["pairwise_metafor_meta"]
+    report = by_adapter["r_metafor_meta_pairwise_preflight"]
     assert report.adapter_id == "r_metafor_meta_pairwise_preflight"
     assert report.certification_effect == "none"
     assert report.is_certification_evidence_candidate is False
@@ -120,7 +121,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     assert PAIRWISE_R_ADAPTER.is_file()
     assert PAIRWISE_PREFLIGHT_SCRIPT.is_file()
 
-    report = by_target["multiarm_gls_netmeta_portfolio_fixture"]
+    report = by_adapter["r_netmeta_multiarm_preflight"]
     assert report.adapter_id == "r_netmeta_multiarm_preflight"
     assert report.reference_method == "netmeta"
     assert report.certification_effect == "none"
@@ -132,13 +133,38 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     assert MULTIARM_R_ADAPTER.is_file()
     assert MULTIARM_PREFLIGHT_SCRIPT.is_file()
 
-    for report in reports:
+    for report in (by_adapter["r_metafor_meta_pairwise_preflight"], by_adapter["r_netmeta_multiarm_preflight"]):
         assert report.output_artifacts == ()
         assert report.output_sha256 == {}
         assert report.tolerance == ""
+
+    pairwise_reference = by_adapter["r_metafor_meta_pairwise_output_validation"]
+    assert pairwise_reference.target_id == "pairwise_metafor_meta"
+    assert pairwise_reference.status == "passed"
+    assert pairwise_reference.certification_effect == "evidence_candidate"
+    assert pairwise_reference.output_artifacts == (
+        "validation/reference_runs/pairwise_metafor_meta_output.json",
+    )
+    assert pairwise_reference.tolerance == "absolute <= 1e-06 for validated components"
+
+    multiarm_reference = by_adapter["r_netmeta_multiarm_output_validation"]
+    assert multiarm_reference.target_id == "multiarm_gls_netmeta_portfolio_fixture"
+    assert multiarm_reference.status == "passed"
+    assert multiarm_reference.certification_effect == "evidence_candidate"
+    assert multiarm_reference.output_artifacts == (
+        "validation/reference_runs/multiarm_netmeta_output.json",
+    )
+    assert multiarm_reference.tolerance == "absolute <= 1e-06 for validated components"
+
+    for report in reports:
         for artifact, expected_sha in report.input_sha256.items():
             assert sha256_file(ROOT / artifact) == expected_sha
-    assert certification_candidate_artifacts(reports) == ()
+        for artifact, expected_sha in report.output_sha256.items():
+            assert sha256_file(ROOT / artifact) == expected_sha
+    assert set(certification_candidate_artifacts(reports)) == {
+        "validation/reference_runs/pairwise_metafor_meta_output.json",
+        "validation/reference_runs/multiarm_netmeta_output.json",
+    }
 
 
 def test_reference_run_rejects_nonpassed_certification_evidence():

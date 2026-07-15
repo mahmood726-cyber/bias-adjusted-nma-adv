@@ -34,6 +34,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/simulation_matrix.py`: Validator and runner for executable, non-certifying simulation smoke jobs tied to the grand-benchmark plan.
 - `src/bias_nma_adv/portfolio_reuse.py`: Local portfolio reuse registry and scanner for candidate methods/source-ingestion components; it is non-certifying and takes roots at runtime.
 - `src/bias_nma_adv/proof_effect_bundle.py`: Validator and writer support for proof-carrying extracted-effect bundles that bind reported effects to verified source manifests, source-check reports, and minimal source snippets.
+- `src/bias_nma_adv/r_reference_validation.py`: Validates optional R reference-output JSON from `metafor`, `meta`, and `netmeta` against local source-backed or algorithmic benchmark artifacts before any report can become an evidence candidate.
 - `src/bias_nma_adv/review_ledger.py`: Machine-readable multiperson review ledger validator for source-boundary, statistical, implementation, and claims-governance review rounds.
 - `src/bias_nma_adv/validation_status.py`: Unified validation-status report composing source-backed benchmark, reference-target, and reference-run gates without changing certification status.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
@@ -57,6 +58,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, and later tier-one NMA packages.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
 - `scripts/preflight_multiarm_netmeta_adapter.py`: Regenerates the non-certifying `netmeta` multi-arm adapter preflight report.
+- `scripts/validate_r_reference_outputs.py`: Validates generated R reference-output JSON and writes separate passed candidate reports with output hashes and tolerances.
 - `scripts/validate_benchmark_registry.py`: Validates every registered local source-backed benchmark and emits an optional JSON summary for CI/Overmind-style gates.
 - `scripts/run_simulation_matrix.py`: Runs the non-certifying simulation matrix and emits a JSON report for operating-characteristic smoke checks.
 - `scripts/scan_portfolio_reuse.py`: Scans user-supplied local roots for registered portfolio reuse candidates and reports dirty worktrees, missing assets, and import-review status.

@@ -120,7 +120,7 @@ main <- function() {
     )
   )
 
-  jsonlite::write_json(output, parsed$output, auto_unbox = TRUE, pretty = TRUE)
+  jsonlite::write_json(output, parsed$output, auto_unbox = TRUE, pretty = TRUE, digits = NA)
 }
 
 main()

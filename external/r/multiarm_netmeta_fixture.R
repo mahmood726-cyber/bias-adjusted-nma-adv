@@ -7,6 +7,9 @@ suppressPackageStartupMessages({
   if (!requireNamespace("netmeta", quietly = TRUE)) {
     stop("Package 'netmeta' is required. Install with install.packages('netmeta').")
   }
+  if (!requireNamespace("meta", quietly = TRUE)) {
+    stop("Package 'meta' is required. Install with install.packages('meta').")
+  }
 })
 
 parse_args <- function(args) {
@@ -50,7 +53,7 @@ as_effects <- function(nm, reference, model) {
 
 fit_fixture <- function(rows, fixture_id, reference) {
   fixture_rows <- rows[rows$fixture_id == fixture_id, , drop = FALSE]
-  pw <- netmeta::pairwise(
+  pw <- meta::pairwise(
     treat = treatment,
     event = events,
     n = n,
@@ -88,12 +91,13 @@ main <- function() {
     effect_scale = "log_or",
     package_versions = list(
       R = as.character(getRversion()),
-      netmeta = as.character(utils::packageVersion("netmeta"))
+      netmeta = as.character(utils::packageVersion("netmeta")),
+      meta = as.character(utils::packageVersion("meta"))
     ),
     fixtures = fixtures
   )
 
-  jsonlite::write_json(output, parsed$output, auto_unbox = TRUE, pretty = TRUE)
+  jsonlite::write_json(output, parsed$output, auto_unbox = TRUE, pretty = TRUE, digits = NA)
 }
 
 main()

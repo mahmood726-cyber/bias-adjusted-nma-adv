@@ -111,10 +111,25 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 2
-    assert reference_runs["status_counts"] == {"unavailable": 2}
-    assert reference_runs["certification_candidate_artifacts"] == []
-    assert {item["certification_effect"] for item in reference_runs["reports"]} == {"none"}
+    assert reference_runs["n_reports"] == 4
+    assert reference_runs["status_counts"] == {"failed": 2, "passed": 2}
+    assert set(reference_runs["certification_candidate_artifacts"]) == {
+        "validation/reference_runs/pairwise_metafor_meta_output.json",
+        "validation/reference_runs/multiarm_netmeta_output.json",
+    }
+    assert {item["certification_effect"] for item in reference_runs["reports"]} == {
+        "none",
+        "evidence_candidate",
+    }
+    assert {
+        (item["adapter_id"], item["status"])
+        for item in reference_runs["reports"]
+    } == {
+        ("r_metafor_meta_pairwise_preflight", "failed"),
+        ("r_metafor_meta_pairwise_output_validation", "passed"),
+        ("r_netmeta_multiarm_preflight", "failed"),
+        ("r_netmeta_multiarm_output_validation", "passed"),
+    }
 
 
 def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):

@@ -81,7 +81,7 @@ Current local benchmark contract: `validation/real_meta/sglt2_hf_primary_benchma
 
 External reference preflight: `validation/reference_runs/pairwise_metafor_meta_preflight.toml`.
 
-The external `metafor`/`meta` parity adapter is planned at `external/r/pairwise_metafor_meta.R`, but the current preflight is `unavailable` because `Rscript` is not available on PATH in this environment. This benchmark therefore remains a local source-backed validation artifact, not a reference-matched artifact.
+Validated local R output: `validation/reference_runs/pairwise_metafor_meta_reference.toml` validates `validation/reference_runs/pairwise_metafor_meta_output.json` against this source-backed benchmark. It matches study-level log-OR effects and the fixed-effect pooled result within the stated tolerance, and it records the expected HKSJ difference: `metafor` uses the unfloored KNHA factor here, while this Python artifact applies the prespecified HKSJ floor. This is a narrow evidence-candidate parity artifact, not broad production certification.
 
 | Engine | Estimate | SE / posterior SD | 95% interval |
 | --- | ---: | ---: | ---: |
@@ -106,7 +106,7 @@ Limitations:
 - the proof-carrying extraction bundle validates model-ingestion provenance only; it does not certify source extraction accuracy beyond the checked abstract HR/CI tokens and does not certify any estimator;
 - the REML heterogeneity estimate is zero on this four-study fixture, so this is not evidence of random-effects superiority;
 - PubMed/CT.gov source identity is verified by public API snapshots, and the arm counts are checked against exact PubMed abstract count tokens; full paper/table extraction, time-to-event HR extraction, and independent dual extraction remain future work;
-- this benchmark does not yet have a passed external `metafor`, `meta`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference run.
+- this benchmark now has a narrow local `metafor`/`meta` output-validation report for fixed-effect and documented HKSJ-convention checks, but it does not yet satisfy all planned pairwise, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference targets.
 
 ## Benchmark 2: PCSK9 Inhibitors And Major Cardiovascular Events
 
@@ -221,7 +221,8 @@ Limitations:
 | Source-check certification effect | Static contract | `certification_effect = "none"` in source-check artifacts | Source-token verification cannot certify model performance or tier-one parity |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
 | Pairwise bridge result | Dynamic computation | `bias_nma_adv.pairwise.fit_pairwise_meta` | Recomputed by tests from source-backed study-level effects |
-| External pairwise reference run | Dynamic local environment preflight | `validation/reference_runs/pairwise_metafor_meta_preflight.toml` | Recorded as unavailable and has `certification_effect = "none"` |
+| External pairwise reference preflight | Dynamic local environment preflight | `validation/reference_runs/pairwise_metafor_meta_preflight.toml` | Records dependency availability only and has `certification_effect = "none"` |
+| External pairwise reference output | Dynamic local R execution plus Python validation | `validation/reference_runs/pairwise_metafor_meta_output.json`, `validation/reference_runs/pairwise_metafor_meta_reference.toml`, and `src/bias_nma_adv/r_reference_validation.py` | Validates narrow `metafor`/`meta` output parity for study log-OR effects, fixed-effect pooling, REML tau2/Q/df, and documented HKSJ floor differences; not production certification |
 | Candidate frequentist result | Dynamic computation | `AdvancedBiasAdjustedNMAPooler` | Recomputed by tests from the CSV rows |
 | Candidate Bayesian result | Dynamic seeded computation | `BayesianNMAMCMCSampler` with seed 20260715 | Recomputed by tests with tolerance for sampler behavior |
 | Certification status | Static contract | `sglt2_hf_primary_benchmark.toml` | `certification_effect = "none"` until external reference matching exists |
