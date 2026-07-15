@@ -1,0 +1,110 @@
+schema_version = "grand_benchmark_plan/v1"
+checked_at = "2026-07-15"
+purpose = "Prespecified validation plan for proving source-backed evidence-synthesis performance without overclaiming superiority."
+allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
+certification_effect = "none"
+superiority_claim_policy = "No native method is described as better than tier-one specialist software until source-backed real-data benchmarks, prespecified simulations, and external reference matching all pass with machine-verifiable artifacts."
+
+[[real_data_lanes]]
+id = "source_backed_binary_pairwise_meta"
+status = "active"
+evidence_class = "real_source_backed"
+source_policy = "clinicaltrials_gov + pubmed_abstract only"
+benchmark_registry_ids = ["sglt2_hf_primary_log_or"]
+required_artifacts = [
+  "source_manifest",
+  "source_identity_check",
+  "event_count_token_check",
+  "analysis_artifact",
+  "external_reference_run_before_certification",
+]
+claim_limit = "Validates source-governed pairwise binary analysis only; it does not certify network meta-analysis parity or clinical superiority."
+certification_effect = "none"
+
+[[real_data_lanes]]
+id = "source_backed_reported_survival_hr_pairwise"
+status = "active"
+evidence_class = "real_source_backed"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+benchmark_registry_ids = [
+  "sglt2_hf_reported_hr",
+  "pcsk9_mace_reported_hr",
+]
+required_artifacts = [
+  "source_manifest",
+  "source_identity_check",
+  "reported_hr_token_check",
+  "analysis_artifact",
+  "external_reference_run_before_certification",
+]
+claim_limit = "Validates reported-HR token provenance and pairwise log-HR recomputation only; it is not Kaplan-Meier reconstruction or survival-NMA certification."
+certification_effect = "none"
+
+[[real_data_lanes]]
+id = "source_backed_ctgov_reported_hr_network"
+status = "active"
+evidence_class = "real_source_backed"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+benchmark_registry_ids = ["t2d_mace_ctgov_hr_network"]
+required_artifacts = [
+  "source_manifest",
+  "ctgov_hr_source_check",
+  "network_analysis_artifact",
+  "external_reference_run_before_certification",
+]
+claim_limit = "Validates a source-governed placebo-centered star network only; it cannot establish closed-loop inconsistency performance or class-level clinical superiority."
+certification_effect = "none"
+
+[[simulation_scenarios]]
+id = "binary_sparse_multiarm_bias_grid"
+status = "planned"
+evidence_class = "simulation"
+uses_real_data = false
+outcome_families = ["binary"]
+network_features = ["small_network", "large_network", "multi_arm", "rare_events", "zero_events"]
+design_features = ["rct_only", "rct_nrs_conflict", "high_risk_of_bias"]
+methods_under_test = [
+  "standard_nma",
+  "hksj_bias_adjusted_nma",
+  "downweighted_sensitivity_model",
+  "tier_one_reference_targets",
+]
+metrics = ["bias", "rmse", "interval_coverage", "calibration", "convergence_failure", "runtime"]
+claim_limit = "Simulation can evaluate operating characteristics but cannot be presented as real clinical validation."
+certification_effect = "none"
+
+[[simulation_scenarios]]
+id = "survival_nonph_and_km_reconstruction_grid"
+status = "planned"
+evidence_class = "simulation"
+uses_real_data = false
+outcome_families = ["time_to_event"]
+network_features = ["non_proportional_hazards", "crossing_curves", "limited_risk_tables", "multi_arm"]
+design_features = ["rct_only", "informative_censoring_sensitivity"]
+methods_under_test = [
+  "reported_hr_pairwise",
+  "km_reconstruction_policy",
+  "rmst_sensitivity",
+  "tier_one_reference_targets",
+]
+metrics = ["bias", "rmse", "interval_coverage", "calibration", "convergence_failure", "runtime"]
+claim_limit = "Simulation-only survival curves test robustness only; real OA figure validation requires separate source-backed artifacts."
+certification_effect = "none"
+
+[[simulation_scenarios]]
+id = "effect_modifier_transport_and_mlnmr_grid"
+status = "planned"
+evidence_class = "simulation"
+uses_real_data = false
+outcome_families = ["binary", "continuous", "time_to_event"]
+network_features = ["effect_modifier_imbalance", "limited_overlap", "disconnected_subnetworks"]
+design_features = ["ipd_plus_aggregate", "aggregate_covariate_reconstruction", "target_population_shift"]
+methods_under_test = [
+  "transportability_support_certificate",
+  "mlnmr_reference_target",
+  "standard_nma",
+  "tier_one_reference_targets",
+]
+metrics = ["bias", "rmse", "interval_coverage", "calibration", "convergence_failure", "runtime"]
+claim_limit = "Transport and ML-NMR simulations must report support and extrapolation failures before any accuracy claim."
+certification_effect = "none"

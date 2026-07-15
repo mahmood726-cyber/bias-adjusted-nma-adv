@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from bias_nma_adv.benchmark_registry import BenchmarkRegistryError  # noqa: E402
 from bias_nma_adv.certification import CertificationError  # noqa: E402
+from bias_nma_adv.grand_benchmark_plan import GrandBenchmarkPlanError  # noqa: E402
 from bias_nma_adv.validation_status import (  # noqa: E402
     VALIDATION_STATUS_SCHEMA_VERSION,
     build_validation_status,
@@ -36,7 +37,13 @@ def main(argv: list[str] | None = None) -> int:
     root = args.root.resolve()
     try:
         report = build_validation_status(root, checked_at=args.checked_at)
-    except (BenchmarkRegistryError, CertificationError, OSError, json.JSONDecodeError) as exc:
+    except (
+        BenchmarkRegistryError,
+        CertificationError,
+        GrandBenchmarkPlanError,
+        OSError,
+        json.JSONDecodeError,
+    ) as exc:
         failure = {
             "schema_version": VALIDATION_STATUS_SCHEMA_VERSION,
             "status": "failed",

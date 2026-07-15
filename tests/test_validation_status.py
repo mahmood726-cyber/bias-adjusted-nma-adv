@@ -42,6 +42,14 @@ def test_validation_status_composes_all_current_gates():
         "t2d_mace_ctgov_hr_network",
     }
 
+    grand_plan = report["grand_benchmark_plan"]
+    assert grand_plan["plan"] == "validation/grand_benchmark_plan.toml"
+    assert grand_plan["n_real_data_lanes"] == 3
+    assert grand_plan["real_data_lane_status_counts"] == {"active": 3}
+    assert grand_plan["n_simulation_scenarios"] == 3
+    assert grand_plan["simulation_scenario_status_counts"] == {"planned": 3}
+    assert grand_plan["certification_effect"] == "none"
+
     reference_targets = report["reference_targets"]
     assert reference_targets["registry"] == "validation/reference_targets.toml"
     assert reference_targets["status_counts"] == {

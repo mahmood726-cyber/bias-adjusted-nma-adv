@@ -30,12 +30,14 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/km_reconstruction.py`: Fail-closed screen for open-access Kaplan-Meier reconstruction results before they can enter survival validation artifacts.
 - `src/bias_nma_adv/ctgov_hr_network.py`: Source-verified ClinicalTrials.gov reported-HR network benchmark support.
 - `src/bias_nma_adv/benchmark_registry.py`: Machine-readable registry validator for local source-backed benchmark artifacts, source-check semantics, and pinned hashes.
+- `src/bias_nma_adv/grand_benchmark_plan.py`: Validator for the prespecified grand-benchmark plan separating real source-backed lanes from simulation-only operating-characteristic scenarios.
 - `src/bias_nma_adv/validation_status.py`: Unified validation-status report composing source-backed benchmark, reference-target, and reference-run gates without changing certification status.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
 - `tests/`: Unit and integration test suite.
 - `reproduce.py`: Benchmark script running 200 simulation iterations.
 - `reproduce_real_meta.py`: Runs the source-backed SGLT2 heart-failure real-meta benchmark.
 - `validation/reference_targets.toml`: Machine-readable reference targets required before tier-one parity or production certification claims.
+- `validation/grand_benchmark_plan.toml`: Prespecified source-bound validation plan for real-data lanes and simulation scenarios; it contains no benchmark results and has `certification_effect = "none"`.
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.

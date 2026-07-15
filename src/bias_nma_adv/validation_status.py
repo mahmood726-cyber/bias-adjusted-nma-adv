@@ -19,6 +19,10 @@ from bias_nma_adv.certification import (
     summarize_reference_run_reports,
     summarize_reference_targets,
 )
+from bias_nma_adv.grand_benchmark_plan import (
+    summarize_grand_benchmark_plan,
+    validate_grand_benchmark_plan,
+)
 
 
 VALIDATION_STATUS_SCHEMA_VERSION = "validation_status/v1"
@@ -47,11 +51,16 @@ def build_validation_status(
 
     root = Path(repo_root).resolve()
     registry_path = root / "validation" / "benchmark_registry.toml"
+    grand_benchmark_plan_path = root / "validation" / "grand_benchmark_plan.toml"
     reference_targets_path = root / "validation" / "reference_targets.toml"
     reference_runs_path = root / "validation" / "reference_runs"
 
     registry = validate_source_benchmark_registry(registry_path, repo_root=root)
     assert_registry_covers_source_backed_artifacts(registry, repo_root=root)
+    grand_benchmark_plan = validate_grand_benchmark_plan(
+        grand_benchmark_plan_path,
+        source_registry=registry,
+    )
 
     targets = load_reference_targets(reference_targets_path)
     assert_no_unsupported_production_claims(targets)
@@ -82,6 +91,10 @@ def build_validation_status(
             registry_path=registry_path,
             repo_root=root,
         ),
+        "grand_benchmark_plan": {
+            "plan": _relpath(grand_benchmark_plan_path, root),
+            **summarize_grand_benchmark_plan(grand_benchmark_plan),
+        },
         "reference_targets": {
             "registry": _relpath(reference_targets_path, root),
             "n_targets": len(targets),

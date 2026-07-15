@@ -48,7 +48,7 @@ Failure modes that must remain explicit:
 
 ## Staged Validation Strategy
 
-The executable reference-target registry is `validation/reference_targets.toml`. It is intentionally conservative: every target starts as `planned`, and certification tests fail closed if a module is promoted without evidence artifacts. Real-world validation data must come from ClinicalTrials.gov records, PubMed abstracts, or open-access papers only.
+The executable reference-target registry is `validation/reference_targets.toml`. It is intentionally conservative: every target starts as `planned`, and certification tests fail closed if a module is promoted without evidence artifacts. The grand-benchmark plan in `validation/grand_benchmark_plan.toml` separates real source-backed validation lanes from simulation-only operating-characteristic scenarios. Real-world validation data must come from ClinicalTrials.gov records, PubMed abstracts, or open-access papers only.
 
 External reference adapters must also emit machine-readable run reports under `validation/reference_runs/`. A skipped or unavailable adapter is recorded as `certification_effect = "none"` and cannot count as reference-matching evidence. A report becomes a certification candidate only when it has `status = "passed"`, package versions, input and output artifact hashes, and a prespecified tolerance.
 
@@ -138,6 +138,7 @@ Winners should be reported separately for statistical accuracy, uncertainty cali
 | KM reconstruction policy | Static screen plus local unit fixtures | `validation/survival/km_reconstruction_policy.toml` and `tests/test_km_reconstruction_policy.py` | Blocks text-only and synthetic-IPD survival outputs; does not digitize any OA curve yet |
 | CT.gov reported-HR network | Static manifest plus dynamic CT.gov source snapshot | `validation/networks/t2d_mace_ctgov_hrs.toml`, `validation/source_checks/t2d_mace_ctgov_hr_network_check.json`, and `tests/test_ctgov_hr_network.py` | Verifies public CT.gov HR/CI records and recomputes a local star-network GLS artifact; not reference matching or clinical guidance |
 | Source-backed benchmark registry | Static registry plus dynamic hash checks | `validation/benchmark_registry.toml` and `tests/test_benchmark_registry.py` | Provides the canonical inventory of local real-data benchmark artifacts and enforces non-certification status until external reference artifacts pass |
+| Grand benchmark plan | Static source-bound plan plus dynamic registry cross-check | `validation/grand_benchmark_plan.toml`, `src/bias_nma_adv/grand_benchmark_plan.py`, and `tests/test_grand_benchmark_plan.py` | Separates real source-backed lanes from simulation scenarios; contains no results and cannot certify superiority |
 | Unified validation status | Dynamic local gate summary | `src/bias_nma_adv/validation_status.py`, `scripts/write_validation_status.py`, and `tests/test_validation_status.py` | Composes current gates into JSON; does not certify models or enable clinical/HTA reporting |
 | Source-identity snapshots | Dynamic public API check | `validation/source_checks/*source_check.json` | Verifies public-record identity and reachability, not numeric extraction |
 | Event-count snapshots | Dynamic public API check | `validation/source_checks/*event_counts.json` | Verifies exact abstract count tokens and nearby treatment terms, not full paper extraction |
