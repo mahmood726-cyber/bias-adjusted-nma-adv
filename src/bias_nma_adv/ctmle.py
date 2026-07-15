@@ -1,9 +1,42 @@
-"""Collaborative Targeted Minimum Loss-Based Estimation (C-TMLE) module."""
-
 from __future__ import annotations
 
 import numpy as np
-from bias_nma_adv.tmle import LogisticRegressionSolver, sigmoid, logit
+
+def sigmoid(x: np.ndarray) -> np.ndarray:
+    """Stable sigmoid function."""
+    return 1.0 / (1.0 + np.exp(-np.clip(x, -50.0, 50.0)))
+
+def logit(p: np.ndarray) -> np.ndarray:
+    """Stable logit function."""
+    p_clamped = np.clip(p, 1e-15, 1.0 - 1e-15)
+    return np.log(p_clamped / (1.0 - p_clamped))
+
+class LogisticRegressionSolver:
+    """Simple NumPy-based logistic regression solver using gradient descent."""
+
+    def __init__(self, lr: float = 0.1, n_iter: int = 100):
+        self.lr = lr
+        self.n_iter = n_iter
+        self.weights: np.ndarray | None = None
+
+    def fit(self, x: np.ndarray, y: np.ndarray, offset: np.ndarray | None = None) -> None:
+        n_samples, n_features = x.shape
+        self.weights = np.zeros(n_features)
+        
+        offset_val = np.zeros(n_samples) if offset is None else offset
+
+        for _ in range(self.n_iter):
+            logits = x @ self.weights + offset_val
+            preds = sigmoid(logits)
+            gradient = x.T @ (preds - y) / n_samples
+            self.weights -= self.lr * gradient
+
+    def predict_proba(self, x: np.ndarray, offset: np.ndarray | None = None) -> np.ndarray:
+        offset_val = np.zeros(len(x)) if offset is None else offset
+        if self.weights is None:
+            return sigmoid(offset_val)
+        return sigmoid(x @ self.weights + offset_val)
+
 
 class CollaborativeTMLE:
     """C-TMLE solver selecting propensity covariates collaboratively based on outcome loss reduction."""
