@@ -33,3 +33,47 @@ def test_survival_vae():
     
     gen = vae.generate(10)
     assert gen.shape == (10, 3)
+
+def test_hamiltonian_monte_carlo():
+    from bias_nma_adv.hmc import HamiltonianMonteCarloSampler
+    sampler = HamiltonianMonteCarloSampler(step_size=0.1, n_steps=5, seed=42)
+    
+    # Mock log-posterior: standard 1D normal (mean=0, variance=1)
+    def log_post(theta):
+        return -0.5 * theta[0]**2
+        
+    def grad_log_post(theta):
+        return -theta
+        
+    initial_pos = np.array([1.0])
+    samples = sampler.sample(initial_pos, log_post, grad_log_post, n_samples=20)
+    
+    assert samples.shape == (20, 1)
+    # Samples should cluster around mean=0
+    assert np.mean(np.abs(samples)) < 2.0
+
+def test_double_robust_tmle():
+    from bias_nma_adv.tmle import DoubleRobustTMLE
+    tmle = DoubleRobustTMLE()
+    
+    rng = np.random.default_rng(42)
+    n = 200
+    
+    # Generate mock covariate W, treatment A (binary), outcome Y (binary)
+    w = rng.normal(0.0, 1.0, size=(n, 2))
+    # Standardize covariates to have intercept column for regression
+    w_with_intercept = np.column_stack([np.ones(n), w])
+    
+    # True propensity score depends on W
+    ps = 1.0 / (1.0 + np.exp(-w_with_intercept[:, 1]))
+    a = rng.binomial(1, ps)
+    
+    # Outcome probability depends on A and W
+    y_prob = 1.0 / (1.0 + np.exp(-(0.5 * a + w_with_intercept[:, 2])))
+    y = rng.binomial(1, y_prob)
+    
+    rd = tmle.estimate_risk_difference(w_with_intercept, a, y)
+    
+    # Risk difference should be bounded in [-1, 1]
+    assert -1.0 <= rd <= 1.0
+
