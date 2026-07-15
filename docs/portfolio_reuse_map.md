@@ -7,7 +7,12 @@ This note records which nearby repositories can materially help this project bec
 
 It is a reuse plan, not a certification claim. Any imported method must be ported or wrapped with source-backed tests before it can support a platform capability.
 
-Current gate: source-backed benchmark artifacts imported or inspired by these repositories must be registered in `validation/benchmark_registry.toml` or covered by an equivalent machine-readable validation gate. The registry must pin artifact hashes, source manifests, source-check reports, limitations, and `certification_effect = "none"` until a separate external reference run passes. Source-check files must pass their specialized validators, not just hash matching.
+Current gates:
+
+- Candidate source repositories are recorded in `validation/portfolio_reuse_sources.toml` using repo names and relative asset paths only. Run `python scripts/scan_portfolio_reuse.py --root <portfolio-root>` to produce a non-certifying local scan of present repos, dirty worktrees, and missing assets.
+- Source-backed benchmark artifacts imported or inspired by these repositories must be registered in `validation/benchmark_registry.toml` or covered by an equivalent machine-readable validation gate. The registry must pin artifact hashes, source manifests, source-check reports, limitations, and `certification_effect = "none"` until a separate external reference run passes. Source-check files must pass their specialized validators, not just hash matching.
+
+The portfolio scan requires four review rounds before any import: source-boundary review, statistical-methods review, implementation-contract review, and claims-governance review.
 
 ## Immediate Reuse Candidates
 
@@ -20,8 +25,8 @@ Current gate: source-backed benchmark artifacts imported or inspired by these re
 | `C:\Projects\sheaf-nma` | Real `netmeta` corpus export, inconsistency-localization tests, DBT/Bucher/node-splitting comparators | Gives a real NMA inconsistency validation corpus and comparator harness design | Built-in `netmeta` datasets are useful reference fixtures, but they are not enough for the OA-only clinical source policy unless linked back to admissible source records. |
 | `C:\Projects\spec-collapse-atlas` | Weighted-likelihood aggregation and multiverse calibration tests against `metafor` | Supplies a tested way to report method-choice fragility without anti-conservative IV pooling of specs | Must be used for specification sensitivity only; never present a multiverse aggregate as a new clinical estimator without validation. |
 | `C:\Projects\topo-transport-ma` | Effect-modifier meta-regression, collapsibility guard, topological support certificate | Adds population-transportability diagnostics and fail-closed warnings for unsupported target populations | Port concepts and tests, not raw claims. The OR refusal and baseline-risk sign-flip warning should become platform guards. |
-| `C:\Projects\allmeta\shared\nma-multiarm-v1.js` | Multi-arm contrast-level GLS NMA with netmeta parity fixture | Gives a small audited algorithmic template for preserving multi-arm covariance | Port to Python only after reproducing the JS fixture and an independent `netmeta` run. Comments in JS files have encoding damage, so do not copy prose. |
-| `C:\Projects\allmeta\shared\transported-nma-v1.js` | Entropy-balancing transported NMA approximation | Gives a population-specific NMA candidate and an ESS-loss diagnostic | Treat as experimental until compared against IPD or ML-NMR reference targets. |
+| `C:\Projects\allmeta\shared\nma-multiarm-v1.js` | Multi-arm contrast-level GLS NMA with netmeta parity fixture | Gives a small audited algorithmic template for preserving multi-arm covariance | Port to Python only after reproducing the JS fixture and an independent `netmeta` run. Comments in JS files have encoding damage, and the local worktree was dirty during the 2026-07-15 scan, so do not copy prose or unreviewed values. |
+| `C:\Projects\allmeta\shared\transported-nma-v1.js` | Entropy-balancing transported NMA approximation | Gives a population-specific NMA candidate and an ESS-loss diagnostic | Treat as experimental until compared against IPD or ML-NMR reference targets. The local allmeta worktree must be reviewed before any import. |
 | `C:\Projects\allmeta\nma-pro-v2` | Netmeta parity fixtures and R scripts | Provides lightweight frequentist NMA parity examples | Fixture values can seed tests only if the source R script and package version are captured in the artifact. |
 | `C:\Users\mahmo\code\rct-extractor-v2` | PubMed/OA/CT.gov extraction ensemble, outcome matching, value plausibility checks | Provides ingestion and adjudication patterns for real meta-analysis datasets | Do not trust rows wholesale. One inspected benchmark row points PMID 32865377 to a non-article fallback PDF, so every row needs source validation before use. |
 
@@ -80,6 +85,7 @@ Current gate: source-backed benchmark artifacts imported or inspired by these re
 | Existing validation numbers in source repos | Dynamic and untrusted until reproduced | Local JSON/test files | Must be regenerated or independently checked before becoming platform evidence. |
 | Trial identifiers and effect estimates | Dynamic source-backed fields | ClinicalTrials.gov, PubMed abstracts, and OA papers | Must be validated per record before use in code, tests, dashboards, or claims. |
 | New validation targets | Static registry entries | `validation/reference_targets.toml` | Targets remain `planned` until machine-verifiable artifacts exist. |
+| Portfolio reuse candidates | Static registry plus optional dynamic scan | `validation/portfolio_reuse_sources.toml` and `scripts/scan_portfolio_reuse.py` | Candidate repos are implementation inputs only; scan reports do not certify clinical evidence or method superiority. |
 
 ## Next Implementation Order
 

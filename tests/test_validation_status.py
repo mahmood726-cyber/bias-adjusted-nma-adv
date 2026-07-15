@@ -57,6 +57,18 @@ def test_validation_status_composes_all_current_gates():
     assert simulation_matrix["execution_mode_counts"] == {"smoke": 1}
     assert simulation_matrix["certification_effect"] == "none"
 
+    portfolio_reuse = report["portfolio_reuse"]
+    assert portfolio_reuse["registry"] == "validation/portfolio_reuse_sources.toml"
+    assert portfolio_reuse["n_sources"] == 8
+    assert portfolio_reuse["priority_counts"] == {"high": 4, "medium": 4}
+    assert portfolio_reuse["certification_effect"] == "none"
+    assert portfolio_reuse["required_review_rounds"] == [
+        "source_boundary_review",
+        "statistical_methods_review",
+        "implementation_contract_review",
+        "claims_governance_review",
+    ]
+
     reference_targets = report["reference_targets"]
     assert reference_targets["registry"] == "validation/reference_targets.toml"
     assert reference_targets["status_counts"] == {

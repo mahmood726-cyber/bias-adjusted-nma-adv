@@ -32,6 +32,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/benchmark_registry.py`: Machine-readable registry validator for local source-backed benchmark artifacts, source-check semantics, and pinned hashes.
 - `src/bias_nma_adv/grand_benchmark_plan.py`: Validator for the prespecified grand-benchmark plan separating real source-backed lanes from simulation-only operating-characteristic scenarios.
 - `src/bias_nma_adv/simulation_matrix.py`: Validator and runner for executable, non-certifying simulation smoke jobs tied to the grand-benchmark plan.
+- `src/bias_nma_adv/portfolio_reuse.py`: Local portfolio reuse registry and scanner for candidate methods/source-ingestion components; it is non-certifying and takes roots at runtime.
 - `src/bias_nma_adv/validation_status.py`: Unified validation-status report composing source-backed benchmark, reference-target, and reference-run gates without changing certification status.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
 - `tests/`: Unit and integration test suite.
@@ -40,6 +41,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/reference_targets.toml`: Machine-readable reference targets required before tier-one parity or production certification claims.
 - `validation/grand_benchmark_plan.toml`: Prespecified source-bound validation plan for real-data lanes and simulation scenarios; it contains no benchmark results and has `certification_effect = "none"`.
 - `validation/simulation_matrix.toml`: Executable simulation smoke matrix. It uses no real data and cannot support clinical or tier-one superiority claims.
+- `validation/portfolio_reuse_sources.toml`: Machine-readable inventory of local portfolio repositories worth inspecting for reusable code patterns. It stores repo names and relative assets only, not local absolute paths.
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.
@@ -53,6 +55,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/preflight_multiarm_netmeta_adapter.py`: Regenerates the non-certifying `netmeta` multi-arm adapter preflight report.
 - `scripts/validate_benchmark_registry.py`: Validates every registered local source-backed benchmark and emits an optional JSON summary for CI/Overmind-style gates.
 - `scripts/run_simulation_matrix.py`: Runs the non-certifying simulation matrix and emits a JSON report for operating-characteristic smoke checks.
+- `scripts/scan_portfolio_reuse.py`: Scans user-supplied local roots for registered portfolio reuse candidates and reports dirty worktrees, missing assets, and import-review status.
 - `scripts/write_validation_status.py`: Emits the combined validation status JSON for CI/Overmind-style gates. Current reports keep clinical and HTA reporting disabled unless a module is Production Certified.
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.

@@ -23,6 +23,10 @@ from bias_nma_adv.grand_benchmark_plan import (
     summarize_grand_benchmark_plan,
     validate_grand_benchmark_plan,
 )
+from bias_nma_adv.portfolio_reuse import (
+    load_portfolio_reuse_registry,
+    summarize_portfolio_reuse_registry,
+)
 from bias_nma_adv.simulation_matrix import (
     summarize_simulation_matrix,
     validate_simulation_matrix,
@@ -57,6 +61,7 @@ def build_validation_status(
     registry_path = root / "validation" / "benchmark_registry.toml"
     grand_benchmark_plan_path = root / "validation" / "grand_benchmark_plan.toml"
     simulation_matrix_path = root / "validation" / "simulation_matrix.toml"
+    portfolio_reuse_registry_path = root / "validation" / "portfolio_reuse_sources.toml"
     reference_targets_path = root / "validation" / "reference_targets.toml"
     reference_runs_path = root / "validation" / "reference_runs"
 
@@ -70,6 +75,7 @@ def build_validation_status(
         simulation_matrix_path,
         grand_benchmark_plan_path=grand_benchmark_plan_path,
     )
+    portfolio_reuse_registry = load_portfolio_reuse_registry(portfolio_reuse_registry_path)
 
     targets = load_reference_targets(reference_targets_path)
     assert_no_unsupported_production_claims(targets)
@@ -107,6 +113,10 @@ def build_validation_status(
         "simulation_matrix": {
             "matrix": _relpath(simulation_matrix_path, root),
             **summarize_simulation_matrix(simulation_matrix),
+        },
+        "portfolio_reuse": {
+            "registry": _relpath(portfolio_reuse_registry_path, root),
+            **summarize_portfolio_reuse_registry(portfolio_reuse_registry),
         },
         "reference_targets": {
             "registry": _relpath(reference_targets_path, root),

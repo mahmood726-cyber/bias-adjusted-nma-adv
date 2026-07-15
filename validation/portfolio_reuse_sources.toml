@@ -1,0 +1,177 @@
+schema_version = "portfolio_reuse_sources/v1"
+checked_at = "2026-07-15"
+purpose = "Local portfolio reuse registry for methods, source-ingestion, and validation components that may help this platform. Entries are not evidence and do not certify method performance."
+source_policy = "local_reuse_registry_only_no_clinical_evidence"
+certification_effect = "none"
+claim_limit = "Portfolio reuse entries identify implementation candidates only. No source repo output may support clinical, HTA, tier-one parity, or superiority claims until it is revalidated inside this repository under the ClinicalTrials.gov, PubMed abstract, and open-access paper source policy."
+required_review_rounds = [
+  "source_boundary_review",
+  "statistical_methods_review",
+  "implementation_contract_review",
+  "claims_governance_review",
+]
+
+[[sources]]
+id = "wasserstein_km_survival"
+repo_name = "wasserstein"
+priority = "high"
+domain = "survival_km_reconstruction"
+required_assets = [
+  "README.md",
+  "benchmark/README.md",
+  "faithful_guyot.py",
+  "improved_hr_estimation.py",
+  "improved_guyot_algorithm.py",
+  "benchmark/km_metrics.py",
+  "benchmark/tests/test_km_metrics.py",
+]
+reusable_assets = [
+  "OA Kaplan-Meier figure screening patterns",
+  "Guyot-style reconstructed-IPD workflow",
+  "HR validation and KM reconstruction metrics",
+]
+import_boundary = "Port source-policy screens, metric definitions, and manifests first. Existing extracted IPD or HR results must be revalidated against OA paper figures, PubMed abstracts, and typed identifiers before use."
+next_gate = "Add the first OA KM source manifest with PMID/NCT/figure provenance, curve/IPD hashes, reproduced HR, and discrepancy."
+
+[[sources]]
+id = "advanced_nma_pooling_reference_adapters"
+repo_name = "advanced-nma-pooling"
+priority = "high"
+domain = "tier_one_reference_adapters"
+required_assets = [
+  "external/r/README.md",
+  "external/r/netmeta_runner.R",
+  "external/r/multinma_runner.R",
+  "src/nma_pool/validation/benchmark.py",
+  "src/nma_pool/models/core_ad.py",
+  "tests/integration/test_benchmark.py",
+]
+reusable_assets = [
+  "External command adapter contract",
+  "netmeta and multinma JSON runner shape",
+  "HKSJ and prediction-interval validation conventions",
+]
+import_boundary = "Reuse adapter shape and failure semantics only. This does not certify methods; reference matching requires immutable local run artifacts with package versions, input hashes, output hashes, and numerical tolerances."
+next_gate = "Replace preflight-only R adapter reports with real netmeta/metafor/multinma runs when R and packages are available."
+
+[[sources]]
+id = "aact_kit_ctgov_ingestion"
+repo_name = "aact-kit"
+priority = "high"
+domain = "clinicaltrials_gov_ingestion"
+required_assets = [
+  "README.md",
+  "src/aact_kit/schema.py",
+  "src/aact_kit/location.py",
+  "src/aact_kit/tables.py",
+  "tests/test_schema.py",
+  "tests/test_tables.py",
+]
+reusable_assets = [
+  "Fail-closed AACT schema validation",
+  "Local backend resolution patterns",
+  "Column-existence checks before aggregation",
+]
+import_boundary = "Use as CT.gov/AACT ingestion design. Every query must verify actual columns, lowercase intervention types, and source rows before creating benchmark artifacts."
+next_gate = "Add a CT.gov ingestion adapter that records backend, table schema, filters, row counts, and NCT IDs before any analysis row is emitted."
+
+[[sources]]
+id = "rct_extractor_source_provenance"
+repo_name = "rct-extractor-v2"
+priority = "high"
+domain = "pubmed_oa_extraction"
+required_assets = [
+  "data/schemas/ma_extraction_record.schema.json",
+  "scripts/verify_pmids.py",
+  "scripts/validate_ma_contract.py",
+  "tests/test_proof_carrying_numbers.py",
+  "tests/test_ma_contract.py",
+]
+reusable_assets = [
+  "Proof-carrying extracted-number schema",
+  "PMID/title/abstract verification patterns",
+  "Outcome and source-snippet validation tests",
+]
+import_boundary = "Do not import extracted rows wholesale. Rebuild source validation here and reject mismatched PMIDs, non-article fallbacks, closed full text, or unsupported snippets."
+next_gate = "Add an ingestion provenance validator for PMID/NCT/DOI/OA identity, source snippets, and extraction origin."
+
+[[sources]]
+id = "sheaf_nma_inconsistency"
+repo_name = "sheaf-nma"
+priority = "medium"
+domain = "inconsistency_diagnostics"
+required_assets = [
+  "README.md",
+  "sheafnma/comparators.py",
+  "sheafnma/core.py",
+  "corpus/README.md",
+  "corpus/export_netmeta.R",
+  "tests/test_comparators.py",
+]
+reusable_assets = [
+  "DBT, Bucher, and node-splitting comparator design",
+  "Real netmeta built-in corpus export pattern",
+  "Localized inconsistency diagnostics",
+]
+import_boundary = "Use comparator harness design only until every real corpus row is linked to admissible source records or treated as algorithmic fixture data."
+next_gate = "Port a source-backed inconsistency fixture and keep built-in netmeta datasets separate from OA clinical evidence."
+
+[[sources]]
+id = "topo_transport_support"
+repo_name = "topo-transport-ma"
+priority = "medium"
+domain = "transportability_support"
+required_assets = [
+  "README.md",
+  "topotransport/support.py",
+  "topotransport/transport.py",
+  "tests/test_support.py",
+  "tests/test_transport.py",
+]
+reusable_assets = [
+  "Effect-modifier support certificate",
+  "Convex-hull and topology-aware extrapolation warnings",
+  "Target-population overlap grading",
+]
+import_boundary = "Port guards and diagnostics before estimators. Target covariates must be source-backed and transportability output must remain separate from treatment-effect estimation."
+next_gate = "Add an experimental transportability support module with OR/logOR refusal and baseline-risk heterogeneity warnings."
+
+[[sources]]
+id = "spec_collapse_method_robustness"
+repo_name = "spec-collapse-atlas"
+priority = "medium"
+domain = "method_choice_robustness"
+required_assets = [
+  "README.md",
+  "spec_collapse/aggregators.py",
+  "spec_collapse/coverage.py",
+  "ci/check_against_metafor.py",
+  "tests/test_engine.py",
+]
+reusable_assets = [
+  "Weighted-likelihood specification multiverse",
+  "Anti-conservative IV multiverse warning",
+  "Coverage calibration tests",
+]
+import_boundary = "Use for specification sensitivity and claims governance only. Do not present multiverse aggregation as a new clinical estimator without separate validation."
+next_gate = "Add a method-choice robustness report that separates primary estimates from specification-fragility summaries."
+
+[[sources]]
+id = "allmeta_algorithmic_fixtures"
+repo_name = "allmeta"
+priority = "medium"
+domain = "algorithmic_parity_fixtures"
+required_assets = [
+  "shared/nma-multiarm-v1.js",
+  "shared/tests/nma-multiarm-v1.spec.mjs",
+  "shared/transported-nma-v1.js",
+  "shared/survival-reconstruction.js",
+  "shared/tests/survival-reconstruction-parity.spec.mjs",
+]
+reusable_assets = [
+  "Multi-arm GLS fixture design",
+  "Transported NMA approximation",
+  "Browser-side KM reconstruction parity tests",
+]
+import_boundary = "Treat as implementation inspiration only. JavaScript fixtures must be reproduced in Python and independently checked against reference software before entering certification evidence."
+next_gate = "Keep current Python multi-arm fixture green, then add external netmeta run artifacts before expanding."
