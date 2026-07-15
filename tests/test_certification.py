@@ -22,7 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGETS_PATH = ROOT / "validation" / "reference_targets.toml"
 REFERENCE_RUNS_PATH = ROOT / "validation" / "reference_runs"
 PAIRWISE_R_ADAPTER = ROOT / "external" / "r" / "pairwise_metafor_meta.R"
-PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_reference_adapters.py"
+PAIRWISE_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_reference_adapters.py"
+MULTIARM_R_ADAPTER = ROOT / "external" / "r" / "multiarm_netmeta_fixture.R"
+MULTIARM_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_multiarm_netmeta_adapter.py"
 
 
 def sha256_file(path: Path) -> str:
@@ -97,20 +99,45 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     reports = load_reference_run_reports(REFERENCE_RUNS_PATH)
 
     assert_reference_runs_target_known(targets, reports)
-    assert summarize_reference_run_reports(reports) == {"unavailable": 1}
-    report = reports[0]
-    assert report.target_id == "pairwise_metafor_meta"
+    summary = summarize_reference_run_reports(reports)
+    assert sum(summary.values()) == 2
+    assert set(summary) <= {"unavailable", "failed"}
+
+    by_target = {report.target_id: report for report in reports}
+    assert set(by_target) == {
+        "pairwise_metafor_meta",
+        "multiarm_gls_netmeta_portfolio_fixture",
+    }
+
+    report = by_target["pairwise_metafor_meta"]
     assert report.adapter_id == "r_metafor_meta_pairwise_preflight"
     assert report.certification_effect == "none"
     assert report.is_certification_evidence_candidate is False
     assert "Rscript" in report.command
     assert "external/r/pairwise_metafor_meta.R" in report.command
-    assert report.executable_found is False
-    assert "Rscript is not available" in report.skip_reason
+    if report.executable_found is False:
+        assert "Rscript is not available" in report.skip_reason
     assert PAIRWISE_R_ADAPTER.is_file()
-    assert PREFLIGHT_SCRIPT.is_file()
-    for artifact, expected_sha in report.input_sha256.items():
-        assert sha256_file(ROOT / artifact) == expected_sha
+    assert PAIRWISE_PREFLIGHT_SCRIPT.is_file()
+
+    report = by_target["multiarm_gls_netmeta_portfolio_fixture"]
+    assert report.adapter_id == "r_netmeta_multiarm_preflight"
+    assert report.reference_method == "netmeta"
+    assert report.certification_effect == "none"
+    assert report.is_certification_evidence_candidate is False
+    assert "Rscript" in report.command
+    assert "external/r/multiarm_netmeta_fixture.R" in report.command
+    if report.executable_found is False:
+        assert "Rscript is not available" in report.skip_reason
+    assert MULTIARM_R_ADAPTER.is_file()
+    assert MULTIARM_PREFLIGHT_SCRIPT.is_file()
+
+    for report in reports:
+        assert report.output_artifacts == ()
+        assert report.output_sha256 == {}
+        assert report.tolerance == ""
+        for artifact, expected_sha in report.input_sha256.items():
+            assert sha256_file(ROOT / artifact) == expected_sha
     assert certification_candidate_artifacts(reports) == ()
 
 

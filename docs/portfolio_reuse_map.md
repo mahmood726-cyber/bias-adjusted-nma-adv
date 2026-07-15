@@ -36,9 +36,9 @@ It is a reuse plan, not a certification claim. Any imported method must be porte
    - Certification target: match metafor/statsmodels anchors and confirm topological support behavior on known fixtures before using real clinical covariate clouds.
 
 3. **Frequentist NMA parity lane**
-   - Port the multi-arm GLS fixture into Python tests for `src/bias_nma_adv`.
-   - Required checks: full multi-arm covariance block, disconnected-network failure, incomplete multi-arm clique warning, FE and RE estimates against `netmeta`.
-   - Certification target: pass multiple `netmeta` parity fixtures, not only a small hand-built network.
+   - The multi-arm GLS fixture has now been ported into Python tests and a governed local replay artifact.
+   - Current checks: full multi-arm covariance block, disconnected-network failure, incomplete multi-arm clique warning, FE and RE deterministic replay values.
+   - Remaining certification target: run the external `netmeta` adapter and then pass multiple `netmeta` parity fixtures, not only a small hand-built network.
 
 4. **Source-backed ingestion lane**
    - Reuse `rct-extractor-v2` design patterns for extraction ensembles and adjudication, but rebuild the validation gate here.
@@ -80,7 +80,7 @@ It is a reuse plan, not a certification claim. Any imported method must be porte
 
 ## Next Implementation Order
 
-1. Add Python multi-arm GLS parity tests using the `allmeta` fixture and an explicit `netmeta` artifact.
+1. Run and hash the external `netmeta` multi-arm adapter when R and `netmeta` are available; keep the current preflight as a skip until then.
 2. Extend the new survival HR manifest into an OA Kaplan-Meier reconstruction manifest before importing any `wasserstein` output.
 3. Port the transportability collapsibility guards and support certificate behind an experimental API.
 4. Add an ingestion provenance validator that rejects mismatched PMID/OA PDF rows.

@@ -17,7 +17,7 @@ The correct claim is:
 
 | Domain | Strong reference method or package | What must be matched first | Current platform position |
 | --- | --- | --- | --- |
-| Frequentist NMA | `netmeta` | Treatment effects, multi-arm covariance, inconsistency diagnostics, sparse-event handling, contribution matrices, disconnected-network warnings | Spec target; current repository has a small frequentist prototype, not full parity |
+| Frequentist NMA | `netmeta` | Treatment effects, multi-arm covariance, inconsistency diagnostics, sparse-event handling, contribution matrices, disconnected-network warnings | Spec target; current repository has a small frequentist prototype plus a local multi-arm fixture replay artifact, not full parity |
 | Bayesian NMA | `multinma` and validated CmdStan models | Posterior means, credible intervals, rank probabilities, diagnostics, prior sensitivity | Spec target; current repository does not yet provide production Stan reference matching |
 | ML-NMR | `multinma` | IPD plus aggregate likelihood integration, population standardization, covariate-distribution checks | Spec target only |
 | Dose-response NMA | `MBNMAdose` | Functional dose-response families, class effects, dose extrapolation checks, consistency diagnostics | Spec target only |
@@ -54,7 +54,9 @@ External reference adapters must also emit machine-readable run reports under `v
 
 Real-data benchmarks must also be paired with source snapshots under `validation/source_checks/`. Source-identity snapshots verify that public ClinicalTrials.gov and PubMed records are reachable and match the manifest identifiers. Event-count and reported-HR snapshots, when present, separately verify exact numeric tokens and nearby treatment terms in PubMed abstracts; they are still not a substitute for full open-access paper/table extraction, Kaplan-Meier digitization, or external reference-software parity. Source-check artifacts must carry `certification_effect = "none"`.
 
-Current adapter preflight: `validation/reference_runs/pairwise_metafor_meta_preflight.toml` records that the planned `metafor`/`meta` pairwise adapter could not run because `Rscript` was not available on PATH in this environment. That is an honest skip, not a parity claim.
+Current adapter preflights: `validation/reference_runs/pairwise_metafor_meta_preflight.toml` records that the planned `metafor`/`meta` pairwise adapter could not run because `Rscript` was not available on PATH in this environment. `validation/reference_runs/multiarm_netmeta_preflight.toml` records the same fail-closed status for the planned `netmeta` multi-arm adapter. These are honest skips, not parity claims.
+
+Current local multi-arm artifact: `validation/multiarm/netmeta_portfolio_multiarm_benchmark.toml` deterministically replays the governed arm-level fixture in `validation/multiarm/netmeta_portfolio_multiarm_arms.csv`. It is useful for regression testing multi-arm covariance handling, but it carries `certification_effect = "none"` until an external `netmeta` adapter actually runs and passes with package versions, output hashes, and a prespecified tolerance.
 
 ### Phase 1: Match Tier One
 
@@ -122,6 +124,7 @@ Winners should be reported separately for statistical accuracy, uncertainty cali
 | Platform capability status | Static repository review | Current repository files and tests checked on 2026-07-15 | Current implementation is not certified as tier-one parity |
 | Benchmark thresholds | Static specification | This document and `docs/technical_specification.md` | Must be implemented as machine-readable validation criteria before certification |
 | Reference-run preflight | Dynamic local environment check | `validation/reference_runs/*.toml` | Unavailable or failed adapters are recorded but cannot certify a module |
+| Multi-arm fixture replay | Static algorithmic fixture plus dynamic local recomputation | `validation/multiarm/*` and `tests/test_multiarm_artifact.py` | Validates local covariance handling on a small fixture; not clinical evidence and not external `netmeta` parity |
 | Source-identity snapshots | Dynamic public API check | `validation/source_checks/*source_check.json` | Verifies public-record identity and reachability, not numeric extraction |
 | Event-count snapshots | Dynamic public API check | `validation/source_checks/*event_counts.json` | Verifies exact abstract count tokens and nearby treatment terms, not full paper extraction |
 | Reported-HR snapshots | Dynamic public API check | `validation/source_checks/*reported_hr_tokens.json` | Verifies HR/CI abstract tokens near a hazard-ratio anchor, not survival model fitting |

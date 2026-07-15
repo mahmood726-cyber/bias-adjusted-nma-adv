@@ -33,14 +33,17 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `reproduce_real_meta.py`: Runs the source-backed SGLT2 heart-failure real-meta benchmark.
 - `validation/reference_targets.toml`: Machine-readable reference targets required before tier-one parity or production certification claims.
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.
+- `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.
 - `validation/source_checks/`: Public-source identity snapshots and PubMed abstract event-count token checks.
 - `validation/survival/`: Source-backed survival HR benchmark manifests; current entries verify reported HR tokens from PubMed abstracts and explicitly do not claim KM reconstruction yet.
 - `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, and later tier-one NMA packages.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
+- `scripts/preflight_multiarm_netmeta_adapter.py`: Regenerates the non-certifying `netmeta` multi-arm adapter preflight report.
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.
 - `scripts/verify_pubmed_survival_hrs.py`: Regenerates PubMed abstract reported-HR token snapshots for survival benchmark manifests.
+- `scripts/write_multiarm_benchmark.py`: Writes the deterministic multi-arm GLS fixture replay artifact from the governed arm-level CSV.
 - `scripts/write_survival_hr_benchmark.py`: Writes the deterministic reported-HR pairwise benchmark artifact from a verified survival source snapshot.
 - `docs/portfolio_reuse_map.md`: Local portfolio scan describing reusable methods and hard stops before porting them.
 - `docs/review_artifact_policy.md`: Scope guard for historical review transcripts that contain hypotheses or critique, not certified evidence.

@@ -1,0 +1,108 @@
+schema_version = "multiarm_benchmark/v1"
+benchmark_id = "netmeta_portfolio_multiarm_fixture"
+status = "local_fixture_recomputed"
+certification_effect = "none"
+source_policy = "portfolio_algorithmic_fixture_not_clinical_evidence"
+evidence_mode = "algorithmic_fixture"
+effect_scale = "log_or"
+reference_method = "netmeta"
+reference_target_id = "multiarm_gls_netmeta_portfolio_fixture"
+reference_status = "external_netmeta_preflight_required_before_reference_matching"
+arm_data = "validation/multiarm/netmeta_portfolio_multiarm_arms.csv"
+arm_data_sha256 = "4350855d567dc6fef36fa45c81451fead0809b9aa3a9008b1a13ac778a069e5a"
+tolerance = "absolute <= 1e-6 for deterministic fixture replay"
+limitations = ["The fixture is algorithmic and is not clinical evidence.", "The values are local deterministic replay outputs and do not certify netmeta parity by themselves.", "Reference matching requires a passed external netmeta adapter report with package versions and output hashes."]
+
+[[fixtures]]
+fixture_id = "consistent"
+n_arm_rows = 13
+n_studies = 6
+treatments = ["A", "B", "C"]
+description = "consistent multi-arm covariance fixture"
+
+[[fixtures]]
+fixture_id = "heterogeneous"
+n_arm_rows = 15
+n_studies = 7
+treatments = ["A", "B", "C"]
+description = "heterogeneous multi-arm covariance fixture"
+
+[[model_fits]]
+fixture_id = "consistent"
+model = "fixed"
+reference_treatment = "A"
+treatments = ["A", "B", "C"]
+nonreference_treatments = ["B", "C"]
+multi_arm_studies = ["S6"]
+warnings = []
+tau2 = 0.0
+
+[[model_fits]]
+fixture_id = "heterogeneous"
+model = "fixed"
+reference_treatment = "A"
+treatments = ["A", "B", "C"]
+nonreference_treatments = ["B", "C"]
+multi_arm_studies = ["S6"]
+warnings = []
+tau2 = 0.0
+
+[[model_fits]]
+fixture_id = "heterogeneous"
+model = "random"
+reference_treatment = "A"
+treatments = ["A", "B", "C"]
+nonreference_treatments = ["B", "C"]
+multi_arm_studies = ["S6"]
+warnings = []
+tau2 = 0.8921998164576315
+q = 45.13751626280792
+df = 6
+
+[[effects]]
+fixture_id = "consistent"
+model = "fixed"
+treatment = "B"
+reference_treatment = "A"
+estimate = 0.5925559658568861
+se = 0.20432714629280033
+
+[[effects]]
+fixture_id = "consistent"
+model = "fixed"
+treatment = "C"
+reference_treatment = "A"
+estimate = 0.48412980545317835
+se = 0.2155057123294117
+
+[[effects]]
+fixture_id = "heterogeneous"
+model = "fixed"
+treatment = "B"
+reference_treatment = "A"
+estimate = 0.003878494464399501
+se = 0.16047528587689
+
+[[effects]]
+fixture_id = "heterogeneous"
+model = "fixed"
+treatment = "C"
+reference_treatment = "A"
+estimate = 0.23415046184320143
+se = 0.2056420347799592
+
+[[effects]]
+fixture_id = "heterogeneous"
+model = "random"
+treatment = "B"
+reference_treatment = "A"
+estimate = 0.08057751335642038
+se = 0.46605879108622494
+
+[[effects]]
+fixture_id = "heterogeneous"
+model = "random"
+treatment = "C"
+reference_treatment = "A"
+estimate = 0.3584933241522009
+se = 0.5262952048912735
