@@ -34,6 +34,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/simulation_matrix.py`: Validator and runner for executable, non-certifying simulation smoke jobs tied to the grand-benchmark plan.
 - `src/bias_nma_adv/portfolio_reuse.py`: Local portfolio reuse registry and scanner for candidate methods/source-ingestion components; it is non-certifying and takes roots at runtime.
 - `src/bias_nma_adv/proof_effect_bundle.py`: Validator and writer support for proof-carrying extracted-effect bundles that bind reported effects to verified source manifests, source-check reports, and minimal source snippets.
+- `src/bias_nma_adv/review_ledger.py`: Machine-readable multiperson review ledger validator for source-boundary, statistical, implementation, and claims-governance review rounds.
 - `src/bias_nma_adv/validation_status.py`: Unified validation-status report composing source-backed benchmark, reference-target, and reference-run gates without changing certification status.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
 - `tests/`: Unit and integration test suite.
@@ -44,6 +45,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/simulation_matrix.toml`: Executable simulation smoke matrix. It uses no real data and cannot support clinical or tier-one superiority claims.
 - `validation/portfolio_reuse_sources.toml`: Machine-readable inventory of local portfolio repositories worth inspecting for reusable code patterns. It stores repo names and relative assets only, not local absolute paths.
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.
+- `validation/reviews/`: Non-certifying review ledgers recording multiperson review findings, actions, and next gates.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.
 - `validation/benchmark_registry.toml`: Canonical inventory of local source-backed benchmark artifacts. Every entry must retain `certification_effect = "none"` until an external reference run passes, and every source-check report is revalidated against its specialized schema.

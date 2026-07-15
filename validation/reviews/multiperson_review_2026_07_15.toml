@@ -1,0 +1,91 @@
+schema_version = "multiperson_review/v1"
+checked_at = "2026-07-15"
+certification_effect = "none"
+source_policy = "ClinicalTrials.gov records, PubMed abstracts, and open-access papers only"
+required_review_rounds = [
+  "source_boundary_review",
+  "statistical_methods_review",
+  "implementation_contract_review",
+  "claims_governance_review",
+]
+thread_limit_note = "Fresh sub-agent spawn was unavailable because the session had reached the thread limit; completed existing agent review outputs plus a local review pass were harvested and dispositioned here."
+
+[[rounds]]
+id = "source_boundary_review"
+reviewer = "existing-agent + local follow-up"
+status = "actioned"
+scope = [
+  "src/bias_nma_adv/proof_effect_bundle.py",
+  "scripts/write_proof_effect_bundle.py",
+  "validation/ingestion/sglt2_hf_reported_hr_proof_effects.json",
+  "validation/source_checks/sglt2_hf_reported_hr_tokens.json",
+  "validation/source_checks/sglt2_hf_reported_hr_source_check.json",
+]
+findings = [
+  "Extracted model-ready effects need source snippets, source-manifest hashes, and source-check hashes before model ingestion.",
+  "Existing Wasserstein survival outputs can guide method design but cannot be imported as clinical evidence without OA figure/source revalidation.",
+]
+actions = [
+  "Commit 67204e5 added the proof-effect bundle validator and SGLT2 reported-HR proof bundle.",
+  "The bundle validates PubMed abstract source identifiers, HR/CI snippets, source-check hashes, and certification_effect = none.",
+]
+next_gate = "Add the first OA Kaplan-Meier figure manifest with PMID/NCT/figure provenance, curve/IPD hashes, reproduced HR, and discrepancy."
+
+[[rounds]]
+id = "statistical_methods_review"
+reviewer = "existing-agent + local follow-up"
+status = "tracked_next_gate"
+scope = [
+  "docs/tier1_benchmark.md",
+  "docs/real_meta_benchmarks.md",
+  "validation/reference_targets.toml",
+  "validation/grand_benchmark_plan.toml",
+]
+findings = [
+  "Current real-meta SGLT2 evidence is a source-governed plumbing benchmark, not proof of random-effects, survival-NMA, or tier-one superiority.",
+  "Pairwise reported-HR fixtures and CT.gov star networks remain local regression evidence until external reference adapters pass.",
+]
+actions = [
+  "Docs and validation status retain clinical_hta_reporting_enabled = false and certification_effect = none.",
+]
+next_gate = "Run external netmeta/metafor/multinma adapters with package versions, input/output hashes, and prespecified tolerances when R/package dependencies are available."
+
+[[rounds]]
+id = "implementation_contract_review"
+reviewer = "existing-agent + local follow-up"
+status = "actioned"
+scope = [
+  "tests/test_proof_effect_bundle.py",
+  "tests/test_validation_status.py",
+  "src/bias_nma_adv/validation_status.py",
+]
+findings = [
+  "The ingestion contract needed a generated artifact test, mutation tests, and inclusion in the unified validation status report.",
+  "Proof snippets should be minimal HR/CI-bearing text rather than broad PubMed abstract windows.",
+]
+actions = [
+  "Commit 67204e5 added bundle validation tests for non-certification, hash drift, and missing HR-token mutations.",
+  "The writer now stores compact HR/CI snippets and the status report exposes the bundle summary.",
+]
+next_gate = "Promote additional reported-effect bundles only when their source-check reports and source manifests have specialized validators."
+
+[[rounds]]
+id = "claims_governance_review"
+reviewer = "existing-agent + local follow-up"
+status = "tracked_next_gate"
+scope = [
+  "docs/review_artifact_policy.md",
+  "tests/test_review_artifact_policy.py",
+  "docs/adversarial_review*.md",
+  "docs/journal_peer_review.md",
+  "docs/methods_evaluation.md",
+]
+findings = [
+  "Historical adversarial and journal-review notes contain clinical, guideline, publication-status, and tier-one superiority language that must remain quarantined as hypotheses.",
+  "Every historical review note must start with a non-evidence disclaimer and must not be treated as source, certification, clinical, regulatory, or HTA evidence.",
+]
+actions = [
+  "Existing review-artifact policy and tests require the non-evidence disclaimer at the start of historical review notes.",
+  "This ledger records the claim-governance finding as an active next gate rather than treating historical review notes as validation evidence.",
+]
+next_gate = "Add a stricter claim-hygiene denylist for historical review notes if any release-facing exporter starts ingesting docs content."

@@ -17,6 +17,7 @@ from bias_nma_adv.certification import CertificationError  # noqa: E402
 from bias_nma_adv.grand_benchmark_plan import GrandBenchmarkPlanError  # noqa: E402
 from bias_nma_adv.portfolio_reuse import PortfolioReuseError  # noqa: E402
 from bias_nma_adv.proof_effect_bundle import ProofEffectBundleError  # noqa: E402
+from bias_nma_adv.review_ledger import ReviewLedgerError  # noqa: E402
 from bias_nma_adv.simulation_matrix import SimulationMatrixError  # noqa: E402
 from bias_nma_adv.validation_status import (  # noqa: E402
     VALIDATION_STATUS_SCHEMA_VERSION,
@@ -47,6 +48,7 @@ def main(argv: list[str] | None = None) -> int:
         GrandBenchmarkPlanError,
         PortfolioReuseError,
         ProofEffectBundleError,
+        ReviewLedgerError,
         SimulationMatrixError,
         OSError,
         json.JSONDecodeError,

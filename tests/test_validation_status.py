@@ -90,6 +90,18 @@ def test_validation_status_composes_all_current_gates():
     assert proof_effect_bundle["source_type_counts"] == {"pubmed_abstract": 4}
     assert proof_effect_bundle["certification_effect"] == "none"
 
+    multiperson_review = report["multiperson_review"]
+    assert multiperson_review["ledger"] == (
+        "validation/reviews/multiperson_review_2026_07_15.toml"
+    )
+    assert multiperson_review["schema_version"] == "multiperson_review/v1"
+    assert multiperson_review["n_rounds"] == 4
+    assert multiperson_review["status_counts"] == {
+        "actioned": 2,
+        "tracked_next_gate": 2,
+    }
+    assert multiperson_review["certification_effect"] == "none"
+
     reference_targets = report["reference_targets"]
     assert reference_targets["registry"] == "validation/reference_targets.toml"
     assert reference_targets["status_counts"] == {
@@ -131,3 +143,4 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["clinical_hta_reporting_enabled"] is False
     assert payload["source_benchmark_registry"]["n_benchmarks"] == 4
     assert payload["proof_effect_bundle"]["n_records"] == 4
+    assert payload["multiperson_review"]["n_rounds"] == 4

@@ -29,6 +29,7 @@ from bias_nma_adv.portfolio_reuse import (
     summarize_portfolio_reuse_registry,
 )
 from bias_nma_adv.proof_effect_bundle import summarize_proof_effect_bundle
+from bias_nma_adv.review_ledger import summarize_review_ledger
 from bias_nma_adv.simulation_matrix import (
     summarize_simulation_matrix,
     validate_simulation_matrix,
@@ -66,6 +67,9 @@ def build_validation_status(
     portfolio_reuse_registry_path = root / "validation" / "portfolio_reuse_sources.toml"
     proof_effect_bundle_path = (
         root / "validation" / "ingestion" / "sglt2_hf_reported_hr_proof_effects.json"
+    )
+    review_ledger_path = (
+        root / "validation" / "reviews" / "multiperson_review_2026_07_15.toml"
     )
     reference_targets_path = root / "validation" / "reference_targets.toml"
     reference_runs_path = root / "validation" / "reference_runs"
@@ -127,6 +131,10 @@ def build_validation_status(
         "proof_effect_bundle": {
             "bundle": _relpath(proof_effect_bundle_path, root),
             **summarize_proof_effect_bundle(proof_effect_bundle_path, repo_root=root),
+        },
+        "multiperson_review": {
+            "ledger": _relpath(review_ledger_path, root),
+            **summarize_review_ledger(review_ledger_path),
         },
         "reference_targets": {
             "registry": _relpath(reference_targets_path, root),
