@@ -59,6 +59,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/write_survival_hr_benchmark.py`: Writes the deterministic reported-HR pairwise benchmark artifact from a verified survival source snapshot.
 - `scripts/verify_ctgov_hr_network.py`: Regenerates CT.gov reported-HR source snapshots for network benchmark manifests.
 - `scripts/write_ctgov_hr_network_benchmark.py`: Writes the deterministic CT.gov reported-HR network benchmark artifact from a verified CT.gov source snapshot.
+- `.github/workflows/validation.yml`: CI workflow running pytest, the source-backed benchmark registry gate, and the unified validation-status writer. The uploaded status artifact is evidence of gate execution, not certification.
 - `docs/portfolio_reuse_map.md`: Local portfolio scan describing reusable methods and hard stops before porting them.
 - `docs/review_artifact_policy.md`: Scope guard for historical review transcripts that contain hypotheses or critique, not certified evidence.
 - `e156-submission/`: Micro-publication artifacts.
