@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 30): The Upgraded 40 Cardiology NMA Database
 
 This document registers the transcript of the thirtieth-round joint adversarial and journal peer review, evaluating the clinical and statistical performance of our fully upgraded Tier 1 engine across the 40 cardiology trial networks.

@@ -25,6 +25,7 @@ def test_survival_hr_manifest_is_source_bounded_and_pubmed_only():
     assert manifest.benchmark_id == "sglt2_hf_reported_hr"
     assert manifest.evidence_mode == "reported_hr_pubmed_abstract"
     assert manifest.status == "candidate_source_verified"
+    assert manifest.certification_effect == "none"
     assert manifest.manifest_sha256 == sha256_file(MANIFEST)
     assert len(manifest.studies) == 4
     assert {study.study_id for study in manifest.studies} == {
@@ -66,11 +67,37 @@ def test_survival_hr_manifest_rejects_ci_that_excludes_hr():
         SurvivalHRManifest.from_mapping(raw)
 
 
+def test_survival_hr_manifest_rejects_pubmed_url_identifier_mismatch(tmp_path):
+    bad = tmp_path / "bad_survival_manifest.toml"
+    bad.write_text(
+        MANIFEST.read_text(encoding="utf-8").replace(
+            "https://pubmed.ncbi.nlm.nih.gov/31535829/",
+            "https://pubmed.ncbi.nlm.nih.gov/32865377/",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValidationError, match="PubMed source URL"):
+        load_survival_hr_manifest(bad)
+
+
+def test_survival_hr_manifest_rejects_scalar_source_terms():
+    raw = copy.deepcopy(load_survival_hr_manifest(MANIFEST).__dict__)
+    raw["schema_version"] = "survival_hr_manifest/v1"
+    raw["studies"] = [copy.deepcopy(study.__dict__) for study in raw["studies"]]
+    raw["studies"][0]["source_terms"] = "dapagliflozin"
+
+    with pytest.raises(ValidationError, match="source_terms must be a list"):
+        SurvivalHRManifest.from_mapping(raw)
+
+
 def test_survival_hr_verification_snapshot_matches_manifest():
     manifest = load_survival_hr_manifest(MANIFEST)
     report = load_survival_hr_verification_report(REPORT)
 
     assert report.status == "verified"
+    assert report.certification_effect == "none"
     assert report.benchmark_id == manifest.benchmark_id
     assert report.manifest == "validation/survival/sglt2_hf_reported_hrs.toml"
     assert report.manifest_sha256 == sha256_file(MANIFEST)
@@ -94,6 +121,7 @@ def test_survival_hr_verification_snapshot_matches_manifest():
         assert record.ci_lower_token_found is True
         assert record.ci_upper_token_found is True
         assert record.hazard_ratio_anchor_found is True
+        assert record.confidence_interval_anchor_found is True
         assert record.tokens_near_hazard_ratio_anchor is True
         assert record.source_terms_near_hazard_ratio_anchor is True
         assert record.verified is True
@@ -106,4 +134,34 @@ def test_survival_hr_report_rejects_unverified_record_marked_verified():
     raw["records"][0]["tokens_near_hazard_ratio_anchor"] = False
 
     with pytest.raises(ValidationError, match="verified HR record is missing abstract token evidence"):
+        SurvivalHRVerificationReport.from_mapping(raw)
+
+
+def test_survival_hr_report_rejects_scalar_source_terms():
+    raw = copy.deepcopy(load_survival_hr_verification_report(REPORT).__dict__)
+    raw["schema_version"] = "survival_hr_verification/v1"
+    raw["records"] = [copy.deepcopy(record.__dict__) for record in raw["records"]]
+    raw["records"][0]["source_terms"] = "dapagliflozin"
+
+    with pytest.raises(ValidationError, match="source_terms must be a list"):
+        SurvivalHRVerificationReport.from_mapping(raw)
+
+
+def test_survival_hr_manifest_rejects_certification_effect():
+    raw = copy.deepcopy(load_survival_hr_manifest(MANIFEST).__dict__)
+    raw["schema_version"] = "survival_hr_manifest/v1"
+    raw["certification_effect"] = "reference_matched"
+    raw["studies"] = [copy.deepcopy(study.__dict__) for study in raw["studies"]]
+
+    with pytest.raises(ValidationError, match="cannot certify model performance"):
+        SurvivalHRManifest.from_mapping(raw)
+
+
+def test_survival_hr_report_rejects_certification_effect():
+    raw = copy.deepcopy(load_survival_hr_verification_report(REPORT).__dict__)
+    raw["schema_version"] = "survival_hr_verification/v1"
+    raw["certification_effect"] = "reference_matched"
+    raw["records"] = [copy.deepcopy(record.__dict__) for record in raw["records"]]
+
+    with pytest.raises(ValidationError, match="cannot certify model performance"):
         SurvivalHRVerificationReport.from_mapping(raw)

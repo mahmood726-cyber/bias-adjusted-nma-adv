@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review: Advanced Bias-Adjusted NMA Under the Microscope
 
 This document registers the transcript of a hardcore, multiperson adversarial review of the advanced NMA pooler implemented in this repository. 

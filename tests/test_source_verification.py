@@ -27,6 +27,7 @@ def test_source_verification_snapshot_matches_manifest_sources():
     assert report.benchmark_id == manifest["benchmark_id"]
     assert report.source_manifest == "validation/real_meta/sglt2_hf_primary_sources.toml"
     assert report.source_manifest_sha256 == sha256_file(SGLT2_SOURCES)
+    assert report.certification_effect == "none"
     assert summarize_source_verification(report) == {
         "clinicaltrials_gov": 4,
         "pubmed_abstract": 4,
@@ -77,4 +78,14 @@ def test_source_verification_rejects_scope_creep():
     raw["records"][0]["evidence_scope"] = "event_count_extraction"
 
     with pytest.raises(ValidationError, match="unsupported evidence_scope"):
+        SourceVerificationReport.from_mapping(raw)
+
+
+def test_source_verification_rejects_certification_effect():
+    raw = copy.deepcopy(load_source_verification_report(SOURCE_REPORT).__dict__)
+    raw["schema_version"] = "source_verification/v1"
+    raw["certification_effect"] = "reference_matched"
+    raw["records"] = [copy.deepcopy(record.__dict__) for record in raw["records"]]
+
+    with pytest.raises(ValidationError, match="cannot certify model performance"):
         SourceVerificationReport.from_mapping(raw)

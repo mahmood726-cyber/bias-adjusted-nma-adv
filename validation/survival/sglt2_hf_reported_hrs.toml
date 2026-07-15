@@ -3,6 +3,7 @@ benchmark_id = "sglt2_hf_reported_hr"
 source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
 evidence_mode = "reported_hr_pubmed_abstract"
 status = "candidate_source_verified"
+certification_effect = "none"
 
 [[studies]]
 study_id = "DAPA-HF"

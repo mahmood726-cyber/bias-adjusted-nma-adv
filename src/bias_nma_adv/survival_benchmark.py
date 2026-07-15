@@ -10,6 +10,7 @@ import re
 import string
 import tomllib
 from typing import Any
+from urllib.parse import urlparse
 
 from bias_nma_adv.data import ValidationError
 from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
@@ -73,6 +74,9 @@ class SurvivalHRStudy:
         missing = sorted(required - set(raw))
         if missing:
             raise ValidationError(f"survival HR study missing required keys: {missing}")
+        source_terms = raw["source_terms"]
+        if not isinstance(source_terms, (list, tuple)):
+            raise ValidationError("survival HR source_terms must be a list.")
         study = cls(
             study_id=str(raw["study_id"]),
             trial=str(raw["trial"]),
@@ -90,7 +94,7 @@ class SurvivalHRStudy:
             source_url=str(raw["source_url"]),
             access_statement=str(raw["access_statement"]),
             evidence_mode=str(raw["evidence_mode"]),
-            source_terms=tuple(str(term) for term in raw["source_terms"]),
+            source_terms=tuple(str(term) for term in source_terms),
             km_reconstruction_status=str(raw["km_reconstruction_status"]),
             reuse_origin=str(raw["reuse_origin"]),
         )
@@ -129,6 +133,9 @@ class SurvivalHRStudy:
                 )
             ]
         )
+        parsed_url = urlparse(self.source_url)
+        if parsed_url.hostname != "pubmed.ncbi.nlm.nih.gov" or self.pmid not in parsed_url.path:
+            raise ValidationError(f"{self.study_id}: PubMed source URL must use pubmed.ncbi.nlm.nih.gov and contain PMID.")
         hr = _positive_decimal(self.reported_hr, self.study_id, "reported_hr")
         ci_low = _positive_decimal(self.ci_lower, self.study_id, "ci_lower")
         ci_high = _positive_decimal(self.ci_upper, self.study_id, "ci_upper")
@@ -146,6 +153,7 @@ class SurvivalHRManifest:
     source_policy: str
     evidence_mode: str
     status: str
+    certification_effect: str
     studies: tuple[SurvivalHRStudy, ...]
     manifest_sha256: str | None = None
 
@@ -157,6 +165,7 @@ class SurvivalHRManifest:
             "source_policy",
             "evidence_mode",
             "status",
+            "certification_effect",
             "studies",
         }
         missing = sorted(required - set(raw))
@@ -170,6 +179,7 @@ class SurvivalHRManifest:
             source_policy=str(raw["source_policy"]),
             evidence_mode=str(raw["evidence_mode"]),
             status=str(raw["status"]),
+            certification_effect=str(raw["certification_effect"]),
             studies=studies,
             manifest_sha256=manifest_sha256,
         )
@@ -185,6 +195,8 @@ class SurvivalHRManifest:
             raise ValidationError("survival HR manifest evidence_mode must be reported_hr_pubmed_abstract.")
         if self.status != "candidate_source_verified":
             raise ValidationError("survival HR manifest status must be candidate_source_verified.")
+        if self.certification_effect != "none":
+            raise ValidationError("survival HR manifests cannot certify model performance.")
         if not self.studies:
             raise ValidationError("survival HR manifest must contain at least one study.")
         study_ids = [study.study_id for study in self.studies]
@@ -210,6 +222,7 @@ class SurvivalHRVerificationRecord:
     ci_lower_token_found: bool
     ci_upper_token_found: bool
     hazard_ratio_anchor_found: bool
+    confidence_interval_anchor_found: bool
     tokens_near_hazard_ratio_anchor: bool
     source_terms_near_hazard_ratio_anchor: bool
     verified: bool
@@ -230,6 +243,7 @@ class SurvivalHRVerificationRecord:
             "ci_lower_token_found",
             "ci_upper_token_found",
             "hazard_ratio_anchor_found",
+            "confidence_interval_anchor_found",
             "tokens_near_hazard_ratio_anchor",
             "source_terms_near_hazard_ratio_anchor",
             "verified",
@@ -237,6 +251,9 @@ class SurvivalHRVerificationRecord:
         missing = sorted(required - set(raw))
         if missing:
             raise ValidationError(f"survival HR verification record missing required keys: {missing}")
+        source_terms = raw["source_terms"]
+        if not isinstance(source_terms, (list, tuple)):
+            raise ValidationError("survival HR verification source_terms must be a list.")
         record = cls(
             study_id=str(raw["study_id"]),
             pmid=str(raw["pmid"]),
@@ -246,11 +263,12 @@ class SurvivalHRVerificationRecord:
             reported_hr=str(raw["reported_hr"]),
             ci_lower=str(raw["ci_lower"]),
             ci_upper=str(raw["ci_upper"]),
-            source_terms=tuple(str(term) for term in raw["source_terms"]),
+            source_terms=tuple(str(term) for term in source_terms),
             hr_token_found=bool(raw["hr_token_found"]),
             ci_lower_token_found=bool(raw["ci_lower_token_found"]),
             ci_upper_token_found=bool(raw["ci_upper_token_found"]),
             hazard_ratio_anchor_found=bool(raw["hazard_ratio_anchor_found"]),
+            confidence_interval_anchor_found=bool(raw["confidence_interval_anchor_found"]),
             tokens_near_hazard_ratio_anchor=bool(raw["tokens_near_hazard_ratio_anchor"]),
             source_terms_near_hazard_ratio_anchor=bool(raw["source_terms_near_hazard_ratio_anchor"]),
             verified=bool(raw["verified"]),
@@ -278,6 +296,7 @@ class SurvivalHRVerificationRecord:
                 self.ci_lower_token_found,
                 self.ci_upper_token_found,
                 self.hazard_ratio_anchor_found,
+                self.confidence_interval_anchor_found,
                 self.tokens_near_hazard_ratio_anchor,
                 self.source_terms_near_hazard_ratio_anchor,
             )
@@ -294,6 +313,7 @@ class SurvivalHRVerificationReport:
     manifest: str
     manifest_sha256: str
     status: str
+    certification_effect: str
     records: tuple[SurvivalHRVerificationRecord, ...]
 
     @classmethod
@@ -305,6 +325,7 @@ class SurvivalHRVerificationReport:
             "manifest",
             "manifest_sha256",
             "status",
+            "certification_effect",
             "records",
         }
         missing = sorted(required - set(raw))
@@ -321,6 +342,7 @@ class SurvivalHRVerificationReport:
             manifest=str(raw["manifest"]),
             manifest_sha256=str(raw["manifest_sha256"]),
             status=str(raw["status"]),
+            certification_effect=str(raw["certification_effect"]),
             records=records,
         )
         report.validate()
@@ -335,6 +357,8 @@ class SurvivalHRVerificationReport:
             raise ValidationError("survival HR verification manifest_sha256 is not a SHA-256 digest.")
         if self.status not in {"verified", "failed"}:
             raise ValidationError(f"survival HR verification status '{self.status}' is not supported.")
+        if self.certification_effect != "none":
+            raise ValidationError("survival HR verification reports cannot certify model performance.")
         if not self.records:
             raise ValidationError("survival HR verification report must contain records.")
         if self.status == "verified" and any(not record.verified for record in self.records):

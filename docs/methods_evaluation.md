@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Advanced Bias-Adjusted NMA: Methodological Evaluation and Critical Challenge
 
 This document provides a critical challenge and evaluation of the **Advanced Design-Stratified Network Meta-Analysis (NMA)** estimator implemented in this repository. It compares our frequentist estimator against other state-of-the-art evidence synthesis methodologies, highlights its strengths and weaknesses, and outlines whether and when researchers should use this method.

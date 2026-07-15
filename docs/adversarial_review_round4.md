@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 4): Reaching Tier 1 Using ClinicalTrials.gov Data
 
 This document registers the transcript of the fourth-round multiperson adversarial review, outlining a concrete mathematical and software blueprint to elevate our evidence synthesis framework to **Tier 1 (State-of-the-Art)** using only data publicly available on ClinicalTrials.gov.

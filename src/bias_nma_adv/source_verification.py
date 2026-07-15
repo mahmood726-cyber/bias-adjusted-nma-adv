@@ -109,6 +109,7 @@ class SourceVerificationReport:
     source_manifest: str
     source_manifest_sha256: str
     status: str
+    certification_effect: str
     records: tuple[SourceVerificationRecord, ...]
 
     @classmethod
@@ -120,6 +121,7 @@ class SourceVerificationReport:
             "source_manifest",
             "source_manifest_sha256",
             "status",
+            "certification_effect",
             "records",
         }
         missing = sorted(required - set(raw))
@@ -136,6 +138,7 @@ class SourceVerificationReport:
             source_manifest=str(raw["source_manifest"]),
             source_manifest_sha256=str(raw["source_manifest_sha256"]),
             status=str(raw["status"]),
+            certification_effect=str(raw["certification_effect"]),
             records=records,
         )
         report.validate()
@@ -152,6 +155,8 @@ class SourceVerificationReport:
             raise ValidationError("source verification source_manifest_sha256 is not a SHA-256 digest.")
         if self.status not in ALLOWED_SOURCE_VERIFICATION_STATUSES:
             raise ValidationError(f"source verification status '{self.status}' is not supported.")
+        if self.certification_effect != "none":
+            raise ValidationError("source verification reports cannot certify model performance.")
         if not self.records:
             raise ValidationError("source verification report must contain records.")
         failures = [record for record in self.records if not record.identity_verified]

@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 28): Final Tier 1 Verification
 
 This document registers the transcript of the twenty-eighth-round multiperson adversarial review, compiling the final Tier 1 capabilities verification table for our upgraded evidence synthesis engine.

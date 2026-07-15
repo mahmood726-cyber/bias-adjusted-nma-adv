@@ -6,6 +6,8 @@ The tier-one methods benchmark is documented in `docs/tier1_benchmark.md`. The c
 
 The portfolio reuse map in `docs/portfolio_reuse_map.md` identifies nearby repos that can strengthen the platform: `wasserstein` for OA Kaplan-Meier survival validation, `topo-transport-ma` for transportability support diagnostics, `allmeta` for netmeta parity fixtures, and `rct-extractor-v2` for source-backed ingestion patterns. These are planned inputs only; each contribution must be revalidated inside this repository before it supports a certification claim.
 
+Historical adversarial-review and journal-review notes in `docs/` are governed by `docs/review_artifact_policy.md`; they are critique artifacts, not validation evidence or clinical guidance.
+
 ## Methods & Estimands
 
 The package implements a frequentist contrast-based network meta-analysis model with the following advanced features:
@@ -40,6 +42,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.
 - `scripts/verify_pubmed_survival_hrs.py`: Regenerates PubMed abstract reported-HR token snapshots for survival benchmark manifests.
 - `docs/portfolio_reuse_map.md`: Local portfolio scan describing reusable methods and hard stops before porting them.
+- `docs/review_artifact_policy.md`: Scope guard for historical review transcripts that contain hypotheses or critique, not certified evidence.
 - `e156-submission/`: Micro-publication artifacts.
 
 ## Benchmark Results

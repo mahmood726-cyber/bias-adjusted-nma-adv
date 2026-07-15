@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 33): Quantitative Benchmarking and Peer Review
 
 This document registers the transcript of the thirty-third-round joint adversarial and benchmark review, evaluating the quantitative execution metrics of our optimized next-generation modules.

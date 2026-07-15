@@ -30,6 +30,7 @@ def test_event_count_snapshot_matches_pubmed_abstract_terms_and_counts():
     assert report.dataset_sha256 == sha256_file(SGLT2_EVENTS)
     assert report.source_manifest == "validation/real_meta/sglt2_hf_primary_sources.toml"
     assert report.source_manifest_sha256 == sha256_file(SGLT2_SOURCES)
+    assert report.certification_effect == "none"
     assert VERIFY_SCRIPT.is_file()
     assert len(report.records) == 4
 
@@ -97,6 +98,16 @@ def test_event_count_report_rejects_scope_creep():
         EventCountVerificationReport.from_mapping(raw)
 
 
+def test_event_count_report_rejects_scalar_source_terms():
+    raw = copy.deepcopy(load_event_count_verification_report(EVENT_COUNT_REPORT).__dict__)
+    raw["schema_version"] = "event_count_verification/v1"
+    raw["records"] = [copy.deepcopy(record.__dict__) for record in raw["records"]]
+    raw["records"][0]["active_source_terms"] = "dapagliflozin"
+
+    with pytest.raises(ValidationError, match="source terms must be lists"):
+        EventCountVerificationReport.from_mapping(raw)
+
+
 def test_event_count_report_rejects_count_token_mismatch():
     raw = copy.deepcopy(load_event_count_verification_report(EVENT_COUNT_REPORT).__dict__)
     raw["schema_version"] = "event_count_verification/v1"
@@ -104,4 +115,14 @@ def test_event_count_report_rejects_count_token_mismatch():
     raw["records"][0]["active_count_token"] = "386/2373"
 
     with pytest.raises(ValidationError, match="active_count_token does not match active counts"):
+        EventCountVerificationReport.from_mapping(raw)
+
+
+def test_event_count_report_rejects_certification_effect():
+    raw = copy.deepcopy(load_event_count_verification_report(EVENT_COUNT_REPORT).__dict__)
+    raw["schema_version"] = "event_count_verification/v1"
+    raw["certification_effect"] = "reference_matched"
+    raw["records"] = [copy.deepcopy(record.__dict__) for record in raw["records"]]
+
+    with pytest.raises(ValidationError, match="cannot certify model performance"):
         EventCountVerificationReport.from_mapping(raw)

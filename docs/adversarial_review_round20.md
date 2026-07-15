@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 20): Empirical Lessons from Real-World Cardiology Networks
 
 This document registers the transcript of the twentieth-round multiperson adversarial review, summarizing the empirical lessons learned from running the four real-world cardiology networks (SGLT2i, TAVI vs. SAVR, Antiplatelets, and PCSK9i) and how they calibrate our advanced NMA engine.

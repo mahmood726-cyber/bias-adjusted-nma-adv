@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 13): The 2007 Registry Barrier and Scientific Truth
 
 This document registers the transcript of the thirteenth-round multiperson adversarial review, debating whether the 2007 ClinicalTrials.gov barrier (which excludes pre-2007 trials like SOLVD and RALES) affects the truth or publishability of the network meta-analysis (NMA).

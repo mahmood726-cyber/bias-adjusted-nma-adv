@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 17): Causal Inference on Reconstructed Pseudo-IPD
 
 This document registers the transcript of the seventeenth-round multiperson adversarial review, analyzing the information boundary of Guyot-reconstructed Individual Patient Data (IPD) and its impact on the validity of Targeted Minimum Loss-Based Estimation (TMLE) and G-computation.

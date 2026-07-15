@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Journal Peer-Review Report: Advanced Bias-Adjusted NMA Framework
 
 This document registers the transcript of a multiperson journal peer-review evaluating the advanced bias-adjusted network meta-analysis (NMA) framework, its mathematical architecture, and its clinical findings in Heart Failure with Reduced Ejection Fraction (HFrEF).

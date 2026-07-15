@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 21): True Publication Bias and Outcome Switching
 
 This document registers the transcript of the twenty-first-round multiperson adversarial review, focusing on the mathematical formulation and clinical impact of incorporating registry-based publication bias and outcome switching detection into our advanced NMA pipeline.

@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 14): Advanced Non-Proportional Hazards Integration
 
 This document registers the transcript of the fourteenth-round multiperson adversarial review, evaluating the clinical and mathematical utility of fractional polynomials, multidimensional covariance penalties, causal transportability, Bayesian QBA, and G-computation target trial emulation in our advanced NMA engine.

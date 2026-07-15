@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 11): How Advanced Adjustments Shift Drug Rankings
 
 This document registers the transcript of the eleventh-round multiperson adversarial review, detailing how our advanced NMA adjustments (TOPCAT regional down-weighting and Kenward-Roger covariance expansion) shift the clinical rankings (SUCRA / P-scores) of HFrEF drug classes.

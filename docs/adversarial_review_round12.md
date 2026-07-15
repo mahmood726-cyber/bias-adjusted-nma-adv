@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 12): Future Frontiers, Feasibility Audits, and Missed Trials
 
 This document registers the transcript of the twelfth-round multiperson adversarial review, detailing out-of-field methodological improvements, a feasibility audit of major cardiology NMAs under our data restrictions, and an analysis of historical trials missed due to our data boundaries.

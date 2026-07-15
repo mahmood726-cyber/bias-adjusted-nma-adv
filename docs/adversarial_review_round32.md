@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 32): Methodological Pruning and Optimization
 
 This document registers the transcript of the thirty-second-round multiperson adversarial review, deconstructing the pruning exercise that consolidated our next-generation evidence synthesis engine.

@@ -176,6 +176,7 @@ def build_report(
         "source_manifest": manifest_path.as_posix(),
         "source_manifest_sha256": sha256_file(manifest_path),
         "status": status,
+        "certification_effect": "none",
         "records": records,
     }
 

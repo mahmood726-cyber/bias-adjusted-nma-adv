@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 18): Tier 1 Capabilities and the Run-In Blind Spot
 
 This document registers the transcript of the eighteenth-round multiperson adversarial review, compiling a Tier 1 Methodological Capabilities Matching Table and evaluating how standard evidence synthesis engines fail to penalize selection bias occurring prior to "Time Zero."

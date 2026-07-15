@@ -1,8 +1,9 @@
 {
   "benchmark_id": "sglt2_hf_reported_hr",
+  "certification_effect": "none",
   "checked_at": "2026-07-15T00:00:00Z",
   "manifest": "validation/survival/sglt2_hf_reported_hrs.toml",
-  "manifest_sha256": "9f1ca5831d7e30ed02160f3e7ffe1e4544487a72c20f037ce2b53246c8ef4434",
+  "manifest_sha256": "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1ff06",
   "records": [
     {
       "abstract_sha256": "1027c177002f313f913a64e63223935585ad152f2df949ceb8d3c43aae8f18a5",
@@ -10,6 +11,7 @@
       "ci_lower_token_found": true,
       "ci_upper": "0.85",
       "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
       "evidence_scope": "pubmed_abstract_reported_hr_tokens",
       "hazard_ratio_anchor_found": true,
       "hr_token_found": true,
@@ -31,6 +33,7 @@
       "ci_lower_token_found": true,
       "ci_upper": "0.86",
       "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
       "evidence_scope": "pubmed_abstract_reported_hr_tokens",
       "hazard_ratio_anchor_found": true,
       "hr_token_found": true,
@@ -52,6 +55,7 @@
       "ci_lower_token_found": true,
       "ci_upper": "0.92",
       "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
       "evidence_scope": "pubmed_abstract_reported_hr_tokens",
       "hazard_ratio_anchor_found": true,
       "hr_token_found": true,
@@ -73,6 +77,7 @@
       "ci_lower_token_found": true,
       "ci_upper": "0.90",
       "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
       "evidence_scope": "pubmed_abstract_reported_hr_tokens",
       "hazard_ratio_anchor_found": true,
       "hr_token_found": true,

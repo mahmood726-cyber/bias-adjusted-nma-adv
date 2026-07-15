@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 6): Head-to-Head Comparison with Published Cardiology Meta-Analyses
 
 This document registers the transcript of the sixth-round multiperson adversarial review, comparing the results of our advanced NMA engine with major published cardiology meta-analyses of SGLT2 inhibitors in heart failure (such as the SMART-C Collaboration in *The Lancet* 2022 and Cochrane safety reviews).

@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 3): Is This Engine Among the Most Advanced in the World?
 
 This document registers the transcript of the third-round multiperson adversarial review, debating whether the advanced bias-adjusted NMA pooler implemented in this repository ranks among the most advanced evidence synthesis tools globally.

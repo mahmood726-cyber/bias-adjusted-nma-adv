@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 2): The Refined NMA Engine Under Scrutiny
 
 This document registers the transcript of the second-round multiperson adversarial review of the advanced NMA pooler, following the implementation of Kenward-Roger covariance corrections, Sweeting's adaptive corrections, directional priors, and weight sensitivity bounds.

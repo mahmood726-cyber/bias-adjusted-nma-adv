@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 9): Should We Integrate the Wasserstein Metric?
 
 This document registers the transcript of the ninth-round multiperson adversarial review, providing a strategic recommendation on whether to integrate the Wasserstein distance metric into our network meta-analysis engine, or if the present framework is sufficient.

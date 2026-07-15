@@ -64,6 +64,10 @@ class EventCountVerificationRecord:
         missing = sorted(required - set(raw))
         if missing:
             raise ValidationError(f"event-count verification record missing required keys: {missing}")
+        active_source_terms = raw["active_source_terms"]
+        control_source_terms = raw["control_source_terms"]
+        if not isinstance(active_source_terms, (list, tuple)) or not isinstance(control_source_terms, (list, tuple)):
+            raise ValidationError("event-count verification source terms must be lists.")
         record = cls(
             study_id=str(raw["study_id"]),
             pmid=str(raw["pmid"]),
@@ -77,8 +81,8 @@ class EventCountVerificationRecord:
             control_n=int(raw["control_n"]),
             active_count_token=str(raw["active_count_token"]),
             control_count_token=str(raw["control_count_token"]),
-            active_source_terms=tuple(str(term) for term in raw["active_source_terms"]),
-            control_source_terms=tuple(str(term) for term in raw["control_source_terms"]),
+            active_source_terms=tuple(str(term) for term in active_source_terms),
+            control_source_terms=tuple(str(term) for term in control_source_terms),
             active_count_token_found=bool(raw["active_count_token_found"]),
             control_count_token_found=bool(raw["control_count_token_found"]),
             active_term_near_count=bool(raw["active_term_near_count"]),
@@ -129,6 +133,7 @@ class EventCountVerificationReport:
     source_manifest: str
     source_manifest_sha256: str
     status: str
+    certification_effect: str
     records: tuple[EventCountVerificationRecord, ...]
 
     @classmethod
@@ -142,6 +147,7 @@ class EventCountVerificationReport:
             "source_manifest",
             "source_manifest_sha256",
             "status",
+            "certification_effect",
             "records",
         }
         missing = sorted(required - set(raw))
@@ -160,6 +166,7 @@ class EventCountVerificationReport:
             source_manifest=str(raw["source_manifest"]),
             source_manifest_sha256=str(raw["source_manifest_sha256"]),
             status=str(raw["status"]),
+            certification_effect=str(raw["certification_effect"]),
             records=records,
         )
         report.validate()
@@ -176,6 +183,8 @@ class EventCountVerificationReport:
             raise ValidationError("event-count verification source_manifest_sha256 is not a SHA-256 digest.")
         if self.status not in {"verified", "failed"}:
             raise ValidationError(f"event-count verification status '{self.status}' is not supported.")
+        if self.certification_effect != "none":
+            raise ValidationError("event-count verification reports cannot certify model performance.")
         if not self.records:
             raise ValidationError("event-count verification report must contain records.")
         if self.status == "verified" and any(not record.verified for record in self.records):

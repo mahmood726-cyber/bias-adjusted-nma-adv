@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 16): Is This Model World-Class? A Self-Critical Evaluation
 
 This document registers the transcript of the sixteenth-round multiperson adversarial review, debating whether our advanced bias-adjusted NMA model is one of the most advanced in the world, identifying its limitations, and mapping out-of-field upgrades.

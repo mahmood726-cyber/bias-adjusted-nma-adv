@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 29): Exceeding the Tier 1 Pinnacle
 
 This document registers the transcript of the twenty-ninth-round multiperson adversarial review, deconstructing how our newly modeled Multinomial GLMM, C-TMLE, and NUTS samplers elevate all remaining NMA capabilities to the ultimate "EXCEEDS" status.

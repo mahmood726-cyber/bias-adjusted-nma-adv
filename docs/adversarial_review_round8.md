@@ -1,3 +1,4 @@
+> **Historical review artifact - not validation evidence.** This document is a critique/planning transcript only. It is not source extraction evidence, not reference-software parity evidence, not certification evidence, not clinical guidance, and not proof of superiority. Treat all numerical, clinical, guideline, and publication-status statements below as hypotheses unless they are backed by machine-verifiable artifacts in this repository.
 # Hardcore Methodological Review (Round 8): The Wasserstein Distance vs. Guyot in Survival Analysis
 
 This document registers the transcript of the eighth-round multiperson adversarial review, addressing the question: *Is the Wasserstein distance itself better than the Guyot algorithm, and is it only useful when survival curves cross?*

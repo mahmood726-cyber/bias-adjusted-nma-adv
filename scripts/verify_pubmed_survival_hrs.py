@@ -87,6 +87,7 @@ def verify_study(study: dict[str, object], timeout: int) -> dict[str, object]:
     source_terms = [str(term) for term in study["source_terms"]]
     effect_tokens = [hr, ci_lower, ci_upper]
     anchor_found, effect_tokens_near = tokens_near_anchor(abstract, "hazard ratio", effect_tokens)
+    confidence_interval_found, _ = tokens_near_anchor(abstract, "confidence interval", [ci_lower, ci_upper], window=260)
     _, source_terms_near = tokens_near_anchor(abstract, "hazard ratio", source_terms)
     hr_found = normalise_text(hr) in normalised
     ci_lower_found = normalise_text(ci_lower) in normalised
@@ -99,6 +100,7 @@ def verify_study(study: dict[str, object], timeout: int) -> dict[str, object]:
             ci_lower_found,
             ci_upper_found,
             anchor_found,
+            confidence_interval_found,
             effect_tokens_near,
             source_terms_near,
         )
@@ -117,6 +119,7 @@ def verify_study(study: dict[str, object], timeout: int) -> dict[str, object]:
         "ci_lower_token_found": ci_lower_found,
         "ci_upper_token_found": ci_upper_found,
         "hazard_ratio_anchor_found": anchor_found,
+        "confidence_interval_anchor_found": confidence_interval_found,
         "tokens_near_hazard_ratio_anchor": effect_tokens_near,
         "source_terms_near_hazard_ratio_anchor": source_terms_near,
         "verified": verified,
@@ -141,6 +144,7 @@ def build_report(manifest_path: Path, checked_at: str, timeout: int, pause_secon
         "manifest": manifest_path.as_posix(),
         "manifest_sha256": sha256_file(manifest_path),
         "status": status,
+        "certification_effect": "none",
         "records": records,
     }
 
