@@ -1,3 +1,4 @@
+<!-- sentinel:skip-file -->
 # Technical Specification: Advanced Bias-Aware Network Meta-Analysis Engine
 
 ## 1. Scope and Design Principles
@@ -15,11 +16,30 @@ All advanced modules are classified as:
 
 ---
 
-## 2. Core Network Meta-Analysis Model
+## 2. Estimand Definition & Evidence Separations
 
-### 2.1 Study and Treatment Structure
+### 2.1 Estimand Specification
+Before model fitting, each analysis must define the target estimand:
+*   **Population:** Target clinical population baseline parameters.
+*   **Treatment Strategies:** Set of eligible comparator interventions.
+*   **Outcome:** Primary and secondary endpoints (mutually exclusive and collectively exhaustive).
+*   **Follow-Up Time:** Prespecified landmarks or continuous horizons.
+*   **Effect Measure:** Relative risk, odds ratio, risk difference, or hazard ratio.
+*   **Intercurrent Events:** Strategy for handling treatment discontinuation, crossovers, or rescue therapies (e.g. treatment-policy, hypothetical, composite, or while-on-treatment).
+*   **Analysis Interpretation:** Intention-to-treat (ITT) versus per-protocol (PP).
 
-For study (i), arm (a), and treatment (t_{ia}), the linear predictor is:
+Results from materially different estimands are not pooled without an explicit transformation or hierarchical model.
+
+### 2.2 Separating Evidence Designs
+Randomized and non-randomized evidence are analysed separately by default. Joint synthesis requires a prespecified design-adjusted hierarchical model with design-specific bias parameters and sensitivity analyses.
+
+---
+
+## 3. Core Network Meta-Analysis Model
+
+### 3.1 Study and Treatment Structure
+
+For study ($i$), arm ($a$), and treatment ($t_{ia}$), the linear predictor is:
 
 $$
 \eta_{ia}=\mu_i+\delta_{ia},
@@ -27,9 +47,9 @@ $$
 
 where:
 
-* \mu_i is the study-specific baseline parameter;
-* \delta_{ia} is the relative effect of treatment (t_{ia}) against the study reference treatment;
-* \delta_{i1}=0 for the reference arm.
+* $\mu_i$ is the study-specific baseline parameter;
+* $\delta_{ia}$ is the relative effect of treatment ($t_{ia}$) against the study reference treatment;
+* $\delta_{i1}=0$ for the reference arm.
 
 Under a consistency model:
 
@@ -37,11 +57,11 @@ $$
 \delta_{ia}=d_{t_{ia}}-d_{t_{i1}}+u_{ia},
 $$
 
-where (d_t) is the network treatment effect relative to the network reference and (u_{ia}) represents between-study heterogeneity.
+where ($d_t$) is the network treatment effect relative to the network reference and ($u_{ia}$) represents between-study heterogeneity.
 
 Multi-arm trial random effects are modelled jointly so that the induced correlations between treatment contrasts are retained.
 
-### 2.2 Heterogeneity
+### 3.2 Heterogeneity
 
 The default random-effects model assumes:
 
@@ -49,11 +69,11 @@ $$
 u_i \sim \operatorname{MVN}(0,\Sigma_i(\tau)),
 $$
 
-with a common heterogeneity parameter (\tau), unless outcome-specific or comparison-specific heterogeneity is prespecified and supported by sufficient data.
+with a common heterogeneity parameter ($\tau$), unless outcome-specific or comparison-specific heterogeneity is prespecified and supported by sufficient data.
 
 The engine reports:
 
-* posterior median and credible interval for (\tau);
+* posterior median and credible interval for ($\tau$);
 * predictive intervals;
 * prior-to-posterior sensitivity;
 * comparison with a common-effect model.
@@ -69,34 +89,34 @@ Incoherence is evaluated using:
 * residual deviance and posterior predictive checks;
 * design-specific influence diagnostics.
 
-Incoherent evidence is displayed explicitly. It is not automatically averaged with the consistency model without a prespecified model-averaging analysis.
+These methods diagnose incoherence but do not establish which source of evidence is correct. The software does not automatically choose between direct or indirect evidence based solely on statistical significance.
 
 ---
 
-## 3. Multinomial Clinical-State NMA
+## 4. Multinomial Clinical-State NMA
 
 **Module:** `src/bias_nma_adv/multinomial.py`
 
 ### Purpose
 
-Models mutually exclusive clinical states measured at a common, prespecified follow-up time, such as:
+Models mutually exclusive and collectively exhaustive clinical states measured at a common, prespecified follow-up time, such as:
 
 * event-free survival;
 * cardiovascular death;
 * non-cardiovascular death;
-* heart-failure hospitalization as the first event.
+* heart-failure hospitalization as the first event (where states are defined at a common landmark or through a multi-state framework).
 
 This module is intended for fixed-time multinomial outcomes. It is not described as a full competing-risks survival model unless event times and censoring are modelled explicitly.
 
 ### Likelihood
 
-For study (i), arm (a), and outcome category (j):
+For study ($i$), arm ($a$), and outcome category ($j$):
 
 $$
 \mathbf{y}_{ia}\sim \operatorname{Multinomial}\left(n_{ia},\mathbf{p}_{ia}\right).
 $$
 
-Using category (J) as the reference:
+Using category ($J$) as the reference:
 
 $$
 p_{iaj} = \frac{\exp(\eta_{iaj})}{1+\sum_{k=1}^{J-1}\exp(\eta_{iak})}, \qquad j=1,\ldots,J-1,
@@ -108,21 +128,14 @@ $$
 p_{iaJ} = \frac{1}{1+\sum_{k=1}^{J-1}\exp(\eta_{iak})}.
 $$
 
-Each category has study-specific baseline parameters and network treatment effects. Correlations between category-specific treatment effects may be estimated using a structured covariance matrix where the data are sufficient.
-
-### Required safeguards
-
-* stable log-sum-exp calculations;
-* explicit reference-category handling;
-* multi-arm trial covariance;
-* sparse-cell and zero-cell handling;
-* identifiability checks;
-* posterior predictive checks;
-* comparison against independently implemented reference models.
+Each category has study-specific baseline parameters and network treatment effects. The module defines whether category-specific treatment effects are:
+1.  **Independent:** Assuming no correlation between endpoints.
+2.  **Correlated (Unstructured):** Using an unstructured covariance matrix (poorly identified in small networks).
+3.  **Correlated (Factor):** Correlated through a lower-dimensional factor structure.
 
 ---
 
-## 4. Time-to-Event and Competing-Risk Extension
+## 5. Time-to-Event and Competing-Risk Extension
 
 **Module:** `src/bias_nma_adv/competing_risks.py`
 
@@ -139,7 +152,7 @@ Non-proportional hazards are evaluated using prespecified time functions, spline
 
 ---
 
-## 5. Bayesian Inference Using NUTS
+## 6. Bayesian Inference Using NUTS
 
 **Module:** `src/bias_nma_adv/nuts.py`
 
@@ -157,8 +170,8 @@ NUTS adapts the leapfrog trajectory length and, during warm-up, the step size an
 
 The engine reports:
 
-* split-(\hat R);
-* bulk and tail MCMC sample sizes;
+* split-$\hat R$;
+* bulk and tail Markov chain sample sizes;
 * divergent transitions;
 * maximum tree-depth events;
 * energy Bayesian fraction of missing information;
@@ -170,19 +183,19 @@ A model is not marked as successfully fitted merely because sampling terminates.
 
 ---
 
-## 6. Probabilistic Bias Analysis
+## 7. Probabilistic Bias Analysis
 
 **Module:** `src/bias_nma_adv/bias_model.py`
 
 Bias is represented as an explicit additive or multiplicative parameter rather than an arbitrary change in study weight.
 
-For study (i):
+For study ($i$):
 
 $$
 \theta_i^{\mathrm{observed}} = \theta_i^{\mathrm{true}}+b_i,
 $$
 
-where (b_i) is a bias parameter whose prior distribution is determined by the relevant bias domain, empirical evidence or structured expert elicitation.
+where ($b_i$) is a bias parameter whose prior distribution is determined by the relevant bias domain, empirical evidence or prior distributions from expert elicitation.
 
 Analyses include:
 
@@ -196,7 +209,7 @@ The direction and magnitude of every bias prior are reported.
 
 ---
 
-## 7. Registry and Missing-Evidence Auditing
+## 8. Registry and Missing-Evidence Auditing
 
 **Modules:**
 
@@ -246,7 +259,7 @@ A fixed dropout threshold is not used as an automatic weight adjustment.
 
 ---
 
-## 8. Collaborative TMLE IPD Extension
+## 9. Collaborative TMLE IPD Extension
 
 **Module:** `src/bias_nma_adv/ctmle.py`
 
@@ -260,8 +273,8 @@ It is not applied automatically to aggregate randomized-trial NMA.
 
 The module estimates a prespecified causal estimand using:
 
-* an initial outcome regression (Q(A,W));
-* a treatment or censoring mechanism (g(A\mid W));
+* an initial outcome regression ($Q(A,W)$);
+* a treatment or censoring mechanism ($g(A\mid W)$);
 * targeted fluctuation updates;
 * cross-fitting or sample splitting;
 * influence-curve-based uncertainty estimation.
@@ -270,16 +283,19 @@ Covariate selection is restricted to a prespecified candidate set. Selection per
 
 ### Diagnostics
 
+* equivalent sample size after weighting;
+* influence-curve variance and standard error;
+* proportion of propensity scores truncated;
+* cross-validated nuisance-model loss;
+* confidence-interval coverage in simulation testing;
 * positivity and propensity-score overlap;
 * truncation sensitivity;
 * nuisance-model performance;
-* influence-curve mean;
-* bulk and tail MCMC sample sizes;
 * comparison with alternative estimators.
 
 ---
 
-## 9. Model Averaging
+## 10. Model Averaging
 
 **Module:** `src/bias_nma_adv/bma.py`
 
@@ -304,7 +320,7 @@ The engine reports model-specific estimates as well as averaged estimates so tha
 
 ---
 
-## 10. Synthetic-Data Simulation
+## 11. Synthetic-Data Simulation
 
 **Module:** `src/bias_nma_adv/gan.py`
 
@@ -329,7 +345,7 @@ Validation includes:
 
 ---
 
-## 11. Flexible Hazard-Function Discovery
+## 12. Flexible Hazard-Function Discovery
 
 **Module:** `src/bias_nma_adv/symbolic.py`
 
@@ -349,7 +365,7 @@ The selected functional form, uncertainty due to model selection and extrapolati
 
 ---
 
-## 12. Treatment Ranking
+## 13. Treatment Ranking
 
 The engine reports:
 
@@ -364,7 +380,7 @@ Rankings are accompanied by treatment-effect estimates and certainty assessments
 
 ---
 
-## 13. Validation and Testing
+## 14. Validation and Testing
 
 Each estimator must pass:
 
@@ -383,7 +399,68 @@ Reference comparisons should include established Stan-based or validated NMA imp
 
 ---
 
-## 14. Reproducibility and Reporting
+## 15. Estimands, Evidence Designs and Analysis Governance
+
+### 15.1 Estimand Definition
+Before model fitting, each analysis must define:
+*   the target population;
+*   eligible treatment strategies;
+*   outcome definition;
+*   follow-up time or time horizon;
+*   effect measure;
+*   treatment-policy, hypothetical, composite or while-on-treatment strategy for intercurrent events;
+*   intention-to-treat, per-protocol or observational causal interpretation.
+
+Results from materially different estimands are not pooled without an explicit transformation or hierarchical model.
+
+### 15.2 Evidence-Design Separation
+Randomized and non-randomized studies are analysed separately by default.
+Joint synthesis is permitted only through a prespecified design-adjusted model containing design-specific parameters or bias distributions. The engine must report:
+1.  randomized-evidence-only results;
+2.  non-randomized-evidence-only results;
+3.  combined design-adjusted results;
+4.  sensitivity to the assumed bias parameters.
+
+Synthetic observations are never classified as clinical evidence.
+
+### 15.3 Prior Specification
+Every Bayesian model must declare priors for:
+*   treatment effects;
+*   study baselines;
+*   heterogeneity parameters;
+*   correlation parameters;
+*   inconsistency parameters;
+*   bias parameters;
+*   time-varying or spline coefficients.
+
+The engine performs prior predictive checks and reports sensitivity to clinically plausible alternative priors.
+
+### 15.4 Model Acceptance Criteria
+A model is classified as successfully fitted only when:
+*   all material parameters have acceptable split-$\hat R$;
+*   MCMC sample sizes meet prespecified thresholds;
+*   Monte Carlo error is small relative to posterior uncertainty;
+*   no unresolved divergent transitions remain;
+*   maximum tree-depth events are absent or adequately investigated;
+*   posterior predictive checks do not show major systematic misfit;
+*   treatment effects are identifiable from the observed network.
+
+Failure of any criterion produces a warning or failed-model status rather than silently returning treatment rankings.
+
+### 15.5 Certainty of Evidence
+For each treatment comparison and outcome, the reporting layer records assessments of:
+*   within-study bias;
+*   across-studies bias;
+*   indirectness;
+*   imprecision;
+*   heterogeneity;
+*   incoherence.
+
+Automated calculations and flags support—but do not replace—reviewer judgements. Treatment rankings are never used as substitutes for comparison-specific certainty assessments.
+
+---
+
+## 16. Reproducibility and Reporting
 
 Every analysis exports:
 
