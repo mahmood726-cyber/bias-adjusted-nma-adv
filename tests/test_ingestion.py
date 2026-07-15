@@ -2,9 +2,13 @@ import pytest
 
 from bias_nma_adv.ingestion import (
     EvidenceIngestionRecord,
+    ExtractionProvenance,
     IngestionProvenanceError,
+    ProofCarryingEffectRecord,
+    proof_effect_from_extractor_row,
     record_from_extractor_row,
     validate_ingestion_records,
+    validate_proof_carrying_effects,
 )
 
 
@@ -116,3 +120,156 @@ def test_rejects_wrong_host_for_registry_and_pubmed_sources():
     )
     with pytest.raises(IngestionProvenanceError, match="pubmed.ncbi.nlm.nih.gov"):
         pubmed.validate()
+
+
+def _valid_effect_record(**overrides):
+    payload = {
+        "record_id": "dapa_hf_hr_primary",
+        "study_id": "DAPA-HF",
+        "outcome_name": "worsening heart failure or cardiovascular death",
+        "effect_type": "HR",
+        "point_estimate": 0.74,
+        "ci_lower": 0.65,
+        "ci_upper": 0.85,
+        "standard_error": None,
+        "p_value": 0.001,
+        "timepoint": "median 18.2 months",
+        "is_primary": True,
+        "is_subgroup": False,
+        "computation_origin": "reported",
+        "source": EvidenceIngestionRecord(
+            row_id="pubmed_dapa_hf",
+            source_type="pubmed_abstract",
+            pmid="31535829",
+            url="https://pubmed.ncbi.nlm.nih.gov/31535829/",
+            access_statement="PubMed abstract metadata and abstract text.",
+        ),
+        "provenance": ExtractionProvenance(
+            source_text="Dapagliflozin reduced worsening heart failure or cardiovascular death (hazard ratio, 0.74; 95% CI, 0.65 to 0.85; P<0.001).",
+            source_type="text",
+            char_start=120,
+            char_end=245,
+        ),
+    }
+    payload.update(overrides)
+    return ProofCarryingEffectRecord(**payload)
+
+
+def test_proof_carrying_effect_validates_and_exports_non_certifying_record():
+    record = _valid_effect_record()
+    exported = record.to_dict()
+
+    assert record.is_meta_analysis_ready is True
+    assert record.has_complete_ci is True
+    assert exported["schema_version"] == "proof_carrying_effect/v1"
+    assert exported["certification_effect"] == "none"
+    assert exported["integrity_hash"] == record.integrity_hash
+    assert len(record.integrity_hash) == 64
+
+
+def test_proof_carrying_effect_integrity_hash_includes_extraction_method_context():
+    reported = _valid_effect_record(computation_origin="reported")
+    computed = _valid_effect_record(computation_origin="computed")
+
+    assert reported.integrity_hash != computed.integrity_hash
+
+
+def test_proof_effect_from_extractor_row_accepts_source_backed_open_access_record():
+    raw = {
+        "benchmark_id": "author_meta_trial_00002",
+        "study_id": "PMC3196245",
+        "pmcid": "PMC3196245",
+        "pmid": "22008217",
+        "oa_download_status": "downloaded_fallback_pmcid_direct",
+        "oa_download_url": "https://europepmc.org/backend/ptpmcrender.fcgi?accid=PMC3196245&blobtype=pdf",
+        "outcome_name": "all-cause mortality",
+        "effect_type": "OR",
+        "point_estimate": 1.05,
+        "ci_lower": 0.90,
+        "ci_upper": 1.22,
+        "p_value": 0.51,
+        "is_primary": "true",
+        "provenance": {
+            "source_text": "The odds ratio was 1.05 with 95% CI 0.90 to 1.22.",
+            "source_type": "text",
+            "page_number": 4,
+            "char_start": 10,
+            "char_end": 62,
+        },
+    }
+
+    record = proof_effect_from_extractor_row(raw)
+    record.validate()
+
+    assert record.effect_type == "OR"
+    assert record.source.pmcid == "PMC3196245"
+    assert record.is_primary is True
+
+
+def test_proof_effect_from_extractor_row_preserves_zero_values():
+    raw = {
+        "benchmark_id": "author_meta_trial_zero_rd",
+        "study_id": "PMC3196245",
+        "pmcid": "PMC3196245",
+        "pmid": "22008217",
+        "oa_download_status": "downloaded_fallback_pmcid_direct",
+        "oa_download_url": "https://europepmc.org/backend/ptpmcrender.fcgi?accid=PMC3196245&blobtype=pdf",
+        "outcome_name": "risk difference outcome",
+        "effect_type": "RD",
+        "point_estimate": 0.0,
+        "standard_error": 0.1,
+        "p_value": 0.0,
+        "is_subgroup": "false",
+        "provenance": {
+            "source_text": "The reported risk difference was 0.0 with standard error 0.1 and p=0.0.",
+            "source_type": "text",
+            "char_start": 0,
+            "char_end": 72,
+        },
+    }
+
+    record = proof_effect_from_extractor_row(raw)
+    record.validate()
+
+    assert record.point_estimate == 0.0
+    assert record.p_value == 0.0
+    assert record.is_subgroup is False
+
+
+def test_proof_carrying_effect_rejects_missing_uncertainty_and_bad_ci():
+    missing_uncertainty = _valid_effect_record(ci_lower=None, ci_upper=None, standard_error=None)
+    with pytest.raises(IngestionProvenanceError, match="complete CI or a standard error"):
+        missing_uncertainty.validate()
+
+    outside_ci = _valid_effect_record(point_estimate=0.9)
+    with pytest.raises(IngestionProvenanceError, match="inside confidence interval"):
+        outside_ci.validate()
+
+
+def test_proof_carrying_effect_rejects_negative_ratio_and_weak_provenance():
+    negative_hr = _valid_effect_record(point_estimate=-0.74, ci_lower=-0.85, ci_upper=-0.65)
+    with pytest.raises(IngestionProvenanceError, match="ratio-scale point_estimate"):
+        negative_hr.validate()
+
+    no_snippet = _valid_effect_record(
+        provenance=ExtractionProvenance(source_text="", source_type="text")
+    )
+    with pytest.raises(IngestionProvenanceError, match="source_text"):
+        no_snippet.validate()
+
+
+def test_proof_carrying_effect_rejects_figure_without_label_and_duplicate_ids():
+    figure_without_label = _valid_effect_record(
+        provenance=ExtractionProvenance(
+            source_text="Kaplan-Meier curve supports the extracted HR.",
+            source_type="figure",
+            page_number=5,
+        )
+    )
+    with pytest.raises(IngestionProvenanceError, match="figure_label"):
+        figure_without_label.validate()
+
+    first = _valid_effect_record()
+    duplicate = _valid_effect_record()
+    with pytest.raises(IngestionProvenanceError, match="record_id must be unique"):
+        validate_proof_carrying_effects([first, duplicate])

@@ -22,7 +22,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 ## Repository Structure
 - `src/bias_nma_adv/`: Core python package containing:
   - `data.py`: Structured data classes and validation schemas.
-  - `ingestion.py`: Source-backed ingestion provenance checks for PubMed, ClinicalTrials.gov, and open-access paper rows.
+  - `ingestion.py`: Source-backed ingestion provenance checks and proof-carrying extracted-effect contracts for PubMed, ClinicalTrials.gov, and open-access paper rows.
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
 - `src/bias_nma_adv/pairwise.py`: Experimental pairwise meta-analysis bridge for FE, DL, Paule-Mandel, REML, HKSJ, and prediction-interval conventions.
 - `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.
