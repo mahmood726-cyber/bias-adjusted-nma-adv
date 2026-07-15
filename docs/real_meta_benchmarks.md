@@ -45,6 +45,8 @@ Reported survival HR token snapshot: `validation/source_checks/sglt2_hf_reported
 
 Reported survival HR benchmark: `validation/survival/sglt2_hf_reported_hr_benchmark.toml`
 
+Proof-carrying reported-HR extraction bundle: `validation/ingestion/sglt2_hf_reported_hr_proof_effects.json`
+
 Outcome: primary composite outcome in each trial, harmonized as worsening heart failure or cardiovascular death / cardiovascular death or heart-failure hospitalization.
 
 Scale currently tested: log odds ratio, because the current arm-level binary model estimates log-odds contrasts.
@@ -63,6 +65,7 @@ Current tests:
 - validate a source-identity snapshot showing the CT.gov and PubMed public records were reachable and matched the manifest identifiers at verification time;
 - validate a PubMed abstract event-count snapshot showing the exact arm-level count tokens and nearby active/control treatment terms were present in the public abstracts at verification time;
 - validate a reported survival HR snapshot showing the abstract HR and confidence-interval tokens are present near the hazard-ratio anchor and treatment terms;
+- validate a proof-carrying reported-HR extraction bundle with source-manifest/report hashes, PubMed abstract source identifiers, minimal HR/CI snippets, and complete CI uncertainty;
 - derive log-HR study effects from the verified reported HR and 95% CI tokens;
 - run the experimental pairwise bridge as fixed effect and REML-HKSJ on the reported log-HR scale;
 - compute an independent inverse-variance fixed-effect log-odds-ratio reference;
@@ -100,6 +103,7 @@ Limitations:
 - this is a pairwise class meta-analysis, not a full multi-treatment NMA;
 - the arm-level model benchmark uses first-event binary counts; the separate reported-HR benchmark uses published HR tokens but does not fit a survival NMA;
 - the reported HR snapshot verifies source tokens only; it does not yet fit a survival NMA or reconstruct IPD from Kaplan-Meier figures;
+- the proof-carrying extraction bundle validates model-ingestion provenance only; it does not certify source extraction accuracy beyond the checked abstract HR/CI tokens and does not certify any estimator;
 - the REML heterogeneity estimate is zero on this four-study fixture, so this is not evidence of random-effects superiority;
 - PubMed/CT.gov source identity is verified by public API snapshots, and the arm counts are checked against exact PubMed abstract count tokens; full paper/table extraction, time-to-event HR extraction, and independent dual extraction remain future work;
 - this benchmark does not yet have a passed external `metafor`, `meta`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference run.
@@ -208,6 +212,7 @@ Limitations:
 | Event-count snapshot | Dynamic public API check | `scripts/verify_pubmed_event_counts.py` against PubMed EFetch abstracts | Verifies exact `events of n` tokens and nearby active/control terms in abstracts, not full paper extraction |
 | Reported HR snapshot | Dynamic public API check | `scripts/verify_pubmed_survival_hrs.py` against PubMed EFetch abstracts | Verifies HR/CI tokens near the hazard-ratio anchor and treatment terms, not KM digitization |
 | Reported HR source identity | Dynamic public API check | `scripts/verify_survival_sources.py` and `validation/source_checks/sglt2_hf_reported_hr_source_check.json` | Verifies CT.gov NCT IDs and PubMed PMIDs before reported HR tokens are benchmarked |
+| Proof-carrying reported-HR bundle | Dynamic PubMed abstract read plus static manifest/report hash checks | `scripts/write_proof_effect_bundle.py` and `validation/ingestion/sglt2_hf_reported_hr_proof_effects.json` | Validates model-ready extracted HR records with source identity, source-check hashes, minimal source snippets, and CI uncertainty; not model-performance certification |
 | Reported HR benchmark | Dynamic computation | `scripts/write_survival_hr_benchmark.py` plus `bias_nma_adv.survival_benchmark` | Recomputes log-HR study effects and pairwise pooling from verified identity and reported-HR source snapshots |
 | CT.gov reported-HR network manifest | Static fixture | `validation/networks/t2d_mace_ctgov_hrs.toml` | Stores NCT IDs, class labels, drug terms, outcome-search terms, and HR/CI values that must be verified before use |
 | CT.gov reported-HR network snapshot | Dynamic public API check | `scripts/verify_ctgov_hr_network.py` against ClinicalTrials.gov API v2 | Verifies NCT identity, completed status, exact HR/CI analysis fields, outcome-title terms, and drug/placebo terms |

@@ -78,6 +78,18 @@ def test_validation_status_composes_all_current_gates():
     assert "HR" in ingestion_contract["allowed_effect_types"]
     assert "HR" in ingestion_contract["ratio_effect_types"]
 
+    proof_effect_bundle = report["proof_effect_bundle"]
+    assert proof_effect_bundle["bundle"] == (
+        "validation/ingestion/sglt2_hf_reported_hr_proof_effects.json"
+    )
+    assert proof_effect_bundle["schema_version"] == "proof_effect_bundle/v1"
+    assert proof_effect_bundle["bundle_id"] == "sglt2_hf_reported_hr_proof_effects"
+    assert proof_effect_bundle["status"] == "local_pass"
+    assert proof_effect_bundle["n_records"] == 4
+    assert proof_effect_bundle["effect_type_counts"] == {"HR": 4}
+    assert proof_effect_bundle["source_type_counts"] == {"pubmed_abstract": 4}
+    assert proof_effect_bundle["certification_effect"] == "none"
+
     reference_targets = report["reference_targets"]
     assert reference_targets["registry"] == "validation/reference_targets.toml"
     assert reference_targets["status_counts"] == {
@@ -118,3 +130,4 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["checked_at"] == "2026-07-15T00:00:00Z"
     assert payload["clinical_hta_reporting_enabled"] is False
     assert payload["source_benchmark_registry"]["n_benchmarks"] == 4
+    assert payload["proof_effect_bundle"]["n_records"] == 4

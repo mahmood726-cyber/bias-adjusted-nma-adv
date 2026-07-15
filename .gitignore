@@ -49,6 +49,8 @@ output/
 *.log
 *.json
 !validation/source_checks/*.json
+!validation/ingestion/
+!validation/ingestion/*.json
 
 # Sentinel findings
 PROGRESS.md

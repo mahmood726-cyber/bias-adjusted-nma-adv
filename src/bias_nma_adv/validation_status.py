@@ -28,6 +28,7 @@ from bias_nma_adv.portfolio_reuse import (
     load_portfolio_reuse_registry,
     summarize_portfolio_reuse_registry,
 )
+from bias_nma_adv.proof_effect_bundle import summarize_proof_effect_bundle
 from bias_nma_adv.simulation_matrix import (
     summarize_simulation_matrix,
     validate_simulation_matrix,
@@ -63,6 +64,9 @@ def build_validation_status(
     grand_benchmark_plan_path = root / "validation" / "grand_benchmark_plan.toml"
     simulation_matrix_path = root / "validation" / "simulation_matrix.toml"
     portfolio_reuse_registry_path = root / "validation" / "portfolio_reuse_sources.toml"
+    proof_effect_bundle_path = (
+        root / "validation" / "ingestion" / "sglt2_hf_reported_hr_proof_effects.json"
+    )
     reference_targets_path = root / "validation" / "reference_targets.toml"
     reference_runs_path = root / "validation" / "reference_runs"
 
@@ -120,6 +124,10 @@ def build_validation_status(
             **summarize_portfolio_reuse_registry(portfolio_reuse_registry),
         },
         "ingestion_contract": summarize_proof_carrying_ingestion_contract(),
+        "proof_effect_bundle": {
+            "bundle": _relpath(proof_effect_bundle_path, root),
+            **summarize_proof_effect_bundle(proof_effect_bundle_path, repo_root=root),
+        },
         "reference_targets": {
             "registry": _relpath(reference_targets_path, root),
             "n_targets": len(targets),
