@@ -160,3 +160,29 @@ acceptance_criteria = [
   "emit proof-carrying arm-level or contrast-level rows with source snippets, page or figure locations, and hashes",
 ]
 evidence_artifacts = []
+
+[[targets]]
+id = "tier_one_adapter_governance"
+domain = "reference_matching"
+module = "planned:external_adapters"
+reference_method = "netmeta, multinma, MBNMAdose, crossnma, metafor, and meta"
+status = "planned"
+acceptance_criteria = [
+  "record command, package version, input hash, output hash, numerical tolerance, and skip-with-reason for every adapter run",
+  "fail closed when reference software is unavailable rather than treating skipped parity as a pass",
+  "separate local smoke tests from Reference Matched certification evidence",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "method_choice_robustness_wrapper"
+domain = "method_choice_robustness"
+module = "planned:robustness_wrapper"
+reference_method = "weighted-likelihood multiverse, self-audit verdicts, POTH, and calibrated prediction intervals"
+status = "planned"
+acceptance_criteria = [
+  "separate primary clinical estimates from specification-fragility summaries",
+  "block best-treatment claims when POTH is below the prespecified threshold",
+  "report estimator diagnostics, self-audit grade, and interval-calibration checks before any robustness claim",
+]
+evidence_artifacts = []

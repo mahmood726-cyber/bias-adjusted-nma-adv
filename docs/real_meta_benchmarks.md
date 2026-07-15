@@ -37,8 +37,11 @@ Current tests:
 - validate all rows against the allowed source boundary;
 - validate a separate source manifest requiring matching trial labels, NCT IDs, PMIDs, outcomes, arm counts, and admissible PubMed/ClinicalTrials.gov URLs;
 - compute an independent inverse-variance fixed-effect log-odds-ratio reference;
+- compute source-backed study-level log-odds-ratio effects with NCT/PMID provenance;
+- run the experimental pairwise bridge as fixed effect and REML-HKSJ with prediction interval;
 - run the frequentist candidate model on the same rows;
 - run the Bayesian MCMC candidate model on the same rows;
+- require the pairwise fixed-effect result to match the independent fixed-effect reference exactly within numerical tolerance;
 - require the frequentist result to match the independent fixed-effect reference exactly within numerical tolerance;
 - require the Bayesian posterior mean to be directionally and numerically compatible with the same reference.
 
@@ -47,6 +50,8 @@ Current local benchmark contract: `validation/real_meta/sglt2_hf_primary_benchma
 | Engine | Estimate | SE / posterior SD | 95% interval |
 | --- | ---: | ---: | ---: |
 | Independent fixed-effect logOR | -0.268984 | 0.036297 | -0.340125 to -0.197843 |
+| Experimental pairwise fixed effect | -0.268984 | 0.036297 | -0.340125 to -0.197843 |
+| Experimental pairwise REML-HKSJ | -0.268984 | 0.036297 | -0.384497 to -0.153470 |
 | Candidate frequentist model | -0.268984 | 0.036297 | -0.340125 to -0.197843 |
 | Candidate Bayesian MCMC | -0.260798 | 0.049688 | -0.357244 to -0.164967 |
 
@@ -54,6 +59,7 @@ Limitations:
 
 - this is a pairwise class meta-analysis, not a full multi-treatment NMA;
 - the current benchmark uses first-event binary counts, not time-to-event hazard ratios;
+- the REML heterogeneity estimate is zero on this four-study fixture, so this is not evidence of random-effects superiority;
 - PubMed/CT.gov source IDs are recorded, but full extraction provenance should later include machine-captured source snippets or checksums;
 - this benchmark does not compare against `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` yet.
 
@@ -64,6 +70,7 @@ Limitations:
 | Trial arm counts | Static fixture | `sglt2_hf_primary_events.csv` plus `sglt2_hf_primary_sources.toml` | Treated as extracted source-backed data, not simulated output |
 | Source manifest | Static fixture | PubMed abstract URLs and ClinicalTrials.gov record URLs | Machine-checked for identifier, outcome, source-type, and arm-count consistency |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
+| Pairwise bridge result | Dynamic computation | `bias_nma_adv.pairwise.fit_pairwise_meta` | Recomputed by tests from source-backed study-level effects |
 | Candidate frequentist result | Dynamic computation | `AdvancedBiasAdjustedNMAPooler` | Recomputed by tests from the CSV rows |
 | Candidate Bayesian result | Dynamic seeded computation | `BayesianNMAMCMCSampler` with seed 20260715 | Recomputed by tests with tolerance for sampler behavior |
 | Certification status | Static contract | `sglt2_hf_primary_benchmark.toml` | `certification_effect = "none"` until external reference matching exists |

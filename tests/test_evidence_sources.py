@@ -20,8 +20,8 @@ def test_validates_allowed_sources():
     sources = [
         EvidenceSource(
             source_type="clinicaltrials_gov",
-            identifier="NCT03036826",
-            url="https://clinicaltrials.gov/study/NCT03036826",
+            identifier="NCT03036124",
+            url="https://clinicaltrials.gov/study/NCT03036124",
             access_statement="ClinicalTrials.gov public record.",
         ),
         EvidenceSource(
@@ -57,7 +57,7 @@ def test_rejects_malformed_identifiers():
     bad_nct = EvidenceSource(
         source_type="clinicaltrials_gov",
         identifier="DAPA-HF",
-        url="https://clinicaltrials.gov/study/NCT03036826",
+        url="https://clinicaltrials.gov/study/NCT03036124",
         access_statement="ClinicalTrials.gov public record.",
     )
     with pytest.raises(EvidenceSourceError, match="NCT01234567"):

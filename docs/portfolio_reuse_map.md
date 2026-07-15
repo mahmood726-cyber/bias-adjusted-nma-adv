@@ -12,6 +12,11 @@ It is a reuse plan, not a certification claim. Any imported method must be porte
 | Source repo | Reusable asset | How it helps this project | Reuse boundary |
 | --- | --- | --- | --- |
 | `C:\Projects\wasserstein` | Kaplan-Meier curve extraction, Guyot-style IPD reconstruction, HR validation reports | Adds a survival real-meta validation path from open-access KM figures and abstracts | Do not treat existing outputs as certified. Re-validate every PMID, NCT ID, curve, risk table, and HR against OA source text or source figures before use. |
+| `C:\Projects\advanced-nma-pooling` | Config-driven NMA workflows, optional `netmeta`/`multinma` adapters, HKSJ-floor and PI conventions | Gives the closest existing Python implementation pattern for tier-one reference matching and publication-gate outputs | Reuse conventions and adapter shape, but re-run all parity artifacts under this repo's source policy before claiming any match. |
+| `C:\Projects\complex-evidence-synthesis-map` | Self-audit verdicts, honest prediction-interval selection, weighted-likelihood multiverse, POTH rank guard | Provides the operational wrapper strategy: estimator outputs plus audit, calibration, and ranking-safety checks | Reuse as governance and diagnostics, not as proof that any estimator is better. Weighted-likelihood is for multiverse aggregation, not for pooling clinical studies. |
+| `C:\Projects\aact-kit` | Local AACT/ClinicalTrials.gov table resolution, schema checks, and aggregation helpers | Can become the CT.gov ingestion backbone for source-backed benchmark discovery | Verify actual columns and lowercase intervention types for every query; do not assume a local AACT backend exists in CI. |
+| `C:\Projects\sheaf-nma` | Real `netmeta` corpus export, inconsistency-localization tests, DBT/Bucher/node-splitting comparators | Gives a real NMA inconsistency validation corpus and comparator harness design | Built-in `netmeta` datasets are useful reference fixtures, but they are not enough for the OA-only clinical source policy unless linked back to admissible source records. |
+| `C:\Projects\spec-collapse-atlas` | Weighted-likelihood aggregation and multiverse calibration tests against `metafor` | Supplies a tested way to report method-choice fragility without anti-conservative IV pooling of specs | Must be used for specification sensitivity only; never present a multiverse aggregate as a new clinical estimator without validation. |
 | `C:\Projects\topo-transport-ma` | Effect-modifier meta-regression, collapsibility guard, topological support certificate | Adds population-transportability diagnostics and fail-closed warnings for unsupported target populations | Port concepts and tests, not raw claims. The OR refusal and baseline-risk sign-flip warning should become platform guards. |
 | `C:\Projects\allmeta\shared\nma-multiarm-v1.js` | Multi-arm contrast-level GLS NMA with netmeta parity fixture | Gives a small audited algorithmic template for preserving multi-arm covariance | Port to Python only after reproducing the JS fixture and an independent `netmeta` run. Comments in JS files have encoding damage, so do not copy prose. |
 | `C:\Projects\allmeta\shared\transported-nma-v1.js` | Entropy-balancing transported NMA approximation | Gives a population-specific NMA candidate and an ESS-loss diagnostic | Treat as experimental until compared against IPD or ML-NMR reference targets. |
@@ -45,12 +50,23 @@ It is a reuse plan, not a certification claim. Any imported method must be porte
    - Required output: source network result, transported target result, achieved target moments, ESS loss, and extrapolation warning.
    - Certification target: simulation plus real-data examples where target covariates are source-backed.
 
+6. **Tier-one adapter lane**
+   - Reuse `advanced-nma-pooling` adapter shape for `netmeta`, `multinma`, and later `MBNMAdose` / `crossnma`.
+   - Required output: command, package version, input hash, reference output hash, numerical tolerance, skip-with-reason when R/package is unavailable.
+   - Certification target: each module reaches Reference Matched only from immutable parity artifacts, not from local smoke tests.
+
+7. **Method-choice robustness lane**
+   - Reuse `complex-evidence-synthesis-map` and `spec-collapse-atlas` for self-audit, POTH, and multiverse reporting.
+   - Required output: primary estimator, prespecified sensitivity grid, weighted-likelihood multiverse summary, and clear separation between clinical effect estimates and specification-fragility summaries.
+   - Certification target: no "best treatment" or "robust" claim unless interval calibration, rank uncertainty, and self-audit gates pass.
+
 ## Hard Stops
 
 - Existing portfolio outputs are not evidence unless their identifiers, dates, article links, and numerical values are rechecked.
 - No benchmark row is accepted if it depends on closed full text, a non-article fallback PDF, a guessed outcome, or a hardcoded effect size.
 - Simulations can test operating characteristics, but they cannot be presented as real clinical validation.
 - Native methods are not called better than `netmeta`, `multinma`, `MBNMAdose`, `crossnma`, `metafor`, or `meta` until reference matching and broader validation artifacts exist.
+- Portfolio methods are not imported as black boxes; every reused component needs a local contract, source policy check, and failure mode test.
 
 ## Static-Vs-Dynamic Hardcode Disclosure
 

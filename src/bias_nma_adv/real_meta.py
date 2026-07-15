@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import csv
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 import hashlib
 import math
 from pathlib import Path
@@ -18,6 +18,7 @@ from bias_nma_adv.evidence_sources import ALLOWED_SOURCE_TYPES
 from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
 from bias_nma_adv.ingestion import EvidenceIngestionRecord, validate_ingestion_records
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
+from bias_nma_adv.pairwise import PairwiseMetaResult, fit_pairwise_meta
 
 
 @dataclass(frozen=True)
@@ -40,6 +41,28 @@ class EffectEstimate:
     se: float
     ci_low: float
     ci_high: float
+
+
+@dataclass(frozen=True)
+class StudyLogOREffect:
+    study_id: str
+    trial: str
+    nct_id: str
+    pmid: str
+    outcome_id: str
+    outcome_label: str
+    active_treatment: str
+    control_treatment: str
+    active_events: int
+    active_n: int
+    control_events: int
+    control_n: int
+    effect_direction: str
+    effect_scale: str
+    continuity_correction: str
+    estimate: float
+    variance: float
+    se: float
 
 
 def sha256_file(path: str | Path) -> str:
@@ -221,6 +244,17 @@ def _source_record_from_manifest(
     source_entry: dict[str, Any],
 ) -> EvidenceIngestionRecord:
     source_type = str(source_entry.get("source_type", ""))
+    identifier = str(source_entry.get("identifier", "")).strip()
+    if source_type == "clinicaltrials_gov":
+        if not identifier:
+            raise ValidationError(f"{study_id}: ClinicalTrials.gov source requires identifier.")
+        if identifier != row.nct_id:
+            raise ValidationError(f"{study_id}: ClinicalTrials.gov source identifier does not match CSV NCT ID.")
+    if source_type == "pubmed_abstract":
+        if not identifier:
+            raise ValidationError(f"{study_id}: PubMed source requires identifier.")
+        if identifier != row.pmid:
+            raise ValidationError(f"{study_id}: PubMed source identifier does not match CSV PMID.")
     return EvidenceIngestionRecord(
         row_id=f"{study_id}:{source_type}",
         source_type=source_type,
@@ -264,9 +298,11 @@ def build_dataset_from_arm_events(rows: list[ArmEventRow]) -> EvidenceDataset:
     return dataset
 
 
-def fixed_effect_log_or_reference(rows: list[ArmEventRow]) -> EffectEstimate:
-    effects = []
-    variances = []
+def study_log_or_effects(rows: list[ArmEventRow]) -> list[StudyLogOREffect]:
+    """Compute source-backed study-level log-OR effects from validated two-arm rows."""
+
+    _validate_study_pairs(rows)
+    study_effects: list[StudyLogOREffect] = []
     by_study: dict[str, dict[str, ArmEventRow]] = {}
     for row in rows:
         by_study.setdefault(row.study_id, {})[row.arm_role] = row
@@ -287,8 +323,38 @@ def fixed_effect_log_or_reference(rows: list[ArmEventRow]) -> EffectEstimate:
             + 1.0 / control.events
             + 1.0 / (control.n - control.events)
         )
-        effects.append(log_or)
-        variances.append(variance)
+        study_effects.append(
+            StudyLogOREffect(
+                study_id=study_id,
+                trial=active.trial,
+                nct_id=active.nct_id,
+                pmid=active.pmid,
+                outcome_id=active.outcome_id,
+                outcome_label=active.outcome_label,
+                active_treatment=active.treatment,
+                control_treatment=control.treatment,
+                active_events=active.events,
+                active_n=active.n,
+                control_events=control.events,
+                control_n=control.n,
+                effect_direction="active_vs_control",
+                effect_scale="log_or",
+                continuity_correction="none_zero_cells_fail_closed",
+                estimate=float(log_or),
+                variance=float(variance),
+                se=math.sqrt(float(variance)),
+            )
+        )
+
+    if not study_effects:
+        raise ValidationError("at least one study-level effect is required.")
+    return study_effects
+
+
+def fixed_effect_log_or_reference(rows: list[ArmEventRow]) -> EffectEstimate:
+    study_effects = study_log_or_effects(rows)
+    effects = [effect.estimate for effect in study_effects]
+    variances = [effect.variance for effect in study_effects]
 
     y = np.asarray(effects, dtype=float)
     v = np.asarray(variances, dtype=float)
@@ -304,11 +370,34 @@ def fixed_effect_log_or_reference(rows: list[ArmEventRow]) -> EffectEstimate:
     )
 
 
+def _pairwise_result_payload(result: PairwiseMetaResult) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "method": result.method,
+        "estimate": result.estimate,
+        "se": result.se,
+        "ci_low": result.ci_low,
+        "ci_high": result.ci_high,
+        "tau2": result.tau2,
+        "q": result.q,
+        "df": result.df,
+        "hksj": result.hksj,
+        "hksj_q_factor": result.hksj_q_factor,
+        "weights": list(result.weights),
+        "warnings": list(result.warnings),
+    }
+    if result.prediction_interval is not None:
+        payload["pi_low"] = float(result.prediction_interval[0])
+        payload["pi_high"] = float(result.prediction_interval[1])
+    return payload
+
+
 def run_real_meta_benchmark(
     path: str | Path,
     *,
     mcmc_samples: int = 600,
     source_manifest_path: str | Path | None = None,
+    reference_treatment: str = "Placebo",
+    candidate_treatment: str = "SGLT2i",
 ) -> dict[str, Any]:
     rows = load_arm_event_rows(path)
     source_manifest = None
@@ -327,16 +416,28 @@ def run_real_meta_benchmark(
         random_effects=False,
         exact_binomial=False,
     )
-    fit = pooler.fit(dataset, outcome_id, reference_treatment="Placebo")
-    frequentist = fit.contrast("SGLT2i", "Placebo", alpha=0.05)
+    fit = pooler.fit(dataset, outcome_id, reference_treatment=reference_treatment)
+    frequentist = fit.contrast(candidate_treatment, reference_treatment, alpha=0.05)
     reference = fixed_effect_log_or_reference(rows)
+    study_effects = study_log_or_effects(rows)
+    pairwise_effects = np.asarray([effect.estimate for effect in study_effects], dtype=float)
+    pairwise_variances = np.asarray([effect.variance for effect in study_effects], dtype=float)
+    pairwise_fixed = fit_pairwise_meta(pairwise_effects, pairwise_variances, method="FE")
+    pairwise_reml_hksj = fit_pairwise_meta(
+        pairwise_effects,
+        pairwise_variances,
+        method="REML",
+        hksj=True,
+        hksj_floor=True,
+        prediction_interval=True,
+    )
 
     blocks = pooler._build_study_blocks(dataset, outcome_id, "binary")
-    param_names = pooler._build_parameter_names(("SGLT2i",), (), [], False, ())
+    param_names = pooler._build_parameter_names((candidate_treatment,), (), [], False, ())
     y, x, v = pooler._assemble_design(
         blocks,
         param_names,
-        reference_treatment="Placebo",
+        reference_treatment=reference_treatment,
         reference_design="rct",
         cov_names=[],
         study_specific_bias=False,
@@ -368,8 +469,22 @@ def run_real_meta_benchmark(
         "n_arms": len(rows),
         "outcome_id": outcome_id,
         "effect_scale": "log_or",
+        "model_config": {
+            "reference_treatment": reference_treatment,
+            "candidate_treatment": candidate_treatment,
+            "pairwise_fixed_effect_method": "FE",
+            "pairwise_random_effect_method": "REML",
+            "pairwise_hksj": True,
+            "pairwise_hksj_floor": True,
+            "pairwise_prediction_interval": True,
+            "pairwise_prediction_interval_df": "k_minus_1",
+            "level": 0.95,
+            "bayesian_samples": mcmc_samples,
+            "bayesian_seed": 20260715,
+        },
         "source_manifest": source_manifest,
-        "reference": reference.__dict__,
+        "study_effects": [asdict(effect) for effect in study_effects],
+        "reference": asdict(reference),
         "frequentist": {
             "estimate": float(frequentist[0]),
             "se": float(frequentist[1]),
@@ -377,10 +492,14 @@ def run_real_meta_benchmark(
             "ci_high": float(frequentist[3]),
             "warnings": list(fit.warnings),
         },
+        "pairwise": {
+            "fixed_effect": _pairwise_result_payload(pairwise_fixed),
+            "reml_hksj": _pairwise_result_payload(pairwise_reml_hksj),
+        },
         "bayesian": {
-            "posterior_mean": float(bayes.posterior_means["trt_SGLT2i"]),
-            "posterior_sd": float(bayes.posterior_sds["trt_SGLT2i"]),
-            "credible_interval": bayes.credible_intervals["trt_SGLT2i"],
+            "posterior_mean": float(bayes.posterior_means[f"trt_{candidate_treatment}"]),
+            "posterior_sd": float(bayes.posterior_sds[f"trt_{candidate_treatment}"]),
+            "credible_interval": bayes.credible_intervals[f"trt_{candidate_treatment}"],
             "acceptance_rate": float(bayes.acceptance_rate),
         },
     }
