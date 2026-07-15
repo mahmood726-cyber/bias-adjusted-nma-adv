@@ -7,7 +7,6 @@ import numpy as np
 from bias_nma_adv.data import EvidenceDataset
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
 from bias_nma_adv.copula import ClaytonCopulaJointEstimator
-from bias_nma_adv.vae import SurvivalCohortVAE
 
 def main():
     print("=" * 80)
@@ -111,31 +110,7 @@ def main():
     theta = copula.fit(u, v)
     print(f" -> Clayton Copula parameter theta: {theta:.4f} (fitted correlation)")
 
-    # 2. Variational Autoencoder Cohort Simulator
-    print("\n[VAE] Generating Synthetic Patient Cohort...")
-    # Real-world covariate parameters: [Age, LVEF, Systolic BP, Follow-up Months]
-    # Calibrated to heart failure population averages: mean=[66.0, 31.2, 122.0, 18.2]
-    x_raw = np.random.default_rng(42).normal(
-        loc=[66.0, 31.2, 122.0, 18.2],
-        scale=[10.0, 5.0, 15.0, 6.0],
-        size=(200, 4)
-    )
-    # Standardize input features to prevent gradient explosion
-    x_mean = np.mean(x_raw, axis=0)
-    x_std = np.std(x_raw, axis=0)
-    x_data = (x_raw - x_mean) / np.maximum(x_std, 1e-6)
-
-    vae = SurvivalCohortVAE(input_dim=4, latent_dim=2)
-    losses = vae.fit(x_data, epochs=10, lr=0.01)
-    print(f" -> VAE trained successfully. Initial loss: {losses[0]:.4f} -> Final loss: {losses[-1]:.4f}")
-    synthetic_normalized = vae.generate(n_samples=5)
-    # Denormalize to restore original scale
-    synthetic_cohort = synthetic_normalized * x_std + x_mean
-    print(" -> Reconstructed synthetic cohort (first 5 samples):")
-    print(synthetic_cohort)
-
-
-    # 3. Symbolic Regression for Non-Proportional Hazards
+    # 2. Symbolic Regression for Non-Proportional Hazards
     print("\n[Symbolic Regression] Finding closed-form time-varying hazard functions...")
     from bias_nma_adv.symbolic import SymbolicHazardRegressor
     sym_reg = SymbolicHazardRegressor()
