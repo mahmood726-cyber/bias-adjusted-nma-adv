@@ -33,6 +33,13 @@ def test_improvement_review_passes_current_milestone_but_not_global_goal():
         assert round_.actions
         assert round_.remaining_blockers
         assert "global_goal" in round_.verdict
+    by_id = {round_.id: round_ for round_ in review.rounds}
+    assert "src/bias_nma_adv/node_splitting.py" in by_id[
+        "statistical_tier1_blocker_review"
+    ].scope
+    assert "tests/test_publication_bias_diagnostics.py" in by_id[
+        "implementation_polish_review"
+    ].scope
 
 
 def test_improvement_review_summary_is_validation_status_ready():

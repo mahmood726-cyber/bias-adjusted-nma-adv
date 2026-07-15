@@ -14,19 +14,24 @@ status = "passed_current_milestone"
 scope = [
   "validation/tier1_gap_register.toml",
   "src/bias_nma_adv/tier1_gap_register.py",
+  "src/bias_nma_adv/multiarm.py",
+  "src/bias_nma_adv/node_splitting.py",
+  "src/bias_nma_adv/publication_bias.py",
   "docs/tier1_benchmark.md",
   "validation/reference_targets.toml",
 ]
 findings = [
   "Feature completeness, numerical stability, and Bayesian ecosystem integration are legitimate blockers to tier-one parity.",
   "The new register keeps superiority, production certification, clinical reporting, and HTA reporting blocked while these gaps remain active.",
+  "The added leverage, node-splitting, and Egger diagnostics are useful feature-completeness progress but not broad tier-one parity evidence.",
 ]
 actions = [
   "Added a machine-readable tier-one gap register with three blocking gaps and required evidence artifacts.",
   "Wired the gap register into validation status so blocked claims are visible in CI-style reports.",
+  "Recorded multi-arm influence diagnostics, fixed-effect node-splitting smoke diagnostics, and Egger small-study-effect diagnostics as implemented partial capabilities.",
 ]
 remaining_blockers = [
-  "Implement and reference-match missing diagnostics such as node splitting, contribution heatmaps, outlier diagnostics, and publication-bias sensitivity workflows.",
+  "Reference-match node-splitting behavior and add contribution heatmaps, outlier diagnostics, trim-and-fill, and selection-model sensitivity workflows.",
   "Run broader sparse-network numerical stability stress tests against tier-one references.",
   "Add Stan/NUTS or externally matched Bayesian reference artifacts before Bayesian tier-one claims.",
 ]
@@ -88,6 +93,9 @@ status = "passed_current_milestone"
 scope = [
   "tests/test_tier1_gap_register.py",
   "tests/test_html_delivery_contract.py",
+  "tests/test_multiarm.py",
+  "tests/test_node_splitting.py",
+  "tests/test_publication_bias_diagnostics.py",
   "tests/test_validation_status.py",
   "README.md",
   "docs/tier1_benchmark.md",
@@ -95,12 +103,14 @@ scope = [
 findings = [
   "The new governance contracts are test-covered and exposed through the unified validation status report.",
   "The docs now describe staged world-class ambitions without claiming that tier-one methods have already been beaten.",
+  "The new diagnostics are isolated, deterministic, and covered by focused tests before full-suite validation.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
+  "Added targeted tests for GLS leverage invariants, node-splitting disconnected-network failure, and Egger regression input validation.",
   "Updated README and tier-one benchmark documentation to keep claims, code, and validation artifacts aligned.",
 ]
 remaining_blockers = [
-  "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit the milestone.",
+  "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit each capability milestone before treating the batch as reviewed.",
 ]
-verdict = "passed_current_milestone_pending_final_green_run_not_global_goal"
+verdict = "passed_current_milestone_not_global_goal"
