@@ -50,3 +50,24 @@ This document provides a critical challenge and evaluation of the **Advanced Des
 - **Individual Patient Data (IPD) is available:** If you have IPD, use **ML-NMR** (Phillippo et al.) to adjust for baseline imbalances at the patient level and mitigate the ecological fallacy.
 - **Informative bias priors are well-established:** If historical meta-epidemiological databases provide precise bias priors, a **Bayesian Bias-Adjustment** model will propagate the uncertainty of these priors more naturally than a frequentist ridge penalty.
 - **The treatment network is extremely sparse:** If most treatments are only informed by single trials, meta-regression will fail. Stick to simple design-stratified models without covariate interactions.
+
+---
+
+## 5. Application to ClinicalTrials.gov: Rare Adverse Events and Publication Bias
+
+When applying NMA to safety data from ClinicalTrials.gov (ct.gov), two severe methodological challenges arise: selective safety reporting (publication bias) and the statistical sparsity of rare adverse events (AEs). Our advanced features directly address these:
+
+1. **Selective Reporting and Publication Bias:**
+   - Trials often under-report or delay the publication of secondary safety endpoints.
+   - By enabling `study_specific_bias=True`, our model assigns a trial-level bias parameter $\delta_s$ with prior variance coupled to the trial's reporting quality score $w_s$: $\sigma^2_{\text{bias}, s} = \sigma^2_{\text{bias\_base}} (1 - w_s)$.
+   - Low-quality/high-risk trials ($w_s < 1.0$) are permitted to have a non-zero bias parameter which the model estimates and subtracts from the pooled treatment contrast. This mathematical adjustment corrects for systematic under-reporting of side effects.
+
+2. **Topological Regularization for Sparse Safety Networks:**
+   - Safety networks are often star-shaped (new drugs are compared to placebo, but rarely compared head-to-head).
+   - Topological regularization penalizes treatment contrasts based on their degree centrality: $P_{j,j} = \lambda_{\text{trt}} (1 - c_j)$.
+   - Sparse treatments (low centrality) are shrunk toward the reference treatment (e.g. placebo), preventing unstable or artificially inflated risk estimates.
+
+3. **Robust Zero-Cell Handling:**
+   - Rare AEs frequently result in zero events in one or more arms, causing normal-approximation variances to explode.
+   - The pooler applies an adaptive continuity correction ($cc = 0.5$) only in studies containing zero cells, ensuring numerical stability while preventing the dilution of true safety signals in studies with complete data.
+
