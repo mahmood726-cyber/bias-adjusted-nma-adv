@@ -1,0 +1,55 @@
+{
+  "benchmark_id": "pcsk9_mace_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-15T00:00:00Z",
+  "manifest": "validation/survival/pcsk9_mace_reported_hrs.toml",
+  "manifest_sha256": "63ce38ca37ea9246747c2ed325211d930f6147f61e94609b3fff17d316a3c069",
+  "records": [
+    {
+      "abstract_sha256": "69b29050b93665c18bf32cdb1560007f6641525f71ce423766dbde48ee329dc4",
+      "ci_lower": "0.79",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.92",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "mace_primary",
+      "pmid": "28304224",
+      "reported_hr": "0.85",
+      "source_terms": [
+        "evolocumab",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "FOURIER",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "49daf1368dc75a62d14dda344758936b286e71c37ce11d087b558b882486366b",
+      "ci_lower": "0.78",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.93",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "mace_primary",
+      "pmid": "30403574",
+      "reported_hr": "0.85",
+      "source_terms": [
+        "alirocumab",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ODYSSEY-Outcomes",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

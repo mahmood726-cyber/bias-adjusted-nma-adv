@@ -1,0 +1,106 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "pcsk9_mace_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/pcsk9_mace_reported_hrs.toml"
+source_manifest_sha256 = "63ce38ca37ea9246747c2ed325211d930f6147f61e94609b3fff17d316a3c069"
+source_verification_report = "validation/source_checks/pcsk9_mace_reported_hr_tokens.json"
+source_verification_report_sha256 = "35fdf5d4704e4b2b2cd09a1a9eeb643d844fe93e1ae077cf2de055618114d946"
+source_identity_report = "validation/source_checks/pcsk9_mace_reported_hr_source_check.json"
+source_identity_report_sha256 = "b30454a503fb032c27be478645fbaa9224848576b1b83de24e3c3447ed224127"
+n_studies = 2
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "pcsk9_mace_reported_hr"
+manifest_sha256 = "63ce38ca37ea9246747c2ed325211d930f6147f61e94609b3fff17d316a3c069"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 2
+
+[source_identity_bundle]
+benchmark_id = "pcsk9_mace_reported_hr"
+manifest_sha256 = "63ce38ca37ea9246747c2ed325211d930f6147f61e94609b3fff17d316a3c069"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 2, pubmed_abstract = 2}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "FOURIER"
+trial = "Evolocumab in ASCVD"
+nct_id = "NCT01764633"
+pmid = "28304224"
+outcome_id = "mace_primary"
+outcome_label = "cardiovascular death, myocardial infarction, stroke, hospitalization for unstable angina, or coronary revascularization"
+active_treatment = "evolocumab"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.85
+ci_lower = 0.79
+ci_upper = 0.92
+estimate = -0.16251892949777494
+variance = 0.0015103439506596763
+se = 0.03886314385969921
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ODYSSEY-Outcomes"
+trial = "Alirocumab after ACS"
+nct_id = "NCT01663402"
+pmid = "30403574"
+outcome_id = "mace_primary"
+outcome_label = "death from coronary heart disease, nonfatal myocardial infarction, fatal or nonfatal ischemic stroke, or unstable angina requiring hospitalization"
+active_treatment = "alirocumab"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.85
+ci_lower = 0.78
+ci_upper = 0.93
+estimate = -0.16251892949777494
+variance = 0.0020133969927238335
+se = 0.044870892488603716
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.16251892949777494
+se = 0.029376540601088737
+ci_low = -0.2200958910662875
+ci_high = -0.10494196792926239
+tau2 = 0.0
+q = 0.0
+df = 1
+hksj = false
+hksj_q_factor = 1.0
+weights = [662.1008410456623, 496.6730374654754]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.16251892949777494
+se = 0.029376540601088737
+ci_low = -0.5357832688157569
+ci_high = 0.21074540982020698
+tau2 = 0.0
+q = 0.0
+df = 1
+hksj = true
+hksj_q_factor = 1.0
+weights = [662.1008410456623, 496.6730374654754]
+warnings = []
+pi_low = -0.5357832688157569
+pi_high = 0.21074540982020698

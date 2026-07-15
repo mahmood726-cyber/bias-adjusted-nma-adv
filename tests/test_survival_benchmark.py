@@ -24,25 +24,47 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "validation" / "survival" / "sglt2_hf_reported_hrs.toml"
 REPORT = ROOT / "validation" / "source_checks" / "sglt2_hf_reported_hr_tokens.json"
 IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "sglt2_hf_reported_hr_source_check.json"
+PCSK9_MANIFEST = ROOT / "validation" / "survival" / "pcsk9_mace_reported_hrs.toml"
+PCSK9_REPORT = ROOT / "validation" / "source_checks" / "pcsk9_mace_reported_hr_tokens.json"
+PCSK9_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "pcsk9_mace_reported_hr_source_check.json"
 VERIFY_SCRIPT = ROOT / "scripts" / "verify_pubmed_survival_hrs.py"
 IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
 
 
-def test_survival_hr_manifest_is_source_bounded_and_pubmed_only():
-    manifest = load_survival_hr_manifest(MANIFEST)
+@pytest.mark.parametrize(
+    ("manifest_path", "benchmark_id", "expected_study_ids"),
+    [
+        (
+            MANIFEST,
+            "sglt2_hf_reported_hr",
+            {
+                "DAPA-HF",
+                "EMPEROR-Reduced",
+                "DELIVER",
+                "EMPEROR-Preserved",
+            },
+        ),
+        (
+            PCSK9_MANIFEST,
+            "pcsk9_mace_reported_hr",
+            {
+                "FOURIER",
+                "ODYSSEY-Outcomes",
+            },
+        ),
+    ],
+)
+def test_survival_hr_manifest_is_source_bounded_and_pubmed_only(
+    manifest_path, benchmark_id, expected_study_ids
+):
+    manifest = load_survival_hr_manifest(manifest_path)
 
-    assert manifest.benchmark_id == "sglt2_hf_reported_hr"
+    assert manifest.benchmark_id == benchmark_id
     assert manifest.evidence_mode == "reported_hr_pubmed_abstract"
     assert manifest.status == "candidate_source_verified"
     assert manifest.certification_effect == "none"
-    assert manifest.manifest_sha256 == sha256_file(MANIFEST)
-    assert len(manifest.studies) == 4
-    assert {study.study_id for study in manifest.studies} == {
-        "DAPA-HF",
-        "EMPEROR-Reduced",
-        "DELIVER",
-        "EMPEROR-Preserved",
-    }
+    assert manifest.manifest_sha256 == sha256_file(manifest_path)
+    assert {study.study_id for study in manifest.studies} == expected_study_ids
     for study in manifest.studies:
         assert study.source_type == "pubmed_abstract"
         assert study.km_reconstruction_status == "not_digitized"
@@ -101,15 +123,32 @@ def test_survival_hr_manifest_rejects_scalar_source_terms():
         SurvivalHRManifest.from_mapping(raw)
 
 
-def test_survival_hr_verification_snapshot_matches_manifest():
-    manifest = load_survival_hr_manifest(MANIFEST)
-    report = load_survival_hr_verification_report(REPORT)
+@pytest.mark.parametrize(
+    ("manifest_path", "report_path", "manifest_relpath"),
+    [
+        (
+            MANIFEST,
+            REPORT,
+            "validation/survival/sglt2_hf_reported_hrs.toml",
+        ),
+        (
+            PCSK9_MANIFEST,
+            PCSK9_REPORT,
+            "validation/survival/pcsk9_mace_reported_hrs.toml",
+        ),
+    ],
+)
+def test_survival_hr_verification_snapshot_matches_manifest(
+    manifest_path, report_path, manifest_relpath
+):
+    manifest = load_survival_hr_manifest(manifest_path)
+    report = load_survival_hr_verification_report(report_path)
 
     assert report.status == "verified"
     assert report.certification_effect == "none"
     assert report.benchmark_id == manifest.benchmark_id
-    assert report.manifest == "validation/survival/sglt2_hf_reported_hrs.toml"
-    assert report.manifest_sha256 == sha256_file(MANIFEST)
+    assert report.manifest == manifest_relpath
+    assert report.manifest_sha256 == sha256_file(manifest_path)
     assert VERIFY_SCRIPT.is_file()
     assert len(report.records) == len(manifest.studies)
 
@@ -136,19 +175,35 @@ def test_survival_hr_verification_snapshot_matches_manifest():
         assert record.verified is True
 
 
-def test_survival_hr_identity_snapshot_matches_manifest():
-    manifest = load_survival_hr_manifest(MANIFEST)
-    report = load_source_verification_report(IDENTITY_REPORT)
+@pytest.mark.parametrize(
+    ("manifest_path", "identity_report_path", "manifest_relpath", "expected_counts"),
+    [
+        (
+            MANIFEST,
+            IDENTITY_REPORT,
+            "validation/survival/sglt2_hf_reported_hrs.toml",
+            {"clinicaltrials_gov": 4, "pubmed_abstract": 4},
+        ),
+        (
+            PCSK9_MANIFEST,
+            PCSK9_IDENTITY_REPORT,
+            "validation/survival/pcsk9_mace_reported_hrs.toml",
+            {"clinicaltrials_gov": 2, "pubmed_abstract": 2},
+        ),
+    ],
+)
+def test_survival_hr_identity_snapshot_matches_manifest(
+    manifest_path, identity_report_path, manifest_relpath, expected_counts
+):
+    manifest = load_survival_hr_manifest(manifest_path)
+    report = load_source_verification_report(identity_report_path)
 
     assert report.status == "verified"
     assert report.certification_effect == "none"
     assert report.benchmark_id == manifest.benchmark_id
-    assert report.source_manifest == "validation/survival/sglt2_hf_reported_hrs.toml"
-    assert report.source_manifest_sha256 == sha256_file(MANIFEST)
-    assert summarize_source_verification(report) == {
-        "clinicaltrials_gov": 4,
-        "pubmed_abstract": 4,
-    }
+    assert report.source_manifest == manifest_relpath
+    assert report.source_manifest_sha256 == sha256_file(manifest_path)
+    assert summarize_source_verification(report) == expected_counts
     assert IDENTITY_VERIFY_SCRIPT.is_file()
 
     expected = {
@@ -178,7 +233,7 @@ def test_survival_hr_identity_snapshot_matches_manifest():
             assert len(record.details["abstract_sha256"]) == 64
 
     bundle = validate_survival_hr_identity_bundle(manifest, report)
-    assert bundle["source_counts"] == {"clinicaltrials_gov": 4, "pubmed_abstract": 4}
+    assert bundle["source_counts"] == expected_counts
 
 
 def test_survival_hr_report_rejects_unverified_record_marked_verified():

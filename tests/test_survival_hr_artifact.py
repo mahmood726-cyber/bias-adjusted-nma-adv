@@ -1,6 +1,8 @@
 from pathlib import Path
 import tomllib
 
+import pytest
+
 from bias_nma_adv.real_meta import sha256_file
 from bias_nma_adv.survival_benchmark import (
     run_survival_hr_benchmark,
@@ -14,11 +16,15 @@ from bias_nma_adv.source_verification import load_source_verification_report
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACT = ROOT / "validation" / "survival" / "sglt2_hf_reported_hr_benchmark.toml"
+ARTIFACTS = [
+    ROOT / "validation" / "survival" / "sglt2_hf_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "pcsk9_mace_reported_hr_benchmark.toml",
+]
 
 
-def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens():
-    with ARTIFACT.open("rb") as handle:
+@pytest.mark.parametrize("artifact_path", ARTIFACTS)
+def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens(artifact_path):
+    with artifact_path.open("rb") as handle:
         artifact = tomllib.load(handle)
 
     manifest_path = ROOT / artifact["source_manifest"]
@@ -31,10 +37,12 @@ def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens()
     assert artifact["status"] == "local_pass"
     assert artifact["certification_effect"] == "none"
     assert artifact["effect_scale"] == "log_hr"
-    assert artifact["n_studies"] == 4
     assert "not a multi-treatment survival NMA" in " ".join(artifact["limitations"])
 
     manifest = load_survival_hr_manifest(manifest_path)
+    assert artifact["n_studies"] == len(manifest.studies)
+    assert artifact["benchmark_id"] == manifest.benchmark_id
+    assert artifact["evidence_mode"] == manifest.evidence_mode
     report = load_survival_hr_verification_report(source_check_path)
     identity_report = load_source_verification_report(identity_check_path)
     source_bundle = validate_survival_hr_source_bundle(manifest, report)

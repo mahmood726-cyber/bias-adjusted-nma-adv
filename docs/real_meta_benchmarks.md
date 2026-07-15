@@ -15,6 +15,16 @@ Real-world validation inputs are restricted to:
 
 Closed IPD, proprietary trial reports, secondary package fixtures, and unverified inline demo numbers are not admissible validation sources.
 
+## Portfolio Reuse Recon
+
+Portfolio recon was run with `find-related-repos.py "evidence synthesis benchmark meta-analysis wasserstein"`, followed by targeted inspection of the local `wasserstein` repository. The selected reusable patterns were:
+
+- `ma-workbench`: reused the honest benchmark pattern of source-backed fixtures, explicit pass/fail artifacts, and no threshold relaxation after a miss.
+- `wasserstein`: reused the method-governance pattern for survival/KM work: provenance hashes, CI containment checks, and outputs marked uncertified unless independently validated. No Wasserstein extraction outputs are imported as evidence here.
+- `fragility-atlas`: reserved as a future pattern for multiverse/sensitivity stress testing. It is not used as a source for the current PCSK9 or SGLT2 effects.
+
+Net-new work in this repository is the NMA-oriented source contract: PubMed abstract HR-token verification, CT.gov/PubMed identity checks, source-bound survival HR manifests, and benchmark artifacts that preserve `certification_effect = "none"` until external reference matching exists.
+
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
 Dataset: `validation/real_meta/sglt2_hf_primary_events.csv`
@@ -92,10 +102,54 @@ Limitations:
 - PubMed/CT.gov source identity is verified by public API snapshots, and the arm counts are checked against exact PubMed abstract count tokens; full paper/table extraction, time-to-event HR extraction, and independent dual extraction remain future work;
 - this benchmark does not yet have a passed external `metafor`, `meta`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference run.
 
+## Benchmark 2: PCSK9 Inhibitors And Major Cardiovascular Events
+
+Reported survival HR manifest: `validation/survival/pcsk9_mace_reported_hrs.toml`
+
+Reported survival HR source-identity snapshot: `validation/source_checks/pcsk9_mace_reported_hr_source_check.json`
+
+Reported survival HR token snapshot: `validation/source_checks/pcsk9_mace_reported_hr_tokens.json`
+
+Reported survival HR benchmark: `validation/survival/pcsk9_mace_reported_hr_benchmark.toml`
+
+Outcome: trial-defined major adverse cardiovascular event composite in FOURIER and ODYSSEY Outcomes.
+
+Scale currently tested: log hazard ratio, derived from reported PubMed abstract HR and 95% CI tokens.
+
+| Trial | NCT | PMID | Active treatment | Control | Reported HR | 95% CI |
+| --- | --- | --- | --- | --- | ---: | --- |
+| FOURIER | NCT01764633 | 28304224 | evolocumab | placebo | 0.85 | 0.79 to 0.92 |
+| ODYSSEY-Outcomes | NCT01663402 | 30403574 | alirocumab | placebo | 0.85 | 0.78 to 0.93 |
+
+Current tests:
+
+- validate both records against the allowed source boundary;
+- validate CT.gov and PubMed source identity snapshots before using the HR tokens;
+- validate PubMed abstract HR/CI tokens near the hazard-ratio anchor and active/control treatment terms;
+- derive log-HR study effects from the verified reported HR and 95% CI tokens;
+- recompute the generated benchmark artifact from the manifest, token snapshot, and identity snapshot;
+- require `certification_effect = "none"` because source verification does not prove model performance or tier-one parity.
+
+Reported HR benchmark on the log-HR scale:
+
+| Engine | Estimate | SE | 95% interval |
+| --- | ---: | ---: | ---: |
+| Experimental pairwise fixed effect | -0.162519 | 0.029377 | -0.220096 to -0.104942 |
+| Experimental pairwise REML-HKSJ | -0.162519 | 0.029377 | -0.535783 to 0.210745 |
+
+Limitations:
+
+- this is a two-study pairwise class benchmark, not a full multi-treatment survival NMA;
+- the public PubMed abstracts provide the reported HR/CI tokens used here, but Kaplan-Meier curves are not digitized;
+- the two reported HR point estimates are identical, so this fixture tests provenance and artifact reproducibility more than heterogeneity behavior;
+- with only two studies, the HKSJ interval is intentionally conservative and should not be treated as a superiority result;
+- this benchmark does not yet have a passed external `metafor`, `meta`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference run.
+
 ## Static-Vs-Dynamic Hardcode Disclosure
 
 | Item | Static or dynamic | Evidence source | Disclosure |
 | --- | --- | --- | --- |
+| Portfolio reuse | Static documentation | `ma-workbench`, `wasserstein`, and `fragility-atlas` repository inspection | Reuses process patterns only; prior repo outputs are not treated as validation data for this platform |
 | Trial arm counts | Static fixture | `sglt2_hf_primary_events.csv` plus `sglt2_hf_primary_sources.toml` | Treated as extracted source-backed data, not simulated output |
 | Source manifest | Static fixture | PubMed abstract URLs and ClinicalTrials.gov record URLs | Machine-checked for identifier, outcome, source-type, and arm-count consistency |
 | Source identity snapshot | Dynamic public API check | `scripts/verify_real_meta_sources.py` against ClinicalTrials.gov API and PubMed EFetch | Verifies identity and reachability only, not event-count extraction |

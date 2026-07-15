@@ -1,0 +1,83 @@
+{
+  "benchmark_id": "pcsk9_mace_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-15T00:00:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01764633",
+      "details": {
+        "brief_title": "Further Cardiovascular Outcomes Research With PCSK9 Inhibition in Subjects With Elevated Risk",
+        "nct_id": "NCT01764633",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01764633",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01764633",
+      "response_sha256": "e444310ef7aa622fe767f0ba5288db91b33c6af1f225219e11933161fbf4ee50",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "FOURIER",
+      "title": "Further Cardiovascular Outcomes Research With PCSK9 Inhibition in Subjects With Elevated Risk"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28304224&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "69b29050b93665c18bf32cdb1560007f6641525f71ce423766dbde48ee329dc4",
+        "article_title": "Evolocumab and Clinical Outcomes in Patients with Cardiovascular Disease.",
+        "journal": "N Engl J Med",
+        "pmid": "28304224"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28304224",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28304224/",
+      "response_sha256": "c3ef00520132a1d8f7d900daf5951bc679007161222b6d308b59048d85116c48",
+      "source_type": "pubmed_abstract",
+      "study_id": "FOURIER",
+      "title": "Evolocumab and Clinical Outcomes in Patients with Cardiovascular Disease."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01663402",
+      "details": {
+        "brief_title": "ODYSSEY Outcomes: Evaluation of Cardiovascular Outcomes After an Acute Coronary Syndrome During Treatment With Alirocumab",
+        "nct_id": "NCT01663402",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01663402",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01663402",
+      "response_sha256": "8f9b28addc51d931a33e482e96f51e470466f4b48833726009f481cb6777cca7",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ODYSSEY-Outcomes",
+      "title": "ODYSSEY Outcomes: Evaluation of Cardiovascular Outcomes After an Acute Coronary Syndrome During Treatment With Alirocumab"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30403574&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "49daf1368dc75a62d14dda344758936b286e71c37ce11d087b558b882486366b",
+        "article_title": "Alirocumab and Cardiovascular Outcomes after Acute Coronary Syndrome.",
+        "journal": "N Engl J Med",
+        "pmid": "30403574"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30403574",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30403574/",
+      "response_sha256": "9e2c9d0adf253dc689cbf8a36caaf42917565582fe941874a0e1b65733c11079",
+      "source_type": "pubmed_abstract",
+      "study_id": "ODYSSEY-Outcomes",
+      "title": "Alirocumab and Cardiovascular Outcomes after Acute Coronary Syndrome."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/pcsk9_mace_reported_hrs.toml",
+  "source_manifest_sha256": "63ce38ca37ea9246747c2ed325211d930f6147f61e94609b3fff17d316a3c069",
+  "status": "verified"
+}
