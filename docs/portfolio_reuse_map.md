@@ -7,6 +7,8 @@ This note records which nearby repositories can materially help this project bec
 
 It is a reuse plan, not a certification claim. Any imported method must be ported or wrapped with source-backed tests before it can support a platform capability.
 
+Current gate: source-backed benchmark artifacts imported or inspired by these repositories must be registered in `validation/benchmark_registry.toml` or covered by an equivalent machine-readable validation gate. The registry must pin artifact hashes, source manifests, source-check reports, limitations, and `certification_effect = "none"` until a separate external reference run passes.
+
 ## Immediate Reuse Candidates
 
 | Source repo | Reusable asset | How it helps this project | Reuse boundary |
@@ -81,8 +83,9 @@ It is a reuse plan, not a certification claim. Any imported method must be porte
 
 ## Next Implementation Order
 
-1. Run and hash the external `netmeta` multi-arm adapter when R and `netmeta` are available; keep the current preflight as a skip until then.
-2. Add the first real OA Kaplan-Meier source manifest and curve/IPD hashes that pass the new KM reconstruction screen.
-3. Port the transportability collapsibility guards and support certificate behind an experimental API.
-4. Add an ingestion provenance validator that rejects mismatched PMID/OA PDF rows.
-5. Only then expand the real-meta benchmark set beyond the current SGLT2 heart-failure fixture.
+1. Keep the source-backed benchmark registry green as new real-meta, survival, or network artifacts are added.
+2. Run and hash the external `netmeta` multi-arm adapter when R and `netmeta` are available; keep the current preflight as a skip until then.
+3. Add the first real OA Kaplan-Meier source manifest and curve/IPD hashes that pass the new KM reconstruction screen.
+4. Port the transportability collapsibility guards and support certificate behind an experimental API.
+5. Add an ingestion provenance validator that rejects mismatched PMID/OA PDF rows.
+6. Only then expand the real-meta benchmark set beyond the current SGLT2 heart-failure fixture.

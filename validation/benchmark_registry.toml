@@ -1,0 +1,102 @@
+schema_version = "source_benchmark_registry/v1"
+checked_at = "2026-07-15"
+purpose = "Machine-readable inventory of local source-backed benchmark artifacts. Entries are validation evidence only within their stated scope and do not certify tier-one parity."
+allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
+certification_rule = "Every registered local benchmark must keep certification_effect = none until a passed external reference run promotes it through validation/reference_targets.toml."
+
+[[benchmarks]]
+id = "sglt2_hf_primary_log_or"
+domain = "binary_pairwise_meta"
+artifact_path = "validation/real_meta/sglt2_hf_primary_benchmark.toml"
+artifact_sha256 = "ade990172f79c9e7358fba7f3d8cb15efb95d7597d052c77ca096ae6d98aaef2"
+artifact_schema_version = "real_meta_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract only"
+evidence_mode = "pubmed_abstract_event_counts"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = [
+  "validation/real_meta/sglt2_hf_primary_sources.toml",
+  "validation/real_meta/sglt2_hf_primary_events.csv",
+]
+source_manifest_sha256 = { "validation/real_meta/sglt2_hf_primary_sources.toml" = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d", "validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8" }
+source_checks = [
+  "validation/source_checks/sglt2_hf_primary_source_check.json",
+  "validation/source_checks/sglt2_hf_primary_event_counts.json",
+]
+source_check_sha256 = { "validation/source_checks/sglt2_hf_primary_source_check.json" = "34465ad3c50f12a2b9ccef5bf1a6a91c8b7b94a5974ced674df3e70bd0531a1d", "validation/source_checks/sglt2_hf_primary_event_counts.json" = "f5fdac4939490031924de0c30e1c47daf2959871348bb07ad7b578bc0f8d4e11" }
+required_limitations = [
+  "not evidence of random-effects superiority",
+  "does not yet have a passed external",
+]
+
+[[benchmarks]]
+id = "sglt2_hf_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/sglt2_hf_reported_hr_benchmark.toml"
+artifact_sha256 = "3bfc6065972313c06382362a429a6082258cd67fa845e4ade462d6dae61eea8a"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/sglt2_hf_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/sglt2_hf_reported_hrs.toml" = "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1ff06" }
+source_checks = [
+  "validation/source_checks/sglt2_hf_reported_hr_source_check.json",
+  "validation/source_checks/sglt2_hf_reported_hr_tokens.json",
+]
+source_check_sha256 = { "validation/source_checks/sglt2_hf_reported_hr_source_check.json" = "5da15dc05d0177483347f12e62bcd710cdf3e1eb587c2f597139aa807c3e5e5e", "validation/source_checks/sglt2_hf_reported_hr_tokens.json" = "e7c09ba32d17fabd7d7511ccdfe9303f8f6af812caf49a65e8ba917d40ff9280" }
+required_limitations = [
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "pcsk9_mace_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/pcsk9_mace_reported_hr_benchmark.toml"
+artifact_sha256 = "8cfba87dc59a7019e595892adc0fc9e5e34044c036746352bfebf96910c9d0d7"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 2
+source_manifests = ["validation/survival/pcsk9_mace_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/pcsk9_mace_reported_hrs.toml" = "63ce38ca37ea9246747c2ed325211d930f6147f61e94609b3fff17d316a3c069" }
+source_checks = [
+  "validation/source_checks/pcsk9_mace_reported_hr_source_check.json",
+  "validation/source_checks/pcsk9_mace_reported_hr_tokens.json",
+]
+source_check_sha256 = { "validation/source_checks/pcsk9_mace_reported_hr_source_check.json" = "b30454a503fb032c27be478645fbaa9224848576b1b83de24e3c3447ed224127", "validation/source_checks/pcsk9_mace_reported_hr_tokens.json" = "35fdf5d4704e4b2b2cd09a1a9eeb643d844fe93e1ae077cf2de055618114d946" }
+required_limitations = [
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "t2d_mace_ctgov_hr_network"
+domain = "reported_hr_star_network"
+artifact_path = "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml"
+artifact_sha256 = "7dd8e3dee31ab286713d19d2637591bde97363ea71beee5e0ce1a01bd59b88ab"
+artifact_schema_version = "ctgov_hr_network_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_clinicaltrials_gov_results"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 10
+source_manifests = ["validation/networks/t2d_mace_ctgov_hrs.toml"]
+source_manifest_sha256 = { "validation/networks/t2d_mace_ctgov_hrs.toml" = "d74c2278b6513a09a0c0a170c33e830a0e68d3a2199f288a500c1255f39bec87" }
+source_checks = ["validation/source_checks/t2d_mace_ctgov_hr_network_check.json"]
+source_check_sha256 = { "validation/source_checks/t2d_mace_ctgov_hr_network_check.json" = "a35d45ddd38c2caaac384034cff8c19042694e34e18b4dcba137e670b40a22ab" }
+required_limitations = [
+  "closed-loop inconsistency cannot be assessed",
+  "not clinical superiority claims",
+  "does not certify model performance",
+]

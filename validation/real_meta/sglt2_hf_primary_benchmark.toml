@@ -7,10 +7,12 @@ source_manifest_sha256 = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20
 status = "local_pass"
 certification_effect = "none"
 source_policy = "clinicaltrials_gov + pubmed_abstract only"
+evidence_mode = "pubmed_abstract_event_counts"
 effect_scale = "log_or"
 outcome_id = "hf_primary"
 n_studies = 4
 n_arms = 8
+limitations = ["PubMed abstract event counts are verified, but this fixed-effect log-OR benchmark is not evidence of random-effects superiority", "the benchmark does not yet have a passed external reference-package parity run", "source verification does not certify model performance or tier-one parity"]
 
 [model_config]
 reference_treatment = "Placebo"
