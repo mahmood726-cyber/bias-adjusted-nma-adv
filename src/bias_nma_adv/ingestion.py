@@ -42,6 +42,22 @@ ALLOWED_PROVENANCE_SOURCE_TYPES = {"text", "table", "figure", "ocr", "computed"}
 ALLOWED_COMPUTATION_ORIGINS = {"reported", "computed"}
 
 
+def summarize_proof_carrying_ingestion_contract() -> dict[str, object]:
+    """Summarize the static contract for validation-status reports."""
+
+    return {
+        "schema_version": PROOF_CARRYING_EFFECT_SCHEMA_VERSION,
+        "allowed_effect_types": sorted(ALLOWED_EFFECT_TYPES),
+        "ratio_effect_types": sorted(RATIO_EFFECT_TYPES),
+        "allowed_provenance_source_types": sorted(ALLOWED_PROVENANCE_SOURCE_TYPES),
+        "allowed_computation_origins": sorted(ALLOWED_COMPUTATION_ORIGINS),
+        "required_uncertainty": "complete_ci_or_standard_error",
+        "requires_source_snippet": True,
+        "requires_source_identity": True,
+        "certification_effect": "none",
+    }
+
+
 @dataclass(frozen=True)
 class ExtractionProvenance:
     """Source location and snippet supporting one extracted number."""

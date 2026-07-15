@@ -69,6 +69,15 @@ def test_validation_status_composes_all_current_gates():
         "claims_governance_review",
     ]
 
+    ingestion_contract = report["ingestion_contract"]
+    assert ingestion_contract["schema_version"] == "proof_carrying_effect/v1"
+    assert ingestion_contract["requires_source_identity"] is True
+    assert ingestion_contract["requires_source_snippet"] is True
+    assert ingestion_contract["required_uncertainty"] == "complete_ci_or_standard_error"
+    assert ingestion_contract["certification_effect"] == "none"
+    assert "HR" in ingestion_contract["allowed_effect_types"]
+    assert "HR" in ingestion_contract["ratio_effect_types"]
+
     reference_targets = report["reference_targets"]
     assert reference_targets["registry"] == "validation/reference_targets.toml"
     assert reference_targets["status_counts"] == {

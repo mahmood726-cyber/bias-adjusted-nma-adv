@@ -23,6 +23,7 @@ from bias_nma_adv.grand_benchmark_plan import (
     summarize_grand_benchmark_plan,
     validate_grand_benchmark_plan,
 )
+from bias_nma_adv.ingestion import summarize_proof_carrying_ingestion_contract
 from bias_nma_adv.portfolio_reuse import (
     load_portfolio_reuse_registry,
     summarize_portfolio_reuse_registry,
@@ -118,6 +119,7 @@ def build_validation_status(
             "registry": _relpath(portfolio_reuse_registry_path, root),
             **summarize_portfolio_reuse_registry(portfolio_reuse_registry),
         },
+        "ingestion_contract": summarize_proof_carrying_ingestion_contract(),
         "reference_targets": {
             "registry": _relpath(reference_targets_path, root),
             "n_targets": len(targets),
