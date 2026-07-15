@@ -1,18 +1,18 @@
 <!-- sentinel:skip-file -->
-# Technical Specification: Advanced Bias-Aware Network Meta-Analysis Engine
+# Technical Specification: Advanced Bias-Aware Network Meta-Analysis Platform
 
 ## 1. Scope and Design Principles
 
-The engine performs Bayesian network meta-analysis of randomized and, where explicitly enabled, non-randomized comparative studies. The core model preserves randomization, within-study treatment contrasts, correlations from multi-arm trials and between-study heterogeneity.
+The engine performs Bayesian network meta-analysis of randomized and non-randomized comparative studies. The core model preserves randomization, within-study treatment contrasts, correlations from multi-arm trials, and between-study heterogeneity.
 
 Bias-related information is incorporated through transparent sensitivity analyses or explicitly specified probabilistic bias models. Study weights are not modified using arbitrary sponsorship, attrition or registry penalty constants.
 
 All advanced modules are classified as:
 
-1. core NMA estimators;
-2. optional bias and sensitivity models;
-3. IPD extensions;
-4. simulation and validation tools.
+1.  **Core NMA Estimators:** Bayesian and frequentist engines, including component, dose-response, multivariate, and survival models.
+2.  **Optional Bias and Sensitivity Models:** Probabilistic bias models and registry-informed analyses.
+3.  **IPD Extensions:** Multilevel Network Meta-Regression (ML-NMR) and causal individual-participant-data (IPD) adjustment.
+4.  **Simulation and Validation Tools:** Benchmarks, simulation matrices, and privacy-preserving data generators.
 
 ---
 
@@ -148,7 +148,7 @@ Where individual event times or sufficiently detailed interval data are availabl
 
 Cause-specific hazards are indexed by event type and treatment. The output must distinguish hazard ratios from cumulative-incidence contrasts because these estimands are not interchangeable.
 
-Non-proportional hazards are evaluated using prespecified time functions, splines or model averaging. Hazards are constrained to remain non-negative.
+Non-proportional hazards are evaluated using splines (M-splines, cubic splines), fractional polynomials, or treatment-specific time-varying coefficients. Hazards are constrained to remain non-negative.
 
 ---
 
@@ -162,7 +162,7 @@ Obtains posterior draws for treatment effects, heterogeneity parameters, inconsi
 
 ### Implementation requirements
 
-The preferred production backend is a validated automatic-differentiation framework such as Stan. Any independent NUTS implementation must be verified against a reference implementation using analytically tractable and simulated models.
+The preferred production backend is a validated automatic-differentiation framework such as Stan (via CmdStanPy). Any independent NUTS implementation must be verified against a reference implementation using analytically tractable and simulated models.
 
 NUTS adapts the leapfrog trajectory length and, during warm-up, the step size and mass matrix.
 
@@ -171,7 +171,7 @@ NUTS adapts the leapfrog trajectory length and, during warm-up, the step size an
 The engine reports:
 
 * split-$\hat R$;
-* bulk and tail Markov chain sample sizes;
+* bulk and tail ESS statistics;
 * divergent transitions;
 * maximum tree-depth events;
 * energy Bayesian fraction of missing information;
@@ -322,9 +322,9 @@ The engine reports model-specific estimates as well as averaged estimates so tha
 
 ## 11. Synthetic-Data Simulation
 
-**Module:** `src/bias_nma_adv/gan.py`
+**Module:** `bias_nma_simulation/` (Isolated package)
 
-The synthetic-data module is restricted to:
+The synthetic-data simulation module is restricted to:
 
 * software testing;
 * simulation studies;
@@ -457,31 +457,3 @@ For each treatment comparison and outcome, the reporting layer records assessmen
 *   incoherence.
 
 Automated calculations and flags support—but do not replace—reviewer judgements. Treatment rankings are never used as substitutes for comparison-specific certainty assessments.
-
----
-
-## 16. Reproducibility and Reporting
-
-Every analysis exports:
-
-* data and treatment-network checks;
-* model equations;
-* likelihood and prior definitions;
-* software version and random seed;
-* sampler settings and diagnostics;
-* convergence status;
-* heterogeneity and incoherence results;
-* bias assumptions;
-* sensitivity analyses;
-* absolute and relative treatment effects;
-* ranking uncertainty;
-* machine-readable results and an audit log.
-
-The software must distinguish clearly between:
-
-* observed data;
-* derived quantities;
-* imputed values;
-* simulated data;
-* reviewer-entered risk-of-bias judgements;
-* algorithmically generated bias flags.
