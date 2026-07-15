@@ -25,6 +25,9 @@ required_source_fields = [
 ]
 blocked_hr_methods = [
   "text_synthetic_ipd",
+  "text_hr_pair_fallback",
+  "text_hr_only_fallback",
+  "text_hr_fallback",
   "text_derived_only",
   "derived_event_rate",
   "median_ratio_fallback",
@@ -32,6 +35,9 @@ blocked_hr_methods = [
 ]
 blocked_orientation_methods = [
   "text_synthetic_ipd",
+  "text_hr_pair_fallback",
+  "text_hr_only_fallback",
+  "text_hr_fallback",
   "text_only",
   "closest_to_1_prior",
   "none",
@@ -39,6 +45,8 @@ blocked_orientation_methods = [
 blocked_warning_terms = [
   "Synthetic IPD",
   "text-derived HR only",
+  "Curve HR diverged from text HR",
+  "using text HR",
   "no reliable curve pair",
   "curve extraction failed",
 ]

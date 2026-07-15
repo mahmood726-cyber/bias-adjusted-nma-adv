@@ -78,6 +78,19 @@ def test_km_reconstruction_blocks_wasserstein_text_synthetic_ipd_fallback():
         screen_km_reconstruction_result(SOURCE, result, policy)
 
 
+def test_km_reconstruction_blocks_wasserstein_text_hr_pair_fallback():
+    policy = load_km_reconstruction_policy(POLICY_PATH)
+    result = copy.deepcopy(RESULT)
+    result["hr_method"] = "text_hr_pair_fallback"
+    result["orientation_method"] = "text_hr_pair_fallback"
+    result["warnings"] = [
+        "Curve HR diverged from text HR; using text HR while retaining the selected curve pair for IPD."
+    ]
+
+    with pytest.raises(ValidationError, match="blocked KM HR method"):
+        screen_km_reconstruction_result(SOURCE, result, policy)
+
+
 def test_km_reconstruction_rejects_text_only_or_unverified_curve_results():
     policy = load_km_reconstruction_policy(POLICY_PATH)
     result = copy.deepcopy(RESULT)

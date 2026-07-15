@@ -25,6 +25,8 @@ Portfolio recon was run with `find-related-repos.py "evidence synthesis benchmar
 
 Net-new work in this repository is the NMA-oriented source contract: PubMed abstract HR-token verification, CT.gov/PubMed identity checks, source-bound survival HR manifests, and benchmark artifacts that preserve `certification_effect = "none"` until external reference matching exists.
 
+The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
+
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
 Dataset: `validation/real_meta/sglt2_hf_primary_events.csv`
