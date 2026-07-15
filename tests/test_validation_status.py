@@ -22,9 +22,15 @@ def test_validation_status_composes_all_current_gates():
     assert report["checked_at"] == "2026-07-15T00:00:00Z"
     assert report["allowed_evidence_sources"] == [
         "clinicaltrials_gov",
-        "pubmed_abstract",
         "open_access_paper",
+        "pubmed_abstract",
     ]
+    assert report["allowed_effect_evidence_sources"] == report["allowed_evidence_sources"]
+    assert report["allowed_protocol_only_sources"] == [
+        "other_trial_registry_protocol",
+        "who_ictrp_protocol",
+    ]
+    assert "cannot supply model-ready effects" in report["protocol_registry_rule"]
     assert report["certification_effect"] == "none"
 
     assert report["clinical_hta_reporting_enabled"] is False
@@ -48,6 +54,10 @@ def test_validation_status_composes_all_current_gates():
     assert grand_plan["real_data_lane_status_counts"] == {"active": 3}
     assert grand_plan["n_simulation_scenarios"] == 3
     assert grand_plan["simulation_scenario_status_counts"] == {"planned": 3}
+    assert grand_plan["allowed_protocol_only_sources"] == [
+        "other_trial_registry_protocol",
+        "who_ictrp_protocol",
+    ]
     assert grand_plan["certification_effect"] == "none"
 
     simulation_matrix = report["simulation_matrix"]
@@ -75,6 +85,16 @@ def test_validation_status_composes_all_current_gates():
     assert ingestion_contract["requires_source_snippet"] is True
     assert ingestion_contract["required_uncertainty"] == "complete_ci_or_standard_error"
     assert ingestion_contract["certification_effect"] == "none"
+    assert ingestion_contract["allowed_effect_source_types"] == [
+        "clinicaltrials_gov",
+        "open_access_paper",
+        "pubmed_abstract",
+    ]
+    assert ingestion_contract["protocol_only_source_types"] == [
+        "other_trial_registry_protocol",
+        "who_ictrp_protocol",
+    ]
+    assert ingestion_contract["protocol_sources_can_supply_model_effects"] is False
     assert "HR" in ingestion_contract["allowed_effect_types"]
     assert "HR" in ingestion_contract["ratio_effect_types"]
 

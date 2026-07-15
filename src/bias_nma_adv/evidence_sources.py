@@ -4,17 +4,23 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import re
+from urllib.parse import urlparse
 
 
 class EvidenceSourceError(ValueError):
     """Raised when a source is outside the allowed evidence boundary."""
 
 
-ALLOWED_SOURCE_TYPES = {
+EFFECT_EVIDENCE_SOURCE_TYPES = {
     "clinicaltrials_gov",
     "pubmed_abstract",
     "open_access_paper",
 }
+PROTOCOL_ONLY_SOURCE_TYPES = {
+    "who_ictrp_protocol",
+    "other_trial_registry_protocol",
+}
+ALLOWED_SOURCE_TYPES = EFFECT_EVIDENCE_SOURCE_TYPES | PROTOCOL_ONLY_SOURCE_TYPES
 
 _NCT_RE = re.compile(r"^NCT\d{8}$")
 _PMID_RE = re.compile(r"^\d{1,9}$")
@@ -50,6 +56,18 @@ class EvidenceSource:
             statement = self.access_statement.lower()
             if "open access" not in statement and "oa" not in statement:
                 raise EvidenceSourceError("open_access_paper sources must state open-access status.")
+        if self.source_type in PROTOCOL_ONLY_SOURCE_TYPES:
+            statement = self.access_statement.lower()
+            if not any(token in statement for token in ("protocol", "registration", "registry")):
+                raise EvidenceSourceError(
+                    "protocol-only registry sources must state their protocol or registration role."
+                )
+            if self.source_type == "who_ictrp_protocol":
+                host = (urlparse(self.url).hostname or "").lower()
+                if host != "trialsearch.who.int" and not host.endswith(".who.int"):
+                    raise EvidenceSourceError(
+                        "WHO ICTRP protocol sources must use a who.int registry URL."
+                    )
 
 
 def validate_sources(sources: list[EvidenceSource]) -> None:

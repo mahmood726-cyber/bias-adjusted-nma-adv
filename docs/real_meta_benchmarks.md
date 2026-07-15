@@ -13,6 +13,8 @@ Real-world validation inputs are restricted to:
 - PubMed abstracts;
 - open-access papers.
 
+WHO ICTRP and other trial registries are allowed for protocol-only metadata such as registration, planned outcomes, eligibility criteria, and dates. They are not admissible sources for model-ready effects under the current extraction contracts.
+
 Closed IPD, proprietary trial reports, secondary package fixtures, and unverified inline demo numbers are not admissible validation sources.
 
 ## Portfolio Reuse Recon
@@ -218,6 +220,7 @@ Limitations:
 | CT.gov reported-HR network snapshot | Dynamic public API check | `scripts/verify_ctgov_hr_network.py` against ClinicalTrials.gov API v2 | Verifies NCT identity, completed status, exact HR/CI analysis fields, outcome-title terms, and drug/placebo terms |
 | CT.gov reported-HR network benchmark | Dynamic computation | `scripts/write_ctgov_hr_network_benchmark.py` plus `bias_nma_adv.ctgov_hr_network` | Recomputes log-HR study effects and fixed/random contrast-GLS NMA from the verified CT.gov source snapshot |
 | Proof-carrying extracted effect | Static contract plus unit fixtures | `bias_nma_adv.ingestion.ProofCarryingEffectRecord` | Blocks model-ready extracted effects unless source provenance, source snippet, uncertainty, and effect-scale sanity checks pass |
+| Protocol-only registries | Static source-policy contract plus unit fixtures | `bias_nma_adv.evidence_sources`, `bias_nma_adv.ingestion`, and `tests/test_evidence_sources.py` | Allows WHO ICTRP and other registries for protocol metadata only; rejects those records as model-ready effects |
 | Source-check certification effect | Static contract | `certification_effect = "none"` in source-check artifacts | Source-token verification cannot certify model performance or tier-one parity |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
 | Pairwise bridge result | Dynamic computation | `bias_nma_adv.pairwise.fit_pairwise_meta` | Recomputed by tests from source-backed study-level effects |

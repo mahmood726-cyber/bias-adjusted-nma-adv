@@ -8,14 +8,12 @@ import tomllib
 from typing import Any
 
 from bias_nma_adv.benchmark_registry import SourceBenchmarkRegistry
+from bias_nma_adv.evidence_sources import EFFECT_EVIDENCE_SOURCE_TYPES, PROTOCOL_ONLY_SOURCE_TYPES
 
 
 GRAND_BENCHMARK_PLAN_SCHEMA_VERSION = "grand_benchmark_plan/v1"
-ALLOWED_EVIDENCE_SOURCES = {
-    "clinicaltrials_gov",
-    "pubmed_abstract",
-    "open_access_paper",
-}
+ALLOWED_EVIDENCE_SOURCES = EFFECT_EVIDENCE_SOURCE_TYPES
+ALLOWED_PROTOCOL_ONLY_SOURCES = PROTOCOL_ONLY_SOURCE_TYPES
 ALLOWED_STATUSES = {"active", "planned"}
 ALLOWED_EVIDENCE_CLASSES = {"real_source_backed", "simulation"}
 ALLOWED_SOURCE_POLICIES = {
@@ -179,6 +177,8 @@ class GrandBenchmarkPlan:
     checked_at: str
     purpose: str
     allowed_evidence_sources: tuple[str, ...]
+    protocol_only_sources: tuple[str, ...]
+    protocol_registry_rule: str
     certification_effect: str
     superiority_claim_policy: str
     real_data_lanes: tuple[RealDataLane, ...]
@@ -193,6 +193,8 @@ class GrandBenchmarkPlan:
                 "checked_at",
                 "purpose",
                 "allowed_evidence_sources",
+                "protocol_only_sources",
+                "protocol_registry_rule",
                 "certification_effect",
                 "superiority_claim_policy",
                 "real_data_lanes",
@@ -209,6 +211,8 @@ class GrandBenchmarkPlan:
             checked_at=str(raw["checked_at"]),
             purpose=str(raw["purpose"]),
             allowed_evidence_sources=tuple(str(item) for item in raw["allowed_evidence_sources"]),
+            protocol_only_sources=tuple(str(item) for item in raw["protocol_only_sources"]),
+            protocol_registry_rule=str(raw["protocol_registry_rule"]),
             certification_effect=str(raw["certification_effect"]),
             superiority_claim_policy=str(raw["superiority_claim_policy"]),
             real_data_lanes=tuple(
@@ -224,6 +228,13 @@ class GrandBenchmarkPlan:
     def validate(self) -> None:
         if set(self.allowed_evidence_sources) != ALLOWED_EVIDENCE_SOURCES:
             raise GrandBenchmarkPlanError("allowed_evidence_sources drifted.")
+        if set(self.protocol_only_sources) != ALLOWED_PROTOCOL_ONLY_SOURCES:
+            raise GrandBenchmarkPlanError("protocol_only_sources drifted.")
+        rule = self.protocol_registry_rule.lower()
+        if "protocol" not in rule or "cannot supply model-ready effects" not in rule:
+            raise GrandBenchmarkPlanError(
+                "protocol_registry_rule must separate protocol metadata from effect evidence."
+            )
         if self.certification_effect != "none":
             raise GrandBenchmarkPlanError("grand benchmark plan cannot certify methods.")
         policy = self.superiority_claim_policy.lower()
@@ -282,6 +293,7 @@ def summarize_grand_benchmark_plan(plan: GrandBenchmarkPlan) -> dict[str, Any]:
         "real_data_lane_status_counts": dict(sorted(real_status_counts.items())),
         "n_simulation_scenarios": len(plan.simulation_scenarios),
         "simulation_scenario_status_counts": dict(sorted(scenario_status_counts.items())),
+        "allowed_protocol_only_sources": list(plan.protocol_only_sources),
         "certification_effect": plan.certification_effect,
     }
 

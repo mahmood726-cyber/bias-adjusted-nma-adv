@@ -122,6 +122,18 @@ def test_rejects_wrong_host_for_registry_and_pubmed_sources():
         pubmed.validate()
 
 
+def test_protocol_only_registry_source_cannot_supply_model_ready_effect():
+    protocol_source = EvidenceIngestionRecord(
+        row_id="who_protocol_dapa_hf",
+        source_type="who_ictrp_protocol",
+        url="https://trialsearch.who.int/Trial2.aspx?TrialID=NCT03036124",
+        access_statement="WHO ICTRP registry protocol registration metadata only.",
+    )
+
+    with pytest.raises(IngestionProvenanceError, match="protocol-only"):
+        protocol_source.validate()
+
+
 def _valid_effect_record(**overrides):
     payload = {
         "record_id": "dapa_hf_hr_primary",

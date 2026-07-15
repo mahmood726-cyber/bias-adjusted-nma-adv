@@ -16,6 +16,7 @@ from bias_nma_adv.ctgov_hr_network import (
     validate_ctgov_hr_network_source_bundle,
 )
 from bias_nma_adv.data import ValidationError
+from bias_nma_adv.evidence_sources import EFFECT_EVIDENCE_SOURCE_TYPES
 from bias_nma_adv.event_count_verification import (
     EVENT_COUNT_VERIFICATION_SCHEMA_VERSION,
     EventCountVerificationReport,
@@ -197,7 +198,7 @@ class SourceBenchmarkRegistry:
         return registry
 
     def validate_metadata(self) -> None:
-        if set(self.allowed_evidence_sources) != {"clinicaltrials_gov", "pubmed_abstract", "open_access_paper"}:
+        if set(self.allowed_evidence_sources) != EFFECT_EVIDENCE_SOURCE_TYPES:
             raise BenchmarkRegistryError("benchmark registry allowed_evidence_sources drifted.")
         if "certification_effect = none" not in self.certification_rule:
             raise BenchmarkRegistryError("benchmark registry must state the non-certification rule.")

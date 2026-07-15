@@ -9,7 +9,12 @@ import math
 import re
 from urllib.parse import unquote, urlparse
 
-from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
+from bias_nma_adv.evidence_sources import (
+    EFFECT_EVIDENCE_SOURCE_TYPES,
+    PROTOCOL_ONLY_SOURCE_TYPES,
+    EvidenceSource,
+    validate_sources,
+)
 
 
 class IngestionProvenanceError(ValueError):
@@ -48,6 +53,9 @@ def summarize_proof_carrying_ingestion_contract() -> dict[str, object]:
     return {
         "schema_version": PROOF_CARRYING_EFFECT_SCHEMA_VERSION,
         "allowed_effect_types": sorted(ALLOWED_EFFECT_TYPES),
+        "allowed_effect_source_types": sorted(EFFECT_EVIDENCE_SOURCE_TYPES),
+        "protocol_only_source_types": sorted(PROTOCOL_ONLY_SOURCE_TYPES),
+        "protocol_sources_can_supply_model_effects": False,
         "ratio_effect_types": sorted(RATIO_EFFECT_TYPES),
         "allowed_provenance_source_types": sorted(ALLOWED_PROVENANCE_SOURCE_TYPES),
         "allowed_computation_origins": sorted(ALLOWED_COMPUTATION_ORIGINS),
@@ -141,6 +149,11 @@ class EvidenceIngestionRecord:
             self._validate_pubmed_source()
         elif self.source_type == "open_access_paper":
             self._validate_open_access_source()
+        elif self.source_type in PROTOCOL_ONLY_SOURCE_TYPES:
+            raise IngestionProvenanceError(
+                f"{self.row_id}: source_type '{self.source_type}' is protocol-only and "
+                "cannot supply a model-ready extracted effect."
+            )
         else:
             raise IngestionProvenanceError(
                 f"source_type '{self.source_type}' is not allowed for ingestion."

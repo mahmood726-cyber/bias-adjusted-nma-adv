@@ -2,6 +2,8 @@ schema_version = "grand_benchmark_plan/v1"
 checked_at = "2026-07-15"
 purpose = "Prespecified validation plan for proving source-backed evidence-synthesis performance without overclaiming superiority."
 allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
+protocol_only_sources = ["other_trial_registry_protocol", "who_ictrp_protocol"]
+protocol_registry_rule = "WHO ICTRP and other trial registries may verify protocol registration, planned outcomes, eligibility criteria, and dates, but cannot supply model-ready effects."
 certification_effect = "none"
 superiority_claim_policy = "No native method is described as better than tier-one specialist software until source-backed real-data benchmarks, prespecified simulations, and external reference matching all pass with machine-verifiable artifacts."
 

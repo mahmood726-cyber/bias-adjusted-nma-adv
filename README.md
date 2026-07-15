@@ -22,7 +22,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 ## Repository Structure
 - `src/bias_nma_adv/`: Core python package containing:
   - `data.py`: Structured data classes and validation schemas.
-  - `ingestion.py`: Source-backed ingestion provenance checks and proof-carrying extracted-effect contracts for PubMed, ClinicalTrials.gov, and open-access paper rows.
+  - `ingestion.py`: Source-backed ingestion provenance checks and proof-carrying extracted-effect contracts for PubMed, ClinicalTrials.gov, and open-access paper rows. WHO ICTRP and other registries are protocol-only metadata sources and cannot supply model-ready effects.
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
 - `src/bias_nma_adv/pairwise.py`: Experimental pairwise meta-analysis bridge for FE, DL, Paule-Mandel, REML, HKSJ, and prediction-interval conventions.
 - `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.
@@ -48,7 +48,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.
 - `validation/reviews/`: Non-certifying review ledgers recording multiperson review findings, actions, and next gates.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
-- `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.
+- `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers. Protocol-only registries such as WHO ICTRP may support registration metadata only.
 - `validation/benchmark_registry.toml`: Canonical inventory of local source-backed benchmark artifacts. Every entry must retain `certification_effect = "none"` until an external reference run passes, and every source-check report is revalidated against its specialized schema.
 - `validation/source_checks/`: Public-source identity snapshots and PubMed abstract event-count token checks.
 - `validation/ingestion/`: Proof-carrying extracted-effect bundles. These are model-ingestion evidence contracts only and carry `certification_effect = "none"`.

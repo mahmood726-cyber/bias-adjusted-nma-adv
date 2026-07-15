@@ -23,6 +23,7 @@ from bias_nma_adv.grand_benchmark_plan import (
     summarize_grand_benchmark_plan,
     validate_grand_benchmark_plan,
 )
+from bias_nma_adv.evidence_sources import EFFECT_EVIDENCE_SOURCE_TYPES, PROTOCOL_ONLY_SOURCE_TYPES
 from bias_nma_adv.ingestion import summarize_proof_carrying_ingestion_contract
 from bias_nma_adv.portfolio_reuse import (
     load_portfolio_reuse_registry,
@@ -37,11 +38,8 @@ from bias_nma_adv.simulation_matrix import (
 
 
 VALIDATION_STATUS_SCHEMA_VERSION = "validation_status/v1"
-ALLOWED_EVIDENCE_SOURCES = (
-    "clinicaltrials_gov",
-    "pubmed_abstract",
-    "open_access_paper",
-)
+ALLOWED_EVIDENCE_SOURCES = tuple(sorted(EFFECT_EVIDENCE_SOURCE_TYPES))
+ALLOWED_PROTOCOL_ONLY_SOURCES = tuple(sorted(PROTOCOL_ONLY_SOURCE_TYPES))
 NO_PRODUCTION_CERTIFIED_MESSAGE = (
     "No modules in this build currently hold Production Certified status. "
     "Clinical and HTA reporting is disabled."
@@ -106,6 +104,12 @@ def build_validation_status(
         "checked_at": checked_at or _utc_now(),
         "repository": root.name,
         "allowed_evidence_sources": list(ALLOWED_EVIDENCE_SOURCES),
+        "allowed_effect_evidence_sources": list(ALLOWED_EVIDENCE_SOURCES),
+        "allowed_protocol_only_sources": list(ALLOWED_PROTOCOL_ONLY_SOURCES),
+        "protocol_registry_rule": (
+            "Protocol-only registry sources may verify registration, planned outcomes, "
+            "eligibility, and dates, but cannot supply model-ready effects."
+        ),
         "certification_effect": "none",
         "clinical_hta_reporting_enabled": bool(production_targets),
         "clinical_hta_reporting_reason": _clinical_hta_reason(production_targets),

@@ -30,6 +30,11 @@ def test_grand_benchmark_plan_validates_against_source_registry():
         "pubmed_abstract",
         "open_access_paper",
     }
+    assert set(plan.protocol_only_sources) == {
+        "other_trial_registry_protocol",
+        "who_ictrp_protocol",
+    }
+    assert "cannot supply model-ready effects" in plan.protocol_registry_rule
     assert {lane.id for lane in plan.real_data_lanes} == {
         "source_backed_binary_pairwise_meta",
         "source_backed_reported_survival_hr_pairwise",
@@ -45,6 +50,10 @@ def test_grand_benchmark_plan_validates_against_source_registry():
         "real_data_lane_status_counts": {"active": 3},
         "n_simulation_scenarios": 3,
         "simulation_scenario_status_counts": {"planned": 3},
+        "allowed_protocol_only_sources": [
+            "other_trial_registry_protocol",
+            "who_ictrp_protocol",
+        ],
         "certification_effect": "none",
     }
 
@@ -99,4 +108,19 @@ def test_grand_benchmark_plan_loader_rejects_source_policy_drift(tmp_path):
     )
 
     with pytest.raises(GrandBenchmarkPlanError, match="allowed_evidence_sources drifted"):
+        load_grand_benchmark_plan(bad_plan)
+
+
+def test_grand_benchmark_plan_loader_rejects_protocol_source_drift(tmp_path):
+    bad_plan = tmp_path / "bad_protocol_plan.toml"
+    bad_plan.write_text(
+        PLAN.read_text(encoding="utf-8").replace(
+            'protocol_only_sources = ["other_trial_registry_protocol", "who_ictrp_protocol"]',
+            'protocol_only_sources = ["who_ictrp_protocol"]',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(GrandBenchmarkPlanError, match="protocol_only_sources drifted"):
         load_grand_benchmark_plan(bad_plan)
