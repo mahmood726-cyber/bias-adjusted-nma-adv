@@ -108,3 +108,55 @@ acceptance_criteria = [
   "validate sparse binary and continuous outcome edge cases",
 ]
 evidence_artifacts = []
+
+[[targets]]
+id = "survival_km_oa_ipd_reconstruction"
+domain = "survival_km_reconstruction"
+module = "planned:survival_km"
+reference_method = "IPDfromKM-style Guyot reconstruction and source-reported HRs"
+status = "planned"
+acceptance_criteria = [
+  "accept only open-access KM figures, PubMed abstracts, or ClinicalTrials.gov-linked survival records",
+  "validate PMID, NCT ID when present, source figure location, risk table, and extracted curve provenance",
+  "reproduce source-reported HRs and confidence intervals within prespecified tolerance or explain direction and scale differences",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "transportability_support_topology"
+domain = "transportability"
+module = "planned:transportability"
+reference_method = "metafor/statsmodels meta-regression anchors plus topological support fixtures"
+status = "planned"
+acceptance_criteria = [
+  "match REML meta-regression anchors against independent reference software",
+  "refuse non-collapsible OR or logOR transport unless an explicit estimand transformation is supplied",
+  "report target-population support grade, nearest-neighbour distance, convex-hull status, and extrapolation warnings",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "multiarm_gls_netmeta_portfolio_fixture"
+domain = "frequentist_nma"
+module = "planned:multiarm_gls"
+reference_method = "netmeta multi-arm GLS fixtures"
+status = "planned"
+acceptance_criteria = [
+  "preserve within-study covariance for multi-arm studies",
+  "match fixed-effect and random-effect treatment estimates and standard errors against netmeta fixtures",
+  "warn or fail closed when a multi-arm study lacks the complete pairwise clique needed to recover covariance",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "source_backed_ingestion_rct_extractor"
+domain = "evidence_ingestion"
+module = "planned:evidence_ingestion"
+reference_method = "PubMed, ClinicalTrials.gov, and open-access paper provenance checks"
+status = "planned"
+acceptance_criteria = [
+  "validate PMID, NCT ID, DOI, dates, and OA URLs against source records",
+  "reject fallback PDFs or extracted rows whose article identity does not match the claimed PMID",
+  "emit proof-carrying arm-level or contrast-level rows with source snippets, page or figure locations, and hashes",
+]
+evidence_artifacts = []

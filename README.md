@@ -4,6 +4,8 @@ This repository contains the implementation and benchmarking framework for an ad
 
 The tier-one methods benchmark is documented in `docs/tier1_benchmark.md`. The current package should be read as a prototype plus validation harness, not as a claim that every native estimator already outperforms mature specialist software such as `netmeta`, `multinma`, `MBNMAdose`, or `crossnma`.
 
+The portfolio reuse map in `docs/portfolio_reuse_map.md` identifies nearby repos that can strengthen the platform: `wasserstein` for OA Kaplan-Meier survival validation, `topo-transport-ma` for transportability support diagnostics, `allmeta` for netmeta parity fixtures, and `rct-extractor-v2` for source-backed ingestion patterns. These are planned inputs only; each contribution must be revalidated inside this repository before it supports a certification claim.
+
 ## Methods & Estimands
 
 The package implements a frequentist contrast-based network meta-analysis model with the following advanced features:
@@ -25,6 +27,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `reproduce_real_meta.py`: Runs the source-backed SGLT2 heart-failure real-meta benchmark.
 - `validation/reference_targets.toml`: Machine-readable reference targets required before tier-one parity or production certification claims.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.
+- `docs/portfolio_reuse_map.md`: Local portfolio scan describing reusable methods and hard stops before porting them.
 - `e156-submission/`: Micro-publication artifacts.
 
 ## Benchmark Results
