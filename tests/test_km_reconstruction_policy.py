@@ -24,6 +24,9 @@ SOURCE = {
     "source_type": "open_access_paper",
     "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1234567/",
     "access_statement": "Open access paper used only as a unit-test source locator fixture.",
+    "source_snapshot_sha256": "b" * 64,
+    "article_identity_status": "pmid_verified",
+    "open_access_status": "verified_open_access",
     "figure_label": "Figure 2",
     "figure_page": "5",
     "outcome_label": "overall survival",
@@ -100,4 +103,9 @@ def test_km_reconstruction_policy_rejects_scope_creep():
     source = copy.deepcopy(SOURCE)
     source["source_type"] = "pubmed_abstract"
     with pytest.raises(ValidationError, match="open_access_paper"):
+        KMPaperSource.from_mapping(source)
+
+    source = copy.deepcopy(SOURCE)
+    source["open_access_status"] = "declared_only"
+    with pytest.raises(ValidationError, match="open-access status must be verified"):
         KMPaperSource.from_mapping(source)

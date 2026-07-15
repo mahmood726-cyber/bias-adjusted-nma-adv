@@ -33,6 +33,7 @@ class KMReconstructionPolicy:
     required_source_type: str
     synthetic_ipd_policy: str
     min_curve_points: int
+    required_source_fields: tuple[str, ...]
     blocked_hr_methods: tuple[str, ...]
     blocked_orientation_methods: tuple[str, ...]
     blocked_warning_terms: tuple[str, ...]
@@ -48,6 +49,7 @@ class KMReconstructionPolicy:
             "required_source_type",
             "synthetic_ipd_policy",
             "min_curve_points",
+            "required_source_fields",
             "blocked_hr_methods",
             "blocked_orientation_methods",
             "blocked_warning_terms",
@@ -67,6 +69,7 @@ class KMReconstructionPolicy:
             required_source_type=str(raw["required_source_type"]),
             synthetic_ipd_policy=str(raw["synthetic_ipd_policy"]),
             min_curve_points=int(raw["min_curve_points"]),
+            required_source_fields=tuple(str(item) for item in raw["required_source_fields"]),
             blocked_hr_methods=tuple(str(item) for item in raw["blocked_hr_methods"]),
             blocked_orientation_methods=tuple(str(item) for item in raw["blocked_orientation_methods"]),
             blocked_warning_terms=tuple(str(item) for item in raw["blocked_warning_terms"]),
@@ -88,6 +91,8 @@ class KMReconstructionPolicy:
             raise ValidationError("Synthetic IPD must be blocked for KM validation evidence.")
         if self.min_curve_points < 2:
             raise ValidationError("KM reconstruction min_curve_points must be at least 2.")
+        if not self.required_source_fields:
+            raise ValidationError("KM reconstruction policy must declare required source fields.")
         if not self.blocked_hr_methods:
             raise ValidationError("KM reconstruction policy must declare blocked HR methods.")
         if not self.blocked_warning_terms:
@@ -107,6 +112,9 @@ class KMPaperSource:
     source_type: str
     source_url: str
     access_statement: str
+    source_snapshot_sha256: str
+    article_identity_status: str
+    open_access_status: str
     figure_label: str
     figure_page: str
     outcome_label: str
@@ -125,6 +133,9 @@ class KMPaperSource:
             "source_type",
             "source_url",
             "access_statement",
+            "source_snapshot_sha256",
+            "article_identity_status",
+            "open_access_status",
             "figure_label",
             "figure_page",
             "outcome_label",
@@ -162,6 +173,12 @@ class KMPaperSource:
                 )
             ]
         )
+        if not _looks_like_sha256(self.source_snapshot_sha256):
+            raise ValidationError(f"{self.study_id}: source_snapshot_sha256 is not SHA-256.")
+        if self.article_identity_status != "pmid_verified":
+            raise ValidationError(f"{self.study_id}: article identity must be PMID-verified.")
+        if self.open_access_status != "verified_open_access":
+            raise ValidationError(f"{self.study_id}: open-access status must be verified.")
         if not all(
             item.strip()
             for item in (

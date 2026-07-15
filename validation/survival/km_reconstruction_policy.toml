@@ -5,6 +5,24 @@ reuse_origin = "wasserstein_method_pattern_only"
 required_source_type = "open_access_paper"
 synthetic_ipd_policy = "blocked"
 min_curve_points = 10
+required_source_fields = [
+  "study_id",
+  "nct_id",
+  "pmid",
+  "source_type",
+  "source_url",
+  "access_statement",
+  "source_snapshot_sha256",
+  "article_identity_status",
+  "open_access_status",
+  "figure_label",
+  "figure_page",
+  "outcome_label",
+  "active_treatment",
+  "control_treatment",
+  "risk_table_status",
+  "reuse_origin",
+]
 blocked_hr_methods = [
   "text_synthetic_ipd",
   "text_derived_only",
