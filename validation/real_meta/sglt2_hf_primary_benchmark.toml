@@ -1,0 +1,47 @@
+schema_version = "real_meta_benchmark/v1"
+benchmark_id = "sglt2_hf_primary_log_or"
+dataset = "validation/real_meta/sglt2_hf_primary_events.csv"
+dataset_sha256 = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract only"
+effect_scale = "log_or"
+outcome_id = "hf_primary"
+n_studies = 4
+n_arms = 8
+
+[model_config]
+reference_treatment = "Placebo"
+candidate_treatment = "SGLT2i"
+frequentist_common_effect = true
+frequentist_random_effects = false
+frequentist_hksj = false
+frequentist_exact_binomial = false
+bayesian_sampler = "BayesianNMAMCMCSampler"
+bayesian_samples = 1200
+bayesian_seed = 20260715
+
+[reference.fixed_effect_log_or]
+estimate = -0.2689836218969911
+se = 0.03629705037045316
+ci_low = -0.34012453336811554
+ci_high = -0.19784271042586668
+
+[candidate.frequentist]
+estimate = -0.26898362189699115
+se = 0.03629705037045316
+ci_low = -0.34012453336811554
+ci_high = -0.19784271042586674
+
+[candidate.bayesian_mcmc]
+posterior_mean = -0.2607983925421356
+posterior_sd = 0.04968838583097165
+ci_low = -0.3572439330155368
+ci_high = -0.16496694729150746
+acceptance_rate = 0.7641666666666667
+
+[tolerances]
+frequentist_abs = 1e-10
+bayesian_mean_abs = 0.05
+bayesian_acceptance_min = 0.05
+bayesian_acceptance_max = 0.95

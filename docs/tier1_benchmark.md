@@ -48,6 +48,8 @@ Failure modes that must remain explicit:
 
 ## Staged Validation Strategy
 
+The executable reference-target registry is `validation/reference_targets.toml`. It is intentionally conservative: every target starts as `planned`, and certification tests fail closed if a module is promoted without evidence artifacts. Real-world validation data must come from ClinicalTrials.gov records, PubMed abstracts, or open-access papers only.
+
 ### Phase 1: Match Tier One
 
 For each module, reproduce the established implementation before claiming improvement.

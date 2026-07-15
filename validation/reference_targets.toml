@@ -1,0 +1,110 @@
+schema_version = 1
+checked_at = "2026-07-15"
+purpose = "Minimum external reference targets required before platform modules can claim tier-one parity or production certification."
+certification_rule = "A module cannot be marked reference_matched, simulation_validated, externally_reproduced, or production_certified unless required evidence_artifacts exist and are machine-verifiable."
+allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
+
+[[targets]]
+id = "frequentist_nma_netmeta"
+domain = "frequentist_nma"
+module = "src/bias_nma_adv/model.py"
+reference_method = "netmeta"
+status = "planned"
+acceptance_criteria = [
+  "match treatment effects within deterministic tolerance on published two-arm and multi-arm networks",
+  "match or explicitly document multi-arm covariance handling",
+  "match disconnected-network fail-closed behavior",
+  "compare inconsistency and contribution diagnostics where available",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "bayesian_nma_multinma_cmdstan"
+domain = "bayesian_nma"
+module = "planned:stan_backend"
+reference_method = "multinma and validated CmdStan models"
+status = "planned"
+acceptance_criteria = [
+  "posterior summaries differ by no more than expected Monte Carlo error",
+  "rank probabilities are computed from joint posterior draws",
+  "R-hat, ESS, divergence, and prior-sensitivity diagnostics are exported",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "mlnmr_multinma"
+domain = "mlnmr"
+module = "planned:mlnmr"
+reference_method = "multinma ML-NMR"
+status = "planned"
+acceptance_criteria = [
+  "match IPD plus aggregate likelihood integration on public examples",
+  "verify target-population standardization",
+  "report covariate-distribution reconstruction and overlap diagnostics",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "dose_response_mbnmadose"
+domain = "dose_response_nma"
+module = "planned:dose_response"
+reference_method = "MBNMAdose"
+status = "planned"
+acceptance_criteria = [
+  "match standard dose-response functions on package examples",
+  "verify class-effect and dose-extrapolation behavior",
+  "compare consistency diagnostics against unrelated mean effects or node splitting",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "cross_design_crossnma"
+domain = "cross_design_nma"
+module = "planned:cross_design"
+reference_method = "crossnma"
+status = "planned"
+acceptance_criteria = [
+  "match cross-format and cross-design examples for RCT/NRS mixtures",
+  "separate RCT-only, NRS-only, and combined estimates",
+  "stress-test sensitivity to design-bias priors",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "component_nma_netmeta_cnma"
+domain = "component_nma"
+module = "planned:component"
+reference_method = "netmeta additive CNMA plus CNMA hierarchy workflow"
+status = "planned"
+acceptance_criteria = [
+  "match additive component effects on benchmark networks",
+  "detect non-estimable treatment or component contrasts",
+  "block treatment hierarchy claims for non-estimable effects",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "certainty_cinema_robmen"
+domain = "evidence_certainty"
+module = "planned:evidence_quality"
+reference_method = "CINeMA and ROB-MEN"
+status = "planned"
+acceptance_criteria = [
+  "derive non-negative contribution percentages from a documented evidence-flow algorithm",
+  "map risk-of-bias domains to comparison-level certainty outputs",
+  "separate missing-evidence risk from small-study-effect heuristics",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "pairwise_metafor_meta"
+domain = "pairwise_meta_analysis"
+module = "planned:pairwise_bridge"
+reference_method = "metafor and meta"
+status = "planned"
+acceptance_criteria = [
+  "match REML, Paule-Mandel, HKSJ, and prediction-interval conventions",
+  "document HKSJ floor and prediction-interval degrees-of-freedom convention",
+  "validate sparse binary and continuous outcome edge cases",
+]
+evidence_artifacts = []

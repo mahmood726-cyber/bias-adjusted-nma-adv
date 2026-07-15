@@ -1,4 +1,8 @@
-"""Run and compare all four major cardiology network meta-analyses (NMA) under strict post-2007 data boundaries using real-world trial extractions."""
+"""Run cardiology demonstration analyses from inline event-count examples.
+
+This script is not validation evidence. Source-backed real-meta benchmarks live
+under validation/real_meta and are checked by tests.
+"""
 
 from __future__ import annotations
 
@@ -10,7 +14,7 @@ from bias_nma_adv.copula import ClaytonCopulaJointEstimator
 
 def main():
     print("=" * 80)
-    print("MASTER REAL-WORLD CARDIOLOGY NMA PIPELINE (POST-2007 REGISTRY DATA)")
+    print("MASTER CARDIOLOGY NMA DEMONSTRATION PIPELINE")
     print("=" * 80)
 
     # -------------------------------------------------------------------------
@@ -18,7 +22,7 @@ def main():
     # -------------------------------------------------------------------------
     print("\n[1/4] Running SGLT2i in Heart Failure (HFrEF) NMA...")
     ds_hf = EvidenceDataset()
-    # DAPA-HF (NCT03036826): Dapagliflozin vs Placebo
+    # DAPA-HF: Dapagliflozin vs Placebo
     ds_hf.add_study("DAPA-HF", "rct")
     ds_hf.add_arm("DAPA-HF", "arm1", "PLA", 2371)
     ds_hf.add_arm("DAPA-HF", "arm2", "SGLT2i", 2373)
@@ -34,7 +38,7 @@ def main():
 
     pooler = AdvancedBiasAdjustedNMAPooler(random_effects=True, hksj=True)
     fit_hf = pooler.fit(ds_hf, "mace", reference_treatment="PLA")
-    print(f" -> SGLT2i vs Placebo Pooled HR: {math.exp(fit_hf.parameter_estimates[0]):.3f}")
+    print(f" -> SGLT2i vs Placebo Pooled OR: {math.exp(fit_hf.parameter_estimates[0]):.3f}")
 
     # -------------------------------------------------------------------------
     # DOMAIN 2: TAVI vs. SAVR (PARTNER 3 & EVOLUT Low Risk)
@@ -56,7 +60,7 @@ def main():
     ds_tavi.add_outcome_ad("EVOLUT_LR", "arm2", "death_stroke", "binary", 22)
 
     fit_tavi = pooler.fit(ds_tavi, "death_stroke", reference_treatment="SAVR")
-    print(f" -> TAVI vs SAVR Pooled HR: {math.exp(fit_tavi.parameter_estimates[0]):.3f}")
+    print(f" -> TAVI vs SAVR Pooled OR: {math.exp(fit_tavi.parameter_estimates[0]):.3f}")
 
     # -------------------------------------------------------------------------
     # DOMAIN 3: Antiplatelet Monotherapy vs. DAPT (TWILIGHT Bleeding Safety)
@@ -71,7 +75,7 @@ def main():
     ds_ap.add_outcome_ad("TWILIGHT", "arm2", "bleeding", "binary", 141)
 
     fit_ap = pooler.fit(ds_ap, "bleeding", reference_treatment="DAPT")
-    print(f" -> P2Y12 Monotherapy vs DAPT Pooled HR: {math.exp(fit_ap.parameter_estimates[0]):.3f}")
+    print(f" -> P2Y12 Monotherapy vs DAPT Pooled OR: {math.exp(fit_ap.parameter_estimates[0]):.3f}")
 
     # -------------------------------------------------------------------------
     # DOMAIN 4: PCSK9i vs. Placebo (FOURIER & ODYSSEY Outcomes)
@@ -93,7 +97,7 @@ def main():
     ds_pcsk9.add_outcome_ad("ODYSSEY_Outcomes", "arm2", "mace", "binary", 903)
 
     fit_pcsk9 = pooler.fit(ds_pcsk9, "mace", reference_treatment="PLA")
-    print(f" -> PCSK9i vs Placebo Pooled HR: {math.exp(fit_pcsk9.parameter_estimates[0]):.3f}")
+    print(f" -> PCSK9i vs Placebo Pooled OR: {math.exp(fit_pcsk9.parameter_estimates[0]):.3f}")
 
     # -------------------------------------------------------------------------
     # PART 2: TESTING OUT-OF-FIELD METHODS (COPULA, VAE)
@@ -104,8 +108,8 @@ def main():
 
     # 1. Clayton Copula Joint Likelihood Estimator
     print("\n[Copula] Estimating Joint Efficacy and Safety dependencies...")
-    u = np.array([0.837, 0.963, 0.902]) # actual survival efficacy (u) for SGLT2i, TAVI, PCSK9i
-    v = np.array([0.999, 0.980, 0.960]) # actual safety non-event rates (v)
+    u = np.array([0.837, 0.963, 0.902]) # illustrative efficacy values
+    v = np.array([0.999, 0.980, 0.960]) # illustrative safety non-event rates
     copula = ClaytonCopulaJointEstimator()
     theta = copula.fit(u, v)
     print(f" -> Clayton Copula parameter theta: {theta:.4f} (fitted correlation)")
@@ -202,6 +206,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 

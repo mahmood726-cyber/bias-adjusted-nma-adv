@@ -1,0 +1,9 @@
+study_id,trial,nct_id,pmid,outcome_id,outcome_label,arm_role,treatment,events,n
+DAPA-HF,Dapagliflozin in HFrEF,NCT03036124,31535829,hf_primary,worsening heart failure or cardiovascular death,active,SGLT2i,386,2373
+DAPA-HF,Dapagliflozin in HFrEF,NCT03036124,31535829,hf_primary,worsening heart failure or cardiovascular death,control,Placebo,502,2371
+EMPEROR-Reduced,Empagliflozin in HFrEF,NCT03057977,32865377,hf_primary,cardiovascular death or hospitalization for heart failure,active,SGLT2i,361,1863
+EMPEROR-Reduced,Empagliflozin in HFrEF,NCT03057977,32865377,hf_primary,cardiovascular death or hospitalization for heart failure,control,Placebo,462,1867
+DELIVER,Dapagliflozin in HFmrEF/HFpEF,NCT03619213,36027570,hf_primary,worsening heart failure or cardiovascular death,active,SGLT2i,512,3131
+DELIVER,Dapagliflozin in HFmrEF/HFpEF,NCT03619213,36027570,hf_primary,worsening heart failure or cardiovascular death,control,Placebo,610,3132
+EMPEROR-Preserved,Empagliflozin in HFpEF,NCT03057951,34449189,hf_primary,cardiovascular death or hospitalization for heart failure,active,SGLT2i,415,2997
+EMPEROR-Preserved,Empagliflozin in HFpEF,NCT03057951,34449189,hf_primary,cardiovascular death or hospitalization for heart failure,control,Placebo,511,2991

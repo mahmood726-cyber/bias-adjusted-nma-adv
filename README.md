@@ -19,9 +19,12 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/`: Core python package containing:
   - `data.py`: Structured data classes and validation schemas.
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
-  - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
+- `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
 - `tests/`: Unit and integration test suite.
 - `reproduce.py`: Benchmark script running 200 simulation iterations.
+- `reproduce_real_meta.py`: Runs the source-backed SGLT2 heart-failure real-meta benchmark.
+- `validation/reference_targets.toml`: Machine-readable reference targets required before tier-one parity or production certification claims.
+- `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to ClinicalTrials.gov, PubMed abstracts, and open-access papers.
 - `e156-submission/`: Micro-publication artifacts.
 
 ## Benchmark Results

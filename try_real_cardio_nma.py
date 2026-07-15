@@ -1,4 +1,8 @@
-"""Demonstration of Exact Binomial GLMM NMA and Guyot IPD Reconstruction on real-world SGLT2i Heart Failure trials."""
+"""Demonstration of binary NMA and survival reconstruction utilities.
+
+This script mixes source-labeled event counts with illustrative curve
+coordinates. It is not validation evidence.
+"""
 
 from __future__ import annotations
 
@@ -60,7 +64,7 @@ def main():
     print("\n--- PART 2: Survival IPD Reconstruction (Guyot Curve Reconstructor) ---")
     reconstructor = SurvivalIPDReconstructor()
 
-    # Simulated coordinates representing DAPA-HF Placebo Arm KM Curve
+    # Illustrative coordinates representing a DAPA-HF-like placebo arm KM curve
     # Starts at 1.0, drops to 0.85 at 12 months, 0.75 at 24 months
     dapa_t = [0.0, 3.0, 6.0, 12.0, 18.0, 24.0]
     dapa_s = [1.0, 0.95, 0.91, 0.85, 0.79, 0.75]
@@ -76,8 +80,8 @@ def main():
         total_n=2371
     )
 
-    # Simulated coordinates representing DAPA-HF Dapagliflozin Arm KM Curve
-    # Starts at 1.0, drops to 0.88 at 12 months, 0.81 at 24 months (HR ~ 0.74)
+    # Illustrative coordinates representing a DAPA-HF-like active arm KM curve
+    # Starts at 1.0, drops to 0.88 at 12 months, 0.81 at 24 months.
     dapa_t_active = [0.0, 3.0, 6.0, 12.0, 18.0, 24.0]
     dapa_s_active = [1.0, 0.96, 0.93, 0.88, 0.84, 0.81]
     dapa_nar_v_active = [2373, 2088, 1922]
