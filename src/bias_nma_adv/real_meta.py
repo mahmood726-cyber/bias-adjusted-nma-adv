@@ -228,6 +228,9 @@ def validate_real_meta_source_manifest(
             raise ValidationError(
                 f"{study_id}: event_count_source_type '{event_count_source_type}' is not one of the declared sources."
             )
+        if event_count_source_type == "pubmed_abstract":
+            _validate_source_terms(study_id, study.get("active_source_terms"), "active_source_terms")
+            _validate_source_terms(study_id, study.get("control_source_terms"), "control_source_terms")
         _validate_manifest_arms(study_id, study_rows, study.get("arms"))
 
     return {
@@ -285,6 +288,13 @@ def _validate_manifest_arms(
                 raise ValidationError(
                     f"{study_id}: source manifest arm {row.arm_role} {field_name} does not match CSV rows."
                 )
+
+
+def _validate_source_terms(study_id: str, terms: Any, field_name: str) -> None:
+    if not isinstance(terms, list) or not terms:
+        raise ValidationError(f"{study_id}: source manifest requires non-empty {field_name}.")
+    if any(not isinstance(term, str) or not term.strip() for term in terms):
+        raise ValidationError(f"{study_id}: {field_name} entries must be non-empty strings.")
 
 
 def build_dataset_from_arm_events(rows: list[ArmEventRow]) -> EvidenceDataset:

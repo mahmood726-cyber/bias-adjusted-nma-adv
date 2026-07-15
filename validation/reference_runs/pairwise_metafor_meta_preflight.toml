@@ -21,8 +21,8 @@ skip_reason = "Rscript is not available on PATH in this environment; no metafor/
 
 [input_sha256]
 "validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
-"validation/real_meta/sglt2_hf_primary_sources.toml" = "f94dbbf54637a1d7afb26acd39f888cf7ae145273b9c353f2da38f3d5c728bf3"
-"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "1b70bdf21afa752ad2805bd7e34330ea7fed8bfa506b23da41204cc74ecfb456"
+"validation/real_meta/sglt2_hf_primary_sources.toml" = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d"
+"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "b354d0722b2e868d1094f21a481626b3ea4f0bbaaeff677cf4cacad4404b661f"
 "external/r/pairwise_metafor_meta.R" = "2b35b074cd30acc80dede4337fcf37b16cf98e0dc80520e3b082763e96fea156"
 
 [output_sha256]

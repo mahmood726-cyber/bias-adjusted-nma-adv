@@ -52,7 +52,7 @@ The executable reference-target registry is `validation/reference_targets.toml`.
 
 External reference adapters must also emit machine-readable run reports under `validation/reference_runs/`. A skipped or unavailable adapter is recorded as `certification_effect = "none"` and cannot count as reference-matching evidence. A report becomes a certification candidate only when it has `status = "passed"`, package versions, input and output artifact hashes, and a prespecified tolerance.
 
-Real-data benchmarks must also be paired with source-identity snapshots under `validation/source_checks/`. These snapshots verify that public ClinicalTrials.gov and PubMed records are reachable and match the manifest identifiers; they do not by themselves prove that every numeric outcome was re-extracted from source text.
+Real-data benchmarks must also be paired with source snapshots under `validation/source_checks/`. Source-identity snapshots verify that public ClinicalTrials.gov and PubMed records are reachable and match the manifest identifiers. Event-count snapshots, when present, separately verify exact numeric count tokens and nearby treatment terms in PubMed abstracts; they are still not a substitute for full open-access paper/table extraction or external reference-software parity.
 
 Current adapter preflight: `validation/reference_runs/pairwise_metafor_meta_preflight.toml` records that the planned `metafor`/`meta` pairwise adapter could not run because `Rscript` was not available on PATH in this environment. That is an honest skip, not a parity claim.
 
@@ -122,7 +122,8 @@ Winners should be reported separately for statistical accuracy, uncertainty cali
 | Platform capability status | Static repository review | Current repository files and tests checked on 2026-07-15 | Current implementation is not certified as tier-one parity |
 | Benchmark thresholds | Static specification | This document and `docs/technical_specification.md` | Must be implemented as machine-readable validation criteria before certification |
 | Reference-run preflight | Dynamic local environment check | `validation/reference_runs/*.toml` | Unavailable or failed adapters are recorded but cannot certify a module |
-| Source-identity snapshots | Dynamic public API check | `validation/source_checks/*.json` | Verifies public-record identity and reachability, not numeric extraction |
+| Source-identity snapshots | Dynamic public API check | `validation/source_checks/*source_check.json` | Verifies public-record identity and reachability, not numeric extraction |
+| Event-count snapshots | Dynamic public API check | `validation/source_checks/*event_counts.json` | Verifies exact abstract count tokens and nearby treatment terms, not full paper extraction |
 | Statistical results | Dynamic | Future benchmark artefacts | No superiority claim is made here without generated benchmark outputs |
 
 ## References

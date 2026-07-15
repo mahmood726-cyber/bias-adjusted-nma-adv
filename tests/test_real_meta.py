@@ -194,6 +194,22 @@ def test_source_manifest_fails_closed_on_source_identifier_mismatch(tmp_path):
         validate_real_meta_source_manifest(rows, bad_pubmed, dataset_path=SGLT2_EVENTS)
 
 
+def test_source_manifest_fails_closed_on_missing_pubmed_event_count_terms(tmp_path):
+    rows = load_arm_event_rows(SGLT2_EVENTS)
+    manifest = tmp_path / "bad_source_terms.toml"
+    manifest.write_text(
+        SGLT2_SOURCES.read_text(encoding="utf-8").replace(
+            'active_source_terms = ["dapagliflozin"]',
+            'active_source_terms = []',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValidationError, match="active_source_terms"):
+        validate_real_meta_source_manifest(rows, manifest, dataset_path=SGLT2_EVENTS)
+
+
 def test_real_meta_benchmark_runs_frequentist_and_bayesian_models():
     result = run_real_meta_benchmark(
         SGLT2_EVENTS,

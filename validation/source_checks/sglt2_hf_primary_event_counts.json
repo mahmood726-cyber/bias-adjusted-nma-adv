@@ -1,0 +1,112 @@
+{
+  "benchmark_id": "sglt2_hf_primary_log_or",
+  "checked_at": "2026-07-15T00:00:00Z",
+  "dataset": "validation/real_meta/sglt2_hf_primary_events.csv",
+  "dataset_sha256": "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8",
+  "records": [
+    {
+      "abstract_sha256": "1027c177002f313f913a64e63223935585ad152f2df949ceb8d3c43aae8f18a5",
+      "active_count_token": "386 of 2373",
+      "active_count_token_found": true,
+      "active_events": 386,
+      "active_n": 2373,
+      "active_source_terms": [
+        "dapagliflozin"
+      ],
+      "active_term_near_count": true,
+      "control_count_token": "502 of 2371",
+      "control_count_token_found": true,
+      "control_events": 502,
+      "control_n": 2371,
+      "control_source_terms": [
+        "placebo"
+      ],
+      "control_term_near_count": true,
+      "evidence_scope": "pubmed_abstract_event_count_tokens",
+      "outcome_id": "hf_primary",
+      "outcome_label": "worsening heart failure or cardiovascular death",
+      "pmid": "31535829",
+      "study_id": "DAPA-HF",
+      "verified": true
+    },
+    {
+      "abstract_sha256": "134f318b30cd034505acee6a5336c3690d940d126ffc62e4f6e1b30cf57891c1",
+      "active_count_token": "361 of 1863",
+      "active_count_token_found": true,
+      "active_events": 361,
+      "active_n": 1863,
+      "active_source_terms": [
+        "empagliflozin"
+      ],
+      "active_term_near_count": true,
+      "control_count_token": "462 of 1867",
+      "control_count_token_found": true,
+      "control_events": 462,
+      "control_n": 1867,
+      "control_source_terms": [
+        "placebo"
+      ],
+      "control_term_near_count": true,
+      "evidence_scope": "pubmed_abstract_event_count_tokens",
+      "outcome_id": "hf_primary",
+      "outcome_label": "cardiovascular death or hospitalization for heart failure",
+      "pmid": "32865377",
+      "study_id": "EMPEROR-Reduced",
+      "verified": true
+    },
+    {
+      "abstract_sha256": "fdfd871338e9c06f1c7689c6bed1054ea6663b654bb1930da767b6b1cd40559f",
+      "active_count_token": "512 of 3131",
+      "active_count_token_found": true,
+      "active_events": 512,
+      "active_n": 3131,
+      "active_source_terms": [
+        "dapagliflozin"
+      ],
+      "active_term_near_count": true,
+      "control_count_token": "610 of 3132",
+      "control_count_token_found": true,
+      "control_events": 610,
+      "control_n": 3132,
+      "control_source_terms": [
+        "placebo"
+      ],
+      "control_term_near_count": true,
+      "evidence_scope": "pubmed_abstract_event_count_tokens",
+      "outcome_id": "hf_primary",
+      "outcome_label": "worsening heart failure or cardiovascular death",
+      "pmid": "36027570",
+      "study_id": "DELIVER",
+      "verified": true
+    },
+    {
+      "abstract_sha256": "b14a13cbbb2d5fc79960ab083ac87dbdd1906caae2f58cebff7fcac1c9084e2e",
+      "active_count_token": "415 of 2997",
+      "active_count_token_found": true,
+      "active_events": 415,
+      "active_n": 2997,
+      "active_source_terms": [
+        "empagliflozin"
+      ],
+      "active_term_near_count": true,
+      "control_count_token": "511 of 2991",
+      "control_count_token_found": true,
+      "control_events": 511,
+      "control_n": 2991,
+      "control_source_terms": [
+        "placebo"
+      ],
+      "control_term_near_count": true,
+      "evidence_scope": "pubmed_abstract_event_count_tokens",
+      "outcome_id": "hf_primary",
+      "outcome_label": "cardiovascular death or hospitalization for heart failure",
+      "pmid": "34449189",
+      "study_id": "EMPEROR-Preserved",
+      "verified": true
+    }
+  ],
+  "schema_version": "event_count_verification/v1",
+  "source_manifest": "validation/real_meta/sglt2_hf_primary_sources.toml",
+  "source_manifest_sha256": "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d",
+  "status": "verified"
+}

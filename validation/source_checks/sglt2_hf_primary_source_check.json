@@ -149,6 +149,6 @@
   ],
   "schema_version": "source_verification/v1",
   "source_manifest": "validation/real_meta/sglt2_hf_primary_sources.toml",
-  "source_manifest_sha256": "f94dbbf54637a1d7afb26acd39f888cf7ae145273b9c353f2da38f3d5c728bf3",
+  "source_manifest_sha256": "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d",
   "status": "verified"
 }
