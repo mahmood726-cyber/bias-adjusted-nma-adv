@@ -7,7 +7,11 @@ from bias_nma_adv.data import ValidationError
 from bias_nma_adv.km_reconstruction import (
     KMPaperSource,
     KMReconstructionPolicy,
+    compare_km_curves,
+    evaluate_km_step,
+    km_from_ipd,
     load_km_reconstruction_policy,
+    restricted_mean_survival_time,
     screen_km_reconstruction_result,
 )
 
@@ -122,3 +126,58 @@ def test_km_reconstruction_policy_rejects_scope_creep():
     source["open_access_status"] = "declared_only"
     with pytest.raises(ValidationError, match="open-access status must be verified"):
         KMPaperSource.from_mapping(source)
+
+
+def test_km_step_metrics_match_hand_calculation():
+    event_times, survivals = km_from_ipd([1, 2, 3, 4], [1, 1, 0, 1])
+
+    assert list(event_times) == [0.0, 1.0, 2.0, 3.0, 4.0]
+    assert survivals[1] == pytest.approx(0.75)
+    assert survivals[2] == pytest.approx(0.5)
+    assert survivals[3] == pytest.approx(0.5)
+    assert survivals[4] == pytest.approx(0.0)
+
+    evaluated = evaluate_km_step(event_times, survivals, [0.0, 0.9, 1.0, 1.9, 2.0])
+    assert list(evaluated) == pytest.approx([1.0, 1.0, 0.75, 0.75, 0.5])
+
+
+def test_restricted_mean_survival_time_uses_right_continuous_step_curve():
+    event_times, survivals = km_from_ipd([2, 4], [1, 1])
+
+    assert restricted_mean_survival_time(event_times, survivals, tau=4.0) == pytest.approx(
+        3.0,
+        abs=0.01,
+    )
+
+
+def test_compare_km_curves_reports_non_certifying_fidelity_metrics():
+    reference_times = [0.0, 5.0, 10.0]
+    reference_survivals = [1.0, 1.0, 0.0]
+    reconstructed_times = [0.0, 5.0, 10.0]
+    reconstructed_survivals = [1.0, 0.5, 0.0]
+
+    metrics = compare_km_curves(
+        reference_times,
+        reference_survivals,
+        reconstructed_times,
+        reconstructed_survivals,
+        tau=10.0,
+    )
+
+    assert metrics["schema_version"] == "km_curve_fidelity/v1"
+    assert metrics["certification_effect"] == "none"
+    assert metrics["tau"] == 10.0
+    assert metrics["ks"] == pytest.approx(0.5)
+    assert metrics["iae"] > 0.2
+    assert metrics["rmst_abs_error"] == pytest.approx(2.5, abs=0.05)
+
+
+def test_km_curve_metrics_reject_invalid_or_extrapolated_curves():
+    with pytest.raises(ValidationError, match="nonincreasing"):
+        compare_km_curves([0.0, 1.0, 2.0], [1.0, 0.8, 0.9], [0.0, 1.0, 2.0], [1.0, 0.7, 0.6])
+
+    with pytest.raises(ValidationError, match="within both observed curves"):
+        compare_km_curves([0.0, 1.0], [1.0, 0.8], [0.0, 1.0], [1.0, 0.7], tau=2.0)
+
+    with pytest.raises(ValidationError, match="coded as 0/1"):
+        km_from_ipd([1.0, 2.0], [1.0, 0.5])

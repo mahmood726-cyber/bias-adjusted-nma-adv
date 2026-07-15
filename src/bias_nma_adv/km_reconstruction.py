@@ -12,12 +12,15 @@ import tomllib
 from typing import Any
 from urllib.parse import urlparse
 
+import numpy as np
+
 from bias_nma_adv.data import ValidationError
 from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
 
 
 KM_RECONSTRUCTION_POLICY_SCHEMA_VERSION = "km_reconstruction_policy/v1"
 KM_RECONSTRUCTION_SCREEN_SCHEMA_VERSION = "km_reconstruction_screen/v1"
+KM_CURVE_FIDELITY_SCHEMA_VERSION = "km_curve_fidelity/v1"
 
 _NCT_RE = re.compile(r"^NCT\d{8}$")
 _PMID_RE = re.compile(r"^\d{1,9}$")
@@ -283,6 +286,126 @@ def screen_km_reconstruction_result(
     }
 
 
+def km_from_ipd(times: Any, events: Any) -> tuple[np.ndarray, np.ndarray]:
+    """Compute a right-continuous Kaplan-Meier step curve from IPD-like arrays."""
+
+    times_array = np.asarray(times, dtype=float)
+    event_values = np.asarray(events, dtype=float)
+    if times_array.shape != event_values.shape:
+        raise ValidationError("KM IPD times and events must have the same shape.")
+    if times_array.ndim != 1:
+        raise ValidationError("KM IPD times and events must be one-dimensional.")
+    if times_array.size == 0:
+        return np.asarray([0.0]), np.asarray([1.0])
+    if np.any(~np.isfinite(times_array)) or np.any(times_array < 0.0):
+        raise ValidationError("KM IPD times must be finite and non-negative.")
+    if np.any(~np.isfinite(event_values)) or not set(np.unique(event_values)).issubset({0.0, 1.0}):
+        raise ValidationError("KM IPD events must be coded as 0/1.")
+    events_array = event_values.astype(int)
+
+    order = np.argsort(times_array, kind="mergesort")
+    times_array = times_array[order]
+    events_array = events_array[order]
+    n_risk = times_array.size
+    survival = 1.0
+    event_times = [0.0]
+    survivals = [1.0]
+    for time in np.unique(times_array):
+        at_time = times_array == time
+        n_events = int(events_array[at_time].sum())
+        n_censored = int(at_time.sum() - n_events)
+        if n_risk > 0 and n_events > 0:
+            survival *= 1.0 - n_events / n_risk
+        event_times.append(float(time))
+        survivals.append(float(survival))
+        n_risk -= n_events + n_censored
+    return np.asarray(event_times), np.asarray(survivals)
+
+
+def evaluate_km_step(event_times: Any, survivals: Any, grid: Any) -> np.ndarray:
+    """Evaluate a right-continuous KM step curve on a grid."""
+
+    times_array, survival_array = _validated_km_curve_arrays(
+        study_id="km_step",
+        label="curve",
+        raw_times=event_times,
+        raw_survivals=survivals,
+        min_curve_points=1,
+    )
+    grid_array = np.asarray(grid, dtype=float)
+    if np.any(~np.isfinite(grid_array)) or np.any(grid_array < 0.0):
+        raise ValidationError("KM evaluation grid must be finite and non-negative.")
+    index = np.searchsorted(times_array, grid_array, side="right") - 1
+    index = np.clip(index, 0, len(survival_array) - 1)
+    return survival_array[index]
+
+
+def restricted_mean_survival_time(event_times: Any, survivals: Any, tau: float) -> float:
+    """Compute RMST by integrating a KM step curve over [0, tau]."""
+
+    tau = float(tau)
+    if not math.isfinite(tau) or tau <= 0.0:
+        raise ValidationError("RMST tau must be positive and finite.")
+    grid = np.linspace(0.0, tau, 2001)
+    survival = evaluate_km_step(event_times, survivals, grid)
+    return float(np.trapezoid(survival, grid))
+
+
+def compare_km_curves(
+    reference_times: Any,
+    reference_survivals: Any,
+    reconstructed_times: Any,
+    reconstructed_survivals: Any,
+    *,
+    tau: float | None = None,
+    grid_points: int = 100,
+) -> dict[str, Any]:
+    """Compare two externally oriented KM curves without choosing the orientation."""
+
+    ref_times, ref_survivals = _validated_km_curve_arrays(
+        study_id="reference",
+        label="curve",
+        raw_times=reference_times,
+        raw_survivals=reference_survivals,
+        min_curve_points=2,
+    )
+    recon_times, recon_survivals = _validated_km_curve_arrays(
+        study_id="reconstructed",
+        label="curve",
+        raw_times=reconstructed_times,
+        raw_survivals=reconstructed_survivals,
+        min_curve_points=2,
+    )
+    if grid_points < 2:
+        raise ValidationError("KM curve comparison requires at least two grid points.")
+    if tau is None:
+        tau = float(min(ref_times[-1], recon_times[-1]))
+    tau = float(tau)
+    if not math.isfinite(tau) or tau <= 0.0:
+        raise ValidationError("KM curve comparison tau must be positive and finite.")
+    if tau > ref_times[-1] or tau > recon_times[-1]:
+        raise ValidationError("KM curve comparison tau must stay within both observed curves.")
+
+    grid = np.linspace(0.0, tau, grid_points)
+    ref_curve = evaluate_km_step(ref_times, ref_survivals, grid)
+    recon_curve = evaluate_km_step(recon_times, recon_survivals, grid)
+    delta = np.abs(recon_curve - ref_curve)
+    ref_rmst = restricted_mean_survival_time(ref_times, ref_survivals, tau)
+    recon_rmst = restricted_mean_survival_time(recon_times, recon_survivals, tau)
+    return {
+        "schema_version": KM_CURVE_FIDELITY_SCHEMA_VERSION,
+        "certification_effect": "none",
+        "tau": tau,
+        "grid_points": grid_points,
+        "ae_median": float(np.median(delta)),
+        "iae": float(np.trapezoid(delta, grid) / tau),
+        "rmse": float(np.sqrt(np.mean(delta**2))),
+        "ks": float(np.max(delta)),
+        "rmst_abs_error": float(abs(recon_rmst - ref_rmst)),
+        "rmst_relative_error": float(abs(recon_rmst - ref_rmst) / max(ref_rmst, 1e-12)),
+    }
+
+
 def _validate_curve(
     study_id: str,
     label: str,
@@ -298,6 +421,7 @@ def _validate_curve(
         raise ValidationError(f"{study_id}: {label} has fewer than {min_curve_points} points.")
 
     previous_time: float | None = None
+    previous_survival: float | None = None
     for time_raw, survival_raw in zip(raw_times, raw_survivals):
         time = float(time_raw)
         survival = float(survival_raw)
@@ -307,8 +431,28 @@ def _validate_curve(
             raise ValidationError(f"{study_id}: {label} times must be nondecreasing.")
         if not math.isfinite(survival) or not 0.0 <= survival <= 1.0:
             raise ValidationError(f"{study_id}: {label} contains an invalid survival probability.")
+        if previous_survival is not None and survival > previous_survival + 1e-12:
+            raise ValidationError(f"{study_id}: {label} survival probabilities must be nonincreasing.")
         previous_time = time
+        previous_survival = survival
     return len(raw_times)
+
+
+def _validated_km_curve_arrays(
+    *,
+    study_id: str,
+    label: str,
+    raw_times: Any,
+    raw_survivals: Any,
+    min_curve_points: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    try:
+        times_list = list(raw_times)
+        survivals_list = list(raw_survivals)
+    except TypeError as exc:
+        raise ValidationError(f"{study_id}: {label} times and survivals must be iterable.") from exc
+    _validate_curve(study_id, label, times_list, survivals_list, min_curve_points)
+    return np.asarray(times_list, dtype=float), np.asarray(survivals_list, dtype=float)
 
 
 def _looks_like_sha256(value: str) -> bool:
