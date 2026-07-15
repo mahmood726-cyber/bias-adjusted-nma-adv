@@ -148,5 +148,49 @@ def test_bayesian_model_averaging():
     assert avg_eff < 0.0
     assert avg_var > 0.0
 
+def test_multinomial_glmm():
+    from bias_nma_adv.multinomial import MultinomialGLMMSolver
+    solver = MultinomialGLMMSolver()
+    
+    x = np.array([[1.0, 0.5], [1.0, -0.5], [1.0, 1.2], [1.0, -1.2]])
+    # 3 classes: one-hot encoded
+    y = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 0, 0]])
+    
+    solver.fit(x, y)
+    probs = solver.predict_proba(x)
+    assert probs.shape == (4, 3)
+    assert np.allclose(np.sum(probs, axis=1), 1.0)
+
+def test_collaborative_tmle():
+    from bias_nma_adv.ctmle import CollaborativeTMLE
+    ctmle = CollaborativeTMLE()
+    
+    rng = np.random.default_rng(42)
+    n = 150
+    w = rng.normal(0.0, 1.0, size=(n, 2))
+    ps = 1.0 / (1.0 + np.exp(-w[:, 1]))
+    a = rng.binomial(1, ps)
+    y_prob = 1.0 / (1.0 + np.exp(-(0.5 * a + w[:, 0])))
+    y = rng.binomial(1, y_prob)
+    
+    rd = ctmle.estimate_risk_difference(w, a, y)
+    assert -1.0 <= rd <= 1.0
+
+def test_no_u_turn_sampler():
+    from bias_nma_adv.nuts import NoUTurnSampler
+    sampler = NoUTurnSampler(step_size=0.1, seed=42)
+    
+    def log_post(theta):
+        return -0.5 * theta[0]**2
+        
+    def grad_log_post(theta):
+        return -theta
+        
+    initial_pos = np.array([1.0])
+    samples = sampler.sample(initial_pos, log_post, grad_log_post, n_samples=15)
+    assert samples.shape == (15, 1)
+    assert np.mean(np.abs(samples)) < 2.0
+
+
 
 

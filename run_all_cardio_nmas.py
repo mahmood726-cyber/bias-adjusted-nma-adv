@@ -168,10 +168,49 @@ def main():
     effects = np.array([-0.25, -0.32]) # [Consistent Model, Inconsistent Model]
     variances = np.array([0.015, 0.020])
     bics = np.array([85.4, 88.9]) # Consistent model (BIC=85.4) is preferred
-    
     bma_eff, bma_var = bma_solver.average_effects(effects, variances, bics)
     print(f" -> BMA Pooled Effect: {bma_eff:.4f} (Pooled Variance: {bma_var:.4f})")
 
+
+    # 6. Multinomial Logistic GLMM for Competing Endpoints
+    print("\n[Multinomial GLMM] Modeling competing outcomes (CV Death vs. Non-CV Death vs. HF Hosp)...")
+    from bias_nma_adv.multinomial import MultinomialGLMMSolver
+    mult_solver = MultinomialGLMMSolver()
+    hf_covs = np.random.default_rng(42).normal(loc=[66.0, 31.0], scale=[8.0, 4.0], size=(10, 2))
+    # 3 classes: [CV Death, Non-CV Death, HF Hosp] one-hot encoded
+    y_mult = np.array([
+        [1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 0, 1], [1, 0, 0],
+        [0, 1, 0], [0, 0, 1], [0, 0, 1], [1, 0, 0], [0, 1, 0]
+    ])
+    mult_solver.fit(hf_covs, y_mult)
+    mult_probs = mult_solver.predict_proba(hf_covs[:3])
+    print(" -> Multinomial probabilities for first 3 patients:")
+    print(mult_probs)
+
+    # 7. Collaborative TMLE Causal Inference
+    print("\n[C-TMLE] Estimating collaborative risk differences...")
+    from bias_nma_adv.ctmle import CollaborativeTMLE
+    ctmle_solver = CollaborativeTMLE()
+    w_covs = np.random.default_rng(42).normal(loc=[0.0, 0.0], scale=[1.0, 1.0], size=(50, 2))
+    a_tr = np.random.default_rng(42).binomial(1, 0.5, size=50)
+    y_out = np.random.default_rng(42).binomial(1, 0.4, size=50)
+    c_rd = ctmle_solver.estimate_risk_difference(w_covs, a_tr, y_out)
+    print(f" -> Collaborative TMLE Risk Difference: {c_rd:.4f}")
+
+    # 8. No-U-Turn Sampler (NUTS)
+    print("\n[NUTS] Running No-U-Turn Sampler for Bayesian posterior estimation...")
+    from bias_nma_adv.nuts import NoUTurnSampler
+    nuts_sampler = NoUTurnSampler(step_size=0.1, seed=42)
+    def log_post_fn(theta):
+        return -0.5 * theta[0]**2
+    def grad_log_post_fn(theta):
+        return -theta
+    
+    nuts_samples = nuts_sampler.sample(np.array([1.0]), log_post_fn, grad_log_post_fn, n_samples=5)
+    print(" -> NUTS parameter samples:")
+    print(nuts_samples)
+
 if __name__ == "__main__":
     main()
+
 
