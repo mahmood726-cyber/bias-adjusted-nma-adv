@@ -37,3 +37,25 @@ def test_guyot_ipd_reconstruction():
     
     # Reconstructed times should all fall within the KM range [0.0, 10.0]
     assert np.all((t_arr >= 0.0) & (t_arr <= 10.0))
+
+def test_wasserstein_and_km_audit():
+    reconstructor = SurvivalIPDReconstructor()
+    
+    times = [0.0, 5.0, 10.0]
+    survivals = [1.0, 0.8, 0.6]
+    
+    reconstructor.add_arm_curve(
+        arm_id=1,
+        times=times,
+        survivals=survivals,
+        total_n=100
+    )
+    
+    # Audit should yield low Wasserstein distance (high reconstruction accuracy)
+    dist, is_valid, warning = reconstructor.audit_reconstruction(1, times, survivals)
+    
+    assert dist >= 0.0
+    assert dist < 0.10 # Reconstructed curve should be close to original (discretized over 3 points)
+    assert isinstance(is_valid, bool)
+    assert isinstance(warning, str)
+

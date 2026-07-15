@@ -195,3 +195,113 @@ class SurvivalIPDReconstructor:
             np.array(all_events, dtype=int),
             np.array(all_arms, dtype=int)
         )
+
+    def audit_reconstruction(
+        self,
+        arm_id: int,
+        digitized_times: List[float] | np.ndarray,
+        digitized_survivals: List[float] | np.ndarray
+    ) -> Tuple[float, bool, str]:
+        """Audit the reconstruction quality of an arm using Integrated Absolute Error (IAE).
+
+        Returns (integrated_absolute_error, is_valid, warning_message).
+        """
+        records = self.arms_data.get(arm_id, [])
+        if not records:
+            return 0.0, False, "No reconstructed IPD available for this arm."
+
+        rec_times = np.array([r.time for r in records], dtype=float)
+        rec_events = np.array([r.event for r in records], dtype=int)
+
+        # Compute KM curve from reconstructed IPD
+        km_times, km_survivals = calculate_km_curve(rec_times, rec_events)
+
+        # Calculate Wasserstein distance
+        dist = calculate_wasserstein_distance(
+            np.asarray(digitized_times, dtype=float),
+            np.asarray(digitized_survivals, dtype=float),
+            km_times,
+            km_survivals
+        )
+
+        # Normalize by follow-up span to get scale-free IAE
+        span = float(km_times[-1] - km_times[0])
+        iae = dist / max(span, 1e-6)
+
+        is_valid = bool(iae <= 0.02)
+        warning = "" if is_valid else f"Warning: High reconstruction error (Integrated Absolute Error = {iae:.4f} > 0.02)."
+
+        return iae, is_valid, warning
+
+
+def calculate_km_curve(times: np.ndarray, events: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """Calculate the Kaplan-Meier survival curve from patient-level IPD."""
+    if len(times) == 0:
+        return np.array([0.0]), np.array([1.0])
+
+    idx = np.argsort(times)
+    sorted_times = times[idx]
+    sorted_events = events[idx]
+
+    unique_times = np.unique(sorted_times)
+    survivals = []
+    current_s = 1.0
+    n = len(sorted_times)
+
+    for ut in unique_times:
+        d = np.sum((sorted_times == ut) & (sorted_events == 1))
+        c = np.sum((sorted_times == ut) & (sorted_events == 0))
+        if n > 0:
+            current_s *= (1.0 - d / n)
+            n -= (d + c)
+        survivals.append(current_s)
+
+    return np.concatenate([[0.0], unique_times]), np.concatenate([[1.0], survivals])
+
+
+def calculate_wasserstein_distance(
+    times1: np.ndarray,
+    survivals1: np.ndarray,
+    times2: np.ndarray,
+    survivals2: np.ndarray,
+    max_time: Optional[float] = None
+) -> float:
+    """Calculate the L1 Wasserstein distance between two survival curves."""
+    if len(times1) == 0 or len(times2) == 0:
+        return 0.0
+
+    # Ensure monotonic non-increasing curves
+    surv1 = np.asarray(survivals1, dtype=float).copy()
+    surv2 = np.asarray(survivals2, dtype=float).copy()
+    for i in range(1, len(surv1)):
+        surv1[i] = min(surv1[i], surv1[i-1])
+    for i in range(1, len(surv2)):
+        surv2[i] = min(surv2[i], surv2[i-1])
+
+    # Construct common grid
+    grid = sorted(list(set(times1) | set(times2)))
+    if max_time is not None:
+        grid = [t for t in grid if t <= max_time]
+
+    # Step function interpolation on common grid
+    def step_interpolate(t_arr, s_arr, g):
+        interpolated = []
+        for t in g:
+            idx = np.where(t_arr <= t)[0]
+            if len(idx) > 0:
+                interpolated.append(s_arr[idx[-1]])
+            else:
+                interpolated.append(1.0)
+        return np.array(interpolated)
+
+    s1_interp = step_interpolate(times1, surv1, grid)
+    s2_interp = step_interpolate(times2, surv2, grid)
+
+    # Riemann sum integral of absolute differences
+    total_dist = 0.0
+    for i in range(1, len(grid)):
+        width = grid[i] - grid[i-1]
+        diff = abs(s1_interp[i-1] - s2_interp[i-1])
+        total_dist += diff * width
+
+    return total_dist
