@@ -14,6 +14,8 @@ All advanced modules are classified as:
 3.  **IPD Extensions:** Multilevel Network Meta-Regression (ML-NMR) and causal individual-participant-data (IPD) adjustment.
 4.  **Simulation and Validation Tools:** Benchmarks, simulation matrices, and privacy-preserving data generators.
 
+The platform is described as "potentially world-leading" until its models achieve reference matching, simulation validation, and independent external reproduction.
+
 ---
 
 ## 2. Estimands, Evidence Designs and Analysis Governance
@@ -72,9 +74,9 @@ Student-$t$ continuous models are specified to target individual observations wh
 
 ## 4. Core Bayesian Network Meta-Analysis Model
 
-**Module:** `src/bias_nma/inference/stan_backend.py`
+**Module:** `src/bias_nma/models/standard_nma/`
 
-### 4.1 Likelihood and Linear Predictor
+### 4.1 Arm-Level Formulation
 For study $i$ and arm $a$, the outcome $y_{ia}$ is modeled via:
 
 $$
@@ -91,7 +93,6 @@ where:
 *   $g$ is the link function (e.g. logit, log, identity);
 *   $\mu_i$ is the study-specific baseline parameter.
 
-### 4.2 Multi-Arm Random Effects
 For the reference arm ($a=1$), $\delta_{i1}=0$. For arm $a > 1$, the relative treatment effect against the reference treatment $t_{i1}$ is modeled under a random-effects framework:
 
 $$
@@ -110,11 +111,24 @@ $$
 
 where $\boldsymbol{\Sigma}_i(\tau)$ has diagonal elements $\tau^2$ and off-diagonal elements $\tau^2/2$, representing the induced correlation between treatment contrasts sharing the reference treatment.
 
+### 4.2 Contrast-Level Formulation
+For studies reporting contrast-level effects directly, the vector of observed effects $\boldsymbol{y}_i$ for study $i$ is modeled via:
+
+$$
+\boldsymbol{y}_i \sim \operatorname{MVN}\left(\boldsymbol{X}_i \boldsymbol{d}, \boldsymbol{S}_i + \boldsymbol{\Sigma}_i(\tau)\right),
+$$
+
+where:
+*   $\boldsymbol{S}_i$ is the known within-study covariance matrix;
+*   $\boldsymbol{d}$ is the vector of basic treatment parameters;
+*   $\boldsymbol{X}_i$ is the study design matrix;
+*   $\boldsymbol{\Sigma}_i(\tau)$ represents between-study heterogeneity.
+
 ### 4.3 Formulations and Constraints
 *   **Arm-Based and Contrast-Based:** Supports both arm-level data inputs (binomial counts, normal means) and contrast-level trial inputs (log odds-ratios, mean differences).
 *   **Common- and Random-Effects:** Random-effects modeling is used by default; common-effects models (constraining $\tau = 0$) are available as comparator specifications.
 *   **Treatment Reference Constraints:** Constrains the reference treatment effect to zero ($d_{\text{reference}} = 0$) to ensure network parameter identifiability.
-*   **Baseline-Risk Modeling:** Models baselines $\mu_i$ either as study-specific independent fixed effects or hierarchically from a common baseline risk distribution.
+*   **Baseline-Risk Modeling:** Models baselines $\mu_i$ either as study-specific independent fixed effects or hierarchically from a common baseline risk distribution. Hierarchical baseline-risk modeling is used mainly for absolute-risk prediction. It must not create unsupported links between disconnected treatments or introduce treatment–baseline associations unless explicitly modeled.
 *   **Consistency and Inconsistency:** Fits both consistency models (retaining the transitivity relation $d_{BC} = d_C - d_B$) and inconsistency models (such as design-by-treatment or unrelated mean effects models) to evaluate network coherence.
 
 ---
@@ -124,7 +138,7 @@ where $\boldsymbol{\Sigma}_i(\tau)$ has diagonal elements $\tau^2$ and off-diago
 **Module:** `src/bias_nma/models/multinomial/`
 
 ### 5.1 Likelihood and Logits
-Models mutually exclusive and collectively exhaustive clinical categories $j = 1, \ldots, J$ measured at a common, follow-up time:
+Models mutually exclusive and collectively exhaustive clinical categories $j = 1, \ldots, J$ measured at a common follow-up time:
 
 $$
 \mathbf{y}_{ia}\sim \operatorname{Multinomial}\left(n_{ia},\mathbf{p}_{ia}\right).
@@ -140,7 +154,18 @@ where:
 *   $\mu_{ij}$ is the study-specific baseline for outcome category $j$;
 *   $\delta_{iaj}$ is the relative effect of the treatment in arm $a$ versus reference arm $1$ for outcome category $j$, with $\delta_{i1j} = 0$.
 
-### 5.2 Covariance Structures
+### 5.2 Network Treatment Effects
+The relative effects $\delta_{iaj}$ are connected to basic category-specific treatment parameters via:
+
+$$
+\delta_{iaj} = d_{t_{ia}, j} - d_{t_{i1}, j} + u_{iaj},
+$$
+
+where:
+*   $d_{t, j}$ is the treatment effect relative to the reference treatment for clinical-state category $j$;
+*   $\boldsymbol{u}_{ia} = (u_{ia1}, \ldots, u_{ia, J-1})^T$ represents cross-category random effects following the selected covariance structure.
+
+### 5.3 Covariance Structures
 Correlations between category-specific treatment effects $\delta_{iaj}$ are evaluated under one of three covariance specifications:
 1.  **Independent:** Category-specific random effects are assumed uncorrelated across endpoints.
 2.  **Unstructured Correlated:** Estimates a full covariance matrix $\boldsymbol{\Sigma}_{\text{multi}}$ representing the correlations between outcomes. This structure is subject to network size and identifiability limits.
@@ -237,14 +262,20 @@ where:
 
 **Module:** `src/bias_nma/models/dose_response/`
 
-### 7.1 Models
+### 9.1 Models
 The dose-response module models continuous dose variables using:
 *   **Nonlinear Functions:** Emax, Hill, exponential, or fractional polynomial functions.
 *   **Spline Functions:** Restricted cubic splines and monotonic splines to capture complex dose curves.
 *   **Hierarchical Curves:** Class-level dose-response curves linking agents with similar mechanisms.
 
-### 7.2 Constraints & Extrapolations
-*   **Dose-Equivalence Assumptions:** Standardizes doses using predefined equivalence coefficients.
+### 9.2 Constraints & Extrapolations
+*   **Dose-Equivalence Assumptions:** Standardizes doses using predefined equivalence coefficients. Equivalence coefficients should not always be treated as fixed. The system permits:
+
+$$
+e_k \sim p(e_k)
+$$
+
+when equivalence ratios are uncertain, propagating that uncertainty into treatment-effect estimates.
 *   **Prediction:** Estimates effects at unobserved doses.
 *   **Extrapolation Warnings:** Flags predictions outside the range of observed trial doses.
 
@@ -269,6 +300,14 @@ where:
 *   **Outcome Integration:** Integrates over unreported outcome components under the joint model and may produce posterior predictive distributions for those outcomes. Predictions are clearly distinguished from observed study results.
 *   **Borrow-of-Strength Diagnostics:** Computes the change in precision (shrinkage) across outcomes to evaluate the impact of multivariate modeling.
 
+### 10.3 Multivariate Covariance Sensitivity
+When within-study correlations are unavailable, the engine enforces:
+1.  a declared correlation imputation method;
+2.  a plausible correlation range;
+3.  a sensitivity analysis over that range;
+4.  positive-definiteness checks on the combined covariance matrix;
+5.  a comparison against separate univariate analyses.
+
 ---
 
 ## 11. Cross-Design Network Meta-Analysis
@@ -276,17 +315,21 @@ where:
 **Module:** `src/bias_nma/models/cross_design/`
 
 ### 11.1 Model Structure
-For combining randomized controlled trials (RCTs) and non-randomized studies (NRS), the relative treatment effects $\theta_{isd}$ are modeled hierarchically:
+For combining randomized controlled trials (RCTs) and non-randomized studies (NRS), the relative treatment effects $\theta_{ic}^{\mathrm{obs}}$ are modeled via:
 
 $$
-\theta_{isd} = \Delta_{is} + \beta_d + b_{isd},
+\theta_{ic}^{\mathrm{obs}} = \Delta_c + b_{d_i, c} + u_{ic},
 $$
 
 where:
-*   $s$ indexes study, and $d$ indexes the study design (RCT or NRS);
-*   $\Delta_{is}$ is the true underlying relative effect;
-*   $\beta_d$ is the design-specific bias parameter, with $\beta_{\text{RCT}}$ constrained to zero as the evidential anchor;
-*   $b_{isd}$ represents design-specific study deviations.
+*   $i$ indexes studies;
+*   $c$ indexes treatment comparisons;
+*   $d_i$ denotes the study design (RCT or NRS);
+*   $\Delta_c$ is the target treatment effect;
+*   $b_{d_i, c}$ is a comparison-specific design-bias term, with $b_{\text{RCT}, c}$ constrained to zero as the evidential anchor;
+*   $u_{ic}$ represents study-specific residual heterogeneity.
+
+Observational bias is comparison-specific rather than a single universal NRS parameter, reflecting differing confounding and data structures.
 
 ### 11.2 Borrowing & Diagnostics
 *   **Hierarchical & Commensurate Borrowing:** Controls the amount of borrowing from NRS evidence using power priors or design-specific variance inflation factors.
@@ -335,14 +378,14 @@ Non-proportional hazards are evaluated using splines, fractional polynomials, or
 
 **Module:** `src/bias_nma/inference/stan_backend.py`
 
-### 12.1 Stan Integration
+### 15.1 Stan Integration
 CmdStanPy serves as the production inference runner. All Bayesian models are compiled to C++ code using CmdStan.
 *   **Parameterizations:** Uses non-centered parameterizations for heterogeneity variables by default to avoid funnel geometries.
 *   **Ranking:** Draw-specific treatment ranks and clinically important benefit indicators are generated while preserving joint posterior draws. Rank probabilities, rankograms and SUCRA are then calculated from the complete posterior sample.
 
 ---
 
-## 13. Probabilistic Bias Analysis
+## 16. Probabilistic Bias Analysis
 
 **Module:** `src/bias_nma/models/bias_adjustment/`
 
@@ -364,7 +407,7 @@ Analyses include:
 
 ---
 
-## 14. Registry and Missing-Evidence Auditing
+## 17. Registry and Missing-Evidence Auditing
 
 **Modules:**
 
@@ -379,7 +422,7 @@ Where appropriate, the engine supports selection models, robust Bayesian meta-an
 
 ---
 
-## 15. Collaborative TMLE IPD Extension
+## 18. Collaborative TMLE IPD Extension
 
 **Module:** `src/bias_nma/models/bias_adjustment/ctmle.py`
 
@@ -387,14 +430,14 @@ Where appropriate, the engine supports selection models, robust Bayesian meta-an
 C-TMLE is an optional individual-participant-data module for observational comparisons or randomized studies requiring adjustment for informative missingness, non-adherence or treatment crossover. It is not applied automatically to aggregate randomized-trial NMA.
 
 ### Diagnostics
-*   **Propensity Weights:** Reports propensity cohort size metrics derived from explicit inverse-probability weights, where such weights are used. Clever-covariate distributions, positivity, truncation and influence-curve behaviour are assessed separately.
+*   **Propensity Weights:** Reports propensity-adjusted equivalent sample size derived from explicit inverse-probability weights, where such weights are used. Clever-covariate distributions, positivity, truncation and influence-curve behaviour are assessed separately.
 *   **Influence Curves:** Computes influence-curve variance and standard error.
 *   **Truncation:** Monitors the proportion of propensity scores truncated.
 *   **Cross-Validation:** Monitors cross-validated nuisance-model loss.
 
 ---
 
-## 16. Model Averaging
+## 19. Model Averaging
 
 **Module:** `src/bias_nma/models/bias_adjustment/bma.py`
 
@@ -410,7 +453,7 @@ they are labelled approximate information-criterion weights.
 
 ---
 
-## 17. Synthetic-Data Simulation
+## 20. Synthetic-Data Simulation
 
 **Package:** `bias_nma_simulation/` (Isolated)
 
@@ -418,24 +461,33 @@ The synthetic-data simulation module is restricted to software testing, simulati
 
 ---
 
-## 18. Governance, Model Certification and Evidence Certainty
+## 21. Governance, Model Certification and Evidence Certainty
 
-### 18.1 Model Acceptance Criteria
+### 21.1 Model Acceptance Criteria
 A model is classified as successfully fitted only when:
 *   **split-$\hat{R}$:** Rank-normalized split-$\hat{R} \leq 1.01$ for all material parameters (exceptions require documented justification).
 *   **MCMC ESS Metrics:** Bulk and tail ESS statistics meet prespecified thresholds (bulk ESS $\geq 400$, tail ESS $\geq 400$ in total). Higher thresholds are enforced for ranking distributions and tail probabilities.
 *   **Monte Carlo Error:** MCSE is sufficiently small relative to posterior uncertainty for the reported numerical precision.
 *   **HMC warnings:** No unresolved divergent transitions or tree-depth saturation events remain.
 *   **Checks:** Posterior predictive checks do not show major systematic misfit.
+*   **Frequentist Convergence Requirements:** 
+    1. design matrix is full-rank or utilizes a documented generalized-inverse solution;
+    2. estimated covariance matrices are positive-semidefinite;
+    3. optimization completes successfully without boundary or singular warnings;
+    4. estimated standard errors are finite and non-zero;
+    5. heterogeneity estimator converges within maximum iterations;
+    6. influence and residual diagnostics are within acceptable boundaries;
+    7. results are consistent under alternative $\tau^2$ estimators;
+    8. warnings are generated when asymptotic approximations are deemed unreliable.
 
-### 18.2 Certainty of Evidence and Contribution Matrices
+### 21.2 Certainty of Evidence and Contribution Matrices
 The platform generates evidence certainty calculations compatible with CINeMA and ROB-MEN.
 *   **Study Contribution Matrix:** The engine first computes the estimator or hat matrix and then derives non-negative study and direct-comparison contribution percentages using an explicitly documented evidence-flow algorithm. Raw signed matrix coefficients are not interpreted directly as percentage contributions.
 *   **Risk of Bias Propagation:** Projects RoB 2 categories (**low risk**, **some concerns**, and **high risk**) across the network using the contribution percentages.
 *   **ROB-MEN Assessments:** Integrates the registry auditor alongside structured assessments of known unpublished studies, selectively unavailable outcomes, small-study effects, comparison-specific reporting patterns, the likely direction of missing evidence, and direct-evidence contribution percentages.
 *   **Equivalence Limits:** Evaluates confidence or credible intervals, as appropriate, against prespecified clinically important equivalence margins.
 
-### 18.3 Model Certification Levels
+### 21.3 Model Certification Levels
 Every model fitted by the platform receives a certification level:
 
 | Level | Meaning |
@@ -451,7 +503,7 @@ Methodological and research outputs from models below **Production Certified** s
 
 ---
 
-## 19. Global Benchmark and Validation Programme
+## 22. Global Benchmark and Validation Programme
 
 For every model certified for production, the platform executes a benchmark programme:
 1.  **Datasets:** Reproduce at least $20$ published reference clinical trials/networks.
@@ -467,9 +519,9 @@ For every model certified for production, the platform executes a benchmark prog
 
 ---
 
-## 20. Reproducibility, Reporting, and Architecture
+## 23. Reproducibility, Reporting, and Architecture
 
-### 20.1 Reproducible Analysis Bundle
+### 23.1 Reproducible Analysis Bundle
 Every execution yields a reproducible bundle containing:
 *   Original `.stan` source files.
 *   Generated C++ source where retained.
@@ -482,7 +534,7 @@ Every execution yields a reproducible bundle containing:
 *   Reviewer overrides and qualitative risk assessments.
 *   Convergence diagnostics and contribution tables.
 
-### 20.2 Directory Structure
+### 23.2 Directory Structure
 The platform codebase is structured as:
 
 ```text
@@ -518,11 +570,11 @@ bias_nma/
 
 ---
 
-## 21. Machine-Generated Build and Validation Status
+## 24. Build and Validation Status Schema
 
 This section is generated automatically by the continuous-integration workflow. It must not be edited manually. A build is described as verified only when the associated machine-readable reports and immutable artefacts are available.
 
-### 21.1 Build Metadata
+### 24.1 Build Metadata
 
 The build report records:
 
@@ -538,7 +590,7 @@ The build report records:
 
 Illustrative or placeholder identifiers must not be presented as actual build results.
 
-### 21.2 Test-Suite Summary
+### 24.2 Test-Suite Summary
 
 The report separates:
 
@@ -562,7 +614,7 @@ For each category, it reports:
 
 Code coverage is reported separately as line and branch coverage. High code coverage is not interpreted as evidence of statistical validity.
 
-### 21.3 Model-Certification Evidence
+### 24.3 Model-Certification Evidence
 
 Each certification entry contains:
 
@@ -582,7 +634,7 @@ Each certification entry contains:
 
 A model cannot receive a certification level based solely on passing unit tests or achieving high code coverage.
 
-### 21.4 Deployment Status
+### 24.4 Deployment Status
 
 The report states clearly which modules are:
 
@@ -599,7 +651,7 @@ If no module is Production Certified, the report must state:
 
 > No modules in this build currently hold Production Certified status. Clinical and HTA reporting is disabled.
 
-### 21.5 Reproducibility Artefacts
+### 24.5 Reproducibility Artefacts
 
 Each build publishes or securely retains:
 
