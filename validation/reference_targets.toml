@@ -151,7 +151,7 @@ evidence_artifacts = []
 [[targets]]
 id = "source_backed_ingestion_rct_extractor"
 domain = "evidence_ingestion"
-module = "planned:evidence_ingestion"
+module = "src/bias_nma_adv/ingestion.py"
 reference_method = "PubMed, ClinicalTrials.gov, and open-access paper provenance checks"
 status = "planned"
 acceptance_criteria = [
