@@ -104,4 +104,49 @@ def test_registry_publication_bias():
     assert shrunk_effect > pooled_effect
     assert np.isclose(shrunk_effect, -0.20)
 
+def test_symbolic_regression():
+    from bias_nma_adv.symbolic import SymbolicHazardRegressor
+    reg = SymbolicHazardRegressor()
+    times = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    # true hazard: h(t) = 0.5 * t + 0.2 * log(t)
+    hazards = 0.5 * times + 0.2 * np.log(times)
+    
+    formula, coefs, mse = reg.fit_best_formula(times, hazards)
+    assert formula != "None"
+    assert len(coefs) == 2
+    assert mse < 1.0
+
+def test_conditional_gan():
+    from bias_nma_adv.gan import ConditionalGAN
+    gan = ConditionalGAN(noise_dim=2, cond_dim=1, out_dim=2)
+    
+    cond = np.array([[1.0], [0.0], [1.0], [0.0]])
+    real_x = np.random.normal(0.0, 1.0, size=(4, 2))
+    
+    # Check shape of generation
+    fake = gan.generate(cond)
+    assert fake.shape == (4, 2)
+    
+    # Train one step and check loss
+    loss = gan.train_step(real_x, cond, lr=0.01)
+    assert isinstance(loss, float)
+
+def test_bayesian_model_averaging():
+    from bias_nma_adv.bma import BayesianModelAverager
+    bma = BayesianModelAverager()
+    
+    effects = np.array([-0.30, -0.25, -0.15])
+    variances = np.array([0.01, 0.012, 0.015])
+    bics = np.array([120.0, 122.0, 128.0]) # Model 1 is strongly preferred
+    
+    probs = bma.calculate_posterior_probabilities(bics)
+    assert len(probs) == 3
+    assert np.isclose(np.sum(probs), 1.0)
+    assert probs[0] > probs[1] > probs[2]
+    
+    avg_eff, avg_var = bma.average_effects(effects, variances, bics)
+    assert avg_eff < 0.0
+    assert avg_var > 0.0
+
+
 

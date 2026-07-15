@@ -128,12 +128,50 @@ def main():
     vae = SurvivalCohortVAE(input_dim=4, latent_dim=2)
     losses = vae.fit(x_data, epochs=10, lr=0.01)
     print(f" -> VAE trained successfully. Initial loss: {losses[0]:.4f} -> Final loss: {losses[-1]:.4f}")
-    
     synthetic_normalized = vae.generate(n_samples=5)
     # Denormalize to restore original scale
     synthetic_cohort = synthetic_normalized * x_std + x_mean
     print(" -> Reconstructed synthetic cohort (first 5 samples):")
     print(synthetic_cohort)
 
+
+    # 3. Symbolic Regression for Non-Proportional Hazards
+    print("\n[Symbolic Regression] Finding closed-form time-varying hazard functions...")
+    from bias_nma_adv.symbolic import SymbolicHazardRegressor
+    sym_reg = SymbolicHazardRegressor()
+    times = np.array([1.0, 6.0, 12.0, 18.0, 24.0, 30.0, 36.0])
+    hazards = 0.05 + 0.02 * np.sqrt(times)
+    formula, coefs, mse = sym_reg.fit_best_formula(times, hazards)
+    print(f" -> Discovered closed-form hazard: {formula} (MSE: {mse:.6f})")
+
+    # 4. Conditional GAN for Physiological Patient Reconstruction
+    print("\n[cGAN] Training Conditional GAN to simulate heart failure cohort...")
+    from bias_nma_adv.gan import ConditionalGAN
+    # 2 features: [Age, LVEF]
+    hf_real = np.random.default_rng(42).normal(loc=[66.0, 31.0], scale=[8.0, 4.0], size=(100, 2))
+    # Condition: 1 if severe HF (LVEF < 30), 0 otherwise
+    severe_cond = np.where(hf_real[:, 1] < 30.0, 1.0, 0.0).reshape(-1, 1)
+    
+    gan = ConditionalGAN(noise_dim=2, cond_dim=1, out_dim=2)
+    gan_loss = gan.train_step(hf_real, severe_cond, lr=0.01)
+    print(f" -> cGAN step completed. Discriminator Loss: {gan_loss:.4f}")
+    
+    # Generate 3 samples for severe HF condition (cond = [[1.0]])
+    gen_severe = gan.generate(np.array([[1.0], [1.0], [1.0]]))
+    print(" -> Generated severe HF patient covariates (first 3 samples):")
+    print(gen_severe)
+
+    # 5. Bayesian Model Averaging for Network Consistency
+    print("\n[BMA] Averaging treatment rankings over consistent and inconsistent models...")
+    from bias_nma_adv.bma import BayesianModelAverager
+    bma_solver = BayesianModelAverager()
+    effects = np.array([-0.25, -0.32]) # [Consistent Model, Inconsistent Model]
+    variances = np.array([0.015, 0.020])
+    bics = np.array([85.4, 88.9]) # Consistent model (BIC=85.4) is preferred
+    
+    bma_eff, bma_var = bma_solver.average_effects(effects, variances, bics)
+    print(f" -> BMA Pooled Effect: {bma_eff:.4f} (Pooled Variance: {bma_var:.4f})")
+
 if __name__ == "__main__":
     main()
+
