@@ -47,6 +47,6 @@ This document provides a critical challenge and evaluation of the **Advanced Des
 - **For automated pipelines & dashboards:** If you need real-time, reproducible, fast evidence synthesis without the overhead of Stan or JAGS, this is the most mathematically rigorous frequentist alternative available.
 
 ### **No, choose alternatives when:**
-- **Individual Patient Data (IPD) is available:** If you have IPD, use **ML-NMR** (Phillippo et al.) to adjust for baseline imbalances at the patient level and prevent the ecological fallacy.
+- **Individual Patient Data (IPD) is available:** If you have IPD, use **ML-NMR** (Phillippo et al.) to adjust for baseline imbalances at the patient level and mitigate the ecological fallacy.
 - **Informative bias priors are well-established:** If historical meta-epidemiological databases provide precise bias priors, a **Bayesian Bias-Adjustment** model will propagate the uncertainty of these priors more naturally than a frequentist ridge penalty.
 - **The treatment network is extremely sparse:** If most treatments are only informed by single trials, meta-regression will fail. Stick to simple design-stratified models without covariate interactions.
