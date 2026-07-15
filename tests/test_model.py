@@ -266,4 +266,33 @@ def test_continuous_outcome():
     assert fit.treatment_ses["B"] > 0.0
 
 
+def test_exact_binomial_rare_events():
+    dataset = EvidenceDataset()
+    
+    # Study 1: A (0 events in 100) vs B (2 events in 100)
+    dataset.add_study("S1", "rct")
+    dataset.add_arm("S1", "arm1", "A", 100)
+    dataset.add_arm("S1", "arm2", "B", 100)
+    dataset.add_outcome_ad("S1", "arm1", "O3", "binary", 0.0)
+    dataset.add_outcome_ad("S1", "arm2", "O3", "binary", 2.0)
+
+    # Study 2: A (1 event in 120) vs B (3 events in 120)
+    dataset.add_study("S2", "rct")
+    dataset.add_arm("S2", "arm1", "A", 120)
+    dataset.add_arm("S2", "arm2", "B", 120)
+    dataset.add_outcome_ad("S2", "arm1", "O3", "binary", 1.0)
+    dataset.add_outcome_ad("S2", "arm2", "O3", "binary", 3.0)
+
+    pooler = AdvancedBiasAdjustedNMAPooler(exact_binomial=True)
+    fit = pooler.fit(dataset, "O3", reference_treatment="A")
+
+    # Verify that exact binomial engine was active
+    assert fit.exact_binomial_active is True
+    # The treatment effect estimate should be positive and non-infinite
+    assert "B" in fit.treatment_effects
+    assert fit.treatment_effects["B"] > 0.0
+    assert fit.treatment_ses["B"] > 0.0
+
+
+
 
