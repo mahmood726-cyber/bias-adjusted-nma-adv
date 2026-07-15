@@ -77,3 +77,31 @@ def test_double_robust_tmle():
     # Risk difference should be bounded in [-1, 1]
     assert -1.0 <= rd <= 1.0
 
+def test_registry_publication_bias():
+    from bias_nma_adv.publication_bias import RegistryPublicationBiasAuditor
+    auditor = RegistryPublicationBiasAuditor()
+    
+    # 1. Register trials
+    auditor.register_trial_protocol("NCT123", "mace", "mace", "completed") # No switching, published
+    auditor.register_trial_protocol("NCT456", "mortality", "mace", "completed") # Outcome switching!
+    auditor.register_trial_protocol("NCT789", "mace", "mace", "completed") # Unpublished trial
+    
+    # 2. Check outcome switching
+    switching_scores = auditor.audit_outcome_switching(["NCT123", "NCT456", "NCT999"])
+    assert switching_scores["NCT123"] == 0.0
+    assert switching_scores["NCT456"] == 1.0
+    assert switching_scores["NCT999"] == 1.0 # High risk (no registry protocol)
+    
+    # 3. Check unpublished ratio
+    utr = auditor.calculate_unpublished_ratio("DrugX", ["NCT123", "NCT456"])
+    # 1 out of 3 trials is unpublished (NCT789)
+    assert np.isclose(utr, 1.0 / 3.0)
+    
+    # 4. Check bias shrinkage
+    pooled_effect = -0.30 # log-HR
+    shrunk_effect = auditor.apply_bias_shrinkage(pooled_effect, utr)
+    # Effect should be shrunk closer to 0 (closer to the null)
+    assert shrunk_effect > pooled_effect
+    assert np.isclose(shrunk_effect, -0.20)
+
+
