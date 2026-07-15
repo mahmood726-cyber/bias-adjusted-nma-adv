@@ -1,0 +1,106 @@
+schema_version = "improvement_review/v1"
+checked_at = "2026-07-15"
+certification_effect = "none"
+overall_status = "passed_current_milestone_with_global_goal_blockers"
+goal_statement = "Build toward a world-class evidence-synthesis platform that can beat tier-one workflows under the source limits of ClinicalTrials.gov, PubMed abstracts, open-access papers, and WHO ICTRP or other registries for protocol metadata only."
+thread_limit_note = "Fresh sub-agent review was attempted for this milestone, but the collaboration thread limit was reached; this ledger records a local multiperson-style role review and must not be represented as independent external reproduction."
+source_boundary = "Effect evidence from ClinicalTrials.gov records, PubMed abstracts, and open-access papers; WHO ICTRP and other registries are protocol-only metadata sources and cannot supply model-ready effects."
+global_goal_complete = false
+
+[[rounds]]
+id = "statistical_tier1_blocker_review"
+reviewer = "statistical methods reviewer"
+status = "passed_current_milestone"
+scope = [
+  "validation/tier1_gap_register.toml",
+  "src/bias_nma_adv/tier1_gap_register.py",
+  "docs/tier1_benchmark.md",
+  "validation/reference_targets.toml",
+]
+findings = [
+  "Feature completeness, numerical stability, and Bayesian ecosystem integration are legitimate blockers to tier-one parity.",
+  "The new register keeps superiority, production certification, clinical reporting, and HTA reporting blocked while these gaps remain active.",
+]
+actions = [
+  "Added a machine-readable tier-one gap register with three blocking gaps and required evidence artifacts.",
+  "Wired the gap register into validation status so blocked claims are visible in CI-style reports.",
+]
+remaining_blockers = [
+  "Implement and reference-match missing diagnostics such as node splitting, contribution heatmaps, outlier diagnostics, and publication-bias sensitivity workflows.",
+  "Run broader sparse-network numerical stability stress tests against tier-one references.",
+  "Add Stan/NUTS or externally matched Bayesian reference artifacts before Bayesian tier-one claims.",
+]
+verdict = "passed_current_milestone_not_global_goal"
+
+[[rounds]]
+id = "source_boundary_review"
+reviewer = "source governance reviewer"
+status = "passed_current_milestone"
+scope = [
+  "src/bias_nma_adv/evidence_sources.py",
+  "src/bias_nma_adv/ingestion.py",
+  "validation/grand_benchmark_plan.toml",
+  "validation/real_benchmark_atlas.json",
+]
+findings = [
+  "The source boundary now distinguishes effect-evidence sources from protocol-only registries.",
+  "WHO ICTRP and other registries are allowed for protocol metadata only and rejected as model-ready extracted-effect sources.",
+]
+actions = [
+  "Centralized effect-source and protocol-only source constants.",
+  "Added tests that reject protocol-only sources in the proof-carrying effect ingestion path.",
+  "Added the real benchmark atlas to summarize current source-backed benchmark coverage and non-claims.",
+]
+remaining_blockers = [
+  "Add open-access full-paper/table extraction artifacts beyond PubMed abstract token checks.",
+  "Add protocol discrepancy audits using WHO ICTRP or other registries without using them as effect sources.",
+]
+verdict = "passed_current_milestone_not_global_goal"
+
+[[rounds]]
+id = "html_delivery_regression_review"
+reviewer = "HTML delivery reviewer"
+status = "passed_current_milestone"
+scope = [
+  "validation/html_delivery_contract.toml",
+  "src/bias_nma_adv/html_delivery_contract.py",
+  "tests/test_html_delivery_contract.py",
+  ".github/workflows/validation.yml",
+]
+findings = [
+  "HTML can safely deliver static dashboards and artifact explorers when the data come from generated JSON/TOML artifacts.",
+  "HTML-only replacement of statistical engines, source verification, reference adapters, hashes, or CI/certification gates would cause validation regression.",
+]
+actions = [
+  "Added the HTML delivery contract with two HTML-allowed read-only surfaces and four backend-required function classes.",
+  "Added tests that fail if statistical estimation or reference adapters are downgraded to HTML-only status.",
+]
+remaining_blockers = [
+  "Build any future HTML dashboard as a read-only consumer of generated artifacts or connect it to a tested backend.",
+  "Add an E2E UI contract before shipping an HTML dashboard.",
+]
+verdict = "passed_current_milestone_not_global_goal"
+
+[[rounds]]
+id = "implementation_polish_review"
+reviewer = "implementation polish reviewer"
+status = "passed_current_milestone"
+scope = [
+  "tests/test_tier1_gap_register.py",
+  "tests/test_html_delivery_contract.py",
+  "tests/test_validation_status.py",
+  "README.md",
+  "docs/tier1_benchmark.md",
+]
+findings = [
+  "The new governance contracts are test-covered and exposed through the unified validation status report.",
+  "The docs now describe staged world-class ambitions without claiming that tier-one methods have already been beaten.",
+]
+actions = [
+  "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
+  "Updated README and tier-one benchmark documentation to keep claims, code, and validation artifacts aligned.",
+]
+remaining_blockers = [
+  "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit the milestone.",
+]
+verdict = "passed_current_milestone_pending_final_green_run_not_global_goal"

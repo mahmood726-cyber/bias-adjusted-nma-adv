@@ -23,7 +23,15 @@ from bias_nma_adv.grand_benchmark_plan import (
     summarize_grand_benchmark_plan,
     validate_grand_benchmark_plan,
 )
+from bias_nma_adv.html_delivery_contract import (
+    load_html_delivery_contract,
+    summarize_html_delivery_contract,
+)
 from bias_nma_adv.evidence_sources import EFFECT_EVIDENCE_SOURCE_TYPES, PROTOCOL_ONLY_SOURCE_TYPES
+from bias_nma_adv.improvement_review import (
+    load_improvement_review,
+    summarize_improvement_review,
+)
 from bias_nma_adv.ingestion import summarize_proof_carrying_ingestion_contract
 from bias_nma_adv.portfolio_reuse import (
     load_portfolio_reuse_registry,
@@ -38,6 +46,10 @@ from bias_nma_adv.review_ledger import summarize_review_ledger
 from bias_nma_adv.simulation_matrix import (
     summarize_simulation_matrix,
     validate_simulation_matrix,
+)
+from bias_nma_adv.tier1_gap_register import (
+    load_tier1_gap_register,
+    summarize_tier1_gap_register,
 )
 
 
@@ -73,9 +85,14 @@ def build_validation_status(
     review_ledger_path = (
         root / "validation" / "reviews" / "multiperson_review_2026_07_15.toml"
     )
+    improvement_review_path = (
+        root / "validation" / "reviews" / "improvement_review_2026_07_15.toml"
+    )
     reference_targets_path = root / "validation" / "reference_targets.toml"
     reference_runs_path = root / "validation" / "reference_runs"
     real_benchmark_atlas_path = root / "validation" / "real_benchmark_atlas.json"
+    tier1_gap_register_path = root / "validation" / "tier1_gap_register.toml"
+    html_delivery_contract_path = root / "validation" / "html_delivery_contract.toml"
 
     registry = validate_source_benchmark_registry(registry_path, repo_root=root)
     assert_registry_covers_source_backed_artifacts(registry, repo_root=root)
@@ -89,6 +106,9 @@ def build_validation_status(
         grand_benchmark_plan_path=grand_benchmark_plan_path,
     )
     portfolio_reuse_registry = load_portfolio_reuse_registry(portfolio_reuse_registry_path)
+    tier1_gap_register = load_tier1_gap_register(tier1_gap_register_path)
+    html_delivery_contract = load_html_delivery_contract(html_delivery_contract_path)
+    improvement_review = load_improvement_review(improvement_review_path)
 
     targets = load_reference_targets(reference_targets_path)
     assert_no_unsupported_production_claims(targets)
@@ -141,6 +161,14 @@ def build_validation_status(
             "registry": _relpath(portfolio_reuse_registry_path, root),
             **summarize_portfolio_reuse_registry(portfolio_reuse_registry),
         },
+        "tier1_gap_register": {
+            "register": _relpath(tier1_gap_register_path, root),
+            **summarize_tier1_gap_register(tier1_gap_register),
+        },
+        "html_delivery_contract": {
+            "contract": _relpath(html_delivery_contract_path, root),
+            **summarize_html_delivery_contract(html_delivery_contract),
+        },
         "ingestion_contract": summarize_proof_carrying_ingestion_contract(),
         "proof_effect_bundle": {
             "bundle": _relpath(proof_effect_bundle_path, root),
@@ -149,6 +177,10 @@ def build_validation_status(
         "multiperson_review": {
             "ledger": _relpath(review_ledger_path, root),
             **summarize_review_ledger(review_ledger_path),
+        },
+        "improvement_review": {
+            "ledger": _relpath(improvement_review_path, root),
+            **summarize_improvement_review(improvement_review),
         },
         "reference_targets": {
             "registry": _relpath(reference_targets_path, root),

@@ -1,0 +1,110 @@
+schema_version = "html_delivery_contract/v1"
+checked_at = "2026-07-15"
+certification_effect = "none"
+purpose = "Define which platform functions can be delivered through HTML without losing functionality or weakening validation gates."
+global_rule = "HTML may present and inspect machine-readable artifacts, but HTML-only code cannot replace statistical estimation, source verification, reference adapters, cryptographic hashes, or certification gates."
+
+[[capabilities]]
+id = "static_validation_dashboard"
+delivery_mode = "static_html_allowed"
+status = "allowed"
+summary = "Render validation status, real benchmark atlas, source manifests, and limitations from committed JSON/TOML artifacts."
+required_backing_artifacts = [
+  "validation_status_json",
+  "real_benchmark_atlas_json",
+  "benchmark_registry_toml",
+]
+forbidden_replacements = [
+  "compute_new_effect_estimates_in_browser_only",
+  "mark_reference_matching_passed_without_backend_artifact",
+]
+regression_risk = "low_if_artifact_hashes_and_schema_versions_are_displayed"
+certification_effect = "none"
+
+[[capabilities]]
+id = "interactive_artifact_explorer"
+delivery_mode = "static_html_allowed"
+status = "allowed"
+summary = "Filter, search, and visualize committed validation artifacts, source checks, gap registers, and non-certifying review ledgers."
+required_backing_artifacts = [
+  "source_check_json",
+  "tier1_gap_register_toml",
+  "multiperson_review_toml",
+]
+forbidden_replacements = [
+  "edit_or_reinterpret_source_numbers_without_regeneration",
+  "hide_blocking_gaps_or_non_certification_status",
+]
+regression_risk = "low_if_read_only_and_schema_checked"
+certification_effect = "none"
+
+[[capabilities]]
+id = "statistical_estimation_engine"
+delivery_mode = "backend_required"
+status = "blocked_for_html_only"
+summary = "Pairwise meta-analysis, NMA, REML, HKSJ, Bayesian sampling, and future ML-NMR/dose-response/cross-design models require tested computational engines."
+required_backing_artifacts = [
+  "python_tested_engine",
+  "reference_output_json_or_toml",
+  "external_reference_adapter_when_applicable",
+]
+forbidden_replacements = [
+  "javascript_only_reimplementation_without_numeric_parity_tests",
+  "manual_hardcoded_estimates_in_html",
+]
+regression_risk = "high_if_reimplemented_as_unvalidated_browser_code"
+certification_effect = "none"
+
+[[capabilities]]
+id = "live_source_verification"
+delivery_mode = "backend_required"
+status = "blocked_for_html_only"
+summary = "ClinicalTrials.gov, PubMed, and open-access source verification must produce timestamped, hashed, machine-readable reports from controlled scripts."
+required_backing_artifacts = [
+  "source_verification_json",
+  "event_count_or_hr_token_report",
+  "source_manifest_hashes",
+]
+forbidden_replacements = [
+  "browser_display_of_unhashed_live_api_response_as_validation",
+  "copy_pasted_source_numbers_without_verification_report",
+]
+regression_risk = "high_if_html_bypasses_hash_or_identity_checks"
+certification_effect = "none"
+
+[[capabilities]]
+id = "reference_software_adapters"
+delivery_mode = "backend_required"
+status = "blocked_for_html_only"
+summary = "R netmeta/metafor/meta, Stan/CmdStan, multinma, MBNMAdose, and crossnma parity checks require executable adapters with versions, inputs, outputs, hashes, and tolerances."
+required_backing_artifacts = [
+  "adapter_command",
+  "package_versions",
+  "input_hash",
+  "output_hash",
+  "tolerance_report",
+]
+forbidden_replacements = [
+  "html_declares_adapter_passed_without_run_report",
+  "manual_package_version_text_as_certification_evidence",
+]
+regression_risk = "high_if_html_replaces_external_reference_execution"
+certification_effect = "none"
+
+[[capabilities]]
+id = "ci_and_certification_gates"
+delivery_mode = "backend_required"
+status = "blocked_for_html_only"
+summary = "Pytest, Sentinel, validation-status generation, simulation smoke runs, and future certification gates must run in CI or local scripts before HTML displays the result."
+required_backing_artifacts = [
+  "pytest_log_or_ci_status",
+  "sentinel_verdict",
+  "validation_status_json",
+  "simulation_report_json",
+]
+forbidden_replacements = [
+  "html_badge_without_underlying_ci_artifact",
+  "client_side_override_of_certification_status",
+]
+regression_risk = "high_if_html_can_change_gate_status"
+certification_effect = "none"

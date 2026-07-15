@@ -98,6 +98,34 @@ def test_validation_status_composes_all_current_gates():
         "claims_governance_review",
     ]
 
+    tier1_gaps = report["tier1_gap_register"]
+    assert tier1_gaps["register"] == "validation/tier1_gap_register.toml"
+    assert tier1_gaps["schema_version"] == "tier1_gap_register/v1"
+    assert tier1_gaps["n_gaps"] == 3
+    assert tier1_gaps["status_counts"] == {"blocking": 3}
+    assert tier1_gaps["gap_ids"] == [
+        "feature_completeness",
+        "numerical_stability",
+        "bayesian_ecosystem_integration",
+    ]
+    assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
+    assert tier1_gaps["certification_effect"] == "none"
+
+    html_contract = report["html_delivery_contract"]
+    assert html_contract["contract"] == "validation/html_delivery_contract.toml"
+    assert html_contract["schema_version"] == "html_delivery_contract/v1"
+    assert html_contract["n_capabilities"] == 6
+    assert html_contract["delivery_mode_counts"] == {
+        "backend_required": 4,
+        "static_html_allowed": 2,
+    }
+    assert html_contract["status_counts"] == {
+        "allowed": 2,
+        "blocked_for_html_only": 4,
+    }
+    assert "statistical_estimation_engine" in html_contract["html_only_blocked_ids"]
+    assert html_contract["certification_effect"] == "none"
+
     ingestion_contract = report["ingestion_contract"]
     assert ingestion_contract["schema_version"] == "proof_carrying_effect/v1"
     assert ingestion_contract["requires_source_identity"] is True
@@ -140,6 +168,19 @@ def test_validation_status_composes_all_current_gates():
         "tracked_next_gate": 2,
     }
     assert multiperson_review["certification_effect"] == "none"
+
+    improvement_review = report["improvement_review"]
+    assert improvement_review["ledger"] == (
+        "validation/reviews/improvement_review_2026_07_15.toml"
+    )
+    assert improvement_review["schema_version"] == "improvement_review/v1"
+    assert improvement_review["overall_status"] == (
+        "passed_current_milestone_with_global_goal_blockers"
+    )
+    assert improvement_review["n_rounds"] == 4
+    assert improvement_review["status_counts"] == {"passed_current_milestone": 4}
+    assert improvement_review["global_goal_complete"] is False
+    assert improvement_review["certification_effect"] == "none"
 
     reference_targets = report["reference_targets"]
     assert reference_targets["registry"] == "validation/reference_targets.toml"
@@ -197,5 +238,11 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["clinical_hta_reporting_enabled"] is False
     assert payload["source_benchmark_registry"]["n_benchmarks"] == 4
     assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 20
+    assert payload["tier1_gap_register"]["status_counts"] == {"blocking": 3}
+    assert payload["html_delivery_contract"]["status_counts"] == {
+        "allowed": 2,
+        "blocked_for_html_only": 4,
+    }
     assert payload["proof_effect_bundle"]["n_records"] == 4
     assert payload["multiperson_review"]["n_rounds"] == 4
+    assert payload["improvement_review"]["global_goal_complete"] is False

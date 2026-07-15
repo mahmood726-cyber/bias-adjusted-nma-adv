@@ -1,0 +1,84 @@
+schema_version = "tier1_gap_register/v1"
+checked_at = "2026-07-15"
+certification_effect = "none"
+purpose = "Machine-readable blocker register for gaps that prevent tier-one parity or superiority claims."
+source_boundary = "Effect evidence from ClinicalTrials.gov records, PubMed abstracts, and open-access papers; WHO ICTRP and other registries are protocol-only metadata sources and cannot supply model-ready effects."
+superiority_claim_rule = "No module may claim tier-one parity, superiority, production certification, clinical reporting, regulatory reporting, or HTA reporting while any gap remains blocking."
+blocked_claims = [
+  "tier_one_parity",
+  "tier_one_superiority",
+  "production_certification",
+  "clinical_reporting",
+  "hta_reporting",
+]
+
+[[gaps]]
+id = "feature_completeness"
+status = "blocking"
+review_source = "multiperson_tier1_feedback"
+summary = "The current Python engine implements a basic estimation core but lacks the helper diagnostics expected from mature tier-one packages."
+tier_one_references = ["netmeta", "metafor", "meta"]
+missing_capabilities = [
+  "node_splitting",
+  "netheat_or_equivalent_contribution_heatmap",
+  "GOSH_or_equivalent_outlier_space",
+  "multi_arm_design_checks",
+  "publication_bias_adjustments",
+  "trim_and_fill_sensitivity",
+  "contribution_matrix_diagnostics",
+]
+required_evidence_artifacts = [
+  "implemented_capability_contract_tests",
+  "external_reference_output_comparisons",
+  "source_backed_real_network_examples",
+  "failure_mode_tests_for_sparse_or_disconnected_networks",
+]
+claim_limit = "Blocks feature-parity and superiority claims until implemented diagnostics are reference matched or deliberately documented as conservative substitutes."
+certification_effect = "none"
+
+[[gaps]]
+id = "numerical_stability"
+status = "blocking"
+review_source = "multiperson_tier1_feedback"
+summary = "The local Python REML and GLS paths need broader convergence and stress-test evidence before they can be treated as robust as mature R implementations."
+tier_one_references = ["metafor", "netmeta", "meta"]
+missing_capabilities = [
+  "optimizer_stress_matrix",
+  "sparse_network_convergence_guards",
+  "local_minimum_detection",
+  "alternative_tau2_estimator_cross_checks",
+  "positive_definite_covariance_repair_or_fail_closed_policy",
+  "deterministic_failure_reports",
+]
+required_evidence_artifacts = [
+  "prespecified_sparse_network_simulations",
+  "real_source_backed_stress_networks",
+  "reference_package_numeric_comparisons",
+  "bounded_failure_mode_reports",
+]
+claim_limit = "Blocks numerical robustness and superiority claims until convergence behavior is benchmarked against tier-one references across sparse and complex networks."
+certification_effect = "none"
+
+[[gaps]]
+id = "bayesian_ecosystem_integration"
+status = "blocking"
+review_source = "multiperson_tier1_feedback"
+summary = "The custom Bayesian sampler is suitable for small prototypes only and is not a substitute for Stan/NUTS-backed Bayesian NMA or ML-NMR workflows."
+tier_one_references = ["multinma", "CmdStan", "Stan NUTS"]
+missing_capabilities = [
+  "cmdstan_backend",
+  "nuts_sampling",
+  "rhat_ess_divergence_exports",
+  "prior_predictive_checks",
+  "posterior_predictive_checks",
+  "joint_posterior_ranking_draws",
+  "mlnmr_reference_examples",
+]
+required_evidence_artifacts = [
+  "stan_model_sources",
+  "cmdstan_versioned_run_reports",
+  "multinma_reference_matching",
+  "mcmc_diagnostic_threshold_tests",
+]
+claim_limit = "Blocks Bayesian tier-one parity claims until Stan/NUTS or externally matched Bayesian reference artifacts exist."
+certification_effect = "none"
