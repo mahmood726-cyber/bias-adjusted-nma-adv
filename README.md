@@ -30,6 +30,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/km_reconstruction.py`: Fail-closed screen for open-access Kaplan-Meier reconstruction results before they can enter survival validation artifacts.
 - `src/bias_nma_adv/ctgov_hr_network.py`: Source-verified ClinicalTrials.gov reported-HR network benchmark support.
 - `src/bias_nma_adv/benchmark_registry.py`: Machine-readable registry validator for local source-backed benchmark artifacts, source-check semantics, and pinned hashes.
+- `src/bias_nma_adv/validation_status.py`: Unified validation-status report composing source-backed benchmark, reference-target, and reference-run gates without changing certification status.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
 - `tests/`: Unit and integration test suite.
 - `reproduce.py`: Benchmark script running 200 simulation iterations.
@@ -47,6 +48,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
 - `scripts/preflight_multiarm_netmeta_adapter.py`: Regenerates the non-certifying `netmeta` multi-arm adapter preflight report.
 - `scripts/validate_benchmark_registry.py`: Validates every registered local source-backed benchmark and emits an optional JSON summary for CI/Overmind-style gates.
+- `scripts/write_validation_status.py`: Emits the combined validation status JSON for CI/Overmind-style gates. Current reports keep clinical and HTA reporting disabled unless a module is Production Certified.
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.
 - `scripts/verify_survival_sources.py`: Regenerates CT.gov/PubMed identity snapshots for survival reported-HR manifests.
