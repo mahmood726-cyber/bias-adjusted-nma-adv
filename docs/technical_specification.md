@@ -70,37 +70,115 @@ Student-$t$ continuous models are specified to target individual observations wh
 
 ---
 
-## 4. Frequentist NMA Engine
+## 4. Core Bayesian Network Meta-Analysis Model
+
+**Module:** `src/bias_nma/inference/stan_backend.py`
+
+### 4.1 Likelihood and Linear Predictor
+For study $i$ and arm $a$, the outcome $y_{ia}$ is modeled via:
+
+$$
+y_{ia}\sim f(\theta_{ia},\phi),
+$$
+
+$$
+g(\theta_{ia})=\mu_i+\delta_{ia},
+$$
+
+where:
+*   $f$ is the outcome probability distribution (e.g. Binomial, Normal);
+*   $\phi$ represents auxiliary parameters (e.g. outcome variances);
+*   $g$ is the link function (e.g. logit, log, identity);
+*   $\mu_i$ is the study-specific baseline parameter.
+
+### 4.2 Multi-Arm Random Effects
+For the reference arm ($a=1$), $\delta_{i1}=0$. For arm $a > 1$, the relative treatment effect against the reference treatment $t_{i1}$ is modeled under a random-effects framework:
+
+$$
+\delta_{ia}=d_{t_{ia}}-d_{t_{i1}}+u_{ia},
+$$
+
+where:
+*   $d_k$ is the network treatment effect for treatment $k$ relative to the network reference;
+*   $u_{ia}$ represents study-specific deviations (heterogeneity).
+
+For a multi-arm study with $A_i$ arms, the vector of random effects $\boldsymbol{u}_i = (u_{i2}, \ldots, u_{iA_i})^T$ is modeled using a multivariate normal distribution:
+
+$$
+\boldsymbol{u}_i \sim \operatorname{MVN}\left(\boldsymbol{0}, \boldsymbol{\Sigma}_i(\tau)\right),
+$$
+
+where $\boldsymbol{\Sigma}_i(\tau)$ has diagonal elements $\tau^2$ and off-diagonal elements $\tau^2/2$, representing the induced correlation between treatment contrasts sharing the reference treatment.
+
+### 4.3 Formulations and Constraints
+*   **Arm-Based and Contrast-Based:** Supports both arm-level data inputs (binomial counts, normal means) and contrast-level trial inputs (log odds-ratios, mean differences).
+*   **Common- and Random-Effects:** Random-effects modeling is used by default; common-effects models (constraining $\tau = 0$) are available as comparator specifications.
+*   **Treatment Reference Constraints:** Constrains the reference treatment effect to zero ($d_{\text{reference}} = 0$) to ensure network parameter identifiability.
+*   **Baseline-Risk Modeling:** Models baselines $\mu_i$ either as study-specific independent fixed effects or hierarchically from a common baseline risk distribution.
+*   **Consistency and Inconsistency:** Fits both consistency models (retaining the transitivity relation $d_{BC} = d_C - d_B$) and inconsistency models (such as design-by-treatment or unrelated mean effects models) to evaluate network coherence.
+
+---
+
+## 5. Multinomial Clinical-State NMA
+
+**Module:** `src/bias_nma/models/multinomial/`
+
+### 5.1 Likelihood and Logits
+Models mutually exclusive and collectively exhaustive clinical categories $j = 1, \ldots, J$ measured at a common, follow-up time:
+
+$$
+\mathbf{y}_{ia}\sim \operatorname{Multinomial}\left(n_{ia},\mathbf{p}_{ia}\right).
+$$
+
+Using category $J$ as the reference category, the multinomial logit relation is:
+
+$$
+\log\left(\frac{p_{iaj}}{p_{iaJ}}\right) = \eta_{iaj} = \mu_{ij} + \delta_{iaj}, \qquad j=1,\ldots,J-1,
+$$
+
+where:
+*   $\mu_{ij}$ is the study-specific baseline for outcome category $j$;
+*   $\delta_{iaj}$ is the relative effect of the treatment in arm $a$ versus reference arm $1$ for outcome category $j$, with $\delta_{i1j} = 0$.
+
+### 5.2 Covariance Structures
+Correlations between category-specific treatment effects $\delta_{iaj}$ are evaluated under one of three covariance specifications:
+1.  **Independent:** Category-specific random effects are assumed uncorrelated across endpoints.
+2.  **Unstructured Correlated:** Estimates a full covariance matrix $\boldsymbol{\Sigma}_{\text{multi}}$ representing the correlations between outcomes. This structure is subject to network size and identifiability limits.
+3.  **Factor-Analytic Correlated:** Models covariance through a lower-dimensional factor structure to preserve stability in sparse networks.
+
+---
+
+## 6. Frequentist NMA Engine
 
 **Module:** `src/bias_nma/inference/frequentist_backend.py`
 
-### 4.1 Estimation Methods
+### 6.1 Estimation Methods
 The frequentist engine implements:
 *   **Contrast-Based Weighted Least Squares:** Solves the linear network equations using study-specific estimates and their covariance matrices.
 *   **Graph-Theoretical NMA:** Analyzes the network structure using electrical network analogies (random walks, Laplacian matrices).
 *   **Common & Random Effects:** Estimates between-study heterogeneity ($\tau^2$). The DerSimonian–Laird estimator is available mainly for legacy compatibility, while Restricted Maximum Likelihood (REML) or Paule–Mandel estimation is preferred and used by default.
 
-### 4.2 Multi-Arm Trial Covariance
+### 6.2 Multi-Arm Trial Covariance
 Multi-arm trial correlations are preserved by constructing the block-diagonal covariance matrix ($V$) of relative effects and solving:
 
 $$
 \hat{\boldsymbol{d}} = \left( X^T V^{-1} X \right)^{-1} X^T V^{-1} \boldsymbol{y}.
 $$
 
-### 4.3 Diagnostics
+### 6.3 Diagnostics
 *   **Design-by-Treatment Interaction:** Evaluates global inconsistency across designs.
 *   **Node Splitting:** Direct–indirect evidence comparisons for direct comparisons.
 *   **Influence & Leverage Diagnostics:** Leverage values, hat matrix diagonals, and Cook's distance for detecting influential studies.
 *   **Prediction Intervals:** Computes uncertainty intervals for a future study.
-*   **Sparse Event Handling:** Implements penalized likelihood or exact conditional logistic NMA for sparse binary outcomes.
+*   **Sparse Event Handling:** Implements validated conditional-likelihood or penalized-likelihood methods for sparse binary outcomes.
 
 ---
 
-## 5. Multilevel Network Meta-Regression (ML-NMR)
+## 7. Multilevel Network Meta-Regression (ML-NMR)
 
 **Module:** `src/bias_nma/models/mlnmr/`
 
-### 5.1 Formulation
+### 7.1 Formulation
 ML-NMR combines individual-participant data (IPD) and aggregate data (AgD). For participant $i$ in study $j$ on treatment $k$, the individual-level linear predictor is:
 
 $$
@@ -111,7 +189,7 @@ where:
 *   $\boldsymbol{\beta}$ is the vector of prognostic covariate effects;
 *   $\boldsymbol{\gamma}_k$ represents the treatment-covariate interaction vector.
 
-### 5.2 Likelihood Integration
+### 7.2 Likelihood Integration
 For aggregate studies where individual $\mathbf{x}_{ij}$ are unknown, the study-level aggregate likelihood contribution is obtained by integrating the individual-level model over the study-specific joint covariate distribution $F_j(\mathbf{x})$:
 
 $$
@@ -120,24 +198,24 @@ $$
 
 This integration is performed numerically using quasi-Monte Carlo integration or Gaussian quadrature.
 
-### 5.3 Covariate-Distribution Governance
+### 7.3 Covariate-Distribution Governance
 To ensure integration validity when only marginal aggregate data are reported:
 *   **Reconstruction Methods:** Users must specify whether joint IPD covariate distributions ($F_j$) are observed directly, or reconstructed under copula or parametric joint distribution assumptions.
 *   **Correlation Assumptions:** The assumed correlations between covariates must be declared and subjected to prior sensitivity audits.
 *   **Target Population Overlap:** Overlap between aggregate covariate bounds and target population distributions must be reported, flagging covariate extrapolation beyond the observed support.
 
-### 5.4 Outputs and Diagnostics
+### 7.4 Outputs and Diagnostics
 *   **Conditional and Average Effects:** Reports treatment effects for specific patient profiles and standardized target-population averages.
 *   **Covariate Overlap:** Computes distance metrics (e.g., Mahalanobis distance) to detect covariate extrapolation.
 *   **Numerical Integration Quality:** Monitors the error of the integration approximation.
 
 ---
 
-## 6. Component Network Meta-Analysis (CNMA)
+## 8. Component Network Meta-Analysis (CNMA)
 
 **Module:** `src/bias_nma/models/component/`
 
-### 6.1 Additive and Interaction Models
+### 8.1 Additive and Interaction Models
 For multi-component interventions, treatment effects ($d_t$) are decomposed into their constituent components ($C$):
 
 $$
@@ -148,14 +226,14 @@ where:
 *   $d_A, d_B$ are the main additive effects of components $A$ and $B$;
 *   $\gamma_{AB}$ is the interaction effect (set to zero in additive models).
 
-### 6.2 Structural Diagnostics
+### 8.2 Structural Diagnostics
 *   **Identifiability Checks:** Verifies that component parameters are estimable from the treatment network design matrix.
 *   **Connectedness:** Checks network connectivity at both the treatment level and the constituent component level.
 *   **Goodness of Fit:** Compares residual deviance between CNMA and full-treatment NMA models to justify additive assumptions.
 
 ---
 
-## 7. Dose-Response Network Meta-Analysis
+## 9. Dose-Response Network Meta-Analysis
 
 **Module:** `src/bias_nma/models/dose_response/`
 
@@ -172,11 +250,11 @@ The dose-response module models continuous dose variables using:
 
 ---
 
-## 8. Genuine Multivariate Network Meta-Analysis
+## 10. Genuine Multivariate Network Meta-Analysis
 
 **Module:** `src/bias_nma/models/multivariate/`
 
-### 8.1 Model Structure
+### 10.1 Model Structure
 For correlated, non-exclusive outcomes (e.g., mortality, hospitalization, and adverse events), the study-level relative effects $\boldsymbol{\theta}_i$ are modeled jointly:
 
 $$
@@ -187,29 +265,53 @@ where:
 *   $\boldsymbol{S}_i$ is the within-study covariance matrix (estimated or imputed);
 *   $\boldsymbol{\Sigma}$ is the between-study covariance matrix.
 
-### 8.2 Missing Outcomes & Borrowing of Strength
+### 10.2 Missing Outcomes & Borrowing of Strength
 *   **Outcome Integration:** Integrates over unreported outcome components under the joint model and may produce posterior predictive distributions for those outcomes. Predictions are clearly distinguished from observed study results.
 *   **Borrow-of-Strength Diagnostics:** Computes the change in precision (shrinkage) across outcomes to evaluate the impact of multivariate modeling.
 
 ---
 
-## 9. Rare-Event and Zero-Event NMA
+## 11. Cross-Design Network Meta-Analysis
+
+**Module:** `src/bias_nma/models/cross_design/`
+
+### 11.1 Model Structure
+For combining randomized controlled trials (RCTs) and non-randomized studies (NRS), the relative treatment effects $\theta_{isd}$ are modeled hierarchically:
+
+$$
+\theta_{isd} = \Delta_{is} + \beta_d + b_{isd},
+$$
+
+where:
+*   $s$ indexes study, and $d$ indexes the study design (RCT or NRS);
+*   $\Delta_{is}$ is the true underlying relative effect;
+*   $\beta_d$ is the design-specific bias parameter, with $\beta_{\text{RCT}}$ constrained to zero as the evidential anchor;
+*   $b_{isd}$ represents design-specific study deviations.
+
+### 11.2 Borrowing & Diagnostics
+*   **Hierarchical & Commensurate Borrowing:** Controls the amount of borrowing from NRS evidence using power priors or design-specific variance inflation factors.
+*   **Design-Conflict Diagnostics:** Computes design-inconsistency statistics to evaluate conflicts between RCT and NRS estimates.
+*   **Stratified Reporting:** Generates RCT-only, NRS-only, and combined estimates alongside sensitivity analyses relative to assumed design-bias priors.
+
+---
+
+## 12. Rare-Event and Zero-Event NMA
 
 **Module:** `src/bias_nma/models/standard_nma/`
 
-### 9.1 Likelihoods
+### 12.1 Likelihoods
 *   **Exact Binomial Likelihood:** Evaluates events without continuity corrections ($+0.5$).
 *   **Mantel-Haenszel NMA:** Fixed-effects Mantel-Haenszel estimators for sparse binary outcomes.
 *   **Non-Central Hypergeometric Models:** Fits conditional likelihoods for multi-arm networks, subject to network size and computational tractability constraints.
 *   **Penalized Regression:** Applies Firth's penalization to logistic models.
 
-### 9.2 Zero-Event Policy
+### 12.2 Zero-Event Policy
 *   Double-zero studies contribute no direct contrast information under conventional relative-effect models. They may be retained in compatible arm-based likelihoods when they inform absolute risks or other hierarchical parameters. Their inclusion policy is reported for every analysis.
 *   Studies with zero events in one arm are modelled using arm-level binomial likelihoods without continuity correction, or validated conditional likelihood methods where applicable.
 
 ---
 
-## 10. Disconnected-Network Policy
+## 13. Disconnected-Network Policy
 
 The platform enforces strict rules for networks containing disconnected components:
 1.  **Pre-Fit Detection:** Scans the adjacency matrix of the treatment network.
@@ -219,7 +321,7 @@ The platform enforces strict rules for networks containing disconnected componen
 
 ---
 
-## 11. Time-to-Event and Competing-Risk Extension
+## 14. Time-to-Event and Competing-Risk Extension
 
 **Module:** `src/bias_nma/survival/flexible_hazards.py`
 
@@ -229,7 +331,7 @@ Non-proportional hazards are evaluated using splines, fractional polynomials, or
 
 ---
 
-## 12. Bayesian Inference Engine
+## 15. Bayesian Inference Engine
 
 **Module:** `src/bias_nma/inference/stan_backend.py`
 
@@ -285,7 +387,7 @@ Where appropriate, the engine supports selection models, robust Bayesian meta-an
 C-TMLE is an optional individual-participant-data module for observational comparisons or randomized studies requiring adjustment for informative missingness, non-adherence or treatment crossover. It is not applied automatically to aggregate randomized-trial NMA.
 
 ### Diagnostics
-*   **Propensity Weights:** Reports equivalent sample size derived from explicit inverse-probability weights, where such weights are used. Clever-covariate distributions, positivity, truncation and influence-curve behaviour are assessed separately.
+*   **Propensity Weights:** Reports propensity cohort size metrics derived from explicit inverse-probability weights, where such weights are used. Clever-covariate distributions, positivity, truncation and influence-curve behaviour are assessed separately.
 *   **Influence Curves:** Computes influence-curve variance and standard error.
 *   **Truncation:** Monitors the proportion of propensity scores truncated.
 *   **Cross-Validation:** Monitors cross-validated nuisance-model loss.
@@ -345,7 +447,7 @@ Every model fitted by the platform receives a certification level:
 | **Externally Reproduced** | Independently tested by an external group. |
 | **Production Certified** | Suitable for clinical or HTA analyses. |
 
-The user interface blocks clinical reporting for any model below the **Production Certified** level.
+Methodological and research outputs from models below **Production Certified** status are watermarked with their certification level. Automated clinical recommendations are blocked, and exports suitable for clinical, regulatory, or HTA decision-making are disabled until the corresponding module has been certified.
 
 ---
 
@@ -515,3 +617,6 @@ Each build publishes or securely retains:
 - benchmark and validation logs.
 
 Any statement that the working tree is clean, tests have passed or validation checks are clear must be derived directly from the continuous-integration system and linked to an immutable report.
+
+---
+Current build and validation status is reported exclusively through the machine-generated CI artefacts described above.
