@@ -25,6 +25,9 @@ jobs:
       - name: Validate source-backed benchmark registry
         run: python scripts\validate_benchmark_registry.py --json
 
+      - name: Write real benchmark atlas
+        run: python scripts\write_real_benchmark_atlas.py --output real_benchmark_atlas.json
+
       - name: Write validation status
         run: python scripts\write_validation_status.py --output validation_status.json
 
@@ -36,6 +39,12 @@ jobs:
         with:
           name: validation-status
           path: validation_status.json
+
+      - name: Upload real benchmark atlas artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-benchmark-atlas
+          path: real_benchmark_atlas.json
 
       - name: Upload simulation matrix artifact
         uses: actions/upload-artifact@v4

@@ -30,6 +30,10 @@ from bias_nma_adv.portfolio_reuse import (
     summarize_portfolio_reuse_registry,
 )
 from bias_nma_adv.proof_effect_bundle import summarize_proof_effect_bundle
+from bias_nma_adv.real_benchmark_atlas import (
+    build_real_benchmark_atlas,
+    summarize_real_benchmark_atlas,
+)
 from bias_nma_adv.review_ledger import summarize_review_ledger
 from bias_nma_adv.simulation_matrix import (
     summarize_simulation_matrix,
@@ -71,6 +75,7 @@ def build_validation_status(
     )
     reference_targets_path = root / "validation" / "reference_targets.toml"
     reference_runs_path = root / "validation" / "reference_runs"
+    real_benchmark_atlas_path = root / "validation" / "real_benchmark_atlas.json"
 
     registry = validate_source_benchmark_registry(registry_path, repo_root=root)
     assert_registry_covers_source_backed_artifacts(registry, repo_root=root)
@@ -78,6 +83,7 @@ def build_validation_status(
         grand_benchmark_plan_path,
         source_registry=registry,
     )
+    real_benchmark_atlas = build_real_benchmark_atlas(root, checked_at=checked_at)
     simulation_matrix = validate_simulation_matrix(
         simulation_matrix_path,
         grand_benchmark_plan_path=grand_benchmark_plan_path,
@@ -122,6 +128,10 @@ def build_validation_status(
         "grand_benchmark_plan": {
             "plan": _relpath(grand_benchmark_plan_path, root),
             **summarize_grand_benchmark_plan(grand_benchmark_plan),
+        },
+        "real_benchmark_atlas": {
+            "atlas": _relpath(real_benchmark_atlas_path, root),
+            **summarize_real_benchmark_atlas(real_benchmark_atlas),
         },
         "simulation_matrix": {
             "matrix": _relpath(simulation_matrix_path, root),

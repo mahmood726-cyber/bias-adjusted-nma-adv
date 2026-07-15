@@ -52,6 +52,7 @@ output/
 !validation/ingestion/
 !validation/ingestion/*.json
 !validation/reference_runs/*.json
+!validation/real_benchmark_atlas.json
 
 # Sentinel findings
 PROGRESS.md

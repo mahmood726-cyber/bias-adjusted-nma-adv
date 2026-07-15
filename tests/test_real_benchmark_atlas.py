@@ -1,0 +1,115 @@
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+from bias_nma_adv.real_benchmark_atlas import (
+    REAL_BENCHMARK_ATLAS_SCHEMA_VERSION,
+    build_real_benchmark_atlas,
+    summarize_real_benchmark_atlas,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+ATLAS = ROOT / "validation" / "real_benchmark_atlas.json"
+SCRIPT = ROOT / "scripts" / "write_real_benchmark_atlas.py"
+
+
+def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
+    atlas = build_real_benchmark_atlas(ROOT, checked_at="2026-07-15T00:00:00Z")
+
+    assert atlas["schema_version"] == REAL_BENCHMARK_ATLAS_SCHEMA_VERSION
+    assert atlas["status"] == "passed"
+    assert atlas["certification_effect"] == "none"
+    assert atlas["allowed_effect_evidence_sources"] == [
+        "clinicaltrials_gov",
+        "open_access_paper",
+        "pubmed_abstract",
+    ]
+    assert atlas["allowed_protocol_only_sources"] == [
+        "other_trial_registry_protocol",
+        "who_ictrp_protocol",
+    ]
+    assert atlas["n_benchmarks"] == 4
+    assert atlas["n_benchmark_study_effects"] == 20
+    assert atlas["n_unique_study_ids"] == 16
+    assert atlas["n_unique_nct_ids"] == 16
+    assert atlas["n_unique_pmids"] == 6
+    assert atlas["domain_counts"] == {
+        "binary_pairwise_meta": 1,
+        "reported_hr_star_network": 1,
+        "reported_survival_hr_pairwise": 2,
+    }
+    assert atlas["evidence_mode_counts"] == {
+        "pubmed_abstract_event_counts": 1,
+        "reported_hr_clinicaltrials_gov_results": 1,
+        "reported_hr_pubmed_abstract": 2,
+    }
+    assert atlas["source_check_scope_counts"] == {
+        "clinicaltrials_gov_reported_hr_analysis": 10,
+        "identity_and_reachability": 20,
+        "pubmed_abstract_event_count_tokens": 4,
+        "pubmed_abstract_reported_hr_tokens": 6,
+    }
+    assert atlas["source_type_counts"] == {
+        "clinicaltrials_gov": 20,
+        "pubmed_abstract": 20,
+    }
+    assert "tier-one parity" in atlas["does_not_prove"]
+    assert "closed-loop source-backed networks before inconsistency-performance claims" in atlas[
+        "required_next_gates"
+    ]
+    assert {item["id"] for item in atlas["benchmarks"]} == {
+        "sglt2_hf_primary_log_or",
+        "sglt2_hf_reported_hr",
+        "pcsk9_mace_reported_hr",
+        "t2d_mace_ctgov_hr_network",
+    }
+    assert {item["certification_effect"] for item in atlas["benchmarks"]} == {"none"}
+
+
+def test_real_benchmark_atlas_artifact_regenerates(tmp_path):
+    output = tmp_path / "real_benchmark_atlas.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--root",
+            str(ROOT),
+            "--checked-at",
+            "2026-07-15T00:00:00Z",
+            "--output",
+            str(output),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "real benchmark atlas written" in completed.stdout
+    expected = json.loads(ATLAS.read_text(encoding="utf-8"))
+    observed = json.loads(output.read_text(encoding="utf-8"))
+    assert observed == expected
+
+
+def test_real_benchmark_atlas_summary_is_validation_status_ready():
+    atlas = json.loads(ATLAS.read_text(encoding="utf-8"))
+
+    assert summarize_real_benchmark_atlas(atlas) == {
+        "schema_version": REAL_BENCHMARK_ATLAS_SCHEMA_VERSION,
+        "status": "passed",
+        "n_benchmarks": 4,
+        "n_benchmark_study_effects": 20,
+        "n_unique_nct_ids": 16,
+        "n_unique_pmids": 6,
+        "domain_counts": {
+            "binary_pairwise_meta": 1,
+            "reported_hr_star_network": 1,
+            "reported_survival_hr_pairwise": 2,
+        },
+        "source_type_counts": {
+            "clinicaltrials_gov": 20,
+            "pubmed_abstract": 20,
+        },
+        "certification_effect": "none",
+    }

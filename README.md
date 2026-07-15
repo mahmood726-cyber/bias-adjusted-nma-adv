@@ -34,6 +34,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/simulation_matrix.py`: Validator and runner for executable, non-certifying simulation smoke jobs tied to the grand-benchmark plan.
 - `src/bias_nma_adv/portfolio_reuse.py`: Local portfolio reuse registry and scanner for candidate methods/source-ingestion components; it is non-certifying and takes roots at runtime.
 - `src/bias_nma_adv/proof_effect_bundle.py`: Validator and writer support for proof-carrying extracted-effect bundles that bind reported effects to verified source manifests, source-check reports, and minimal source snippets.
+- `src/bias_nma_adv/real_benchmark_atlas.py`: Non-certifying coverage atlas for registered source-backed real benchmark artifacts, source-check scopes, and current evidence gaps.
 - `src/bias_nma_adv/r_reference_validation.py`: Validates optional R reference-output JSON from `metafor`, `meta`, and `netmeta` against local source-backed or algorithmic benchmark artifacts before any report can become an evidence candidate.
 - `src/bias_nma_adv/review_ledger.py`: Machine-readable multiperson review ledger validator for source-boundary, statistical, implementation, and claims-governance review rounds.
 - `src/bias_nma_adv/validation_status.py`: Unified validation-status report composing source-backed benchmark, reference-target, and reference-run gates without changing certification status.
@@ -52,6 +53,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/benchmark_registry.toml`: Canonical inventory of local source-backed benchmark artifacts. Every entry must retain `certification_effect = "none"` until an external reference run passes, and every source-check report is revalidated against its specialized schema.
 - `validation/source_checks/`: Public-source identity snapshots and PubMed abstract event-count token checks.
 - `validation/ingestion/`: Proof-carrying extracted-effect bundles. These are model-ingestion evidence contracts only and carry `certification_effect = "none"`.
+- `validation/real_benchmark_atlas.json`: Generated coverage atlas over the registered real-data benchmark artifacts. It records current source-backed coverage and explicit non-claims; it is not certification evidence.
 - `validation/survival/`: Source-backed survival HR benchmark manifests; current entries verify reported HR tokens from PubMed abstracts and explicitly do not claim KM reconstruction yet.
 - `validation/networks/`: Source-backed network benchmark manifests and generated artifacts, including the CT.gov T2D MACE reported-HR star network.
 - `validation/survival/km_reconstruction_policy.toml`: Static OA-only KM reconstruction policy; blocks text-only HR and synthetic-IPD fallbacks from validation evidence.
@@ -63,6 +65,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/run_simulation_matrix.py`: Runs the non-certifying simulation matrix and emits a JSON report for operating-characteristic smoke checks.
 - `scripts/scan_portfolio_reuse.py`: Scans user-supplied local roots for registered portfolio reuse candidates and reports dirty worktrees, missing assets, and import-review status.
 - `scripts/write_proof_effect_bundle.py`: Regenerates the SGLT2 reported-HR proof-carrying extracted-effect bundle from verified manifests and live PubMed abstract text.
+- `scripts/write_real_benchmark_atlas.py`: Regenerates the non-certifying real benchmark coverage atlas from the source-backed benchmark registry.
 - `scripts/write_validation_status.py`: Emits the combined validation status JSON for CI/Overmind-style gates. Current reports keep clinical and HTA reporting disabled unless a module is Production Certified.
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.

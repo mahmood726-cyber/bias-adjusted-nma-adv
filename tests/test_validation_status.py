@@ -60,6 +60,25 @@ def test_validation_status_composes_all_current_gates():
     ]
     assert grand_plan["certification_effect"] == "none"
 
+    real_atlas = report["real_benchmark_atlas"]
+    assert real_atlas["atlas"] == "validation/real_benchmark_atlas.json"
+    assert real_atlas["schema_version"] == "real_benchmark_atlas/v1"
+    assert real_atlas["status"] == "passed"
+    assert real_atlas["n_benchmarks"] == 4
+    assert real_atlas["n_benchmark_study_effects"] == 20
+    assert real_atlas["n_unique_nct_ids"] == 16
+    assert real_atlas["n_unique_pmids"] == 6
+    assert real_atlas["domain_counts"] == {
+        "binary_pairwise_meta": 1,
+        "reported_hr_star_network": 1,
+        "reported_survival_hr_pairwise": 2,
+    }
+    assert real_atlas["source_type_counts"] == {
+        "clinicaltrials_gov": 20,
+        "pubmed_abstract": 20,
+    }
+    assert real_atlas["certification_effect"] == "none"
+
     simulation_matrix = report["simulation_matrix"]
     assert simulation_matrix["matrix"] == "validation/simulation_matrix.toml"
     assert simulation_matrix["n_jobs"] == 1
@@ -177,5 +196,6 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["checked_at"] == "2026-07-15T00:00:00Z"
     assert payload["clinical_hta_reporting_enabled"] is False
     assert payload["source_benchmark_registry"]["n_benchmarks"] == 4
+    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 20
     assert payload["proof_effect_bundle"]["n_records"] == 4
     assert payload["multiperson_review"]["n_rounds"] == 4
