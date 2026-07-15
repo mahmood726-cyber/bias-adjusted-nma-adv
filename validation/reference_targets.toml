@@ -138,7 +138,7 @@ evidence_artifacts = []
 [[targets]]
 id = "multiarm_gls_netmeta_portfolio_fixture"
 domain = "frequentist_nma"
-module = "planned:multiarm_gls"
+module = "src/bias_nma_adv/multiarm.py"
 reference_method = "netmeta multi-arm GLS fixtures"
 status = "planned"
 acceptance_criteria = [

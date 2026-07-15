@@ -21,6 +21,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/`: Core python package containing:
   - `data.py`: Structured data classes and validation schemas.
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
+- `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
 - `tests/`: Unit and integration test suite.
 - `reproduce.py`: Benchmark script running 200 simulation iterations.
