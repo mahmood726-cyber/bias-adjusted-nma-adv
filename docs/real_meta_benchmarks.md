@@ -19,6 +19,8 @@ Closed IPD, proprietary trial reports, secondary package fixtures, and unverifie
 
 Dataset: `validation/real_meta/sglt2_hf_primary_events.csv`
 
+Source manifest: `validation/real_meta/sglt2_hf_primary_sources.toml`
+
 Outcome: primary composite outcome in each trial, harmonized as worsening heart failure or cardiovascular death / cardiovascular death or heart-failure hospitalization.
 
 Scale currently tested: log odds ratio, because the current arm-level binary model estimates log-odds contrasts.
@@ -33,6 +35,7 @@ Scale currently tested: log odds ratio, because the current arm-level binary mod
 Current tests:
 
 - validate all rows against the allowed source boundary;
+- validate a separate source manifest requiring matching trial labels, NCT IDs, PMIDs, outcomes, arm counts, and admissible PubMed/ClinicalTrials.gov URLs;
 - compute an independent inverse-variance fixed-effect log-odds-ratio reference;
 - run the frequentist candidate model on the same rows;
 - run the Bayesian MCMC candidate model on the same rows;
@@ -58,7 +61,8 @@ Limitations:
 
 | Item | Static or dynamic | Evidence source | Disclosure |
 | --- | --- | --- | --- |
-| Trial arm counts | Static fixture | PubMed abstracts and ClinicalTrials.gov identifiers listed above | Treated as extracted source-backed data, not simulated output |
+| Trial arm counts | Static fixture | `sglt2_hf_primary_events.csv` plus `sglt2_hf_primary_sources.toml` | Treated as extracted source-backed data, not simulated output |
+| Source manifest | Static fixture | PubMed abstract URLs and ClinicalTrials.gov record URLs | Machine-checked for identifier, outcome, source-type, and arm-count consistency |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |
 | Candidate frequentist result | Dynamic computation | `AdvancedBiasAdjustedNMAPooler` | Recomputed by tests from the CSV rows |
 | Candidate Bayesian result | Dynamic seeded computation | `BayesianNMAMCMCSampler` with seed 20260715 | Recomputed by tests with tolerance for sampler behavior |

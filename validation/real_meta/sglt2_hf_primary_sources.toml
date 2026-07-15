@@ -1,0 +1,143 @@
+schema_version = "real_meta_sources/v1"
+benchmark_id = "sglt2_hf_primary_log_or"
+dataset = "validation/real_meta/sglt2_hf_primary_events.csv"
+dataset_sha256 = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
+source_policy = "clinicaltrials_gov + pubmed_abstract only"
+allowed_source_types = ["clinicaltrials_gov", "pubmed_abstract"]
+event_count_source_type = "pubmed_abstract"
+
+[[studies]]
+study_id = "DAPA-HF"
+trial = "Dapagliflozin in HFrEF"
+nct_id = "NCT03036124"
+pmid = "31535829"
+outcome_id = "hf_primary"
+outcome_label = "worsening heart failure or cardiovascular death"
+event_count_source_type = "pubmed_abstract"
+source_note = "PubMed abstract reports primary endpoint arm-level event counts; ClinicalTrials.gov supplies registry identity."
+
+[[studies.sources]]
+source_type = "clinicaltrials_gov"
+identifier = "NCT03036124"
+url = "https://clinicaltrials.gov/study/NCT03036124"
+access_statement = "ClinicalTrials.gov public registry record."
+
+[[studies.sources]]
+source_type = "pubmed_abstract"
+identifier = "31535829"
+url = "https://pubmed.ncbi.nlm.nih.gov/31535829/"
+access_statement = "PubMed abstract metadata and abstract text."
+
+[[studies.arms]]
+arm_role = "active"
+treatment = "SGLT2i"
+events = 386
+n = 2373
+
+[[studies.arms]]
+arm_role = "control"
+treatment = "Placebo"
+events = 502
+n = 2371
+
+[[studies]]
+study_id = "EMPEROR-Reduced"
+trial = "Empagliflozin in HFrEF"
+nct_id = "NCT03057977"
+pmid = "32865377"
+outcome_id = "hf_primary"
+outcome_label = "cardiovascular death or hospitalization for heart failure"
+event_count_source_type = "pubmed_abstract"
+source_note = "PubMed abstract reports primary endpoint arm-level event counts; ClinicalTrials.gov supplies registry identity."
+
+[[studies.sources]]
+source_type = "clinicaltrials_gov"
+identifier = "NCT03057977"
+url = "https://clinicaltrials.gov/study/NCT03057977"
+access_statement = "ClinicalTrials.gov public registry record."
+
+[[studies.sources]]
+source_type = "pubmed_abstract"
+identifier = "32865377"
+url = "https://pubmed.ncbi.nlm.nih.gov/32865377/"
+access_statement = "PubMed abstract metadata and abstract text."
+
+[[studies.arms]]
+arm_role = "active"
+treatment = "SGLT2i"
+events = 361
+n = 1863
+
+[[studies.arms]]
+arm_role = "control"
+treatment = "Placebo"
+events = 462
+n = 1867
+
+[[studies]]
+study_id = "DELIVER"
+trial = "Dapagliflozin in HFmrEF/HFpEF"
+nct_id = "NCT03619213"
+pmid = "36027570"
+outcome_id = "hf_primary"
+outcome_label = "worsening heart failure or cardiovascular death"
+event_count_source_type = "pubmed_abstract"
+source_note = "PubMed abstract reports primary endpoint arm-level event counts; ClinicalTrials.gov supplies registry identity."
+
+[[studies.sources]]
+source_type = "clinicaltrials_gov"
+identifier = "NCT03619213"
+url = "https://clinicaltrials.gov/study/NCT03619213"
+access_statement = "ClinicalTrials.gov public registry record."
+
+[[studies.sources]]
+source_type = "pubmed_abstract"
+identifier = "36027570"
+url = "https://pubmed.ncbi.nlm.nih.gov/36027570/"
+access_statement = "PubMed abstract metadata and abstract text."
+
+[[studies.arms]]
+arm_role = "active"
+treatment = "SGLT2i"
+events = 512
+n = 3131
+
+[[studies.arms]]
+arm_role = "control"
+treatment = "Placebo"
+events = 610
+n = 3132
+
+[[studies]]
+study_id = "EMPEROR-Preserved"
+trial = "Empagliflozin in HFpEF"
+nct_id = "NCT03057951"
+pmid = "34449189"
+outcome_id = "hf_primary"
+outcome_label = "cardiovascular death or hospitalization for heart failure"
+event_count_source_type = "pubmed_abstract"
+source_note = "PubMed abstract reports primary endpoint arm-level event counts; ClinicalTrials.gov supplies registry identity."
+
+[[studies.sources]]
+source_type = "clinicaltrials_gov"
+identifier = "NCT03057951"
+url = "https://clinicaltrials.gov/study/NCT03057951"
+access_statement = "ClinicalTrials.gov public registry record."
+
+[[studies.sources]]
+source_type = "pubmed_abstract"
+identifier = "34449189"
+url = "https://pubmed.ncbi.nlm.nih.gov/34449189/"
+access_statement = "PubMed abstract metadata and abstract text."
+
+[[studies.arms]]
+arm_role = "active"
+treatment = "SGLT2i"
+events = 415
+n = 2997
+
+[[studies.arms]]
+arm_role = "control"
+treatment = "Placebo"
+events = 511
+n = 2991

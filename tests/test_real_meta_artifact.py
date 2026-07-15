@@ -14,12 +14,17 @@ def test_sglt2_benchmark_artifact_recomputes_from_source_rows():
 
     dataset_path = ROOT / artifact["dataset"]
     assert sha256_file(dataset_path) == artifact["dataset_sha256"]
+    source_manifest_path = ROOT / artifact["source_manifest"]
+    assert source_manifest_path.is_file()
+    assert sha256_file(source_manifest_path) == artifact["source_manifest_sha256"]
 
     result = run_real_meta_benchmark(
         dataset_path,
+        source_manifest_path=source_manifest_path,
         mcmc_samples=artifact["model_config"]["bayesian_samples"],
     )
     assert result["dataset_sha256"] == artifact["dataset_sha256"]
+    assert result["source_manifest"]["manifest_sha256"] == sha256_file(source_manifest_path)
     assert result["n_studies"] == artifact["n_studies"]
     assert result["n_arms"] == artifact["n_arms"]
     assert result["effect_scale"] == artifact["effect_scale"]

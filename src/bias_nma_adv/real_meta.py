@@ -7,13 +7,16 @@ from dataclasses import dataclass
 import hashlib
 import math
 from pathlib import Path
+import tomllib
 from typing import Any
 
 import numpy as np
 
 from bias_nma_adv.bayesian import BayesianNMAMCMCSampler
 from bias_nma_adv.data import EvidenceDataset, ValidationError
+from bias_nma_adv.evidence_sources import ALLOWED_SOURCE_TYPES
 from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
+from bias_nma_adv.ingestion import EvidenceIngestionRecord, validate_ingestion_records
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
 
 
@@ -125,6 +128,131 @@ def _require_single_value(rows: list[ArmEventRow], field_name: str, study_id: st
         raise ValidationError(f"{study_id}: mixed {field_name} values are not allowed in one contrast.")
 
 
+def load_real_meta_source_manifest(path: str | Path) -> dict[str, Any]:
+    """Load a machine-readable source manifest for real-meta rows."""
+
+    with Path(path).open("rb") as handle:
+        payload = tomllib.load(handle)
+    if payload.get("schema_version") != "real_meta_sources/v1":
+        raise ValidationError("source manifest schema_version must be real_meta_sources/v1.")
+    studies = payload.get("studies")
+    if not isinstance(studies, list) or not studies:
+        raise ValidationError("source manifest must contain a non-empty studies list.")
+    allowed = set(payload.get("allowed_source_types", []))
+    if allowed and not allowed <= ALLOWED_SOURCE_TYPES:
+        raise ValidationError(f"source manifest contains disallowed source types: {sorted(allowed)}")
+    return payload
+
+
+def validate_real_meta_source_manifest(
+    rows: list[ArmEventRow],
+    manifest_path: str | Path,
+    *,
+    dataset_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Validate source manifest identity and arm counts against loaded rows."""
+
+    payload = load_real_meta_source_manifest(manifest_path)
+    if dataset_path is not None and payload.get("dataset_sha256"):
+        actual_sha = sha256_file(dataset_path)
+        if actual_sha != payload["dataset_sha256"]:
+            raise ValidationError("source manifest dataset_sha256 does not match dataset file.")
+
+    by_study: dict[str, list[ArmEventRow]] = {}
+    for row in rows:
+        by_study.setdefault(row.study_id, []).append(row)
+
+    manifest_studies = payload["studies"]
+    manifest_ids = [str(study.get("study_id", "")) for study in manifest_studies]
+    duplicates = sorted({study_id for study_id in manifest_ids if manifest_ids.count(study_id) > 1})
+    if duplicates:
+        raise ValidationError(f"source manifest contains duplicate study IDs: {duplicates}")
+    if set(manifest_ids) != set(by_study):
+        missing = sorted(set(by_study) - set(manifest_ids))
+        extra = sorted(set(manifest_ids) - set(by_study))
+        raise ValidationError(f"source manifest study mismatch; missing={missing}, extra={extra}")
+
+    all_source_types: set[str] = set()
+    source_count = 0
+    for study in manifest_studies:
+        study_id = str(study["study_id"])
+        study_rows = by_study[study_id]
+        canonical = study_rows[0]
+        for field_name in ("trial", "nct_id", "pmid", "outcome_id", "outcome_label"):
+            if str(study.get(field_name, "")) != getattr(canonical, field_name):
+                raise ValidationError(f"{study_id}: source manifest {field_name} does not match CSV rows.")
+
+        source_entries = study.get("sources")
+        if not isinstance(source_entries, list) or not source_entries:
+            raise ValidationError(f"{study_id}: source manifest requires at least one source.")
+        source_records = [
+            _source_record_from_manifest(study_id, canonical, source_entry)
+            for source_entry in source_entries
+        ]
+        validate_ingestion_records(source_records)
+        source_types = {record.source_type for record in source_records}
+        all_source_types.update(source_types)
+        source_count += len(source_records)
+        if not {"clinicaltrials_gov", "pubmed_abstract"} <= source_types:
+            raise ValidationError(f"{study_id}: source manifest requires CT.gov and PubMed sources.")
+
+        event_count_source_type = str(
+            study.get("event_count_source_type")
+            or payload.get("event_count_source_type")
+            or ""
+        )
+        if event_count_source_type not in source_types:
+            raise ValidationError(
+                f"{study_id}: event_count_source_type '{event_count_source_type}' is not one of the declared sources."
+            )
+        _validate_manifest_arms(study_id, study_rows, study.get("arms"))
+
+    return {
+        "manifest_sha256": sha256_file(manifest_path),
+        "n_studies": len(manifest_studies),
+        "n_sources": source_count,
+        "source_types": sorted(all_source_types),
+    }
+
+
+def _source_record_from_manifest(
+    study_id: str,
+    row: ArmEventRow,
+    source_entry: dict[str, Any],
+) -> EvidenceIngestionRecord:
+    source_type = str(source_entry.get("source_type", ""))
+    return EvidenceIngestionRecord(
+        row_id=f"{study_id}:{source_type}",
+        source_type=source_type,
+        url=str(source_entry.get("url", "")),
+        access_statement=str(source_entry.get("access_statement", "")),
+        pmid=str(source_entry.get("pmid", row.pmid)) if source_type in {"pubmed_abstract", "open_access_paper"} else None,
+        nct_id=str(source_entry.get("nct_id", row.nct_id)) if source_type == "clinicaltrials_gov" else None,
+        pmcid=str(source_entry["pmcid"]) if "pmcid" in source_entry else None,
+        doi=str(source_entry["doi"]) if "doi" in source_entry else None,
+        source_text=str(source_entry.get("source_text", "")),
+    )
+
+
+def _validate_manifest_arms(
+    study_id: str,
+    study_rows: list[ArmEventRow],
+    manifest_arms: Any,
+) -> None:
+    if not isinstance(manifest_arms, list):
+        raise ValidationError(f"{study_id}: source manifest arms must be a list.")
+    by_role = {str(arm.get("arm_role", "")): arm for arm in manifest_arms if isinstance(arm, dict)}
+    if set(by_role) != {row.arm_role for row in study_rows}:
+        raise ValidationError(f"{study_id}: source manifest arms do not match CSV arm roles.")
+    for row in study_rows:
+        arm = by_role[row.arm_role]
+        for field_name in ("treatment", "events", "n"):
+            if arm.get(field_name) != getattr(row, field_name):
+                raise ValidationError(
+                    f"{study_id}: source manifest arm {row.arm_role} {field_name} does not match CSV rows."
+                )
+
+
 def build_dataset_from_arm_events(rows: list[ArmEventRow]) -> EvidenceDataset:
     dataset = EvidenceDataset()
     for row in rows:
@@ -176,8 +304,20 @@ def fixed_effect_log_or_reference(rows: list[ArmEventRow]) -> EffectEstimate:
     )
 
 
-def run_real_meta_benchmark(path: str | Path, *, mcmc_samples: int = 600) -> dict[str, Any]:
+def run_real_meta_benchmark(
+    path: str | Path,
+    *,
+    mcmc_samples: int = 600,
+    source_manifest_path: str | Path | None = None,
+) -> dict[str, Any]:
     rows = load_arm_event_rows(path)
+    source_manifest = None
+    if source_manifest_path is not None:
+        source_manifest = validate_real_meta_source_manifest(
+            rows,
+            source_manifest_path,
+            dataset_path=path,
+        )
     dataset = build_dataset_from_arm_events(rows)
     outcome_id = rows[0].outcome_id
 
@@ -228,6 +368,7 @@ def run_real_meta_benchmark(path: str | Path, *, mcmc_samples: int = 600) -> dic
         "n_arms": len(rows),
         "outcome_id": outcome_id,
         "effect_scale": "log_or",
+        "source_manifest": source_manifest,
         "reference": reference.__dict__,
         "frequentist": {
             "estimate": float(frequentist[0]),
