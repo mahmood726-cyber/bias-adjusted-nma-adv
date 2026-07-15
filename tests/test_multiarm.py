@@ -96,6 +96,34 @@ def test_random_effects_multiarm_matches_netmeta_portfolio_fixture():
     assert se_c == pytest.approx(0.5262952049, abs=TOL)
 
 
+def test_fixed_effect_influence_diagnostics_preserve_gls_hat_invariants():
+    fit = fit_multiarm_gls(_rows_from_arms(FIXTURE_CONSISTENT), reference_treatment="A")
+
+    diagnostics = fit.influence_diagnostics
+    assert len(diagnostics) == 7
+    assert sum(row.leverage for row in diagnostics) == pytest.approx(2.0, abs=1e-10)
+    assert all(math.isfinite(row.standardized_residual) for row in diagnostics)
+    assert all(math.isfinite(row.cook_distance) for row in diagnostics)
+    assert all(row.variance > 0.0 for row in diagnostics)
+
+    multiarm_rows = [row for row in diagnostics if row.study == "S6"]
+    assert [(row.treatment_from, row.treatment_to) for row in multiarm_rows] == [
+        ("A", "B"),
+        ("A", "C"),
+    ]
+
+
+def test_influence_diagnostics_flag_deliberately_discordant_contrast():
+    fit = fit_multiarm_gls(_rows_from_arms(FIXTURE_HETEROGENEOUS), reference_treatment="A")
+
+    most_influential = max(fit.influence_diagnostics, key=lambda row: row.cook_distance)
+
+    assert most_influential.study == "S5"
+    assert (most_influential.treatment_from, most_influential.treatment_to) == ("B", "C")
+    assert most_influential.standardized_residual == pytest.approx(3.4130943718, abs=1e-6)
+    assert most_influential.cook_distance == pytest.approx(2.1129830474, abs=1e-6)
+
+
 def test_incomplete_multiarm_clique_warns_and_drops_study():
     rows = [
         row

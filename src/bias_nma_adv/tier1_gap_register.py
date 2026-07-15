@@ -38,6 +38,7 @@ class Tier1Gap:
     summary: str
     tier_one_references: tuple[str, ...]
     missing_capabilities: tuple[str, ...]
+    implemented_capabilities: tuple[str, ...]
     required_evidence_artifacts: tuple[str, ...]
     claim_limit: str
     certification_effect: str
@@ -65,6 +66,9 @@ class Tier1Gap:
             summary=str(raw["summary"]),
             tier_one_references=tuple(str(item) for item in raw["tier_one_references"]),
             missing_capabilities=tuple(str(item) for item in raw["missing_capabilities"]),
+            implemented_capabilities=tuple(
+                str(item) for item in raw.get("implemented_capabilities", [])
+            ),
             required_evidence_artifacts=tuple(
                 str(item) for item in raw["required_evidence_artifacts"]
             ),
@@ -93,6 +97,11 @@ class Tier1Gap:
             raise Tier1GapRegisterError(f"{self.id}: at least two tier-one references are required.")
         if len(self.missing_capabilities) < 3:
             raise Tier1GapRegisterError(f"{self.id}: missing_capabilities is too thin.")
+        overlap = sorted(set(self.missing_capabilities) & set(self.implemented_capabilities))
+        if overlap:
+            raise Tier1GapRegisterError(
+                f"{self.id}: capabilities cannot be both missing and implemented: {overlap}"
+            )
         if len(self.required_evidence_artifacts) < 3:
             raise Tier1GapRegisterError(f"{self.id}: required_evidence_artifacts is too thin.")
         claim_limit = self.claim_limit.lower()
@@ -180,12 +189,18 @@ def summarize_tier1_gap_register(register: Tier1GapRegister) -> dict[str, Any]:
     status_counts: dict[str, int] = {}
     for gap in register.gaps:
         status_counts[gap.status] = status_counts.get(gap.status, 0) + 1
+    implemented = {
+        gap.id: list(gap.implemented_capabilities)
+        for gap in register.gaps
+        if gap.implemented_capabilities
+    }
     return {
         "schema_version": TIER1_GAP_REGISTER_SCHEMA_VERSION,
         "checked_at": register.checked_at,
         "n_gaps": len(register.gaps),
         "gap_ids": [gap.id for gap in register.gaps],
         "status_counts": dict(sorted(status_counts.items())),
+        "implemented_capabilities": implemented,
         "blocked_claims": list(register.blocked_claims),
         "certification_effect": register.certification_effect,
     }

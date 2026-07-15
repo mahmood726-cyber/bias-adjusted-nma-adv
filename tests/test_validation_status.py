@@ -108,6 +108,9 @@ def test_validation_status_composes_all_current_gates():
         "numerical_stability",
         "bayesian_ecosystem_integration",
     ]
+    assert tier1_gaps["implemented_capabilities"] == {
+        "feature_completeness": ["multiarm_gls_influence_leverage_diagnostics"]
+    }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
     assert tier1_gaps["certification_effect"] == "none"
 

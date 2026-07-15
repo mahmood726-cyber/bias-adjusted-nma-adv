@@ -28,6 +28,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
 
     by_id = {gap.id: gap for gap in register.gaps}
     assert "node_splitting" in by_id["feature_completeness"].missing_capabilities
+    assert (
+        "multiarm_gls_influence_leverage_diagnostics"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
     assert "optimizer_stress_matrix" in by_id["numerical_stability"].missing_capabilities
     assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
@@ -46,6 +50,9 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "bayesian_ecosystem_integration",
         ],
         "status_counts": {"blocking": 3},
+        "implemented_capabilities": {
+            "feature_completeness": ["multiarm_gls_influence_leverage_diagnostics"]
+        },
         "blocked_claims": [
             "tier_one_parity",
             "tier_one_superiority",
@@ -104,6 +111,7 @@ def _register_to_mapping(register: Tier1GapRegister) -> dict[str, object]:
                 "summary": gap.summary,
                 "tier_one_references": list(gap.tier_one_references),
                 "missing_capabilities": list(gap.missing_capabilities),
+                "implemented_capabilities": list(gap.implemented_capabilities),
                 "required_evidence_artifacts": list(gap.required_evidence_artifacts),
                 "claim_limit": gap.claim_limit,
                 "certification_effect": gap.certification_effect,

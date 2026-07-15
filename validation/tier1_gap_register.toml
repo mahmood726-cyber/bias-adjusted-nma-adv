@@ -27,6 +27,9 @@ missing_capabilities = [
   "trim_and_fill_sensitivity",
   "contribution_matrix_diagnostics",
 ]
+implemented_capabilities = [
+  "multiarm_gls_influence_leverage_diagnostics",
+]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",
   "external_reference_output_comparisons",

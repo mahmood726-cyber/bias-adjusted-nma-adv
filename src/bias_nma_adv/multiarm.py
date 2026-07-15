@@ -61,7 +61,25 @@ class _AssembledNetwork:
     v: np.ndarray
     nonreference_treatments: tuple[str, ...]
     row_studies: tuple[str, ...]
+    row_contrasts: tuple[tuple[str, str], ...]
     blocks: tuple[tuple[int, int, bool], ...]
+
+
+@dataclass(frozen=True)
+class ContrastInfluenceDiagnostic:
+    """Diagnostic for one contrast row in a fitted GLS network model."""
+
+    row_index: int
+    study: str
+    treatment_from: str
+    treatment_to: str
+    observed: float
+    fitted: float
+    residual: float
+    variance: float
+    leverage: float
+    standardized_residual: float
+    cook_distance: float
 
 
 @dataclass(frozen=True)
@@ -79,6 +97,7 @@ class MultiArmNMAFit:
     df: int | None
     multi_arm_studies: tuple[str, ...]
     warnings: tuple[str, ...]
+    influence_diagnostics: tuple[ContrastInfluenceDiagnostic, ...]
 
     def effect_vs_reference(self, treatment: str) -> tuple[float, float]:
         """Return estimate and SE for treatment versus the reference."""
@@ -164,6 +183,7 @@ def fit_multiarm_gls(
         raise ValueError("singular design or disconnected treatment network.")
 
     model_key = model.lower()
+    diagnostic_v = assembled.v
     if model_key in {"fe", "fixed", "common"}:
         fit = fixed
         tau2 = 0.0
@@ -178,11 +198,13 @@ def fit_multiarm_gls(
             random_fit = _gls(assembled.x, assembled.y, random_v)
             if random_fit is not None:
                 fit = random_fit
+                diagnostic_v = random_v
         result_model = "random"
     else:
         raise ValueError("model must be fixed/common or random/re.")
 
     multi_arm = tuple(study.study_id for study in studies if study.multi_arm)
+    influence_diagnostics = _influence_diagnostics(assembled, fit, diagnostic_v)
     return MultiArmNMAFit(
         reference_treatment=reference,
         treatments=treatments,
@@ -195,6 +217,7 @@ def fit_multiarm_gls(
         df=int(q_info["df"]) if q_info else None,
         multi_arm_studies=multi_arm,
         warnings=tuple(warnings),
+        influence_diagnostics=influence_diagnostics,
     )
 
 
@@ -344,6 +367,7 @@ def _assemble(
     y = np.zeros(n_rows, dtype=float)
     v = np.zeros((n_rows, n_rows), dtype=float)
     row_studies: list[str] = []
+    row_contrasts: list[tuple[str, str]] = []
     blocks: list[tuple[int, int, bool]] = []
 
     cursor = 0
@@ -356,6 +380,7 @@ def _assemble(
             if contrast.from_ != reference:
                 x[cursor, treatment_index[contrast.from_]] -= 1.0
             row_studies.append(study.study_id)
+            row_contrasts.append((contrast.from_, contrast.to))
             cursor += 1
 
         width = len(study.contrasts)
@@ -380,6 +405,7 @@ def _assemble(
         v=v,
         nonreference_treatments=nonreference,
         row_studies=tuple(row_studies),
+        row_contrasts=tuple(row_contrasts),
         blocks=tuple(blocks),
     )
 
@@ -445,3 +471,42 @@ def _random_effects_covariance(
                     random_v[start + i, start + j] += tau2 / 2.0
                     random_v[start + j, start + i] += tau2 / 2.0
     return random_v
+
+
+def _influence_diagnostics(
+    assembled: _AssembledNetwork,
+    fit: dict[str, np.ndarray],
+    covariance: np.ndarray,
+) -> tuple[ContrastInfluenceDiagnostic, ...]:
+    fitted = assembled.x @ fit["d"]
+    residual = assembled.y - fitted
+    hat = assembled.x @ fit["cov"] @ assembled.x.T @ fit["v_inv"]
+    diagonal_v = np.diag(covariance)
+    n_parameters = max(int(assembled.x.shape[1]), 1)
+
+    diagnostics: list[ContrastInfluenceDiagnostic] = []
+    for idx, study in enumerate(assembled.row_studies):
+        treatment_from, treatment_to = assembled.row_contrasts[idx]
+        leverage = float(hat[idx, idx])
+        variance = float(diagonal_v[idx])
+        one_minus_leverage = max(1.0 - leverage, 1e-12)
+        residual_scale = math.sqrt(max(variance * one_minus_leverage, 1e-12))
+        standardized = float(residual[idx] / residual_scale)
+        cook_denominator = n_parameters * one_minus_leverage
+        cook = float((standardized * standardized * max(leverage, 0.0)) / cook_denominator)
+        diagnostics.append(
+            ContrastInfluenceDiagnostic(
+                row_index=idx,
+                study=study,
+                treatment_from=treatment_from,
+                treatment_to=treatment_to,
+                observed=float(assembled.y[idx]),
+                fitted=float(fitted[idx]),
+                residual=float(residual[idx]),
+                variance=variance,
+                leverage=leverage,
+                standardized_residual=standardized,
+                cook_distance=cook,
+            )
+        )
+    return tuple(diagnostics)
