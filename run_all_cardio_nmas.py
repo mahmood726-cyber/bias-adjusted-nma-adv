@@ -6,7 +6,6 @@ import math
 import numpy as np
 from bias_nma_adv.data import EvidenceDataset
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
-from bias_nma_adv.gnn import TreatmentGCNRegularizer
 from bias_nma_adv.copula import ClaytonCopulaJointEstimator
 from bias_nma_adv.vae import SurvivalCohortVAE
 
@@ -82,21 +81,7 @@ def main():
     print("TESTING OUT-OF-FIELD METHODOLOGICAL FRONTIERS")
     print("=" * 80)
 
-    # 1. GNN Treatment Embeddings Regularizer
-    print("\n[GNN] Fitting Graph Convolutional Network Treatment Embeddings...")
-    gnn = TreatmentGCNRegularizer(embedding_dim=3)
-    treatments = ["PLA", "SGLT2i", "ARNI", "MRA", "ARB", "Digoxin"]
-    edges = [
-        ("SGLT2i", "PLA"),
-        ("ARNI", "ARB"),
-        ("MRA", "PLA"),
-        ("ARB", "PLA"),
-        ("Digoxin", "PLA")
-    ]
-    embeddings = gnn.fit_transform(treatments, edges)
-    print(" -> Treatment embeddings generated successfully in GNN space.")
-    p_mat = gnn.get_topological_precision_matrix(treatments, edges)
-    print(f" -> GNN precision matrix shape: {p_mat.shape} (Successfully regularized topology)")
+
 
     # 2. Clayton Copula Joint Likelihood Estimator
     print("\n[Copula] Estimating Joint Efficacy and Safety dependencies...")

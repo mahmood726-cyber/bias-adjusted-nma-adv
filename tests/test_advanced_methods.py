@@ -3,23 +3,8 @@
 from __future__ import annotations
 
 import numpy as np
-from bias_nma_adv.gnn import TreatmentGCNRegularizer
 from bias_nma_adv.copula import ClaytonCopulaJointEstimator
 from bias_nma_adv.vae import SurvivalCohortVAE
-
-def test_gnn_regularizer():
-    gnn = TreatmentGCNRegularizer(embedding_dim=2)
-    treatments = ["A", "B", "C"]
-    edges = [("A", "B"), ("B", "C")]
-    
-    embeddings = gnn.fit_transform(treatments, edges)
-    assert embeddings.shape == (3, 2)
-    assert np.all(embeddings >= 0.0) # ReLU activation
-    
-    p_mat = gnn.get_topological_precision_matrix(treatments, edges)
-    assert p_mat.shape == (3, 3)
-    # Laplacian row-sum should equal 0 (or close due to float precision)
-    assert np.allclose(np.sum(p_mat, axis=1), 0.0, atol=1e-10)
 
 def test_clayton_copula():
     copula = ClaytonCopulaJointEstimator(theta=2.0)
