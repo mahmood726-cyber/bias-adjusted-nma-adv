@@ -141,6 +141,52 @@ class PairwiseNumericalStressReport:
 
 
 @dataclass(frozen=True)
+class REMLProfilePoint:
+    """One point on the pairwise REML tau2 objective profile."""
+
+    tau2: float
+    objective: float
+
+
+@dataclass(frozen=True)
+class REMLLocalMinimumDiagnostic:
+    """Grid/profile diagnostic for pairwise REML tau2 optimization."""
+
+    k: int
+    optimizer_tau2: float
+    optimizer_objective: float
+    best_grid_tau2: float
+    best_grid_objective: float
+    objective_gap: float
+    local_minima: tuple[REMLProfilePoint, ...]
+    boundary_minimum: bool
+    profile: tuple[REMLProfilePoint, ...]
+    warnings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class PairwiseStressMatrixScenario:
+    """One named scenario in a pairwise numerical stress matrix."""
+
+    scenario_id: str
+    status: str
+    stress_report: PairwiseNumericalStressReport | None
+    reml_profile: REMLLocalMinimumDiagnostic | None
+    warnings: tuple[str, ...]
+    error: str | None
+
+
+@dataclass(frozen=True)
+class PairwiseNumericalStressMatrix:
+    """Deterministic stress matrix over named pairwise datasets."""
+
+    n_scenarios: int
+    status_counts: dict[str, int]
+    scenarios: tuple[PairwiseStressMatrixScenario, ...]
+    warnings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class TrimAndFillSensitivity:
     """Bounded trim-and-fill-style sensitivity analysis for funnel asymmetry."""
 
@@ -521,6 +567,135 @@ def numerical_stress_report(
     )
 
 
+def reml_local_minimum_diagnostic(
+    effects: np.ndarray,
+    variances: np.ndarray,
+    *,
+    n_grid: int = 51,
+    tau2_upper: float | None = None,
+    objective_tolerance: float = 1e-6,
+) -> REMLLocalMinimumDiagnostic:
+    """Profile the REML tau2 objective to expose boundary/local-minimum risk."""
+
+    y, v = _validate_effects(effects, variances)
+    if y.size < 2:
+        raise PairwiseMetaError("REML local-minimum diagnostics require at least two studies.")
+    if n_grid < 5:
+        raise PairwiseMetaError("n_grid must be at least 5.")
+    if tau2_upper is not None and tau2_upper <= 0.0:
+        raise PairwiseMetaError("tau2_upper must be positive when supplied.")
+    if objective_tolerance < 0.0:
+        raise PairwiseMetaError("objective_tolerance must be nonnegative.")
+
+    upper = float(tau2_upper) if tau2_upper is not None else _upper_tau2_for_minimization(y, v)
+    grid = np.linspace(0.0, upper, int(n_grid), dtype=float)
+    profile = tuple(
+        REMLProfilePoint(
+            tau2=float(tau2),
+            objective=float(_restricted_log_likelihood(y, v, float(tau2))),
+        )
+        for tau2 in grid
+    )
+    objectives = np.asarray([point.objective for point in profile], dtype=float)
+    best_idx = int(np.argmin(objectives))
+
+    optimizer_tau2 = _tau2_reml(y, v)
+    optimizer_objective = float(_restricted_log_likelihood(y, v, optimizer_tau2))
+    best_grid = profile[best_idx]
+    local_minima = _local_minima_from_profile(profile, tolerance=objective_tolerance)
+    boundary_minimum = best_idx in {0, len(profile) - 1}
+    objective_gap = float(optimizer_objective - best_grid.objective)
+
+    warnings: list[str] = [
+        "REML profile diagnostics are numerical screens and are not reference-package optimizer parity."
+    ]
+    near_best = tuple(
+        point
+        for point in local_minima
+        if point.objective <= best_grid.objective + objective_tolerance
+    )
+    if len(near_best) > 1:
+        warnings.append("Multiple near-best local minima detected on the REML grid.")
+    if boundary_minimum:
+        warnings.append("Best REML grid point is on the tau2 boundary.")
+    if abs(objective_gap) > max(objective_tolerance, 1e-10):
+        warnings.append("Bounded optimizer and grid minimum differ beyond tolerance.")
+
+    return REMLLocalMinimumDiagnostic(
+        k=int(y.size),
+        optimizer_tau2=float(optimizer_tau2),
+        optimizer_objective=optimizer_objective,
+        best_grid_tau2=float(best_grid.tau2),
+        best_grid_objective=float(best_grid.objective),
+        objective_gap=objective_gap,
+        local_minima=local_minima,
+        boundary_minimum=bool(boundary_minimum),
+        profile=profile,
+        warnings=tuple(warnings),
+    )
+
+
+def pairwise_numerical_stress_matrix(
+    scenarios: dict[str, tuple[np.ndarray, np.ndarray]],
+    *,
+    methods: tuple[str, ...] = ("FE", "DL", "PM", "REML"),
+    dominant_weight_threshold: float = 0.80,
+    n_grid: int = 51,
+) -> PairwiseNumericalStressMatrix:
+    """Run pairwise stress and REML-profile diagnostics across scenarios."""
+
+    if not scenarios:
+        raise PairwiseMetaError("at least one stress scenario is required.")
+
+    scenario_reports: list[PairwiseStressMatrixScenario] = []
+    status_counts: dict[str, int] = {}
+    for scenario_id, payload in scenarios.items():
+        try:
+            effects, variances = payload
+            stress = numerical_stress_report(
+                effects,
+                variances,
+                methods=methods,
+                dominant_weight_threshold=dominant_weight_threshold,
+            )
+            profile = reml_local_minimum_diagnostic(
+                effects,
+                variances,
+                n_grid=n_grid,
+            )
+            warnings = tuple(dict.fromkeys((*stress.warnings, *profile.warnings)))
+            status = "warning" if warnings else "passed"
+            report = PairwiseStressMatrixScenario(
+                scenario_id=str(scenario_id),
+                status=status,
+                stress_report=stress,
+                reml_profile=profile,
+                warnings=warnings,
+                error=None,
+            )
+        except (PairwiseMetaError, ValueError) as exc:
+            report = PairwiseStressMatrixScenario(
+                scenario_id=str(scenario_id),
+                status="failed",
+                stress_report=None,
+                reml_profile=None,
+                warnings=(str(exc),),
+                error=str(exc),
+            )
+        scenario_reports.append(report)
+        status_counts[report.status] = status_counts.get(report.status, 0) + 1
+
+    warnings = (
+        "Pairwise stress matrices are local numerical screens and require reference-package comparisons before robustness claims.",
+    )
+    return PairwiseNumericalStressMatrix(
+        n_scenarios=len(scenario_reports),
+        status_counts=dict(sorted(status_counts.items())),
+        scenarios=tuple(scenario_reports),
+        warnings=warnings,
+    )
+
+
 def trim_and_fill_sensitivity(
     effects: np.ndarray,
     standard_errors: np.ndarray,
@@ -697,6 +872,20 @@ def _restricted_log_likelihood(y: np.ndarray, v: np.ndarray, tau2: float) -> flo
     mean = float(np.sum(weights * y) / np.sum(weights))
     q = _q_statistic(y, weights, mean)
     return 0.5 * (float(np.sum(np.log(total_v))) + math.log(float(np.sum(weights))) + q)
+
+
+def _local_minima_from_profile(
+    profile: tuple[REMLProfilePoint, ...],
+    *,
+    tolerance: float,
+) -> tuple[REMLProfilePoint, ...]:
+    local_minima: list[REMLProfilePoint] = []
+    for idx, point in enumerate(profile):
+        left = profile[idx - 1].objective if idx > 0 else math.inf
+        right = profile[idx + 1].objective if idx < len(profile) - 1 else math.inf
+        if point.objective <= left + tolerance and point.objective <= right + tolerance:
+            local_minima.append(point)
+    return tuple(local_minima)
 
 
 def _upper_tau2_for_root(y: np.ndarray, v: np.ndarray, df: int) -> float:

@@ -127,6 +127,8 @@ def test_validation_status_composes_all_current_gates():
             "multiarm_deterministic_failure_reports",
             "pairwise_alternative_tau2_cross_checks",
             "pairwise_sparse_dominant_study_stress_report",
+            "pairwise_reml_local_minimum_profile_diagnostic",
+            "pairwise_optimizer_stress_matrix",
         ],
         "bayesian_ecosystem_integration": [
             "local_mcmc_rhat_ess_mcse_diagnostic_warnings",

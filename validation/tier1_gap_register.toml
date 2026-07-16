@@ -54,17 +54,19 @@ review_source = "multiperson_tier1_feedback"
 summary = "The local Python REML and GLS paths need broader convergence and stress-test evidence before they can be treated as robust as mature R implementations."
 tier_one_references = ["metafor", "netmeta", "meta"]
 missing_capabilities = [
-  "optimizer_stress_matrix",
-  "sparse_network_convergence_guards",
-  "local_minimum_detection",
-  "alternative_tau2_estimator_cross_checks",
-  "deterministic_failure_reports",
+  "reference_matched_optimizer_stress_matrix",
+  "broad_sparse_network_convergence_guards",
+  "reference_matched_local_minimum_detection",
+  "reference_matched_alternative_tau2_estimator_cross_checks",
+  "cross_engine_deterministic_failure_reports",
 ]
 implemented_capabilities = [
   "positive_definite_covariance_fail_closed_policy",
   "multiarm_deterministic_failure_reports",
   "pairwise_alternative_tau2_cross_checks",
   "pairwise_sparse_dominant_study_stress_report",
+  "pairwise_reml_local_minimum_profile_diagnostic",
+  "pairwise_optimizer_stress_matrix",
 ]
 required_evidence_artifacts = [
   "prespecified_sparse_network_simulations",

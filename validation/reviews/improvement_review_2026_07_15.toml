@@ -32,6 +32,7 @@ findings = [
   "The heatmap-ready contribution matrix supports HTML/report rendering without moving statistical estimation into HTML.",
   "The selection-weight sensitivity adds a prespecified publication-bias stress test, but the probabilities are analyst inputs and not inferred evidence.",
   "The pairwise tau2 cross-check and numerical stress report reduce ambiguity around estimator sensitivity, sparse evidence, and dominant fixed-effect weights.",
+  "The pairwise REML profile and stress-matrix diagnostics expose boundary minima, grid-vs-optimizer differences, and scenario failures, but they do not replace reference-package optimizer stress tests.",
   "The bounded trim-and-fill sensitivity screen adds a publication-bias sensitivity workflow, but it is not reference-matched Duval-Tweedie trim-and-fill parity.",
   "The local Bayesian sampler now exports R-hat/ESS/MCSE diagnostic warnings, but it remains a prototype sampler rather than Stan/NUTS or multinma parity.",
   "The CmdStan preflight contract fails closed when CmdStanPy or CmdStan is unavailable and records the required NUTS diagnostics before any model run can count.",
@@ -47,6 +48,7 @@ actions = [
   "Recorded study-level contribution-matrix aggregation and bounded exhaustive GOSH-style subset enumeration as implemented helper diagnostics while keeping netheat, CINeMA, ROB-MEN, and visualization parity blocked.",
   "Recorded heatmap-ready contribution-matrix data and selection-weight publication-bias sensitivity as implemented helper diagnostics while keeping reference-matched publication-bias workflows blocked.",
   "Recorded pairwise tau2 cross-checks and sparse/dominant-study stress reports as partial numerical-stability capabilities.",
+  "Recorded pairwise REML local-minimum profiling and named stress-matrix reporting as partial numerical-stability capabilities.",
   "Recorded bounded trim-and-fill sensitivity screening as partial publication-bias workflow progress while keeping full trim-and-fill parity blocked.",
   "Recorded local Bayesian MCMC diagnostic exports as partial Bayesian ecosystem progress while keeping Stan/NUTS and multinma matching blocked.",
   "Recorded the CmdStan preflight contract as a fail-closed environment gate while keeping CmdStan backend implementation blocked.",
@@ -138,6 +140,7 @@ findings = [
   "The selection-weight publication-bias sensitivity validates input probabilities and preserves warnings in the returned object.",
   "The dose-response coverage gate is static and fail-closed: it records absence of source-backed dose-response artifacts instead of inferring coverage from planned methods text.",
   "The pairwise tau2, stress, and trim-and-fill sensitivity diagnostics are deterministic wrappers over the existing pairwise API and preserve fail-closed input validation.",
+  "The REML profile diagnostic samples a bounded tau2 grid and never silently upgrades optimizer behavior to a certification claim.",
   "The Bayesian diagnostic code is deterministic over stored draws and explicitly warns when single-chain output cannot support R-hat.",
   "The CmdStan preflight is an environment contract only and cannot certify Bayesian performance.",
 ]
@@ -153,6 +156,7 @@ actions = [
   "Added focused tests for heatmap-ready contribution output and selection-weight publication-bias sensitivity input validation.",
   "Added focused tests for dose-response source-coverage absence and validation-status exposure.",
   "Added focused tests for pairwise tau2 cross-checks, dominant-study stress warnings, bounded trim-and-fill sensitivity, and invalid trim-and-fill inputs.",
+  "Added focused tests for REML tau2 objective profiles, boundary-minimum warnings, and named pairwise stress-matrix failures.",
   "Added focused tests for Bayesian MCMC diagnostic exports and multi-chain R-hat availability.",
   "Added focused tests for CmdStan preflight summary shape, required diagnostics, and non-certifying status.",
 ]

@@ -72,7 +72,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         "selection_weight_publication_bias_sensitivity"
         in by_id["feature_completeness"].implemented_capabilities
     )
-    assert "optimizer_stress_matrix" in by_id["numerical_stability"].missing_capabilities
+    assert (
+        "reference_matched_optimizer_stress_matrix"
+        in by_id["numerical_stability"].missing_capabilities
+    )
     assert (
         "positive_definite_covariance_fail_closed_policy"
         in by_id["numerical_stability"].implemented_capabilities
@@ -87,6 +90,14 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     )
     assert (
         "pairwise_sparse_dominant_study_stress_report"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
+        "pairwise_reml_local_minimum_profile_diagnostic"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
+        "pairwise_optimizer_stress_matrix"
         in by_id["numerical_stability"].implemented_capabilities
     )
     assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
@@ -133,6 +144,8 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "multiarm_deterministic_failure_reports",
                 "pairwise_alternative_tau2_cross_checks",
                 "pairwise_sparse_dominant_study_stress_report",
+                "pairwise_reml_local_minimum_profile_diagnostic",
+                "pairwise_optimizer_stress_matrix",
             ],
             "bayesian_ecosystem_integration": [
                 "local_mcmc_rhat_ess_mcse_diagnostic_warnings",

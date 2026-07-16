@@ -9,6 +9,8 @@ from bias_nma_adv.pairwise import (
     gosh_outlier_space_diagnostic,
     leave_one_out_outlier_diagnostic,
     numerical_stress_report,
+    pairwise_numerical_stress_matrix,
+    reml_local_minimum_diagnostic,
     tau2_cross_check_report,
     trim_and_fill_sensitivity,
 )
@@ -175,6 +177,65 @@ def test_numerical_stress_report_flags_dominant_study_and_boundary_tau2():
     assert report.min_variance == pytest.approx(0.0001)
     assert report.max_variance == pytest.approx(1.0)
     assert any("Dominant-study" in warning for warning in report.warnings)
+
+
+def test_reml_local_minimum_diagnostic_profiles_tau2_objective():
+    y = np.array([0.0, 1.0, 2.0])
+    v = np.array([0.25, 0.25, 0.25])
+
+    diagnostic = reml_local_minimum_diagnostic(y, v, n_grid=41, tau2_upper=2.0)
+
+    assert diagnostic.k == 3
+    assert diagnostic.optimizer_tau2 == pytest.approx(0.75, abs=1e-6)
+    assert diagnostic.best_grid_tau2 == pytest.approx(0.75, abs=0.05)
+    assert diagnostic.objective_gap <= 0.0
+    assert diagnostic.local_minima
+    assert diagnostic.boundary_minimum is False
+    assert len(diagnostic.profile) == 41
+    assert any("numerical screens" in warning for warning in diagnostic.warnings)
+
+
+def test_reml_local_minimum_diagnostic_flags_boundary_minimum():
+    y = np.array([0.2, 0.2, 0.2])
+    v = np.array([0.04, 0.04, 0.04])
+
+    diagnostic = reml_local_minimum_diagnostic(y, v, n_grid=11, tau2_upper=1.0)
+
+    assert diagnostic.optimizer_tau2 == pytest.approx(0.0)
+    assert diagnostic.best_grid_tau2 == pytest.approx(0.0)
+    assert diagnostic.boundary_minimum is True
+    assert any("boundary" in warning for warning in diagnostic.warnings)
+
+
+def test_pairwise_numerical_stress_matrix_reports_scenario_statuses():
+    matrix = pairwise_numerical_stress_matrix(
+        {
+            "stable": (
+                np.array([0.0, 1.0, 2.0]),
+                np.array([0.25, 0.25, 0.25]),
+            ),
+            "dominant": (
+                np.array([0.0, 0.1, 0.2]),
+                np.array([0.0001, 1.0, 1.0]),
+            ),
+            "invalid": (
+                np.array([0.0, 0.1]),
+                np.array([0.04, 0.0]),
+            ),
+        },
+        n_grid=17,
+    )
+
+    assert matrix.n_scenarios == 3
+    assert matrix.status_counts["failed"] == 1
+    assert matrix.status_counts["warning"] == 2
+    by_id = {scenario.scenario_id: scenario for scenario in matrix.scenarios}
+    assert by_id["stable"].stress_report is not None
+    assert by_id["stable"].reml_profile is not None
+    assert by_id["dominant"].status == "warning"
+    assert by_id["invalid"].status == "failed"
+    assert by_id["invalid"].error is not None
+    assert any("reference-package" in warning for warning in matrix.warnings)
 
 
 def test_trim_and_fill_sensitivity_mirrors_overrepresented_side():
