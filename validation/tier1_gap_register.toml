@@ -49,6 +49,9 @@ implemented_capabilities = [
   "dta_source_coverage_gate",
   "dta_bivariate_logitnormal_reml_prototype",
   "dta_mada_reitsma_algorithmic_reference_adapter",
+  "rapidmeta_app_index_fail_closed_adapter_contract",
+  "evalue_and_binary_fragility_sensitivity",
+  "pairwise_redescending_outlier_sensitivity",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",

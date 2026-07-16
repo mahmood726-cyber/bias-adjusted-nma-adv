@@ -1,9 +1,11 @@
 from pathlib import Path
+import json
 
 import pytest
 
 from bias_nma_adv.real_meta import (
     ArmEventRow,
+    build_dataset_from_arm_events,
     fixed_effect_log_or_reference,
     load_arm_event_rows,
     run_real_meta_benchmark,
@@ -12,11 +14,13 @@ from bias_nma_adv.real_meta import (
     validate_real_meta_source_manifest,
 )
 from bias_nma_adv.data import ValidationError
+from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SGLT2_EVENTS = ROOT / "validation" / "real_meta" / "sglt2_hf_primary_events.csv"
 SGLT2_SOURCES = ROOT / "validation" / "real_meta" / "sglt2_hf_primary_sources.toml"
+PAIRWISE_METAFOR_OUTPUT = ROOT / "validation" / "reference_runs" / "pairwise_metafor_meta_output.json"
 
 
 def test_text_artifact_sha256_is_line_ending_canonical(tmp_path):
@@ -255,3 +259,24 @@ def test_real_meta_benchmark_runs_frequentist_and_bayesian_models():
     assert bayes["posterior_sd"] > 0.0
     assert 0.05 <= bayes["acceptance_rate"] <= 0.95
     assert abs(bayes["posterior_mean"] - ref["estimate"]) < 0.25
+
+
+def test_unadjusted_pooler_matches_metafor_fixed_effect_golden_reference():
+    rows = load_arm_event_rows(SGLT2_EVENTS)
+    dataset = build_dataset_from_arm_events(rows)
+    assert all(study.rob_weight == 1.0 for study in dataset.studies.values())
+    assert all(not study.covariates for study in dataset.studies.values())
+
+    fit = AdvancedBiasAdjustedNMAPooler(hksj=False, random_effects=False).fit(
+        dataset,
+        "hf_primary",
+        reference_treatment="Placebo",
+    )
+    reference = json.loads(PAIRWISE_METAFOR_OUTPUT.read_text(encoding="utf-8"))["metafor"][
+        "fixed_effect"
+    ]
+
+    assert fit.treatment_effects["SGLT2i"] == pytest.approx(reference["estimate"], abs=1e-12)
+    assert fit.treatment_ses["SGLT2i"] == pytest.approx(reference["se"], abs=1e-12)
+    assert fit.taus == {"rct": 0.0}
+    assert fit.warnings == ()

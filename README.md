@@ -27,6 +27,9 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/bayesian.py`: Experimental Metropolis-Hastings Bayesian sampler with local R-hat/ESS/MCSE diagnostic warnings, prior/posterior predictive checks, and draw-preserving treatment ranking; it is not a Stan/NUTS replacement.
 - `src/bias_nma_adv/stan_backend.py`: Fail-closed CmdStanPy/CmdStan preflight contract exposing required NUTS diagnostics before any Stan-backed reference run can count.
 - `src/bias_nma_adv/pairwise.py`: Experimental pairwise meta-analysis bridge for FE, DL, Paule-Mandel, REML, HKSJ, prediction-interval conventions, diagnostic-only leave-one-out and bounded exhaustive GOSH-style outlier-space screening, tau2 cross-checks, sparse/dominant-study stress reports, REML profile/local-minimum screens, stress-matrix reports, and bounded trim-and-fill sensitivity screening.
+- `src/bias_nma_adv/redescending.py`: Default-off Tukey-biweight redescending pairwise sensitivity screen that reports transparent study weights; it is not a full redescending fraud-containment NMA core.
+- `src/bias_nma_adv/sufficiency_fragility.py`: Deterministic E-value and binary event fragility-index sensitivity summaries for source-backed ratio estimates or event counts.
+- `src/bias_nma_adv/rapidmeta_adapter.py`: Fail-closed importer for a strict RapidMeta-style app-index JSON contract; protocol-only registry rows and ambiguous multi-analysis exports are rejected before estimation.
 - `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.
 - `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests, with pre-fit design diagnostics, deterministic fit-attempt reports, diagnostic-only GLS leverage, residual, approximate Cook-distance, row-level/study-level/heatmap-ready absolute mapping-contribution, and fail-closed covariance-validity outputs.
 - `src/bias_nma_adv/node_splitting.py`: Experimental fixed-effect node-splitting diagnostic for closed-loop direct-versus-indirect contrast checks.
@@ -84,7 +87,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/scan_portfolio_reuse.py`: Scans user-supplied local roots for registered portfolio reuse candidates and reports dirty worktrees, missing assets, and import-review status.
 - `scripts/write_proof_effect_bundle.py`: Regenerates the SGLT2 reported-HR proof-carrying extracted-effect bundle from verified manifests and live PubMed abstract text.
 - `scripts/write_real_benchmark_atlas.py`: Regenerates the non-certifying real benchmark coverage atlas from the source-backed benchmark registry.
-- `scripts/write_validation_status.py`: Emits the combined validation status JSON for CI/Overmind-style gates. Current reports keep clinical and HTA reporting disabled unless a module is Production Certified.
+- `scripts/write_validation_status.py`: Emits the combined validation status JSON for CI/Overmind-style gates and can optionally verify external source-artifact hash pins. Current reports keep clinical and HTA reporting disabled unless a module is Production Certified.
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.
 - `scripts/verify_survival_sources.py`: Regenerates CT.gov/PubMed identity snapshots for survival reported-HR manifests.

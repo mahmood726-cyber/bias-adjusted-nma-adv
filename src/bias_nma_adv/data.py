@@ -8,6 +8,14 @@ import re
 import tomllib
 from typing import Any, Mapping
 
+from bias_nma_adv.evidence_sources import (
+    ALLOWED_SOURCE_TYPES,
+    EFFECT_EVIDENCE_SOURCE_TYPES,
+    PUBLISHED_EFFECT_SOURCE_TYPES,
+    REGISTRY_FIRST_EFFECT_SOURCE_TYPES,
+)
+
+
 class ValidationError(ValueError):
     """Raised when data fails schema validation."""
     pass
@@ -75,6 +83,7 @@ class StudyRecord:
     rob_weight: float = 1.0  # Quality score / weight in (0, 1]
     covariates: dict[str, float] = field(default_factory=dict)
     indirectness: str | None = None
+    source_type: str | None = None
 
     def __post_init__(self):
         normalized_design = self.design.strip().lower()
@@ -91,6 +100,7 @@ class StudyRecord:
             if not indirectness:
                 raise ValidationError("indirectness must not be blank when provided.")
             object.__setattr__(self, "indirectness", indirectness)
+        object.__setattr__(self, "source_type", _validated_source_type(self.source_type))
 
 @dataclass(frozen=True)
 class ArmRecord:
@@ -111,6 +121,7 @@ class OutcomeADRecord:
     measure_type: str  # "binary" or "continuous"
     value: float  # events for binary, mean for continuous
     se: float | None = None  # standard error (required for continuous)
+    source_type: str | None = None
 
     def __post_init__(self):
         if self.measure_type not in {"binary", "continuous"}:
@@ -123,6 +134,12 @@ class OutcomeADRecord:
                 raise ValidationError("Binary outcome events 'value' must be >= 0.")
             if self.se is not None and self.se <= 0.0:
                 raise ValidationError("Field 'se' must be > 0 when provided.")
+        source_type = _validated_source_type(self.source_type)
+        if source_type is not None and source_type not in EFFECT_EVIDENCE_SOURCE_TYPES:
+            raise ValidationError(
+                f"Outcome source_type '{source_type}' cannot supply model-ready effects."
+            )
+        object.__setattr__(self, "source_type", source_type)
 
 class EvidenceDataset:
     """In-memory database of study, arm, and outcome records."""
@@ -139,6 +156,7 @@ class EvidenceDataset:
         rob_weight: float = 1.0,
         covariates: dict[str, float] | None = None,
         indirectness: str | None = None,
+        source_type: str | None = None,
     ) -> None:
         covs = covariates or {}
         self.studies[study_id] = StudyRecord(
@@ -147,6 +165,7 @@ class EvidenceDataset:
             rob_weight=float(rob_weight),
             covariates={k: float(v) for k, v in covs.items()},
             indirectness=indirectness,
+            source_type=source_type,
         )
 
     def add_arm(self, study_id: str, arm_id: str, treatment_id: str, n: int) -> None:
@@ -158,7 +177,16 @@ class EvidenceDataset:
             n=int(n)
         )
 
-    def add_outcome_ad(self, study_id: str, arm_id: str, outcome_id: str, measure_type: str, value: float, se: float | None = None) -> None:
+    def add_outcome_ad(
+        self,
+        study_id: str,
+        arm_id: str,
+        outcome_id: str,
+        measure_type: str,
+        value: float,
+        se: float | None = None,
+        source_type: str | None = None,
+    ) -> None:
         self._validate_model_ready_study(study_id)
         self.outcomes_ad.append(OutcomeADRecord(
             study_id=study_id,
@@ -166,7 +194,8 @@ class EvidenceDataset:
             outcome_id=outcome_id,
             measure_type=measure_type,
             value=float(value),
-            se=float(se) if se is not None else None
+            se=float(se) if se is not None else None,
+            source_type=source_type,
         ))
 
     def arm_lookup(self) -> dict[tuple[str, str], ArmRecord]:
@@ -181,6 +210,43 @@ class EvidenceDataset:
                 return o.measure_type
         raise ValidationError(f"Outcome '{outcome_id}' not found in dataset.")
 
+    def subset_by_input_source(self, mode: str) -> "EvidenceDataset":
+        """Return a copy containing only rows for one declared input source lane.
+
+        The estimator never sees the mode. Selection happens before fitting so
+        as-published versus registry-first comparisons isolate the input layer.
+        Untagged rows are excluded from both lanes.
+        """
+
+        if mode == "as_published":
+            allowed_sources = PUBLISHED_EFFECT_SOURCE_TYPES
+        elif mode == "registry_first":
+            allowed_sources = REGISTRY_FIRST_EFFECT_SOURCE_TYPES
+        else:
+            raise ValidationError("mode must be 'as_published' or 'registry_first'.")
+
+        selected_outcomes = []
+        for outcome in self.outcomes_ad:
+            study = self.studies.get(outcome.study_id)
+            source_type = outcome.source_type or (study.source_type if study else None)
+            if source_type in allowed_sources:
+                selected_outcomes.append(outcome)
+
+        selected_studies = {outcome.study_id for outcome in selected_outcomes}
+        subset = EvidenceDataset()
+        subset.studies = {
+            study_id: study
+            for study_id, study in self.studies.items()
+            if study_id in selected_studies
+        }
+        subset.arms = {
+            key: arm
+            for key, arm in self.arms.items()
+            if key[0] in selected_studies
+        }
+        subset.outcomes_ad = list(selected_outcomes)
+        return subset
+
     def _validate_model_ready_study(self, study_id: str) -> None:
         study = self.studies.get(study_id)
         if study is None:
@@ -190,3 +256,21 @@ class EvidenceDataset:
                 f"Study '{study_id}' has metadata-only design '{study.design}' and "
                 "cannot carry model-ready arms or outcomes."
             )
+        if study.source_type is not None and study.source_type not in EFFECT_EVIDENCE_SOURCE_TYPES:
+            raise ValidationError(
+                f"Study '{study_id}' has protocol-only source_type '{study.source_type}' "
+                "and cannot carry model-ready arms or outcomes."
+            )
+
+
+def _validated_source_type(source_type: str | None) -> str | None:
+    if source_type is None:
+        return None
+    normalized = source_type.strip()
+    if not normalized:
+        raise ValidationError("source_type must not be blank when provided.")
+    if normalized not in ALLOWED_SOURCE_TYPES:
+        raise ValidationError(
+            f"source_type must be one of the configured source types: {sorted(ALLOWED_SOURCE_TYPES)}."
+        )
+    return normalized

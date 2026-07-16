@@ -3,6 +3,9 @@ from pathlib import Path
 import subprocess
 import sys
 
+import pytest
+
+from bias_nma_adv.reversal_yardstick import ReversalYardstickError
 from bias_nma_adv.validation_status import (
     NO_PRODUCTION_CERTIFIED_MESSAGE,
     VALIDATION_STATUS_SCHEMA_VERSION,
@@ -141,6 +144,9 @@ def test_validation_status_composes_all_current_gates():
             "dta_source_coverage_gate",
             "dta_bivariate_logitnormal_reml_prototype",
             "dta_mada_reitsma_algorithmic_reference_adapter",
+            "rapidmeta_app_index_fail_closed_adapter_contract",
+            "evalue_and_binary_fragility_sensitivity",
+            "pairwise_redescending_outlier_sensitivity",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -387,3 +393,57 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["proof_effect_bundle"]["n_records"] == 4
     assert payload["multiperson_review"]["n_rounds"] == 4
     assert payload["improvement_review"]["global_goal_complete"] is False
+
+
+def test_validation_status_source_artifact_pin_reports_unavailable(tmp_path):
+    missing = tmp_path / "missing_FIX.md"
+    report = build_validation_status(
+        ROOT,
+        checked_at="2026-07-15T00:00:00Z",
+        source_artifact_paths={"fix_md": missing},
+    )
+
+    pins = report["reversal_yardstick"]["source_artifact_pins"]
+    assert pins["status"] == "unavailable"
+    assert pins["verified_artifacts"] == {}
+    assert pins["unavailable_artifacts"] == ("fix_md",)
+
+
+def test_validation_status_source_artifact_pin_fails_closed_on_drift(tmp_path):
+    drifted = tmp_path / "FIX.md"
+    drifted.write_text("not the pinned answer key\n", encoding="utf-8")
+
+    with pytest.raises(ReversalYardstickError, match="hash drift"):
+        build_validation_status(
+            ROOT,
+            checked_at="2026-07-15T00:00:00Z",
+            source_artifact_paths={"fix_md": drifted},
+        )
+
+
+def test_write_validation_status_script_fails_closed_on_pin_drift(tmp_path):
+    drifted = tmp_path / "FIX.md"
+    drifted.write_text("not the pinned answer key\n", encoding="utf-8")
+    output = tmp_path / "validation_status.json"
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--root",
+            str(ROOT),
+            "--checked-at",
+            "2026-07-15T00:00:00Z",
+            "--source-artifact",
+            f"fix_md={drifted}",
+            "--output",
+            str(output),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 1
+    assert "hash drift" in completed.stdout
+    assert not output.exists()

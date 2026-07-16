@@ -118,6 +118,18 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "rapidmeta_app_index_fail_closed_adapter_contract"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "evalue_and_binary_fragility_sensitivity"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "pairwise_redescending_outlier_sensitivity"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "reference_matched_optimizer_stress_matrix"
         in by_id["numerical_stability"].missing_capabilities
     )
@@ -210,6 +222,9 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "dta_source_coverage_gate",
             "dta_bivariate_logitnormal_reml_prototype",
             "dta_mada_reitsma_algorithmic_reference_adapter",
+            "rapidmeta_app_index_fail_closed_adapter_contract",
+            "evalue_and_binary_fragility_sensitivity",
+            "pairwise_redescending_outlier_sensitivity",
         ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from bias_nma_adv.benchmark_registry import (
     assert_registry_covers_source_backed_artifacts,
@@ -78,6 +78,7 @@ def build_validation_status(
     repo_root: str | Path,
     *,
     checked_at: str | None = None,
+    source_artifact_paths: Mapping[str, str | Path] | None = None,
 ) -> dict[str, Any]:
     """Build a machine-readable report from all current validation gates.
 
@@ -128,6 +129,11 @@ def build_validation_status(
     )
     dta_coverage = load_dta_source_coverage(dta_coverage_path)
     reversal_yardstick = load_reversal_yardstick(reversal_yardstick_path)
+    reversal_pin_report = (
+        reversal_yardstick.verify_source_artifact_pins(source_artifact_paths)
+        if source_artifact_paths is not None
+        else None
+    )
     improvement_review = load_improvement_review(improvement_review_path)
 
     targets = load_reference_targets(reference_targets_path)
@@ -203,6 +209,11 @@ def build_validation_status(
         "reversal_yardstick": {
             "yardstick": _relpath(reversal_yardstick_path, root),
             **summarize_reversal_yardstick(reversal_yardstick),
+            **(
+                {"source_artifact_pins": reversal_pin_report}
+                if reversal_pin_report is not None
+                else {}
+            ),
         },
         "ingestion_contract": summarize_proof_carrying_ingestion_contract(),
         "proof_effect_bundle": {

@@ -202,9 +202,11 @@ def main():
     
     print(f" -> TWILIGHT (NCT02870140): Sponsor class: {twilight_sbs:.1f} (1.0=industry)")
     print(f" -> Attrition Ratio: {twilight_lar:.4f} (Lost-to-Follow-Up)")
-    print(f" -> Adjusted Doi-Welton Quality Weight: {adj_quality:.4f} (Base: 1.0)")
+    print(
+        f" -> Adjusted Doi-Welton Quality Weight: {adj_quality:.4f} "
+        "(Base: 1.0; computed, NOT applied to the demo estimate above)"
+    )
 
 if __name__ == "__main__":
     main()
-
 

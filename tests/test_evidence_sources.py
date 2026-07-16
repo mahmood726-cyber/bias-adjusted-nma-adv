@@ -4,6 +4,8 @@ from bias_nma_adv.evidence_sources import (
     ALLOWED_SOURCE_TYPES,
     EFFECT_EVIDENCE_SOURCE_TYPES,
     PROTOCOL_ONLY_SOURCE_TYPES,
+    PUBLISHED_EFFECT_SOURCE_TYPES,
+    REGISTRY_FIRST_EFFECT_SOURCE_TYPES,
     REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES,
     REGULATORY_REVIEW_EVIDENCE_SOURCE_TYPES,
     EvidenceSource,
@@ -30,6 +32,18 @@ def test_allowed_source_types_are_the_project_boundary():
     assert REGULATORY_REVIEW_EVIDENCE_SOURCE_TYPES == {
         "ema_epar",
         "fda_review",
+    }
+    assert PUBLISHED_EFFECT_SOURCE_TYPES == {
+        "open_access_paper",
+        "pubmed_abstract",
+    }
+    assert REGISTRY_FIRST_EFFECT_SOURCE_TYPES == {
+        "aact_clinicaltrials_gov",
+        "clinicaltrials_gov",
+        "ema_epar",
+        "fda_review",
+        "pactr_results",
+        "who_ictrp_results",
     }
     assert PROTOCOL_ONLY_SOURCE_TYPES == {
         "other_trial_registry_protocol",

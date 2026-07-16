@@ -108,6 +108,18 @@ REGULATORY_REVIEW_EVIDENCE_SOURCE_TYPES = {
     for source_type, policy in SOURCE_TYPE_POLICIES.items()
     if policy.role == "effect" and policy.category == "regulatory_review"
 }
+REGISTRY_FIRST_EFFECT_SOURCE_TYPES = {
+    source_type
+    for source_type, policy in SOURCE_TYPE_POLICIES.items()
+    if policy.role == "effect"
+    and policy.category
+    in {"clinical_trial_registry", "trial_registry_results", "regulatory_review"}
+}
+PUBLISHED_EFFECT_SOURCE_TYPES = {
+    source_type
+    for source_type, policy in SOURCE_TYPE_POLICIES.items()
+    if policy.role == "effect" and policy.category in {"abstract", "open_access_full_text"}
+}
 PROTOCOL_ONLY_SOURCE_TYPES = {
     source_type
     for source_type, policy in SOURCE_TYPE_POLICIES.items()

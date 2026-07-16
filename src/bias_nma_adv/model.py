@@ -9,6 +9,7 @@ import scipy.stats
 from scipy.optimize import minimize, minimize_scalar
 
 from bias_nma_adv.data import EvidenceDataset, ValidationError, StudyRecord, OutcomeADRecord, ArmRecord
+from bias_nma_adv.sponsor_bias import RegistrySponsorAuditor
 
 @dataclass(frozen=True)
 class AdvancedNMAFitResult:
@@ -35,6 +36,7 @@ class AdvancedNMAFitResult:
     study_specific_biases_ses: dict[str, float]
     weight_sensitivity_stds: dict[str, float] = field(default_factory=dict)
     exact_binomial_active: bool = False
+    target_population: str = "enriched_as_randomised"
     warnings: tuple[str, ...] = field(default_factory=tuple)
 
     def contrast(
@@ -140,7 +142,11 @@ class AdvancedBiasAdjustedNMAPooler:
         treatment_shrinkage_lambda: float = 0.0,
         study_specific_bias: bool = False,
         bias_prior_mean: float = 0.0,
-        exact_binomial: str | bool = "auto"
+        exact_binomial: str | bool = "auto",
+        apply_sponsor_bias: bool = False,
+        sponsor_auditor: RegistrySponsorAuditor | None = None,
+        apply_indirectness: bool = False,
+        target_population: str = "enriched_as_randomised",
     ):
         if hksj_df not in {"studies", "contrasts"}:
             raise ValueError("hksj_df must be 'studies' or 'contrasts'.")
@@ -150,6 +156,12 @@ class AdvancedBiasAdjustedNMAPooler:
             raise ValueError("random_effects must be True, False, or 'stratified'.")
         if exact_binomial not in {True, False, "auto"}:
             raise ValueError("exact_binomial must be True, False, or 'auto'.")
+        if apply_sponsor_bias and sponsor_auditor is None:
+            raise ValueError("apply_sponsor_bias=True requires sponsor_auditor.")
+        if target_population not in {"enriched_as_randomised", "unselected_target"}:
+            raise ValueError(
+                "target_population must be 'enriched_as_randomised' or 'unselected_target'."
+            )
         self.hksj = hksj
         self.hksj_df = hksj_df
         self.down_weight = down_weight
@@ -159,6 +171,10 @@ class AdvancedBiasAdjustedNMAPooler:
         self.study_specific_bias = study_specific_bias
         self.bias_prior_mean = bias_prior_mean
         self.exact_binomial = exact_binomial
+        self.apply_sponsor_bias = apply_sponsor_bias
+        self.sponsor_auditor = sponsor_auditor
+        self.apply_indirectness = apply_indirectness
+        self.target_population = target_population
 
     def fit(
         self,
@@ -226,6 +242,11 @@ class AdvancedBiasAdjustedNMAPooler:
 
         n_contrasts = int(y.shape[0])
         warnings_list: list[str] = []
+        if self.apply_indirectness:
+            warnings_list.append(
+                "Indirectness is enabled as a declared estimand sensitivity, but no "
+                "mechanism-specific numerical delta is applied by default."
+            )
         
         # Checking rank of X (with a fallback regularization standard)
         if np.linalg.matrix_rank(x) < x.shape[1] and not (self.treatment_shrinkage_lambda > 0.0 or self.study_specific_bias):
@@ -540,6 +561,7 @@ class AdvancedBiasAdjustedNMAPooler:
             study_specific_biases_ses=study_specific_biases_ses,
             weight_sensitivity_stds=weight_sensitivity_stds,
             exact_binomial_active=use_exact,
+            target_population=self.target_population,
             warnings=tuple(warnings_list)
         )
 
@@ -563,6 +585,21 @@ class AdvancedBiasAdjustedNMAPooler:
             study = dataset.studies.get(study_id)
             design = study.design if study else "other"
             rob_weight = study.rob_weight if (study and self.down_weight) else 1.0
+            if self.apply_sponsor_bias:
+                if study is None:
+                    raise ValidationError(
+                        f"{study_id}: sponsor-bias adjustment requires a StudyRecord."
+                    )
+                assert self.sponsor_auditor is not None
+                if study_id not in self.sponsor_auditor.registry_db:
+                    raise ValidationError(
+                        f"{study_id}: sponsor-bias adjustment requires registered "
+                        "sponsor and attrition metadata."
+                    )
+                rob_weight = self.sponsor_auditor.adjust_doi_welton_quality(
+                    study_id,
+                    base_quality=rob_weight,
+                )
             covariates = study.covariates if study else {}
 
             # Sweeting's Adaptive Continuity Correction

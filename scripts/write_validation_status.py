@@ -18,6 +18,7 @@ from bias_nma_adv.grand_benchmark_plan import GrandBenchmarkPlanError  # noqa: E
 from bias_nma_adv.portfolio_reuse import PortfolioReuseError  # noqa: E402
 from bias_nma_adv.proof_effect_bundle import ProofEffectBundleError  # noqa: E402
 from bias_nma_adv.review_ledger import ReviewLedgerError  # noqa: E402
+from bias_nma_adv.reversal_yardstick import ReversalYardstickError  # noqa: E402
 from bias_nma_adv.simulation_matrix import SimulationMatrixError  # noqa: E402
 from bias_nma_adv.validation_status import (  # noqa: E402
     VALIDATION_STATUS_SCHEMA_VERSION,
@@ -37,11 +38,25 @@ def main(argv: list[str] | None = None) -> int:
         "--checked-at",
         help="Optional deterministic timestamp for reproducible reports.",
     )
+    parser.add_argument(
+        "--source-artifact",
+        action="append",
+        default=[],
+        metavar="ID=PATH",
+        help=(
+            "Optional external source-artifact pin to verify, for example "
+            "fix_md=/path/to/FIX.md. May be supplied more than once."
+        ),
+    )
     args = parser.parse_args(argv)
 
     root = args.root.resolve()
     try:
-        report = build_validation_status(root, checked_at=args.checked_at)
+        report = build_validation_status(
+            root,
+            checked_at=args.checked_at,
+            source_artifact_paths=_parse_source_artifacts(args.source_artifact),
+        )
     except (
         BenchmarkRegistryError,
         CertificationError,
@@ -49,6 +64,7 @@ def main(argv: list[str] | None = None) -> int:
         PortfolioReuseError,
         ProofEffectBundleError,
         ReviewLedgerError,
+        ReversalYardstickError,
         SimulationMatrixError,
         OSError,
         json.JSONDecodeError,
@@ -74,6 +90,25 @@ def main(argv: list[str] | None = None) -> int:
     output_path.write_text(payload, encoding="utf-8")
     print(f"validation status written: {output_path}")
     return 0
+
+
+def _parse_source_artifacts(raw_items: list[str]) -> dict[str, Path] | None:
+    if not raw_items:
+        return None
+    parsed: dict[str, Path] = {}
+    for raw in raw_items:
+        if "=" not in raw:
+            raise ReversalYardstickError(
+                "--source-artifact entries must use ID=PATH syntax."
+            )
+        artifact_id, path_text = raw.split("=", 1)
+        artifact_id = artifact_id.strip()
+        if not artifact_id or not path_text.strip():
+            raise ReversalYardstickError(
+                "--source-artifact entries must include a non-empty ID and PATH."
+            )
+        parsed[artifact_id] = Path(path_text)
+    return parsed
 
 
 if __name__ == "__main__":

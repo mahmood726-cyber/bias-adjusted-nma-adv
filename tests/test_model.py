@@ -5,6 +5,7 @@ import numpy as np
 
 from bias_nma_adv.data import ALLOWED_STUDY_DESIGNS, EFFECT_STUDY_DESIGNS, EvidenceDataset, ValidationError
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
+from bias_nma_adv.sponsor_bias import RegistrySponsorAuditor
 
 def test_validation_errors():
     dataset = EvidenceDataset()
@@ -41,6 +42,10 @@ def test_study_design_policy_is_extensible_but_metadata_frames_cannot_enter_effe
     with pytest.raises(ValidationError, match="metadata-only design"):
         dataset.add_arm("S_PROTOCOL", "arm1", "A", 100)
 
+    dataset.add_study("S_PROTOCOL_SOURCE", "rct", source_type="who_ictrp_protocol")
+    with pytest.raises(ValidationError, match="protocol-only source_type"):
+        dataset.add_arm("S_PROTOCOL_SOURCE", "arm1", "A", 100)
+
 
 def test_run_in_applicability_is_context_or_indirectness_not_rob_weight():
     dataset = EvidenceDataset()
@@ -59,6 +64,55 @@ def test_run_in_applicability_is_context_or_indirectness_not_rob_weight():
 
     with pytest.raises(ValidationError, match="indirectness"):
         dataset.add_study("S_BLANK", "rct", indirectness=" ")
+
+
+def test_input_source_subset_splits_published_from_registry_first_rows():
+    dataset = EvidenceDataset()
+    dataset.add_study("PUB", "rct", source_type="pubmed_abstract")
+    dataset.add_arm("PUB", "control", "A", 100)
+    dataset.add_arm("PUB", "active", "B", 100)
+    dataset.add_outcome_ad("PUB", "control", "O1", "binary", 20)
+    dataset.add_outcome_ad("PUB", "active", "O1", "binary", 12)
+
+    dataset.add_study("REG", "rct", source_type="clinicaltrials_gov")
+    dataset.add_arm("REG", "control", "A", 100)
+    dataset.add_arm("REG", "active", "B", 100)
+    dataset.add_outcome_ad("REG", "control", "O1", "binary", 22)
+    dataset.add_outcome_ad("REG", "active", "O1", "binary", 13)
+
+    dataset.add_study("OVERRIDE", "rct", source_type="pubmed_abstract")
+    dataset.add_arm("OVERRIDE", "control", "A", 100)
+    dataset.add_arm("OVERRIDE", "active", "B", 100)
+    dataset.add_outcome_ad(
+        "OVERRIDE",
+        "control",
+        "O1",
+        "binary",
+        18,
+        source_type="fda_review",
+    )
+    dataset.add_outcome_ad(
+        "OVERRIDE",
+        "active",
+        "O1",
+        "binary",
+        9,
+        source_type="fda_review",
+    )
+
+    as_published = dataset.subset_by_input_source("as_published")
+    registry_first = dataset.subset_by_input_source("registry_first")
+
+    assert set(as_published.studies) == {"PUB"}
+    assert {outcome.study_id for outcome in as_published.outcomes_ad} == {"PUB"}
+    assert set(registry_first.studies) == {"REG", "OVERRIDE"}
+    assert {outcome.study_id for outcome in registry_first.outcomes_ad} == {
+        "REG",
+        "OVERRIDE",
+    }
+
+    with pytest.raises(ValidationError, match="mode must be"):
+        dataset.subset_by_input_source("all_sources")
 
 
 def test_network_connectivity():
@@ -130,6 +184,73 @@ def test_reml_gls_reproducible_pooling():
     # With rob_weight = 0.5, study S3 variance is doubled, altering estimates.
     assert se_hksj > 0.0
     assert se_non_hksj > 0.0
+
+
+def test_sponsor_bias_is_default_off_and_opt_in_fail_closed():
+    dataset = EvidenceDataset()
+    for study_id, active_events in (("NCT00000001", 20), ("NCT00000002", 30)):
+        dataset.add_study(study_id, "rct", rob_weight=1.0)
+        dataset.add_arm(study_id, "control", "A", 100)
+        dataset.add_arm(study_id, "active", "B", 100)
+        dataset.add_outcome_ad(study_id, "control", "O1", "binary", 10)
+        dataset.add_outcome_ad(study_id, "active", "O1", "binary", active_events)
+
+    default_fit = AdvancedBiasAdjustedNMAPooler(hksj=False, random_effects=False).fit(
+        dataset,
+        "O1",
+        reference_treatment="A",
+    )
+
+    auditor = RegistrySponsorAuditor()
+    auditor.register_trial_flow("NCT00000001", "other", randomized=200, lost_to_follow_up=0)
+    with pytest.raises(ValidationError, match="sponsor-bias adjustment requires"):
+        AdvancedBiasAdjustedNMAPooler(
+            hksj=False,
+            random_effects=False,
+            apply_sponsor_bias=True,
+            sponsor_auditor=auditor,
+        ).fit(dataset, "O1", reference_treatment="A")
+
+    auditor.register_trial_flow("NCT00000002", "industry", randomized=200, lost_to_follow_up=30)
+    adjusted_fit = AdvancedBiasAdjustedNMAPooler(
+        hksj=False,
+        random_effects=False,
+        apply_sponsor_bias=True,
+        sponsor_auditor=auditor,
+    ).fit(dataset, "O1", reference_treatment="A")
+
+    assert adjusted_fit.treatment_ses["B"] > 0.0
+    assert adjusted_fit.treatment_effects["B"] != pytest.approx(
+        default_fit.treatment_effects["B"]
+    )
+    assert adjusted_fit.target_population == "enriched_as_randomised"
+
+
+def test_indirectness_flag_names_estimand_without_default_numeric_penalty():
+    dataset = EvidenceDataset()
+    dataset.add_study("S1", "rct", indirectness="run-in enrichment")
+    dataset.add_arm("S1", "control", "A", 100)
+    dataset.add_arm("S1", "active", "B", 100)
+    dataset.add_outcome_ad("S1", "control", "O1", "binary", 10)
+    dataset.add_outcome_ad("S1", "active", "O1", "binary", 20)
+
+    default_fit = AdvancedBiasAdjustedNMAPooler(hksj=False, random_effects=False).fit(
+        dataset,
+        "O1",
+        reference_treatment="A",
+    )
+    sensitivity_fit = AdvancedBiasAdjustedNMAPooler(
+        hksj=False,
+        random_effects=False,
+        apply_indirectness=True,
+        target_population="unselected_target",
+    ).fit(dataset, "O1", reference_treatment="A")
+
+    assert sensitivity_fit.target_population == "unselected_target"
+    assert sensitivity_fit.treatment_effects["B"] == pytest.approx(
+        default_fit.treatment_effects["B"]
+    )
+    assert any("no mechanism-specific numerical delta" in warning for warning in sensitivity_fit.warnings)
 
 
 def test_meta_regression():
@@ -326,5 +447,4 @@ def test_exact_binomial_rare_events():
     assert "B" in fit.treatment_effects
     assert fit.treatment_effects["B"] > 0.0
     assert fit.treatment_ses["B"] > 0.0
-
 
