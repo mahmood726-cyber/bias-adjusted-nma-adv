@@ -1,17 +1,17 @@
 schema_version = "dose_response_source_coverage/v1"
 checked_at = "2026-07-16"
-status = "missing_source_backed_dose_response_data"
+status = "active_source_backed_dose_response_data"
 certification_effect = "none"
 purpose = "Machine-readable check for whether dose-response benchmark data are currently included from the allowed evidence-source boundary."
 allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
 protocol_only_sources = ["other_trial_registry_protocol", "who_ictrp_protocol"]
 protocol_registry_rule = "WHO ICTRP and other registries may provide protocol metadata only; they cannot supply dose-response model-ready effects."
-registered_benchmark_ids = []
-registered_source_counts = {clinicaltrials_gov = 0, pubmed_abstract = 0, open_access_paper = 0}
+registered_benchmark_ids = ["semaglutide_obesity_dose_response"]
+registered_source_counts = {clinicaltrials_gov = 1, pubmed_abstract = 1, open_access_paper = 0}
 source_search_summary = [
-  "validation/benchmark_registry.toml contains no dose_response_nma or dose_response_pairwise benchmark entries.",
-  "validation/grand_benchmark_plan.toml contains no active real-data dose-response lane.",
-  "validation/reference_targets.toml contains a planned MBNMAdose reference target only.",
+  "validation/benchmark_registry.toml contains one dose_response_pairwise benchmark entry: semaglutide_obesity_dose_response.",
+  "validation/grand_benchmark_plan.toml contains one active real-data dose-response lane.",
+  "validation/reference_targets.toml still contains a planned MBNMAdose reference target only; no external dose-response reference run has passed.",
 ]
 required_next_artifacts = [
   "dose_response_source_manifest_with_nct_pmid_and_open_access_identifiers",
@@ -22,4 +22,4 @@ required_next_artifacts = [
   "dose_response_analysis_artifact",
   "MBNMAdose_reference_run_before_certification",
 ]
-claim_limit = "No dose-response real-data validation, MBNMAdose parity, or dose-response superiority claim is supported until source-backed dose-response artifacts are registered and externally reference matched."
+claim_limit = "No dose-response NMA validation, MBNMAdose parity, or dose-response superiority claim is supported until external reference matching and broader source-backed artifacts pass."

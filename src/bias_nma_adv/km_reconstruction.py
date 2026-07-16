@@ -16,11 +16,13 @@ import numpy as np
 
 from bias_nma_adv.data import ValidationError
 from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
+from bias_nma_adv.survival import reconstruct_ipd_guyot
 
 
 KM_RECONSTRUCTION_POLICY_SCHEMA_VERSION = "km_reconstruction_policy/v1"
 KM_RECONSTRUCTION_SCREEN_SCHEMA_VERSION = "km_reconstruction_screen/v1"
 KM_CURVE_FIDELITY_SCHEMA_VERSION = "km_curve_fidelity/v1"
+KM_NATIVE_GUYOT_RECONSTRUCTION_SCHEMA_VERSION = "km_native_guyot_reconstruction/v1"
 
 _NCT_RE = re.compile(r"^NCT\d{8}$")
 _PMID_RE = re.compile(r"^\d{1,9}$")
@@ -404,6 +406,117 @@ def compare_km_curves(
         "rmst_abs_error": float(abs(recon_rmst - ref_rmst)),
         "rmst_relative_error": float(abs(recon_rmst - ref_rmst) / max(ref_rmst, 1e-12)),
     }
+
+
+def native_guyot_reconstruction_check(
+    curve_times: Any,
+    curve_survivals: Any,
+    *,
+    n_risk_times: Any,
+    n_risk_values: Any,
+    total_n: int,
+    arm: int = 0,
+    tau: float | None = None,
+    iae_threshold: float = 0.02,
+    grid_points: int = 100,
+) -> dict[str, Any]:
+    """Run the native Python Guyot-style loop and report KM fidelity.
+
+    This is an algorithmic reconstruction check only. It does not make an
+    open-access figure source valid; source provenance is still enforced by
+    ``screen_km_reconstruction_result`` and the KM policy artifact.
+    """
+
+    times, survivals = _validated_km_curve_arrays(
+        study_id="native_guyot",
+        label="curve",
+        raw_times=curve_times,
+        raw_survivals=curve_survivals,
+        min_curve_points=2,
+    )
+    risk_times, risk_values = _validated_risk_table(
+        n_risk_times=n_risk_times,
+        n_risk_values=n_risk_values,
+        total_n=total_n,
+    )
+    if not isinstance(arm, int):
+        raise ValidationError("native Guyot reconstruction arm must be an integer.")
+    iae_threshold = float(iae_threshold)
+    if not math.isfinite(iae_threshold) or iae_threshold < 0.0:
+        raise ValidationError("native Guyot reconstruction iae_threshold must be non-negative.")
+
+    records = reconstruct_ipd_guyot(
+        times,
+        survivals,
+        n_risk_times=risk_times,
+        n_risk_values=risk_values,
+        total_n=int(total_n),
+        arm=arm,
+    )
+    ipd_times = np.asarray([record.time for record in records], dtype=float)
+    ipd_events = np.asarray([record.event for record in records], dtype=int)
+    reconstructed_times, reconstructed_survivals = km_from_ipd(ipd_times, ipd_events)
+    fidelity = compare_km_curves(
+        times,
+        survivals,
+        reconstructed_times,
+        reconstructed_survivals,
+        tau=tau,
+        grid_points=grid_points,
+    )
+    status = (
+        "eligible_native_reconstruction"
+        if fidelity["iae"] <= iae_threshold
+        else "warning_native_reconstruction"
+    )
+    warnings = [
+        "Native Guyot-style reconstruction is algorithmic validation only; OA figure provenance is still required.",
+        "Never claim IPD-level accuracy from reconstructed KM curves without external event/median/p-value checks.",
+    ]
+    if status.startswith("warning"):
+        warnings.append(
+            f"Integrated absolute error {fidelity['iae']:.6g} exceeds threshold {iae_threshold:.6g}."
+        )
+    return {
+        "schema_version": KM_NATIVE_GUYOT_RECONSTRUCTION_SCHEMA_VERSION,
+        "status": status,
+        "certification_effect": "none",
+        "n_ipd_records": int(len(records)),
+        "n_events": int(ipd_events.sum()) if ipd_events.size else 0,
+        "n_censored": int(len(records) - int(ipd_events.sum())) if ipd_events.size else 0,
+        "arm": int(arm),
+        "total_n": int(total_n),
+        "risk_table_points": int(len(risk_times)),
+        "fidelity": fidelity,
+        "warnings": warnings,
+    }
+
+
+def _validated_risk_table(
+    *,
+    n_risk_times: Any,
+    n_risk_values: Any,
+    total_n: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    risk_times = np.asarray(list(n_risk_times), dtype=float)
+    risk_values = np.asarray(list(n_risk_values), dtype=float)
+    if risk_times.shape != risk_values.shape:
+        raise ValidationError("native Guyot risk-table times and values must have the same length.")
+    if risk_times.ndim != 1 or risk_times.size < 2:
+        raise ValidationError("native Guyot reconstruction requires at least two risk-table points.")
+    if int(total_n) <= 0:
+        raise ValidationError("native Guyot reconstruction total_n must be positive.")
+    if np.any(~np.isfinite(risk_times)) or np.any(risk_times < 0.0):
+        raise ValidationError("native Guyot risk-table times must be finite and non-negative.")
+    if np.any(np.diff(risk_times) < 0.0):
+        raise ValidationError("native Guyot risk-table times must be nondecreasing.")
+    if np.any(~np.isfinite(risk_values)) or np.any(risk_values < 0.0):
+        raise ValidationError("native Guyot risk-table values must be finite and non-negative.")
+    if np.any(np.diff(risk_values) > 0.0):
+        raise ValidationError("native Guyot risk-table values must be nonincreasing.")
+    if risk_values[0] > int(total_n):
+        raise ValidationError("native Guyot first risk-table value cannot exceed total_n.")
+    return risk_times, risk_values.astype(int)
 
 
 def _validate_curve(

@@ -47,7 +47,7 @@ def test_improvement_review_summary_is_validation_status_ready():
 
     assert summary == {
         "schema_version": IMPROVEMENT_REVIEW_SCHEMA_VERSION,
-        "checked_at": "2026-07-15",
+        "checked_at": "2026-07-16",
         "overall_status": ALLOWED_OVERALL_STATUS,
         "n_rounds": 4,
         "round_ids": [

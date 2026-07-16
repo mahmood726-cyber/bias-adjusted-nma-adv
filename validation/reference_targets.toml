@@ -1,5 +1,5 @@
 schema_version = 1
-checked_at = "2026-07-15"
+checked_at = "2026-07-16"
 purpose = "Minimum external reference targets required before platform modules can claim tier-one parity or production certification."
 certification_rule = "A module cannot be marked reference_matched, simulation_validated, externally_reproduced, or production_certified unless required evidence_artifacts exist and are machine-verifiable."
 allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
@@ -93,6 +93,19 @@ acceptance_criteria = [
   "derive non-negative contribution percentages from a documented evidence-flow algorithm",
   "map risk-of-bias domains to comparison-level certainty outputs",
   "separate missing-evidence risk from small-study-effect heuristics",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "dta_bivariate_hsroc_reference"
+domain = "diagnostic_test_accuracy"
+module = "planned:dta"
+reference_method = "mada, metafor, or validated bivariate/HSROC reference implementation"
+status = "planned"
+acceptance_criteria = [
+  "ingest only source-backed TP/FP/FN/TN 2x2 tables with threshold and reference-standard metadata",
+  "match bivariate random-effects sensitivity/specificity summaries and HSROC outputs within tolerance",
+  "report threshold-effect diagnostics and fail closed for k<5 or nonconvergent bivariate fits",
 ]
 evidence_artifacts = []
 

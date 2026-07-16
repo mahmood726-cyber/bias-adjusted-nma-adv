@@ -1,0 +1,92 @@
+schema_version = "dose_response_ctgov_manifest/v1"
+benchmark_id = "semaglutide_obesity_dose_response"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_dose_response_lsmean"
+status = "candidate_source_verified"
+certification_effect = "none"
+trial = "Semaglutide obesity dose-ranging phase 2 trial"
+nct_id = "NCT02453711"
+pmid = "30122305"
+source_url = "https://clinicaltrials.gov/study/NCT02453711"
+pubmed_url = "https://pubmed.ncbi.nlm.nih.gov/30122305/"
+access_statement = "ClinicalTrials.gov public results plus PubMed abstract identity record; no closed or proprietary source is used."
+outcome_id = "relative_body_weight_change"
+outcome_title = "Relative Change in Body Weight (%)"
+outcome_param_type = "LEAST_SQUARES_MEAN"
+outcome_dispersion_type = "Standard Error"
+outcome_unit = "Percentage (%) of body weight"
+effect_scale = "percentage_point_change_vs_placebo"
+reference_arm_id = "placebo_pool"
+reuse_origin = "source_backed_new_dose_response_lane"
+
+[[arms]]
+arm_id = "semaglutide_0_05"
+group_id = "OG000"
+treatment = "Semaglutide"
+dose = 0.05
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+lsmean = -5.99
+se = 0.85
+source_terms = ["Semaglutide 0.05 mg", "Dose 0.05 mg", "Relative Change in Body Weight"]
+
+[[arms]]
+arm_id = "semaglutide_0_1"
+group_id = "OG001"
+treatment = "Semaglutide"
+dose = 0.1
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+lsmean = -8.62
+se = 0.84
+source_terms = ["Semaglutide 0.1 mg", "0.1 mg", "Relative Change in Body Weight"]
+
+[[arms]]
+arm_id = "semaglutide_0_2"
+group_id = "OG002"
+treatment = "Semaglutide"
+dose = 0.2
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+lsmean = -11.60
+se = 0.85
+source_terms = ["Semaglutide 0.2 mg", "0.2 mg", "Relative Change in Body Weight"]
+
+[[arms]]
+arm_id = "semaglutide_0_3"
+group_id = "OG003"
+treatment = "Semaglutide"
+dose = 0.3
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+lsmean = -11.17
+se = 0.85
+source_terms = ["Semaglutide 0.3 mg", "0.3 mg", "Relative Change in Body Weight"]
+
+[[arms]]
+arm_id = "semaglutide_0_4"
+group_id = "OG004"
+treatment = "Semaglutide"
+dose = 0.4
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+lsmean = -13.84
+se = 0.83
+source_terms = ["Semaglutide 0.4 mg", "0.4 mg", "Relative Change in Body Weight"]
+
+[[arms]]
+arm_id = "placebo_pool"
+group_id = "OG008"
+treatment = "Placebo Pool"
+dose = 0.0
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "pooled placebo"
+lsmean = -2.29
+se = 0.74
+source_terms = ["Placebo Pool", "Relative Change in Body Weight"]

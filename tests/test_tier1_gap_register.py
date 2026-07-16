@@ -73,6 +73,15 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "native_python_guyot_reconstruction_check"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "source_backed_dose_response_smoke_benchmark"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert "dta_source_coverage_gate" in by_id["feature_completeness"].implemented_capabilities
+    assert (
         "reference_matched_optimizer_stress_matrix"
         in by_id["numerical_stability"].missing_capabilities
     )
@@ -98,6 +107,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     )
     assert (
         "pairwise_optimizer_stress_matrix"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
+        "ctgov_sparse_design_bias_guard"
         in by_id["numerical_stability"].implemented_capabilities
     )
     assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
@@ -129,7 +142,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
 
     assert summary == {
         "schema_version": TIER1_GAP_REGISTER_SCHEMA_VERSION,
-        "checked_at": "2026-07-15",
+        "checked_at": "2026-07-16",
         "n_gaps": 3,
         "gap_ids": [
             "feature_completeness",
@@ -150,6 +163,9 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "fixed_effect_node_splitting_smoke_diagnostics",
             "egger_small_study_effect_diagnostic",
             "selection_weight_publication_bias_sensitivity",
+            "native_python_guyot_reconstruction_check",
+            "source_backed_dose_response_smoke_benchmark",
+            "dta_source_coverage_gate",
             ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",
@@ -158,6 +174,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "pairwise_sparse_dominant_study_stress_report",
                 "pairwise_reml_local_minimum_profile_diagnostic",
                 "pairwise_optimizer_stress_matrix",
+                "ctgov_sparse_design_bias_guard",
             ],
             "bayesian_ecosystem_integration": [
                 "local_mcmc_rhat_ess_mcse_diagnostic_warnings",

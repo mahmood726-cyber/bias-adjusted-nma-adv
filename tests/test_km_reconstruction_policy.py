@@ -11,6 +11,7 @@ from bias_nma_adv.km_reconstruction import (
     evaluate_km_step,
     km_from_ipd,
     load_km_reconstruction_policy,
+    native_guyot_reconstruction_check,
     restricted_mean_survival_time,
     screen_km_reconstruction_result,
 )
@@ -172,6 +173,29 @@ def test_compare_km_curves_reports_non_certifying_fidelity_metrics():
     assert metrics["rmst_abs_error"] == pytest.approx(2.5, abs=0.05)
 
 
+def test_native_guyot_reconstruction_executes_python_loop_and_reports_fidelity():
+    result = native_guyot_reconstruction_check(
+        [0.0, 1.0, 2.0, 3.0],
+        [1.0, 0.8, 0.6, 0.5],
+        n_risk_times=[0.0, 1.0, 2.0, 3.0],
+        n_risk_values=[10, 8, 6, 5],
+        total_n=10,
+        arm=1,
+        tau=3.0,
+        iae_threshold=1.0,
+    )
+
+    assert result["schema_version"] == "km_native_guyot_reconstruction/v1"
+    assert result["status"] == "eligible_native_reconstruction"
+    assert result["certification_effect"] == "none"
+    assert result["n_ipd_records"] == 10
+    assert result["n_events"] > 0
+    assert result["n_censored"] > 0
+    assert result["fidelity"]["schema_version"] == "km_curve_fidelity/v1"
+    assert result["fidelity"]["certification_effect"] == "none"
+    assert any("OA figure provenance" in warning for warning in result["warnings"])
+
+
 def test_km_curve_metrics_reject_invalid_or_extrapolated_curves():
     with pytest.raises(ValidationError, match="nonincreasing"):
         compare_km_curves([0.0, 1.0, 2.0], [1.0, 0.8, 0.9], [0.0, 1.0, 2.0], [1.0, 0.7, 0.6])
@@ -181,3 +205,12 @@ def test_km_curve_metrics_reject_invalid_or_extrapolated_curves():
 
     with pytest.raises(ValidationError, match="coded as 0/1"):
         km_from_ipd([1.0, 2.0], [1.0, 0.5])
+
+    with pytest.raises(ValidationError, match="risk-table values must be nonincreasing"):
+        native_guyot_reconstruction_check(
+            [0.0, 1.0, 2.0],
+            [1.0, 0.8, 0.7],
+            n_risk_times=[0.0, 1.0, 2.0],
+            n_risk_values=[10, 11, 8],
+            total_n=10,
+        )

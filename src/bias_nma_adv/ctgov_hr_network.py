@@ -433,6 +433,94 @@ class CTGovHRNetworkLogEffect:
         )
 
 
+@dataclass(frozen=True)
+class SparseDesignBiasDiagnostic:
+    """Pre-fit warning for underidentified treatment-by-design borrowing."""
+
+    treatment: str
+    design_counts: dict[str, int]
+    total: int
+    min_per_design: int
+    status: str
+    certification_effect: str
+    warnings: tuple[str, ...]
+
+
+def sparse_design_bias_diagnostics(
+    rows: Any,
+    *,
+    treatment_key: str = "analysis_treatment",
+    design_key: str = "design",
+    min_per_design: int = 2,
+) -> tuple[SparseDesignBiasDiagnostic, ...]:
+    """Flag treatment nodes where design-bias terms are weakly identified.
+
+    This guard is for method routing before cross-design adjustment. It does
+    not fit a hierarchical cross-design model and cannot certify crossnma
+    parity.
+    """
+
+    min_per_design = int(min_per_design)
+    if min_per_design < 1:
+        raise ValidationError("sparse design-bias min_per_design must be positive.")
+    grouped: dict[str, dict[str, int]] = {}
+    for row in rows:
+        treatment = _row_value(row, treatment_key)
+        design = _row_value(row, design_key)
+        if not treatment.strip() or not design.strip():
+            raise ValidationError("sparse design-bias rows require non-empty treatment and design values.")
+        treatment_counts = grouped.setdefault(treatment, {})
+        treatment_counts[design] = treatment_counts.get(design, 0) + 1
+
+    diagnostics: list[SparseDesignBiasDiagnostic] = []
+    for treatment, counts in sorted(grouped.items()):
+        warnings: list[str] = []
+        if len(counts) < 2:
+            status = "single_design_no_cross_design_bias_contrast"
+            warnings.append(
+                "Only one evidence design is present for this treatment; do not estimate a treatment-specific design-bias contrast."
+            )
+        elif min(counts.values()) < min_per_design:
+            status = "underidentified_sparse_design_bias"
+            warnings.append(
+                "At least one evidence design has fewer than the required studies; use separated reporting or hierarchical shrinkage before cross-design borrowing."
+            )
+        else:
+            status = "sufficient_local_design_replication"
+        diagnostics.append(
+            SparseDesignBiasDiagnostic(
+                treatment=treatment,
+                design_counts=dict(sorted(counts.items())),
+                total=sum(counts.values()),
+                min_per_design=min_per_design,
+                status=status,
+                certification_effect="none",
+                warnings=tuple(warnings),
+            )
+        )
+    return tuple(diagnostics)
+
+
+def summarize_sparse_design_bias_diagnostics(
+    diagnostics: tuple[SparseDesignBiasDiagnostic, ...],
+) -> dict[str, Any]:
+    """Summarize sparse design-bias diagnostics for status artifacts."""
+
+    status_counts: dict[str, int] = {}
+    blocked = []
+    for diagnostic in diagnostics:
+        status_counts[diagnostic.status] = status_counts.get(diagnostic.status, 0) + 1
+        if diagnostic.status != "sufficient_local_design_replication":
+            blocked.append(diagnostic.treatment)
+    return {
+        "schema_version": "sparse_design_bias_diagnostic/v1",
+        "certification_effect": "none",
+        "n_treatments": len(diagnostics),
+        "status_counts": dict(sorted(status_counts.items())),
+        "blocked_cross_design_borrowing_treatments": sorted(blocked),
+    }
+
+
 def load_ctgov_hr_network_manifest(path: str | Path) -> CTGovHRNetworkManifest:
     """Load and validate one CT.gov reported-HR network manifest."""
 
@@ -602,6 +690,16 @@ def _fit_payload(fit: MultiArmNMAFit) -> dict[str, Any]:
 
 def _path_as_posix(path: str | Path) -> str:
     return Path(path).as_posix()
+
+
+def _row_value(row: Any, key: str) -> str:
+    if isinstance(row, dict):
+        if key not in row:
+            raise ValidationError(f"sparse design-bias row missing key '{key}'.")
+        return str(row[key])
+    if not hasattr(row, key):
+        raise ValidationError(f"sparse design-bias row missing attribute '{key}'.")
+    return str(getattr(row, key))
 
 
 def _positive_decimal(value: str, study_id: str, field_name: str) -> Decimal:

@@ -30,30 +30,34 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "other_trial_registry_protocol",
         "who_ictrp_protocol",
     ]
-    assert atlas["n_benchmarks"] == 4
-    assert atlas["n_benchmark_study_effects"] == 20
-    assert atlas["n_unique_study_ids"] == 16
-    assert atlas["n_unique_nct_ids"] == 16
-    assert atlas["n_unique_pmids"] == 6
+    assert atlas["n_benchmarks"] == 5
+    assert atlas["n_benchmark_study_effects"] == 25
+    assert atlas["n_unique_study_ids"] == 21
+    assert atlas["n_unique_nct_ids"] == 17
+    assert atlas["n_unique_pmids"] == 7
     assert atlas["domain_counts"] == {
         "binary_pairwise_meta": 1,
+        "dose_response_pairwise": 1,
         "reported_hr_star_network": 1,
         "reported_survival_hr_pairwise": 2,
     }
     assert atlas["evidence_mode_counts"] == {
+        "ctgov_dose_response_lsmean": 1,
         "pubmed_abstract_event_counts": 1,
         "reported_hr_clinicaltrials_gov_results": 1,
         "reported_hr_pubmed_abstract": 2,
     }
     assert atlas["source_check_scope_counts"] == {
+        "clinicaltrials_gov_dose_response_lsmean": 1,
         "clinicaltrials_gov_reported_hr_analysis": 10,
         "identity_and_reachability": 20,
+        "pubmed_abstract_dose_response_identity": 1,
         "pubmed_abstract_event_count_tokens": 4,
         "pubmed_abstract_reported_hr_tokens": 6,
     }
     assert atlas["source_type_counts"] == {
-        "clinicaltrials_gov": 20,
-        "pubmed_abstract": 20,
+        "clinicaltrials_gov": 21,
+        "pubmed_abstract": 21,
     }
     assert "tier-one parity" in atlas["does_not_prove"]
     assert "closed-loop source-backed networks before inconsistency-performance claims" in atlas[
@@ -64,6 +68,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "sglt2_hf_reported_hr",
         "pcsk9_mace_reported_hr",
         "t2d_mace_ctgov_hr_network",
+        "semaglutide_obesity_dose_response",
     }
     assert {item["certification_effect"] for item in atlas["benchmarks"]} == {"none"}
 
@@ -98,18 +103,19 @@ def test_real_benchmark_atlas_summary_is_validation_status_ready():
     assert summarize_real_benchmark_atlas(atlas) == {
         "schema_version": REAL_BENCHMARK_ATLAS_SCHEMA_VERSION,
         "status": "passed",
-        "n_benchmarks": 4,
-        "n_benchmark_study_effects": 20,
-        "n_unique_nct_ids": 16,
-        "n_unique_pmids": 6,
+        "n_benchmarks": 5,
+        "n_benchmark_study_effects": 25,
+        "n_unique_nct_ids": 17,
+        "n_unique_pmids": 7,
         "domain_counts": {
             "binary_pairwise_meta": 1,
+            "dose_response_pairwise": 1,
             "reported_hr_star_network": 1,
             "reported_survival_hr_pairwise": 2,
         },
         "source_type_counts": {
-            "clinicaltrials_gov": 20,
-            "pubmed_abstract": 20,
+            "clinicaltrials_gov": 21,
+            "pubmed_abstract": 21,
         },
         "certification_effect": "none",
     }

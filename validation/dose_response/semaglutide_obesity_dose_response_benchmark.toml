@@ -1,0 +1,221 @@
+schema_version = "dose_response_benchmark/v1"
+benchmark_id = "semaglutide_obesity_dose_response"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_dose_response_lsmean"
+effect_scale = "percentage_point_change_vs_placebo"
+source_manifest = "validation/dose_response/semaglutide_obesity_dose_response.toml"
+source_manifest_sha256 = "4095b64b12def6b794ce633de3353e8b93fa2d08469b2e2356e77e843892098b"
+source_verification_report = "validation/source_checks/semaglutide_obesity_dose_response_check.json"
+source_verification_report_sha256 = "160c7a13b72ec5f692bfc9d75b7828ed28a503f15f96c70cb6f2bcdc52844bc3"
+n_studies = 1
+n_dose_effects = 5
+limitations = ["single dose-ranging trial only", "shared placebo covariance not modeled", "not MBNMAdose reference matched", "not clinical superiority claims", "does not certify model performance"]
+
+[source_bundle]
+benchmark_id = "semaglutide_obesity_dose_response"
+manifest_sha256 = "4095b64b12def6b794ce633de3353e8b93fa2d08469b2e2356e77e843892098b"
+verification_status = "verified"
+certification_effect = "none"
+n_records = 2
+source_counts = {clinicaltrials_gov = 1, pubmed_abstract = 1}
+
+[model_config]
+candidate_models = ["weighted_linear", "weighted_quadratic"]
+reference_arm_id = "placebo_pool"
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+
+[[study_effects]]
+study_id = "NCT02453711_semaglutide_0_05"
+trial = "Semaglutide obesity dose-ranging phase 2 trial"
+nct_id = "NCT02453711"
+pmid = "30122305"
+arm_id = "semaglutide_0_05"
+group_id = "OG000"
+treatment = "Semaglutide"
+dose = 0.05
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+active_lsmean = -5.99
+active_se = 0.85
+reference_arm_id = "placebo_pool"
+reference_lsmean = -2.29
+reference_se = 0.74
+estimate = -3.7
+se = 1.1269871339105872
+variance = 1.2700999999999998
+effect_scale = "percentage_point_change_vs_placebo"
+variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT02453711_semaglutide_0_1"
+trial = "Semaglutide obesity dose-ranging phase 2 trial"
+nct_id = "NCT02453711"
+pmid = "30122305"
+arm_id = "semaglutide_0_1"
+group_id = "OG001"
+treatment = "Semaglutide"
+dose = 0.1
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+active_lsmean = -8.62
+active_se = 0.84
+reference_arm_id = "placebo_pool"
+reference_lsmean = -2.29
+reference_se = 0.74
+estimate = -6.329999999999999
+se = 1.1194641575325224
+variance = 1.2531999999999999
+effect_scale = "percentage_point_change_vs_placebo"
+variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT02453711_semaglutide_0_2"
+trial = "Semaglutide obesity dose-ranging phase 2 trial"
+nct_id = "NCT02453711"
+pmid = "30122305"
+arm_id = "semaglutide_0_2"
+group_id = "OG002"
+treatment = "Semaglutide"
+dose = 0.2
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+active_lsmean = -11.6
+active_se = 0.85
+reference_arm_id = "placebo_pool"
+reference_lsmean = -2.29
+reference_se = 0.74
+estimate = -9.309999999999999
+se = 1.1269871339105872
+variance = 1.2700999999999998
+effect_scale = "percentage_point_change_vs_placebo"
+variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT02453711_semaglutide_0_3"
+trial = "Semaglutide obesity dose-ranging phase 2 trial"
+nct_id = "NCT02453711"
+pmid = "30122305"
+arm_id = "semaglutide_0_3"
+group_id = "OG003"
+treatment = "Semaglutide"
+dose = 0.3
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+active_lsmean = -11.17
+active_se = 0.85
+reference_arm_id = "placebo_pool"
+reference_lsmean = -2.29
+reference_se = 0.74
+estimate = -8.879999999999999
+se = 1.1269871339105872
+variance = 1.2700999999999998
+effect_scale = "percentage_point_change_vs_placebo"
+variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT02453711_semaglutide_0_4"
+trial = "Semaglutide obesity dose-ranging phase 2 trial"
+nct_id = "NCT02453711"
+pmid = "30122305"
+arm_id = "semaglutide_0_4"
+group_id = "OG004"
+treatment = "Semaglutide"
+dose = 0.4
+dose_unit = "mg"
+dose_frequency = "once daily subcutaneous"
+escalation = "standard"
+active_lsmean = -13.84
+active_se = 0.83
+reference_arm_id = "placebo_pool"
+reference_lsmean = -2.29
+reference_se = 0.74
+estimate = -11.55
+se = 1.1119802156513396
+variance = 1.2365
+effect_scale = "percentage_point_change_vs_placebo"
+variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
+
+[candidate.weighted_linear]
+model = "weighted_polynomial_degree_1_through_zero"
+degree = 1
+coefficients = [-32.89462467311137]
+coefficient_ses = [2.0340520898675556]
+q = 19.435304209581414
+df = 4
+warnings = ["Local weighted polynomial fit is a source-backed smoke benchmark, not MBNMAdose parity.", "Shared placebo covariance is ignored in this simple artifact."]
+
+[[candidate.weighted_linear.fitted]]
+dose = 0.05
+observed = -3.7
+fitted = -1.6447312336555688
+residual = -2.0552687663444313
+
+[[candidate.weighted_linear.fitted]]
+dose = 0.1
+observed = -6.329999999999999
+fitted = -3.2894624673111377
+residual = -3.0405375326888615
+
+[[candidate.weighted_linear.fitted]]
+dose = 0.2
+observed = -9.309999999999999
+fitted = -6.578924934622275
+residual = -2.7310750653777234
+
+[[candidate.weighted_linear.fitted]]
+dose = 0.3
+observed = -8.879999999999999
+fitted = -9.868387401933411
+residual = 0.9883874019334122
+
+[[candidate.weighted_linear.fitted]]
+dose = 0.4
+observed = -11.55
+fitted = -13.15784986924455
+residual = 1.60784986924455
+
+[candidate.weighted_quadratic]
+model = "weighted_polynomial_degree_2_through_zero"
+degree = 2
+coefficients = [-62.99449814878353, 90.69843463580264]
+coefficient_ses = [8.070461513486697, 23.533264294346733]
+q = 4.5815840120821045
+df = 3
+warnings = ["Local weighted polynomial fit is a source-backed smoke benchmark, not MBNMAdose parity.", "Shared placebo covariance is ignored in this simple artifact."]
+
+[[candidate.weighted_quadratic.fitted]]
+dose = 0.05
+observed = -3.7
+fitted = -2.92297882084967
+residual = -0.7770211791503301
+
+[[candidate.weighted_quadratic.fitted]]
+dose = 0.1
+observed = -6.329999999999999
+fitted = -5.392465468520326
+residual = -0.937534531479673
+
+[[candidate.weighted_quadratic.fitted]]
+dose = 0.2
+observed = -9.309999999999999
+fitted = -8.9709622443246
+residual = -0.33903775567539896
+
+[[candidate.weighted_quadratic.fitted]]
+dose = 0.3
+observed = -8.879999999999999
+fitted = -10.735490327412819
+residual = 1.85549032741282
+
+[[candidate.weighted_quadratic.fitted]]
+dose = 0.4
+observed = -11.55
+fitted = -10.686049717784988
+residual = -0.8639502822150131

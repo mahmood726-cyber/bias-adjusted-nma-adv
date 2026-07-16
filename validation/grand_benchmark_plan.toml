@@ -1,5 +1,5 @@
 schema_version = "grand_benchmark_plan/v1"
-checked_at = "2026-07-15"
+checked_at = "2026-07-16"
 purpose = "Prespecified validation plan for proving source-backed evidence-synthesis performance without overclaiming superiority."
 allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
 protocol_only_sources = ["other_trial_registry_protocol", "who_ictrp_protocol"]
@@ -55,6 +55,22 @@ required_artifacts = [
   "external_reference_run_before_certification",
 ]
 claim_limit = "Validates a source-governed placebo-centered star network only; it cannot establish closed-loop inconsistency performance or class-level clinical superiority."
+certification_effect = "none"
+
+[[real_data_lanes]]
+id = "source_backed_dose_response_ctgov"
+status = "active"
+evidence_class = "real_source_backed"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+benchmark_registry_ids = ["semaglutide_obesity_dose_response"]
+required_artifacts = [
+  "source_manifest",
+  "ctgov_dose_response_source_check",
+  "pubmed_identity_check",
+  "dose_response_analysis_artifact",
+  "MBNMAdose_reference_run_before_certification",
+]
+claim_limit = "Validates one source-governed CT.gov dose-response smoke benchmark only; it cannot establish MBNMAdose parity, dose-response NMA superiority, or clinical efficacy claims."
 certification_effect = "none"
 
 [[simulation_scenarios]]

@@ -39,15 +39,16 @@ def test_grand_benchmark_plan_validates_against_source_registry():
         "source_backed_binary_pairwise_meta",
         "source_backed_reported_survival_hr_pairwise",
         "source_backed_ctgov_reported_hr_network",
+        "source_backed_dose_response_ctgov",
     }
     assert {scenario.evidence_class for scenario in plan.simulation_scenarios} == {"simulation"}
     assert {scenario.uses_real_data for scenario in plan.simulation_scenarios} == {False}
 
     summary = summarize_grand_benchmark_plan(plan)
     assert summary == {
-        "checked_at": "2026-07-15",
-        "n_real_data_lanes": 3,
-        "real_data_lane_status_counts": {"active": 3},
+        "checked_at": "2026-07-16",
+        "n_real_data_lanes": 4,
+        "real_data_lane_status_counts": {"active": 4},
         "n_simulation_scenarios": 3,
         "simulation_scenario_status_counts": {"planned": 3},
         "allowed_protocol_only_sources": [

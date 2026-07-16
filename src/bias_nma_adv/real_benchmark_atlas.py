@@ -128,7 +128,7 @@ def build_real_benchmark_atlas(
             "production certification",
             "closed-loop inconsistency performance",
             "Kaplan-Meier reconstruction accuracy",
-            "ML-NMR, dose-response, component, or cross-design synthesis performance",
+            "ML-NMR, broad dose-response NMA, component, or cross-design synthesis performance",
         ],
         "required_next_gates": [
             "external reference runs for every applicable module",

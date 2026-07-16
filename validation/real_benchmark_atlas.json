@@ -109,6 +109,32 @@
         "validation/networks/t2d_mace_ctgov_hrs.toml"
       ],
       "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+    },
+    {
+      "artifact": "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml",
+      "artifact_schema_version": "dose_response_benchmark/v1",
+      "artifact_sha256": "1626d0e18f011ddd3cacb1e92b1bc82a38d52a044893b11e6a789f97eaf397fb",
+      "artifact_status": "local_pass",
+      "certification_effect": "none",
+      "domain": "dose_response_pairwise",
+      "effect_scale": "percentage_point_change_vs_placebo",
+      "evidence_mode": "ctgov_dose_response_lsmean",
+      "id": "semaglutide_obesity_dose_response",
+      "n_studies": 1,
+      "n_study_effects": 5,
+      "required_limitations": [
+        "single dose-ranging trial only",
+        "shared placebo covariance not modeled",
+        "not MBNMAdose reference matched",
+        "does not certify model performance"
+      ],
+      "source_checks": [
+        "validation/source_checks/semaglutide_obesity_dose_response_check.json"
+      ],
+      "source_manifests": [
+        "validation/dose_response/semaglutide_obesity_dose_response.toml"
+      ],
+      "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
     }
   ],
   "certification_effect": "none",
@@ -120,27 +146,30 @@
     "production certification",
     "closed-loop inconsistency performance",
     "Kaplan-Meier reconstruction accuracy",
-    "ML-NMR, dose-response, component, or cross-design synthesis performance"
+    "ML-NMR, broad dose-response NMA, component, or cross-design synthesis performance"
   ],
   "domain_counts": {
     "binary_pairwise_meta": 1,
+    "dose_response_pairwise": 1,
     "reported_hr_star_network": 1,
     "reported_survival_hr_pairwise": 2
   },
   "effect_scale_counts": {
     "log_hr": 3,
-    "log_or": 1
+    "log_or": 1,
+    "percentage_point_change_vs_placebo": 1
   },
   "evidence_mode_counts": {
+    "ctgov_dose_response_lsmean": 1,
     "pubmed_abstract_event_counts": 1,
     "reported_hr_clinicaltrials_gov_results": 1,
     "reported_hr_pubmed_abstract": 2
   },
-  "n_benchmark_study_effects": 20,
-  "n_benchmarks": 4,
-  "n_unique_nct_ids": 16,
-  "n_unique_pmids": 6,
-  "n_unique_study_ids": 16,
+  "n_benchmark_study_effects": 25,
+  "n_benchmarks": 5,
+  "n_unique_nct_ids": 17,
+  "n_unique_pmids": 7,
+  "n_unique_study_ids": 21,
   "protocol_registry_rule": "Protocol-only registry sources may verify registration, planned outcomes, eligibility, and dates, but cannot supply model-ready effects.",
   "registry": "validation/benchmark_registry.toml",
   "required_next_gates": [
@@ -152,23 +181,26 @@
   "schema_version": "real_benchmark_atlas/v1",
   "source_check_schema_counts": {
     "ctgov_hr_network_verification/v1": 1,
+    "dose_response_source_verification/v1": 1,
     "event_count_verification/v1": 1,
     "source_verification/v1": 3,
     "survival_hr_verification/v1": 2
   },
   "source_check_scope_counts": {
+    "clinicaltrials_gov_dose_response_lsmean": 1,
     "clinicaltrials_gov_reported_hr_analysis": 10,
     "identity_and_reachability": 20,
+    "pubmed_abstract_dose_response_identity": 1,
     "pubmed_abstract_event_count_tokens": 4,
     "pubmed_abstract_reported_hr_tokens": 6
   },
   "source_policy_counts": {
-    "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 3,
+    "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 4,
     "clinicaltrials_gov + pubmed_abstract only": 1
   },
   "source_type_counts": {
-    "clinicaltrials_gov": 20,
-    "pubmed_abstract": 20
+    "clinicaltrials_gov": 21,
+    "pubmed_abstract": 21
   },
   "status": "passed"
 }

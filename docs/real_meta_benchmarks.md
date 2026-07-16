@@ -29,7 +29,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 4 benchmark artifacts, 20 study-effect rows, 16 unique NCT IDs, and 6 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 5 benchmark artifacts, 25 study-effect rows, 17 unique NCT IDs, and 7 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 

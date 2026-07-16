@@ -38,6 +38,7 @@ def test_reference_targets_registry_is_valid():
         "cross_design_crossnma",
         "component_nma_netmeta_cnma",
         "certainty_cinema_robmen",
+        "dta_bivariate_hsroc_reference",
         "pairwise_metafor_meta",
     }
 

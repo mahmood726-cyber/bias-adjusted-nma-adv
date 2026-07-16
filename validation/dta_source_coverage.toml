@@ -1,0 +1,39 @@
+schema_version = "dta_source_coverage/v1"
+checked_at = "2026-07-16"
+status = "missing_source_backed_dta_data"
+model_status = "not_implemented"
+certification_effect = "none"
+purpose = "Machine-readable gate for diagnostic test accuracy source data and model readiness."
+allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
+protocol_only_sources = ["other_trial_registry_protocol", "who_ictrp_protocol"]
+protocol_registry_rule = "WHO ICTRP and other registries may provide protocol metadata only; they cannot supply model-ready DTA 2x2 tables or accuracy estimates."
+registered_benchmark_ids = []
+registered_source_counts = {clinicaltrials_gov = 0, pubmed_abstract = 0, open_access_paper = 0}
+required_source_fields = [
+  "tp",
+  "fp",
+  "fn",
+  "tn",
+  "index_test",
+  "reference_standard",
+  "threshold",
+  "nct_id_or_pmid_or_doi",
+  "source_snippet_or_table_locator",
+]
+required_model_families = [
+  "bivariate_random_effects_glmm",
+  "hsroc",
+]
+source_search_summary = [
+  "No source-backed DTA 2x2 benchmark artifact is currently registered.",
+  "ClinicalTrials.gov, PubMed abstracts, and open-access papers are allowed sources, but extracted TP/FP/FN/TN rows must be source-bound before modeling.",
+  "Current files named diagnostics refer to statistical diagnostics, not diagnostic test accuracy meta-analysis.",
+]
+required_next_artifacts = [
+  "dta_source_manifest_with_nct_pmid_or_open_access_identifiers",
+  "source_verified_tp_fp_fn_tn_2x2_tables",
+  "threshold_and_reference_standard_metadata",
+  "bivariate_glmm_or_hsroc_model_artifact",
+  "mada_or_metafor_or_reference_software_parity_before_certification",
+]
+claim_limit = "No DTA real-data validation, DTA meta-analysis implementation, HSROC parity, or diagnostic-accuracy superiority claim is supported until source-backed 2x2 data and reference-matched bivariate models are added."

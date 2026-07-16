@@ -15,10 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 COVERAGE = ROOT / "validation" / "dose_response_source_coverage.toml"
 
 
-def test_dose_response_source_coverage_records_current_absence_from_allowed_sources():
+def test_dose_response_source_coverage_records_current_allowed_source_data():
     coverage = load_dose_response_source_coverage(COVERAGE)
 
-    assert coverage.status == "missing_source_backed_dose_response_data"
+    assert coverage.status == "active_source_backed_dose_response_data"
     assert coverage.certification_effect == "none"
     assert coverage.allowed_evidence_sources == (
         "clinicaltrials_gov",
@@ -29,14 +29,14 @@ def test_dose_response_source_coverage_records_current_absence_from_allowed_sour
         "other_trial_registry_protocol",
         "who_ictrp_protocol",
     )
-    assert coverage.registered_benchmark_ids == ()
+    assert coverage.registered_benchmark_ids == ("semaglutide_obesity_dose_response",)
     assert coverage.registered_source_counts == {
-        "clinicaltrials_gov": 0,
+        "clinicaltrials_gov": 1,
         "open_access_paper": 0,
-        "pubmed_abstract": 0,
+        "pubmed_abstract": 1,
     }
     assert any(
-        "no dose_response_nma" in item for item in coverage.source_search_summary
+        "semaglutide_obesity_dose_response" in item for item in coverage.source_search_summary
     )
     assert (
         "MBNMAdose_reference_run_before_certification"
@@ -52,14 +52,14 @@ def test_dose_response_source_coverage_summary_is_validation_status_ready():
     assert summary == {
         "schema_version": DOSE_RESPONSE_COVERAGE_SCHEMA_VERSION,
         "checked_at": "2026-07-16",
-        "status": "missing_source_backed_dose_response_data",
-        "registered_benchmark_ids": [],
+        "status": "active_source_backed_dose_response_data",
+        "registered_benchmark_ids": ["semaglutide_obesity_dose_response"],
         "registered_source_counts": {
-            "clinicaltrials_gov": 0,
+            "clinicaltrials_gov": 1,
             "open_access_paper": 0,
-            "pubmed_abstract": 0,
+            "pubmed_abstract": 1,
         },
-        "has_source_backed_dose_response_data": False,
+        "has_source_backed_dose_response_data": True,
         "required_next_artifacts": [
             "dose_response_source_manifest_with_nct_pmid_and_open_access_identifiers",
             "dose_amount_unit_route_frequency_duration_or_equivalence_fields",
@@ -75,6 +75,7 @@ def test_dose_response_source_coverage_summary_is_validation_status_ready():
 
 def test_dose_response_source_coverage_rejects_softened_missing_status():
     raw = _coverage_to_mapping(load_dose_response_source_coverage(COVERAGE))
+    raw["status"] = "missing_source_backed_dose_response_data"
     raw["registered_benchmark_ids"] = ["fabricated_dose_response"]
 
     with pytest.raises(DoseResponseCoverageError, match="cannot list"):

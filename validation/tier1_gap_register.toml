@@ -1,5 +1,5 @@
 schema_version = "tier1_gap_register/v1"
-checked_at = "2026-07-15"
+checked_at = "2026-07-16"
 certification_effect = "none"
 purpose = "Machine-readable blocker register for gaps that prevent tier-one parity or superiority claims."
 source_boundary = "Effect evidence from ClinicalTrials.gov records, PubMed abstracts, and open-access papers; WHO ICTRP and other registries are protocol-only metadata sources and cannot supply model-ready effects."
@@ -37,6 +37,9 @@ implemented_capabilities = [
   "fixed_effect_node_splitting_smoke_diagnostics",
   "egger_small_study_effect_diagnostic",
   "selection_weight_publication_bias_sensitivity",
+  "native_python_guyot_reconstruction_check",
+  "source_backed_dose_response_smoke_benchmark",
+  "dta_source_coverage_gate",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",
@@ -67,6 +70,7 @@ implemented_capabilities = [
   "pairwise_sparse_dominant_study_stress_report",
   "pairwise_reml_local_minimum_profile_diagnostic",
   "pairwise_optimizer_stress_matrix",
+  "ctgov_sparse_design_bias_guard",
 ]
 required_evidence_artifacts = [
   "prespecified_sparse_network_simulations",

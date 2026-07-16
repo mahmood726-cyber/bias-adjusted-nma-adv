@@ -13,6 +13,8 @@ from bias_nma_adv.ctgov_hr_network import (
     load_ctgov_hr_network_manifest,
     load_ctgov_hr_network_verification_report,
     run_ctgov_hr_network_benchmark,
+    sparse_design_bias_diagnostics,
+    summarize_sparse_design_bias_diagnostics,
     validate_ctgov_hr_network_source_bundle,
 )
 from bias_nma_adv.data import ValidationError
@@ -276,3 +278,43 @@ def test_ctgov_hr_network_source_bundle_rejects_record_drift():
 
     with pytest.raises(ValidationError, match="does not match manifest"):
         validate_ctgov_hr_network_source_bundle(manifest, report)
+
+
+def test_sparse_design_bias_diagnostic_blocks_underidentified_cross_design_borrowing():
+    rows = [
+        {"analysis_treatment": "A", "design": "rct"},
+        {"analysis_treatment": "A", "design": "nrs"},
+        {"analysis_treatment": "B", "design": "rct"},
+        {"analysis_treatment": "B", "design": "rct"},
+        {"analysis_treatment": "B", "design": "nrs"},
+        {"analysis_treatment": "B", "design": "nrs"},
+        {"analysis_treatment": "C", "design": "rct"},
+        {"analysis_treatment": "C", "design": "rct"},
+    ]
+
+    diagnostics = sparse_design_bias_diagnostics(rows, min_per_design=2)
+    by_treatment = {item.treatment: item for item in diagnostics}
+
+    assert by_treatment["A"].status == "underidentified_sparse_design_bias"
+    assert by_treatment["A"].design_counts == {"nrs": 1, "rct": 1}
+    assert by_treatment["A"].certification_effect == "none"
+    assert "hierarchical shrinkage" in by_treatment["A"].warnings[0]
+    assert by_treatment["B"].status == "sufficient_local_design_replication"
+    assert by_treatment["C"].status == "single_design_no_cross_design_bias_contrast"
+
+    assert summarize_sparse_design_bias_diagnostics(diagnostics) == {
+        "schema_version": "sparse_design_bias_diagnostic/v1",
+        "certification_effect": "none",
+        "n_treatments": 3,
+        "status_counts": {
+            "single_design_no_cross_design_bias_contrast": 1,
+            "sufficient_local_design_replication": 1,
+            "underidentified_sparse_design_bias": 1,
+        },
+        "blocked_cross_design_borrowing_treatments": ["A", "C"],
+    }
+
+
+def test_sparse_design_bias_diagnostic_rejects_missing_design_fields():
+    with pytest.raises(ValidationError, match="missing key 'design'"):
+        sparse_design_bias_diagnostics([{"analysis_treatment": "A"}])

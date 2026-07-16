@@ -16,6 +16,12 @@ from bias_nma_adv.ctgov_hr_network import (
     validate_ctgov_hr_network_source_bundle,
 )
 from bias_nma_adv.data import ValidationError
+from bias_nma_adv.dose_response_benchmark import (
+    DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION,
+    DoseResponseVerificationReport,
+    load_dose_response_manifest,
+    validate_dose_response_source_bundle,
+)
 from bias_nma_adv.evidence_sources import EFFECT_EVIDENCE_SOURCE_TYPES
 from bias_nma_adv.event_count_verification import (
     EVENT_COUNT_VERIFICATION_SCHEMA_VERSION,
@@ -45,6 +51,7 @@ SUPPORTED_SOURCE_CHECK_SCHEMA_VERSIONS = {
     EVENT_COUNT_VERIFICATION_SCHEMA_VERSION,
     SURVIVAL_HR_VERIFICATION_SCHEMA_VERSION,
     CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION,
+    DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION,
 }
 
 
@@ -254,6 +261,7 @@ def discover_source_backed_benchmark_artifacts(repo_root: str | Path) -> tuple[s
         *sorted((root / "validation" / "real_meta").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "survival").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "networks").glob("*_benchmark.toml")),
+        *sorted((root / "validation" / "dose_response").glob("*_benchmark.toml")),
     ]
     return tuple(path.relative_to(root).as_posix() for path in candidates)
 
@@ -326,6 +334,9 @@ def _validate_source_check_payload(
         elif schema_version == CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION:
             report = CTGovHRNetworkVerificationReport.from_mapping(source_check)
             _validate_ctgov_hr_network_reference(entry, report, repo_root=repo_root)
+        elif schema_version == DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION:
+            report = DoseResponseVerificationReport.from_mapping(source_check)
+            _validate_dose_response_reference(entry, report, repo_root=repo_root)
     except ValidationError as exc:
         raise BenchmarkRegistryError(f"{entry.id}: specialized source-check validation failed: {exc}") from exc
 
@@ -402,6 +413,22 @@ def _validate_ctgov_hr_network_reference(
     )
     manifest = load_ctgov_hr_network_manifest(repo_root / report.manifest)
     validate_ctgov_hr_network_source_bundle(manifest, report)
+
+
+def _validate_dose_response_reference(
+    entry: SourceBenchmarkEntry,
+    report: DoseResponseVerificationReport,
+    *,
+    repo_root: Path,
+) -> None:
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.manifest,
+        report.manifest_sha256,
+        label="dose-response verification manifest",
+    )
+    manifest = load_dose_response_manifest(repo_root / report.manifest)
+    validate_dose_response_source_bundle(manifest, report)
 
 
 def _assert_registered_source_manifest_sha(

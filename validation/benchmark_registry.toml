@@ -1,5 +1,5 @@
 schema_version = "source_benchmark_registry/v1"
-checked_at = "2026-07-15"
+checked_at = "2026-07-16"
 purpose = "Machine-readable inventory of local source-backed benchmark artifacts. Entries are validation evidence only within their stated scope and do not certify tier-one parity."
 allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
 certification_rule = "Every registered local benchmark must keep certification_effect = none until a passed external reference run promotes it through validation/reference_targets.toml."
@@ -98,5 +98,28 @@ source_check_sha256 = { "validation/source_checks/t2d_mace_ctgov_hr_network_chec
 required_limitations = [
   "closed-loop inconsistency cannot be assessed",
   "not clinical superiority claims",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "semaglutide_obesity_dose_response"
+domain = "dose_response_pairwise"
+artifact_path = "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml"
+artifact_sha256 = "1626d0e18f011ddd3cacb1e92b1bc82a38d52a044893b11e6a789f97eaf397fb"
+artifact_schema_version = "dose_response_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_dose_response_lsmean"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 1
+source_manifests = ["validation/dose_response/semaglutide_obesity_dose_response.toml"]
+source_manifest_sha256 = { "validation/dose_response/semaglutide_obesity_dose_response.toml" = "4095b64b12def6b794ce633de3353e8b93fa2d08469b2e2356e77e843892098b" }
+source_checks = ["validation/source_checks/semaglutide_obesity_dose_response_check.json"]
+source_check_sha256 = { "validation/source_checks/semaglutide_obesity_dose_response_check.json" = "160c7a13b72ec5f692bfc9d75b7828ed28a503f15f96c70cb6f2bcdc52844bc3" }
+required_limitations = [
+  "single dose-ranging trial only",
+  "shared placebo covariance not modeled",
+  "not MBNMAdose reference matched",
   "does not certify model performance",
 ]

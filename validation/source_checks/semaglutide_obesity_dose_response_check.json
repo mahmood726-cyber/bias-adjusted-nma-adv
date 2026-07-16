@@ -1,0 +1,85 @@
+{
+  "benchmark_id": "semaglutide_obesity_dose_response",
+  "certification_effect": "none",
+  "checked_at": "2026-07-16T00:00:00Z",
+  "manifest": "validation/dose_response/semaglutide_obesity_dose_response.toml",
+  "manifest_sha256": "4095b64b12def6b794ce633de3353e8b93fa2d08469b2e2356e77e843892098b",
+  "records": [
+    {
+      "details": {
+        "arm_checks": [
+          {
+            "arm_id": "semaglutide_0_05",
+            "group_id": "OG000",
+            "se_found": true,
+            "source_terms_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "semaglutide_0_1",
+            "group_id": "OG001",
+            "se_found": true,
+            "source_terms_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "semaglutide_0_2",
+            "group_id": "OG002",
+            "se_found": true,
+            "source_terms_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "semaglutide_0_3",
+            "group_id": "OG003",
+            "se_found": true,
+            "source_terms_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "semaglutide_0_4",
+            "group_id": "OG004",
+            "se_found": true,
+            "source_terms_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "placebo_pool",
+            "group_id": "OG008",
+            "se_found": true,
+            "source_terms_found": true,
+            "value_found": true
+          }
+        ],
+        "arm_values_found": true,
+        "matched_outcome_title": "Relative Change in Body Weight (%)",
+        "nct_id_found": true,
+        "outcome_dispersion_type_found": true,
+        "outcome_found": true,
+        "outcome_param_type_found": true,
+        "source_terms_found": true,
+        "status_completed": true
+      },
+      "evidence_scope": "clinicaltrials_gov_dose_response_lsmean",
+      "identifier": "NCT02453711",
+      "response_sha256": "eb9a1bb34c0d9e37acc2e06885f588cd4323a3c372c15f1e68cc5ac678019ad2",
+      "source_type": "clinicaltrials_gov",
+      "verified": true
+    },
+    {
+      "details": {
+        "dose_ranging_terms_found": true,
+        "pmid_found": true,
+        "title": "Efficacy and safety of semaglutide compared with liraglutide and placebo for weight loss in patients with obesity: a randomised, double-blind, placebo and active controlled, dose-ranging, phase 2 trial.",
+        "title_terms_found": true
+      },
+      "evidence_scope": "pubmed_abstract_dose_response_identity",
+      "identifier": "30122305",
+      "response_sha256": "1da3f6c69fea25ebb202631e89471aeb20e2a7c51c09b9a5f22ca226c92dc4ae",
+      "source_type": "pubmed_abstract",
+      "verified": true
+    }
+  ],
+  "schema_version": "dose_response_source_verification/v1",
+  "status": "verified"
+}

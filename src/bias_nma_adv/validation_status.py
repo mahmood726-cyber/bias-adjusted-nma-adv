@@ -23,6 +23,10 @@ from bias_nma_adv.dose_response_coverage import (
     load_dose_response_source_coverage,
     summarize_dose_response_source_coverage,
 )
+from bias_nma_adv.dta_coverage import (
+    load_dta_source_coverage,
+    summarize_dta_source_coverage,
+)
 from bias_nma_adv.grand_benchmark_plan import (
     summarize_grand_benchmark_plan,
     validate_grand_benchmark_plan,
@@ -98,6 +102,7 @@ def build_validation_status(
     tier1_gap_register_path = root / "validation" / "tier1_gap_register.toml"
     html_delivery_contract_path = root / "validation" / "html_delivery_contract.toml"
     dose_response_coverage_path = root / "validation" / "dose_response_source_coverage.toml"
+    dta_coverage_path = root / "validation" / "dta_source_coverage.toml"
 
     registry = validate_source_benchmark_registry(registry_path, repo_root=root)
     assert_registry_covers_source_backed_artifacts(registry, repo_root=root)
@@ -116,6 +121,7 @@ def build_validation_status(
     dose_response_coverage = load_dose_response_source_coverage(
         dose_response_coverage_path
     )
+    dta_coverage = load_dta_source_coverage(dta_coverage_path)
     improvement_review = load_improvement_review(improvement_review_path)
 
     targets = load_reference_targets(reference_targets_path)
@@ -180,6 +186,10 @@ def build_validation_status(
         "dose_response_source_coverage": {
             "coverage": _relpath(dose_response_coverage_path, root),
             **summarize_dose_response_source_coverage(dose_response_coverage),
+        },
+        "dta_source_coverage": {
+            "coverage": _relpath(dta_coverage_path, root),
+            **summarize_dta_source_coverage(dta_coverage),
         },
         "ingestion_contract": summarize_proof_carrying_ingestion_contract(),
         "proof_effect_bundle": {
