@@ -1,0 +1,94 @@
+import copy
+from pathlib import Path
+
+import pytest
+
+from bias_nma_adv.feature_parity_matrix import (
+    FEATURE_PARITY_MATRIX_SCHEMA_VERSION,
+    REQUIRED_FEATURE_IDS,
+    FeatureParityMatrix,
+    FeatureParityMatrixError,
+    load_feature_parity_matrix,
+    summarize_feature_parity_matrix,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+MATRIX = ROOT / "validation" / "feature_parity_matrix.toml"
+
+
+def test_feature_parity_matrix_keeps_broad_parity_incomplete():
+    matrix = load_feature_parity_matrix(MATRIX)
+
+    assert matrix.certification_effect == "none"
+    assert matrix.global_feature_parity_complete is False
+    assert {item.id for item in matrix.items} == REQUIRED_FEATURE_IDS
+
+    by_id = {item.id: item for item in matrix.items}
+    assert by_id["pairwise_metafor_meta"].status == "reference_candidate"
+    assert by_id["stan_nuts_multinma_bayesian_nma"].status == "blocking"
+    assert by_id["large_scale_validation"].status == "blocking"
+    assert "stan_nuts_cmdstan_preflight.toml" in "\n".join(
+        by_id["stan_nuts_multinma_bayesian_nma"].evidence_artifacts
+    )
+
+    summary = summarize_feature_parity_matrix(matrix)
+    assert summary["schema_version"] == FEATURE_PARITY_MATRIX_SCHEMA_VERSION
+    assert summary["global_feature_parity_complete"] is False
+    assert summary["status_counts"] == {
+        "blocking": 2,
+        "local_implemented": 3,
+        "planned": 4,
+        "reference_candidate": 3,
+    }
+    assert summary["reference_matched_ids"] == []
+    assert "stan_nuts_multinma_bayesian_nma" in summary["blocking_ids"]
+
+
+def test_feature_parity_matrix_rejects_missing_required_feature_or_premature_completion():
+    raw = _matrix_to_mapping(load_feature_parity_matrix(MATRIX))
+    raw["features"] = [
+        item for item in raw["features"] if item["id"] != "large_scale_validation"
+    ]
+
+    with pytest.raises(FeatureParityMatrixError, match="large_scale_validation"):
+        FeatureParityMatrix.from_mapping(raw)
+
+    raw = _matrix_to_mapping(load_feature_parity_matrix(MATRIX))
+    raw["global_feature_parity_complete"] = True
+
+    with pytest.raises(FeatureParityMatrixError, match="every item"):
+        FeatureParityMatrix.from_mapping(raw)
+
+
+def test_feature_parity_matrix_rejects_reference_match_without_evidence():
+    raw = _matrix_to_mapping(load_feature_parity_matrix(MATRIX))
+    raw["features"][0]["status"] = "reference_matched"
+    raw["features"][0]["evidence_artifacts"] = []
+
+    with pytest.raises(FeatureParityMatrixError, match="requires evidence"):
+        FeatureParityMatrix.from_mapping(raw)
+
+
+def _matrix_to_mapping(matrix: FeatureParityMatrix) -> dict[str, object]:
+    return {
+        "schema_version": FEATURE_PARITY_MATRIX_SCHEMA_VERSION,
+        "checked_at": matrix.checked_at,
+        "purpose": matrix.purpose,
+        "certification_effect": matrix.certification_effect,
+        "global_feature_parity_complete": matrix.global_feature_parity_complete,
+        "source_boundary": matrix.source_boundary,
+        "features": [
+            {
+                "id": item.id,
+                "domain": item.domain,
+                "reference_methods": list(item.reference_methods),
+                "status": item.status,
+                "evidence_artifacts": list(item.evidence_artifacts),
+                "required_next_artifacts": list(item.required_next_artifacts),
+                "claim_limit": item.claim_limit,
+                "certification_effect": item.certification_effect,
+            }
+            for item in copy.deepcopy(matrix.items)
+        ],
+    }

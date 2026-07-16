@@ -147,6 +147,7 @@ def test_validation_status_composes_all_current_gates():
             "rapidmeta_app_index_fail_closed_adapter_contract",
             "evalue_and_binary_fragility_sensitivity",
             "pairwise_redescending_outlier_sensitivity",
+            "feature_parity_matrix_gate",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -156,6 +157,7 @@ def test_validation_status_composes_all_current_gates():
             "pairwise_reml_local_minimum_profile_diagnostic",
             "pairwise_optimizer_stress_matrix",
             "ctgov_sparse_design_bias_guard",
+            "large_scale_validation_evidence_gate",
         ],
         "bayesian_ecosystem_integration": [
             "local_mcmc_rhat_ess_mcse_diagnostic_warnings",
@@ -163,6 +165,8 @@ def test_validation_status_composes_all_current_gates():
             "local_prior_predictive_check",
             "local_posterior_predictive_check",
             "joint_posterior_ranking_draws_from_local_mcmc",
+            "standard_binary_stan_model_source",
+            "stan_nuts_cmdstan_reference_preflight_report",
         ],
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
@@ -230,6 +234,37 @@ def test_validation_status_composes_all_current_gates():
         "hsroc",
     ]
     assert dta_coverage["certification_effect"] == "none"
+
+    feature_parity = report["feature_parity_matrix"]
+    assert feature_parity["matrix"] == "validation/feature_parity_matrix.toml"
+    assert feature_parity["schema_version"] == "feature_parity_matrix/v1"
+    assert feature_parity["n_features"] == 12
+    assert feature_parity["status_counts"] == {
+        "blocking": 2,
+        "local_implemented": 3,
+        "planned": 4,
+        "reference_candidate": 3,
+    }
+    assert feature_parity["reference_matched_ids"] == []
+    assert "stan_nuts_multinma_bayesian_nma" in feature_parity["blocking_ids"]
+    assert feature_parity["global_feature_parity_complete"] is False
+    assert feature_parity["certification_effect"] == "none"
+
+    large_scale = report["large_scale_validation"]
+    assert large_scale["gate"] == "validation/large_scale_validation.toml"
+    assert large_scale["schema_version"] == "large_scale_validation/v1"
+    assert large_scale["status"] == "partial_not_large_scale"
+    assert large_scale["dynamic_counts"]["source_backed_benchmarks"] == {
+        "observed": 5,
+        "required": 20,
+    }
+    assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
+        "observed": 3,
+        "required": 10,
+    }
+    assert "diagnostic_test_accuracy" in large_scale["missing_required_real_domains"]
+    assert large_scale["global_large_scale_validation_complete"] is False
+    assert large_scale["certification_effect"] == "none"
 
     reversal_yardstick = report["reversal_yardstick"]
     assert reversal_yardstick["yardstick"] == "validation/reversal_yardstick.toml"
@@ -328,8 +363,12 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 6
-    assert reference_runs["status_counts"] == {"failed": 3, "passed": 3}
+    assert reference_runs["n_reports"] == 7
+    assert reference_runs["status_counts"] == {
+        "failed": 3,
+        "passed": 3,
+        "unavailable": 1,
+    }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
@@ -349,6 +388,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_netmeta_multiarm_output_validation", "passed"),
         ("r_mada_dta_reitsma_preflight", "failed"),
         ("r_mada_dta_reitsma_output_validation", "passed"),
+        ("python_cmdstan_nuts_preflight", "unavailable"),
     }
 
 
@@ -388,6 +428,8 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     ] is True
     assert payload["dta_source_coverage"]["has_source_backed_dta_data"] is False
     assert payload["dta_source_coverage"]["model_status"] == "prototype_not_source_backed"
+    assert payload["feature_parity_matrix"]["global_feature_parity_complete"] is False
+    assert payload["large_scale_validation"]["status"] == "partial_not_large_scale"
     assert payload["reversal_yardstick"]["headline_metric"] == "detected_taint"
     assert payload["reversal_yardstick"]["global_goal_complete"] is False
     assert payload["proof_effect_bundle"]["n_records"] == 4

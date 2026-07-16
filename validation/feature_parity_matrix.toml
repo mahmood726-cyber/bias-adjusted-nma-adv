@@ -1,0 +1,192 @@
+schema_version = "feature_parity_matrix/v1"
+checked_at = "2026-07-16"
+purpose = "Fine-grained feature-parity ledger against mature evidence-synthesis methods."
+certification_effect = "none"
+global_feature_parity_complete = false
+source_boundary = "Feature parity evidence must use AACT/ClinicalTrials.gov records, public numeric ICTRP/PACTR result rows, PubMed abstracts, open-access papers, or public FDA/EMA regulatory review rows with numeric per-trial provenance; protocol-only registry rows cannot supply model-ready effects."
+
+[[features]]
+id = "pairwise_metafor_meta"
+domain = "pairwise_meta_analysis"
+reference_methods = ["metafor", "meta"]
+status = "reference_candidate"
+evidence_artifacts = [
+  "validation/reference_runs/pairwise_metafor_meta_reference.toml",
+  "validation/reference_runs/pairwise_metafor_meta_output.json",
+]
+required_next_artifacts = [
+  "continuous_outcome_reference_cases",
+  "sparse_binary_reference_cases",
+  "prediction_interval_reference_cases",
+]
+claim_limit = "This is a narrow reference candidate, not broad pairwise feature parity."
+certification_effect = "none"
+
+[[features]]
+id = "multiarm_netmeta_gls"
+domain = "frequentist_nma"
+reference_methods = ["netmeta"]
+status = "reference_candidate"
+evidence_artifacts = [
+  "validation/reference_runs/multiarm_netmeta_reference.toml",
+  "validation/reference_runs/multiarm_netmeta_output.json",
+]
+required_next_artifacts = [
+  "published_multiarm_network_corpus",
+  "inconsistency_reference_cases",
+  "netheat_and_contribution_reference_cases",
+]
+claim_limit = "This is a narrow GLS fixture candidate, not full netmeta feature parity."
+certification_effect = "none"
+
+[[features]]
+id = "node_splitting_inconsistency"
+domain = "inconsistency"
+reference_methods = ["netmeta", "multinma"]
+status = "local_implemented"
+evidence_artifacts = ["src/bias_nma_adv/node_splitting.py"]
+required_next_artifacts = [
+  "reference_matched_node_splitting_outputs",
+  "closed_loop_source_backed_networks",
+]
+claim_limit = "Local node splitting is a smoke diagnostic, not reference-matched inconsistency parity."
+certification_effect = "none"
+
+[[features]]
+id = "netheat_contribution_visualization"
+domain = "evidence_contribution"
+reference_methods = ["netmeta", "CINeMA", "ROB-MEN"]
+status = "planned"
+evidence_artifacts = []
+required_next_artifacts = [
+  "netheat_reference_outputs",
+  "cinema_contribution_mapping",
+  "robmen_missing_evidence_mapping",
+]
+claim_limit = "Contribution matrices do not provide netheat, CINeMA, or ROB-MEN parity yet."
+certification_effect = "none"
+
+[[features]]
+id = "publication_bias_adjustments"
+domain = "publication_bias"
+reference_methods = ["metafor", "meta", "ROB-MEN"]
+status = "local_implemented"
+evidence_artifacts = ["src/bias_nma_adv/publication_bias.py"]
+required_next_artifacts = [
+  "trim_and_fill_reference_matching",
+  "selection_model_reference_matching",
+  "robmen_reference_cases",
+]
+claim_limit = "Local screens are sensitivity diagnostics, not reference-matched publication-bias adjustment parity."
+certification_effect = "none"
+
+[[features]]
+id = "stan_nuts_multinma_bayesian_nma"
+domain = "bayesian_nma"
+reference_methods = ["CmdStan", "Stan NUTS", "multinma"]
+status = "blocking"
+evidence_artifacts = [
+  "external/stan/standard_binary_nma.stan",
+  "validation/reference_runs/stan_nuts_cmdstan_preflight.toml",
+]
+required_next_artifacts = [
+  "cmdstanpy_or_cmdstanr_available",
+  "stan_nuts_output_json",
+  "rhat_ess_divergence_treedepth_mcse_report",
+  "multinma_reference_output",
+]
+claim_limit = "Stan/NUTS and multinma parity is not established while the reference backend is unavailable."
+certification_effect = "none"
+
+[[features]]
+id = "mlnmr_multinma"
+domain = "mlnmr"
+reference_methods = ["multinma"]
+status = "planned"
+evidence_artifacts = []
+required_next_artifacts = [
+  "public_ipd_or_aggregate_covariate_fixture",
+  "multinma_mlnmr_reference_run",
+  "covariate_overlap_diagnostics",
+]
+claim_limit = "ML-NMR remains planned and is not feature parity."
+certification_effect = "none"
+
+[[features]]
+id = "dose_response_mbnmadose"
+domain = "dose_response_nma"
+reference_methods = ["MBNMAdose"]
+status = "local_implemented"
+evidence_artifacts = [
+  "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml",
+]
+required_next_artifacts = [
+  "MBNMAdose_reference_run",
+  "multi_trial_dose_response_network",
+  "shared_control_covariance_handling",
+]
+claim_limit = "The source-backed dose-response artifact is a smoke benchmark, not MBNMAdose parity."
+certification_effect = "none"
+
+[[features]]
+id = "cross_design_crossnma"
+domain = "cross_design_nma"
+reference_methods = ["crossnma"]
+status = "planned"
+evidence_artifacts = []
+required_next_artifacts = [
+  "rct_nrs_public_fixture",
+  "crossnma_reference_run",
+  "design_bias_prior_sensitivity",
+]
+claim_limit = "Cross-design synthesis remains planned and is not crossnma parity."
+certification_effect = "none"
+
+[[features]]
+id = "component_nma_netmeta"
+domain = "component_nma"
+reference_methods = ["netmeta"]
+status = "planned"
+evidence_artifacts = []
+required_next_artifacts = [
+  "component_network_fixture",
+  "netmeta_cnma_reference_run",
+  "estimability_and_hierarchy_guard",
+]
+claim_limit = "Component NMA remains planned and is not netmeta CNMA parity."
+certification_effect = "none"
+
+[[features]]
+id = "dta_bivariate_hsroc"
+domain = "diagnostic_test_accuracy"
+reference_methods = ["mada", "metafor"]
+status = "reference_candidate"
+evidence_artifacts = [
+  "validation/reference_runs/dta_mada_reitsma_reference.toml",
+  "validation/reference_runs/dta_mada_reitsma_output.json",
+]
+required_next_artifacts = [
+  "source_backed_dta_2x2_tables",
+  "hsroc_reference_outputs",
+  "threshold_effect_diagnostics",
+]
+claim_limit = "The DTA reference candidate is algorithmic only, not source-backed diagnostic accuracy parity."
+certification_effect = "none"
+
+[[features]]
+id = "large_scale_validation"
+domain = "validation_programme"
+reference_methods = ["source-backed real benchmark corpus", "prespecified simulation matrix"]
+status = "blocking"
+evidence_artifacts = [
+  "validation/benchmark_registry.toml",
+  "validation/simulation_matrix.toml",
+  "validation/large_scale_validation.toml",
+]
+required_next_artifacts = [
+  "twenty_or_more_source_backed_networks",
+  "ten_or_more_passed_reference_reports",
+  "ten_thousand_or_more_prespecified_simulation_iterations",
+]
+claim_limit = "Current validation evidence exists but is not large-scale validation."
+certification_effect = "none"

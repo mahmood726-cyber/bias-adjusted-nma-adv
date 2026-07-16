@@ -27,6 +27,8 @@ MULTIARM_R_ADAPTER = ROOT / "external" / "r" / "multiarm_netmeta_fixture.R"
 MULTIARM_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_multiarm_netmeta_adapter.py"
 DTA_R_ADAPTER = ROOT / "external" / "r" / "dta_mada_reitsma_fixture.R"
 DTA_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_dta_mada_adapter.py"
+STAN_MODEL = ROOT / "external" / "stan" / "standard_binary_nma.stan"
+STAN_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_stan_nuts_adapter.py"
 
 def test_reference_targets_registry_is_valid():
     targets = load_reference_targets(TARGETS_PATH)
@@ -94,7 +96,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 3, "passed": 3}
+    assert summary == {"failed": 3, "passed": 3, "unavailable": 1}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -104,6 +106,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_netmeta_multiarm_output_validation",
         "r_mada_dta_reitsma_preflight",
         "r_mada_dta_reitsma_output_validation",
+        "python_cmdstan_nuts_preflight",
     }
 
     report = by_adapter["r_metafor_meta_pairwise_preflight"]
@@ -145,10 +148,20 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         by_adapter["r_metafor_meta_pairwise_preflight"],
         by_adapter["r_netmeta_multiarm_preflight"],
         by_adapter["r_mada_dta_reitsma_preflight"],
+        by_adapter["python_cmdstan_nuts_preflight"],
     ):
         assert report.output_artifacts == ()
         assert report.output_sha256 == {}
         assert report.tolerance == ""
+
+    stan_preflight = by_adapter["python_cmdstan_nuts_preflight"]
+    assert stan_preflight.target_id == "bayesian_nma_multinma_cmdstan"
+    assert stan_preflight.status == "unavailable"
+    assert stan_preflight.certification_effect == "none"
+    assert "CmdStan" in stan_preflight.reference_method
+    assert "Stan/NUTS backend remains unavailable" in stan_preflight.skip_reason
+    assert STAN_MODEL.is_file()
+    assert STAN_PREFLIGHT_SCRIPT.is_file()
 
     pairwise_reference = by_adapter["r_metafor_meta_pairwise_output_validation"]
     assert pairwise_reference.target_id == "pairwise_metafor_meta"

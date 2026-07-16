@@ -130,6 +130,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "feature_parity_matrix_gate"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "reference_matched_optimizer_stress_matrix"
         in by_id["numerical_stability"].missing_capabilities
     )
@@ -161,6 +165,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         "ctgov_sparse_design_bias_guard"
         in by_id["numerical_stability"].implemented_capabilities
     )
+    assert (
+        "large_scale_validation_evidence_gate"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
     assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
     assert (
         "local_mcmc_rhat_ess_mcse_diagnostic_warnings"
@@ -180,6 +188,14 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     )
     assert (
         "joint_posterior_ranking_draws_from_local_mcmc"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
+    assert (
+        "standard_binary_stan_model_source"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
+    assert (
+        "stan_nuts_cmdstan_reference_preflight_report"
         in by_id["bayesian_ecosystem_integration"].implemented_capabilities
     )
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
@@ -225,6 +241,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "rapidmeta_app_index_fail_closed_adapter_contract",
             "evalue_and_binary_fragility_sensitivity",
             "pairwise_redescending_outlier_sensitivity",
+            "feature_parity_matrix_gate",
         ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",
@@ -234,6 +251,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "pairwise_reml_local_minimum_profile_diagnostic",
                 "pairwise_optimizer_stress_matrix",
                 "ctgov_sparse_design_bias_guard",
+                "large_scale_validation_evidence_gate",
             ],
             "bayesian_ecosystem_integration": [
                 "local_mcmc_rhat_ess_mcse_diagnostic_warnings",
@@ -241,6 +259,8 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "local_prior_predictive_check",
                 "local_posterior_predictive_check",
                 "joint_posterior_ranking_draws_from_local_mcmc",
+                "standard_binary_stan_model_source",
+                "stan_nuts_cmdstan_reference_preflight_report",
             ],
         },
         "blocked_claims": [

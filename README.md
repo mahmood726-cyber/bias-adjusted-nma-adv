@@ -26,6 +26,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
 - `src/bias_nma_adv/bayesian.py`: Experimental Metropolis-Hastings Bayesian sampler with local R-hat/ESS/MCSE diagnostic warnings, prior/posterior predictive checks, and draw-preserving treatment ranking; it is not a Stan/NUTS replacement.
 - `src/bias_nma_adv/stan_backend.py`: Fail-closed CmdStanPy/CmdStan preflight contract exposing required NUTS diagnostics before any Stan-backed reference run can count.
+- `external/stan/standard_binary_nma.stan`: Minimal fixed-effect arm-level binary NMA Stan model source for future CmdStan/NUTS reference matching. It is committed as model source only; the current local preflight reports the backend unavailable.
 - `src/bias_nma_adv/pairwise.py`: Experimental pairwise meta-analysis bridge for FE, DL, Paule-Mandel, REML, HKSJ, prediction-interval conventions, diagnostic-only leave-one-out and bounded exhaustive GOSH-style outlier-space screening, tau2 cross-checks, sparse/dominant-study stress reports, REML profile/local-minimum screens, stress-matrix reports, and bounded trim-and-fill sensitivity screening.
 - `src/bias_nma_adv/redescending.py`: Default-off Tukey-biweight redescending pairwise sensitivity screen that reports transparent study weights; it is not a full redescending fraud-containment NMA core.
 - `src/bias_nma_adv/sufficiency_fragility.py`: Deterministic E-value and binary event fragility-index sensitivity summaries for source-backed ratio estimates or event counts.
@@ -43,6 +44,8 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/benchmark_registry.py`: Machine-readable registry validator for local source-backed benchmark artifacts, source-check semantics, and pinned hashes.
 - `src/bias_nma_adv/grand_benchmark_plan.py`: Validator for the prespecified grand-benchmark plan separating real source-backed lanes from simulation-only operating-characteristic scenarios.
 - `src/bias_nma_adv/tier1_gap_register.py`: Validator for known blockers that prevent tier-one parity or superiority claims, including feature completeness, numerical stability, and Bayesian ecosystem integration.
+- `src/bias_nma_adv/feature_parity_matrix.py`: Fine-grained parity ledger across netmeta, metafor/meta, multinma/Stan, MBNMAdose, crossnma, DTA, and evidence-certainty capabilities.
+- `src/bias_nma_adv/large_scale_validation.py`: Dynamic gate comparing current source-backed benchmarks, reference runs, and simulation jobs against prespecified large-scale validation thresholds.
 - `src/bias_nma_adv/html_delivery_contract.py`: Validator for what can be delivered as HTML without replacing statistical engines, source verification, reference adapters, or CI gates.
 - `src/bias_nma_adv/improvement_review.py`: Validator for the current improvement/polish review milestone, keeping the strategic goal active while documenting what passed current review.
 - `src/bias_nma_adv/simulation_matrix.py`: Validator and runner for executable, non-certifying simulation smoke jobs tied to the grand-benchmark plan.
@@ -59,6 +62,8 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/reference_targets.toml`: Machine-readable reference targets required before tier-one parity or production certification claims.
 - `validation/grand_benchmark_plan.toml`: Prespecified source-bound validation plan for real-data lanes and simulation scenarios; it contains no benchmark results and has `certification_effect = "none"`.
 - `validation/tier1_gap_register.toml`: Machine-readable blocker register for tier-one shortcomings. Current blockers are feature completeness, numerical stability, and Bayesian/Stan ecosystem integration.
+- `validation/feature_parity_matrix.toml`: Fine-grained feature-parity matrix. It currently records reference candidates and local implementations, but no completed broad feature parity.
+- `validation/large_scale_validation.toml`: Large-scale validation gate. It records thresholds and dynamically reports the current corpus as partial, not large-scale validation.
 - `validation/html_delivery_contract.toml`: Machine-readable delivery contract for HTML dashboards versus backend-required engines and gates.
 - `validation/dose_response_source_coverage.toml`: Machine-readable check for dose-response real-data coverage. Current status records one source-backed CT.gov/PubMed semaglutide dose-response smoke benchmark and still blocks dose-response NMA parity or superiority claims.
 - `validation/dta_source_coverage.toml`: Machine-readable DTA gap gate. Current status is no registered source-backed DTA 2x2 benchmark data; a nonclinical algorithmic DTA prototype and `mada::reitsma` fixture adapter are present.
@@ -79,6 +84,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/survival/km_reconstruction_policy.toml`: Static OA-only KM reconstruction policy; blocks text-only HR and synthetic-IPD fallbacks from validation evidence.
 - `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; later targets include `multinma`, `MBNMAdose`, and `crossnma`.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
+- `scripts/preflight_stan_nuts_adapter.py`: Regenerates the non-certifying CmdStan/NUTS preflight report for the committed Stan model source.
 - `scripts/preflight_multiarm_netmeta_adapter.py`: Regenerates the non-certifying `netmeta` multi-arm adapter preflight report.
 - `scripts/preflight_dta_mada_adapter.py`: Regenerates the non-certifying `mada::reitsma` DTA adapter preflight report.
 - `scripts/validate_r_reference_outputs.py`: Validates generated R reference-output JSON and writes separate passed candidate reports with output hashes and tolerances.

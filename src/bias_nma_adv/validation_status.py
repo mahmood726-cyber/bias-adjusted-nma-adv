@@ -27,6 +27,10 @@ from bias_nma_adv.dta_coverage import (
     load_dta_source_coverage,
     summarize_dta_source_coverage,
 )
+from bias_nma_adv.feature_parity_matrix import (
+    load_feature_parity_matrix,
+    summarize_feature_parity_matrix,
+)
 from bias_nma_adv.grand_benchmark_plan import (
     summarize_grand_benchmark_plan,
     validate_grand_benchmark_plan,
@@ -41,6 +45,10 @@ from bias_nma_adv.improvement_review import (
     summarize_improvement_review,
 )
 from bias_nma_adv.ingestion import summarize_proof_carrying_ingestion_contract
+from bias_nma_adv.large_scale_validation import (
+    load_large_scale_validation_gate,
+    summarize_large_scale_validation,
+)
 from bias_nma_adv.portfolio_reuse import (
     load_portfolio_reuse_registry,
     summarize_portfolio_reuse_registry,
@@ -109,6 +117,8 @@ def build_validation_status(
     dose_response_coverage_path = root / "validation" / "dose_response_source_coverage.toml"
     dta_coverage_path = root / "validation" / "dta_source_coverage.toml"
     reversal_yardstick_path = root / "validation" / "reversal_yardstick.toml"
+    feature_parity_matrix_path = root / "validation" / "feature_parity_matrix.toml"
+    large_scale_validation_path = root / "validation" / "large_scale_validation.toml"
 
     registry = validate_source_benchmark_registry(registry_path, repo_root=root)
     assert_registry_covers_source_backed_artifacts(registry, repo_root=root)
@@ -128,6 +138,10 @@ def build_validation_status(
         dose_response_coverage_path
     )
     dta_coverage = load_dta_source_coverage(dta_coverage_path)
+    feature_parity_matrix = load_feature_parity_matrix(feature_parity_matrix_path)
+    large_scale_validation_gate = load_large_scale_validation_gate(
+        large_scale_validation_path
+    )
     reversal_yardstick = load_reversal_yardstick(reversal_yardstick_path)
     reversal_pin_report = (
         reversal_yardstick.verify_source_artifact_pins(source_artifact_paths)
@@ -205,6 +219,19 @@ def build_validation_status(
         "dta_source_coverage": {
             "coverage": _relpath(dta_coverage_path, root),
             **summarize_dta_source_coverage(dta_coverage),
+        },
+        "feature_parity_matrix": {
+            "matrix": _relpath(feature_parity_matrix_path, root),
+            **summarize_feature_parity_matrix(feature_parity_matrix),
+        },
+        "large_scale_validation": {
+            "gate": _relpath(large_scale_validation_path, root),
+            **summarize_large_scale_validation(
+                large_scale_validation_gate,
+                real_benchmark_atlas=real_benchmark_atlas,
+                simulation_matrix=simulation_matrix,
+                reference_reports=reports,
+            ),
         },
         "reversal_yardstick": {
             "yardstick": _relpath(reversal_yardstick_path, root),
