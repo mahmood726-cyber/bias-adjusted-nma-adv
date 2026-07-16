@@ -99,15 +99,13 @@ certification_effect = "none"
 id = "bayesian_ecosystem_integration"
 status = "blocking"
 review_source = "multiperson_tier1_feedback"
-summary = "The custom Bayesian sampler is suitable for small prototypes only and is not a substitute for Stan/NUTS-backed Bayesian NMA or ML-NMR workflows."
+summary = "The custom Bayesian sampler is suitable for small prototypes only; the repository now has one source-backed CmdStan/NUTS candidate, but not broad Stan, multinma, or ML-NMR parity."
 tier_one_references = ["multinma", "CmdStan", "Stan NUTS"]
 missing_capabilities = [
-  "cmdstan_backend",
-  "nuts_sampling",
-  "rhat_ess_divergence_exports",
   "stan_prior_predictive_checks",
   "stan_posterior_predictive_checks",
   "reference_matched_joint_posterior_ranking_draws",
+  "multinma_reference_matching",
   "mlnmr_reference_examples",
 ]
 implemented_capabilities = [
@@ -118,6 +116,8 @@ implemented_capabilities = [
   "joint_posterior_ranking_draws_from_local_mcmc",
   "standard_binary_stan_model_source",
   "stan_nuts_cmdstan_reference_preflight_report",
+  "source_backed_cmdstan_nuts_sglt2i_reference_candidate",
+  "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports",
 ]
 required_evidence_artifacts = [
   "stan_model_sources",
@@ -125,5 +125,5 @@ required_evidence_artifacts = [
   "multinma_reference_matching",
   "mcmc_diagnostic_threshold_tests",
 ]
-claim_limit = "Blocks Bayesian tier-one parity claims until Stan/NUTS or externally matched Bayesian reference artifacts exist."
+claim_limit = "Blocks Bayesian tier-one parity claims until broad Stan/NUTS, multinma, ML-NMR, posterior predictive, ranking, and externally matched Bayesian reference artifacts exist."
 certification_effect = "none"

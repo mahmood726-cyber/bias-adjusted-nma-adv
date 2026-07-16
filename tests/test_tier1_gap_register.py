@@ -169,7 +169,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         "large_scale_validation_evidence_gate"
         in by_id["numerical_stability"].implemented_capabilities
     )
-    assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
+    assert (
+        "multinma_reference_matching"
+        in by_id["bayesian_ecosystem_integration"].missing_capabilities
+    )
     assert (
         "local_mcmc_rhat_ess_mcse_diagnostic_warnings"
         in by_id["bayesian_ecosystem_integration"].implemented_capabilities
@@ -196,6 +199,14 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     )
     assert (
         "stan_nuts_cmdstan_reference_preflight_report"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
+    assert (
+        "source_backed_cmdstan_nuts_sglt2i_reference_candidate"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
+    assert (
+        "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports"
         in by_id["bayesian_ecosystem_integration"].implemented_capabilities
     )
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
@@ -261,6 +272,8 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "joint_posterior_ranking_draws_from_local_mcmc",
                 "standard_binary_stan_model_source",
                 "stan_nuts_cmdstan_reference_preflight_report",
+                "source_backed_cmdstan_nuts_sglt2i_reference_candidate",
+                "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports",
             ],
         },
         "blocked_claims": [

@@ -167,6 +167,8 @@ def test_validation_status_composes_all_current_gates():
             "joint_posterior_ranking_draws_from_local_mcmc",
             "standard_binary_stan_model_source",
             "stan_nuts_cmdstan_reference_preflight_report",
+            "source_backed_cmdstan_nuts_sglt2i_reference_candidate",
+            "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports",
         ],
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
@@ -240,10 +242,10 @@ def test_validation_status_composes_all_current_gates():
     assert feature_parity["schema_version"] == "feature_parity_matrix/v1"
     assert feature_parity["n_features"] == 12
     assert feature_parity["status_counts"] == {
-        "blocking": 2,
+        "blocking": 1,
         "local_implemented": 3,
         "planned": 4,
-        "reference_candidate": 3,
+        "reference_candidate": 4,
     }
     assert feature_parity["reference_matched_ids"] == []
     assert "stan_nuts_multinma_bayesian_nma" in feature_parity["blocking_ids"]
@@ -259,7 +261,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 20,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 3,
+        "observed": 4,
         "required": 10,
     }
     assert "diagnostic_test_accuracy" in large_scale["missing_required_real_domains"]
@@ -363,16 +365,16 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 7
+    assert reference_runs["n_reports"] == 8
     assert reference_runs["status_counts"] == {
-        "failed": 3,
-        "passed": 3,
-        "unavailable": 1,
+        "failed": 4,
+        "passed": 4,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",
+        "validation/reference_runs/stan_nuts_cmdstan_output.json",
     }
     assert {item["certification_effect"] for item in reference_runs["reports"]} == {
         "none",
@@ -388,7 +390,8 @@ def test_validation_status_composes_all_current_gates():
         ("r_netmeta_multiarm_output_validation", "passed"),
         ("r_mada_dta_reitsma_preflight", "failed"),
         ("r_mada_dta_reitsma_output_validation", "passed"),
-        ("python_cmdstan_nuts_preflight", "unavailable"),
+        ("python_cmdstan_nuts_preflight", "failed"),
+        ("python_cmdstan_nuts_output_validation", "passed"),
     }
 
 

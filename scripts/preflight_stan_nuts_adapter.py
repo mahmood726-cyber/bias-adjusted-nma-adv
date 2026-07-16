@@ -13,14 +13,25 @@ DEFAULT_BACKEND = Path("src/bias_nma_adv/stan_backend.py")
 DEFAULT_SCRIPT = Path("scripts/preflight_stan_nuts_adapter.py")
 DEFAULT_OUTPUT = Path("validation/reference_runs/stan_nuts_cmdstan_preflight.toml")
 DEFAULT_REFERENCE_OUTPUT = Path("validation/reference_runs/stan_nuts_cmdstan_output.json")
+TEXT_HASH_EXTENSIONS = {
+    ".csv",
+    ".json",
+    ".md",
+    ".py",
+    ".r",
+    ".stan",
+    ".toml",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
 
 
 def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    payload = path.read_bytes()
+    if path.suffix.lower() in TEXT_HASH_EXTENSIONS:
+        payload = payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def toml_path(path: Path) -> str:
@@ -49,8 +60,14 @@ def build_report(root: Path, checked_at: str) -> str:
     package_versions: dict[str, str] = {}
     if preflight.cmdstanpy_version:
         package_versions["cmdstanpy"] = preflight.cmdstanpy_version
-    if preflight.cmdstan_path:
-        package_versions["cmdstan_path"] = preflight.cmdstan_path
+    if preflight.cmdstan_available:
+        try:
+            import cmdstanpy  # type: ignore[import-not-found]
+
+            cmdstan_version = cmdstanpy.cmdstan_version()
+            package_versions["cmdstan"] = ".".join(str(part) for part in cmdstan_version)
+        except Exception:
+            package_versions["cmdstan"] = "available_version_unresolved"
 
     command = [
         "python",

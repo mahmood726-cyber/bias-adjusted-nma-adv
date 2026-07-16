@@ -54,6 +54,12 @@ output/
 !validation/reference_runs/*.json
 !validation/real_benchmark_atlas.json
 
+# Stan/CmdStan local build artifacts
+external/stan/*.exe
+external/stan/*.hpp
+external/stan/*.o
+external/stan/*.d
+
 # Sentinel findings
 PROGRESS.md
 STUCK_FAILURES.md

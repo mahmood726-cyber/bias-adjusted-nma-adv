@@ -26,7 +26,8 @@ The package implements a frequentist contrast-based network meta-analysis model 
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
 - `src/bias_nma_adv/bayesian.py`: Experimental Metropolis-Hastings Bayesian sampler with local R-hat/ESS/MCSE diagnostic warnings, prior/posterior predictive checks, and draw-preserving treatment ranking; it is not a Stan/NUTS replacement.
 - `src/bias_nma_adv/stan_backend.py`: Fail-closed CmdStanPy/CmdStan preflight contract exposing required NUTS diagnostics before any Stan-backed reference run can count.
-- `external/stan/standard_binary_nma.stan`: Minimal fixed-effect arm-level binary NMA Stan model source for future CmdStan/NUTS reference matching. It is committed as model source only; the current local preflight reports the backend unavailable.
+- `src/bias_nma_adv/stan_reference_validation.py`: Validates the source-backed CmdStan/NUTS reference-output JSON for sampler diagnostics, source identifiers, and posterior mean alignment with the existing `metafor` fixed-effect reference.
+- `external/stan/standard_binary_nma.stan`: Minimal fixed-effect arm-level binary NMA Stan model source used for the current source-backed CmdStan/NUTS SGLT2i reference candidate. This is not broad `multinma` parity.
 - `src/bias_nma_adv/pairwise.py`: Experimental pairwise meta-analysis bridge for FE, DL, Paule-Mandel, REML, HKSJ, prediction-interval conventions, diagnostic-only leave-one-out and bounded exhaustive GOSH-style outlier-space screening, tau2 cross-checks, sparse/dominant-study stress reports, REML profile/local-minimum screens, stress-matrix reports, and bounded trim-and-fill sensitivity screening.
 - `src/bias_nma_adv/redescending.py`: Default-off Tukey-biweight redescending pairwise sensitivity screen that reports transparent study weights; it is not a full redescending fraud-containment NMA core.
 - `src/bias_nma_adv/sufficiency_fragility.py`: Deterministic E-value and binary event fragility-index sensitivity summaries for source-backed ratio estimates or event counts.
@@ -61,7 +62,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `reproduce_real_meta.py`: Runs the source-backed SGLT2 heart-failure real-meta benchmark.
 - `validation/reference_targets.toml`: Machine-readable reference targets required before tier-one parity or production certification claims.
 - `validation/grand_benchmark_plan.toml`: Prespecified source-bound validation plan for real-data lanes and simulation scenarios; it contains no benchmark results and has `certification_effect = "none"`.
-- `validation/tier1_gap_register.toml`: Machine-readable blocker register for tier-one shortcomings. Current blockers are feature completeness, numerical stability, and Bayesian/Stan ecosystem integration.
+- `validation/tier1_gap_register.toml`: Machine-readable blocker register for tier-one shortcomings. Current blockers are feature completeness, numerical stability, and Bayesian ecosystem breadth/reference parity.
 - `validation/feature_parity_matrix.toml`: Fine-grained feature-parity matrix. It currently records reference candidates and local implementations, but no completed broad feature parity.
 - `validation/large_scale_validation.toml`: Large-scale validation gate. It records thresholds and dynamically reports the current corpus as partial, not large-scale validation.
 - `validation/html_delivery_contract.toml`: Machine-readable delivery contract for HTML dashboards versus backend-required engines and gates.
@@ -85,6 +86,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; later targets include `multinma`, `MBNMAdose`, and `crossnma`.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
 - `scripts/preflight_stan_nuts_adapter.py`: Regenerates the non-certifying CmdStan/NUTS preflight report for the committed Stan model source.
+- `scripts/run_stan_nuts_reference.py`: Runs the source-backed SGLT2i CmdStan/NUTS reference candidate and writes both JSON output and a hashed reference-run report. It does not certify `multinma` or broad Bayesian parity.
 - `scripts/preflight_multiarm_netmeta_adapter.py`: Regenerates the non-certifying `netmeta` multi-arm adapter preflight report.
 - `scripts/preflight_dta_mada_adapter.py`: Regenerates the non-certifying `mada::reitsma` DTA adapter preflight report.
 - `scripts/validate_r_reference_outputs.py`: Validates generated R reference-output JSON and writes separate passed candidate reports with output hashes and tolerances.

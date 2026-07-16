@@ -84,18 +84,21 @@ certification_effect = "none"
 id = "stan_nuts_multinma_bayesian_nma"
 domain = "bayesian_nma"
 reference_methods = ["CmdStan", "Stan NUTS", "multinma"]
-status = "blocking"
+status = "reference_candidate"
 evidence_artifacts = [
   "external/stan/standard_binary_nma.stan",
   "validation/reference_runs/stan_nuts_cmdstan_preflight.toml",
+  "validation/reference_runs/stan_nuts_cmdstan_reference.toml",
+  "validation/reference_runs/stan_nuts_cmdstan_output.json",
 ]
 required_next_artifacts = [
-  "cmdstanpy_or_cmdstanr_available",
-  "stan_nuts_output_json",
-  "rhat_ess_divergence_treedepth_mcse_report",
   "multinma_reference_output",
+  "stan_prior_predictive_check_output",
+  "stan_posterior_predictive_check_output",
+  "joint_posterior_ranking_reference_output",
+  "mlnmr_reference_example",
 ]
-claim_limit = "Stan/NUTS and multinma parity is not established while the reference backend is unavailable."
+claim_limit = "A narrow source-backed CmdStan/NUTS candidate exists, but this is not broad Bayesian feature parity or multinma parity."
 certification_effect = "none"
 
 [[features]]

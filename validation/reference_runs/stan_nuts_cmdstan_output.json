@@ -1,0 +1,104 @@
+{
+  "certification_effect": "evidence_candidate",
+  "checked_at": "2026-07-16T00:00:00Z",
+  "claim_limit": "Narrow CmdStan/NUTS reference candidate only; not broad feature parity, not multinma parity, not clinical or HTA certification.",
+  "data": {
+    "n_rows": 8,
+    "n_studies": 4,
+    "source_artifact": "validation/real_meta/sglt2_hf_primary_events.csv",
+    "studies": [
+      {
+        "nct_id": "NCT03036124",
+        "pmid": "31535829",
+        "study_id": "DAPA-HF",
+        "trial": "Dapagliflozin in HFrEF"
+      },
+      {
+        "nct_id": "NCT03619213",
+        "pmid": "36027570",
+        "study_id": "DELIVER",
+        "trial": "Dapagliflozin in HFmrEF/HFpEF"
+      },
+      {
+        "nct_id": "NCT03057951",
+        "pmid": "34449189",
+        "study_id": "EMPEROR-Preserved",
+        "trial": "Empagliflozin in HFpEF"
+      },
+      {
+        "nct_id": "NCT03057977",
+        "pmid": "32865377",
+        "study_id": "EMPEROR-Reduced",
+        "trial": "Empagliflozin in HFrEF"
+      }
+    ],
+    "study_order": [
+      "DAPA-HF",
+      "DELIVER",
+      "EMPEROR-Preserved",
+      "EMPEROR-Reduced"
+    ],
+    "treatments": [
+      "Placebo",
+      "SGLT2i"
+    ]
+  },
+  "diagnostics": {
+    "divergent_transitions": 0,
+    "ess_bulk": 2242.8918113229074,
+    "ess_tail": 2530.7554523546114,
+    "mcse_mean": 0.000775698364190337,
+    "posterior_predictive_checks": "log_likelihood_exported_only",
+    "prior_predictive_checks": "not_run_for_this_reference_candidate",
+    "r_hat": 0.9997596759158875,
+    "treedepth_saturation": 0
+  },
+  "effect_scale": "log_or",
+  "model": {
+    "active_treatment_parameter": "d[2]",
+    "model_family": "fixed_effect_arm_level_binary_nma",
+    "network_reference_treatment": "Placebo",
+    "stan_file": "external/stan/standard_binary_nma.stan"
+  },
+  "package_versions": {
+    "arviz": "1.1.0",
+    "cmdstan": "2.39",
+    "cmdstanpy": "1.3.0",
+    "python": "3.13.13"
+  },
+  "posterior": {
+    "mcse_mean": 0.000775698364190337,
+    "mean": -0.2695463212825,
+    "median": -0.26887446,
+    "parameter": "d[2]",
+    "q025": -0.34154198,
+    "q975": -0.19889623499999998,
+    "sd": 0.03669371771496886
+  },
+  "reference_comparison": {
+    "absolute_difference": 0.0005626993855090134,
+    "posterior_mean": -0.2695463212825,
+    "reference_artifact": "validation/reference_runs/pairwise_metafor_meta_output.json",
+    "reference_estimate": -0.268983621896991,
+    "reference_method": "metafor fixed-effect log-OR on the same source-backed arm counts",
+    "status": "passed",
+    "tolerance": 0.03
+  },
+  "sampling": {
+    "adapt_delta": 0.95,
+    "chains": 4,
+    "iter_sampling": 1000,
+    "iter_warmup": 500,
+    "max_treedepth": 10,
+    "seed": 20260716
+  },
+  "schema_version": "stan_nuts_reference/v1",
+  "source_policy": "Source-backed SGLT2i heart-failure arm counts from ClinicalTrials.gov records and PubMed abstracts; this is not broad Bayesian or multinma parity.",
+  "target_id": "bayesian_nma_multinma_cmdstan",
+  "validated_components": [
+    "arm_level_binary_nma_compiled_by_cmdstan",
+    "nuts_sampler_diagnostics",
+    "sglt2i_source_backed_log_or_posterior",
+    "metafor_fixed_effect_mean_alignment"
+  ]
+}

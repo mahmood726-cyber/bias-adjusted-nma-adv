@@ -26,9 +26,12 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
 
     by_id = {item.id: item for item in matrix.items}
     assert by_id["pairwise_metafor_meta"].status == "reference_candidate"
-    assert by_id["stan_nuts_multinma_bayesian_nma"].status == "blocking"
+    assert by_id["stan_nuts_multinma_bayesian_nma"].status == "reference_candidate"
     assert by_id["large_scale_validation"].status == "blocking"
     assert "stan_nuts_cmdstan_preflight.toml" in "\n".join(
+        by_id["stan_nuts_multinma_bayesian_nma"].evidence_artifacts
+    )
+    assert "stan_nuts_cmdstan_output.json" in "\n".join(
         by_id["stan_nuts_multinma_bayesian_nma"].evidence_artifacts
     )
 
@@ -36,10 +39,10 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
     assert summary["schema_version"] == FEATURE_PARITY_MATRIX_SCHEMA_VERSION
     assert summary["global_feature_parity_complete"] is False
     assert summary["status_counts"] == {
-        "blocking": 2,
+        "blocking": 1,
         "local_implemented": 3,
         "planned": 4,
-        "reference_candidate": 3,
+        "reference_candidate": 4,
     }
     assert summary["reference_matched_ids"] == []
     assert "stan_nuts_multinma_bayesian_nma" in summary["blocking_ids"]
