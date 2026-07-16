@@ -2,7 +2,12 @@ import math
 
 import pytest
 
-from bias_nma_adv.multiarm import ContrastRow, diagnose_multiarm_design, fit_multiarm_gls
+from bias_nma_adv.multiarm import (
+    ContrastRow,
+    diagnose_multiarm_design,
+    fit_multiarm_gls,
+    report_multiarm_gls_fit,
+)
 
 
 TOL = 1e-6
@@ -86,6 +91,24 @@ def test_multiarm_design_diagnostic_reports_rank_connectivity_and_cliques():
     assert by_study["S6"].n_contrasts == 3
     assert by_study["S6"].expected_contrasts == 3
     assert by_study["S6"].complete_pairwise_clique is True
+
+
+def test_multiarm_fit_report_passes_with_design_metadata():
+    report = report_multiarm_gls_fit(
+        _rows_from_arms(FIXTURE_CONSISTENT),
+        reference_treatment="A",
+    )
+
+    assert report.status == "passed"
+    assert report.stage == "fit"
+    assert report.message == "multi-arm GLS fit completed"
+    assert report.model == "fixed"
+    assert report.reference_treatment == "A"
+    assert report.n_studies == 6
+    assert report.n_contrast_rows == 8
+    assert report.design_rank == 2
+    assert report.connected is True
+    assert report.estimable is True
 
 
 def test_fixed_effect_heterogeneous_multiarm_matches_netmeta_portfolio_fixture():
@@ -206,6 +229,32 @@ def test_incompatible_multiarm_covariance_fails_closed():
         fit_multiarm_gls(rows, reference_treatment="A")
 
 
+def test_fit_report_records_incompatible_covariance_without_raising():
+    rows = [
+        ContrastRow("S_bad", "A", "B", 0.1, 0.1),
+        ContrastRow("S_bad", "A", "C", 0.1, 0.1),
+        ContrastRow("S_bad", "B", "C", 0.1, 10.0),
+    ]
+
+    report = report_multiarm_gls_fit(rows, reference_treatment="A")
+
+    assert report.status == "failed"
+    assert report.stage == "design"
+    assert "recovered negative arm variance" in report.message
+    assert report.estimable is False
+    assert report.warnings == (report.message,)
+
+
+def test_fit_report_records_empty_input_without_raising():
+    report = report_multiarm_gls_fit([], reference_treatment="A")
+
+    assert report.status == "failed"
+    assert report.stage == "input"
+    assert report.message == "no contrasts supplied."
+    assert report.reference_treatment == "A"
+    assert report.n_contrast_rows == 0
+
+
 def test_disconnected_network_fails_closed():
     rows = [
         ContrastRow("S1", "A", "B", 0.1, 0.2),
@@ -217,6 +266,13 @@ def test_disconnected_network_fails_closed():
     assert diagnostic.connected is False
     assert diagnostic.disconnected_treatments == ("C", "D")
     assert diagnostic.estimable is False
+
+    report = report_multiarm_gls_fit(rows, reference_treatment="A")
+
+    assert report.status == "failed"
+    assert report.stage == "design"
+    assert report.disconnected_treatments == ("C", "D")
+    assert "disconnected" in report.message
 
     with pytest.raises(ValueError, match="disconnected"):
         fit_multiarm_gls(rows, reference_treatment="A")

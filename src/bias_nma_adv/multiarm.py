@@ -95,6 +95,25 @@ class MultiArmDesignDiagnostic:
 
 
 @dataclass(frozen=True)
+class MultiArmFitReport:
+    """Deterministic status report for a multi-arm GLS fit attempt."""
+
+    status: str
+    stage: str
+    message: str
+    model: str
+    reference_treatment: str
+    n_studies: int
+    n_contrast_rows: int
+    n_parameters: int
+    design_rank: int
+    connected: bool
+    estimable: bool
+    disconnected_treatments: tuple[str, ...]
+    warnings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class ContrastInfluenceDiagnostic:
     """Diagnostic for one contrast row in a fitted GLS network model."""
 
@@ -321,6 +340,59 @@ def diagnose_multiarm_design(
     )
 
 
+def report_multiarm_gls_fit(
+    rows: Iterable[ContrastRow | dict[str, object]],
+    *,
+    reference_treatment: str | None = None,
+    model: str = "fixed",
+) -> MultiArmFitReport:
+    """Return a structured pass/fail report for a multi-arm GLS fit attempt."""
+
+    parsed_rows = tuple(_coerce_row(row) for row in rows)
+    try:
+        design = diagnose_multiarm_design(parsed_rows, reference_treatment=reference_treatment)
+    except ValueError as exc:
+        return _empty_fit_report(
+            status="failed",
+            stage="input",
+            message=str(exc),
+            model=model,
+            reference_treatment=reference_treatment or "",
+        )
+
+    if not design.estimable:
+        message = _design_failure_message(design)
+        return _fit_report_from_design(
+            design,
+            status="failed",
+            stage="design",
+            message=message,
+            model=model,
+            warnings=design.warnings,
+        )
+
+    try:
+        fit = fit_multiarm_gls(parsed_rows, reference_treatment=design.reference_treatment, model=model)
+    except ValueError as exc:
+        return _fit_report_from_design(
+            design,
+            status="failed",
+            stage="fit",
+            message=str(exc),
+            model=model,
+            warnings=design.warnings,
+        )
+
+    return _fit_report_from_design(
+        design,
+        status="passed",
+        stage="fit",
+        message="multi-arm GLS fit completed",
+        model=fit.model,
+        warnings=tuple(design.warnings) + tuple(fit.warnings),
+    )
+
+
 def _coerce_row(row: ContrastRow | dict[str, object]) -> ContrastRow:
     if isinstance(row, ContrastRow):
         return row
@@ -330,6 +402,71 @@ def _coerce_row(row: ContrastRow | dict[str, object]) -> ContrastRow:
         t2=str(row["t2"]),
         est=float(row["est"]),
         se=float(row["se"]),
+    )
+
+
+def _empty_fit_report(
+    *,
+    status: str,
+    stage: str,
+    message: str,
+    model: str,
+    reference_treatment: str,
+) -> MultiArmFitReport:
+    return MultiArmFitReport(
+        status=status,
+        stage=stage,
+        message=message,
+        model=model,
+        reference_treatment=reference_treatment,
+        n_studies=0,
+        n_contrast_rows=0,
+        n_parameters=0,
+        design_rank=0,
+        connected=False,
+        estimable=False,
+        disconnected_treatments=(),
+        warnings=(),
+    )
+
+
+def _fit_report_from_design(
+    design: MultiArmDesignDiagnostic,
+    *,
+    status: str,
+    stage: str,
+    message: str,
+    model: str,
+    warnings: tuple[str, ...],
+) -> MultiArmFitReport:
+    return MultiArmFitReport(
+        status=status,
+        stage=stage,
+        message=message,
+        model=model,
+        reference_treatment=design.reference_treatment,
+        n_studies=design.n_studies,
+        n_contrast_rows=design.n_contrast_rows,
+        n_parameters=design.n_parameters,
+        design_rank=design.design_rank,
+        connected=design.connected,
+        estimable=design.estimable,
+        disconnected_treatments=design.disconnected_treatments,
+        warnings=warnings,
+    )
+
+
+def _design_failure_message(design: MultiArmDesignDiagnostic) -> str:
+    if design.disconnected_treatments:
+        return (
+            "design is disconnected from the reference treatment: "
+            f"{list(design.disconnected_treatments)}"
+        )
+    if design.warnings:
+        return "; ".join(design.warnings)
+    return (
+        "design is not estimable: "
+        f"rank {design.design_rank} for {design.n_parameters} parameters"
     )
 
 

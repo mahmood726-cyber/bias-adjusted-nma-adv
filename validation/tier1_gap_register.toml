@@ -58,6 +58,7 @@ missing_capabilities = [
 ]
 implemented_capabilities = [
   "positive_definite_covariance_fail_closed_policy",
+  "multiarm_deterministic_failure_reports",
 ]
 required_evidence_artifacts = [
   "prespecified_sparse_network_simulations",

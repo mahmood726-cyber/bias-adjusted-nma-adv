@@ -118,6 +118,7 @@ def test_validation_status_composes_all_current_gates():
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
+            "multiarm_deterministic_failure_reports",
         ],
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]

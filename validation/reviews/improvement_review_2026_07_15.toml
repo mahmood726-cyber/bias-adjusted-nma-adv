@@ -110,6 +110,7 @@ findings = [
   "The new diagnostics are isolated, deterministic, and covered by focused tests before full-suite validation.",
   "The pre-fit design diagnostic gives a read-only contract for disconnected networks and incomplete multi-arm cliques before fitting.",
   "The multi-arm GLS path now rejects incompatible covariance inputs before inversion, reducing silent numerical failure risk without changing valid fixture estimates.",
+  "The deterministic fit-attempt report records input, design, and fit-stage failures in a machine-readable form for the multi-arm GLS path.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
@@ -117,6 +118,7 @@ actions = [
   "Updated README and tier-one benchmark documentation to keep claims, code, and validation artifacts aligned.",
   "Added focused tests for pre-fit multi-arm design diagnostics covering complete cliques, incomplete cliques, disconnected treatments, and estimability.",
   "Added focused tests for normalized absolute contribution diagnostics and fail-closed multi-arm covariance validation.",
+  "Added focused tests for multi-arm fit-attempt reports on successful, disconnected, incompatible-covariance, and empty-input cases.",
 ]
 remaining_blockers = [
   "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit each capability milestone before treating the batch as reviewed.",

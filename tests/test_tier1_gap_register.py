@@ -53,6 +53,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         "positive_definite_covariance_fail_closed_policy"
         in by_id["numerical_stability"].implemented_capabilities
     )
+    assert (
+        "multiarm_deterministic_failure_reports"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
     assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
 
@@ -80,6 +84,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",
+                "multiarm_deterministic_failure_reports",
             ]
         },
         "blocked_claims": [
