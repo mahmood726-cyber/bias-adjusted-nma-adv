@@ -41,6 +41,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "pairwise_leave_one_out_outlier_space_diagnostic"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "fixed_effect_node_splitting_smoke_diagnostics"
         in by_id["feature_completeness"].implemented_capabilities
     )
@@ -79,6 +83,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "multiarm_prefit_design_diagnostic",
                 "multiarm_gls_influence_leverage_diagnostics",
                 "multiarm_gls_absolute_mapping_contribution_diagnostics",
+                "pairwise_leave_one_out_outlier_space_diagnostic",
                 "fixed_effect_node_splitting_smoke_diagnostics",
                 "egger_small_study_effect_diagnostic",
             ],

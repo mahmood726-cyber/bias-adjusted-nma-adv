@@ -38,6 +38,35 @@ class PairwiseMetaResult:
     warnings: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class LeaveOneOutDiagnostic:
+    """One leave-one-out refit in a pairwise outlier-space diagnostic."""
+
+    omitted_index: int
+    omitted_effect: float
+    omitted_variance: float
+    estimate: float
+    se: float
+    tau2: float
+    q: float
+    delta_estimate: float
+    absolute_delta_estimate: float
+    standardized_delta: float
+
+
+@dataclass(frozen=True)
+class PairwiseOutlierSpaceDiagnostic:
+    """Diagnostic-only leave-one-out outlier-space summary."""
+
+    method: str
+    full_estimate: float
+    full_se: float
+    full_tau2: float
+    full_q: float
+    diagnostics: tuple[LeaveOneOutDiagnostic, ...]
+    warnings: tuple[str, ...]
+
+
 def fit_pairwise_meta(
     effects: np.ndarray,
     variances: np.ndarray,
@@ -136,6 +165,73 @@ def fit_pairwise_meta(
         hksj_q_factor=float(q_factor),
         prediction_interval=pred,
         weights=tuple(float(w) for w in weights),
+        warnings=tuple(warnings),
+    )
+
+
+def leave_one_out_outlier_diagnostic(
+    effects: np.ndarray,
+    variances: np.ndarray,
+    *,
+    method: str = "REML",
+    hksj: bool = False,
+    hksj_floor: bool = True,
+) -> PairwiseOutlierSpaceDiagnostic:
+    """Run deterministic leave-one-out refits as a GOSH-style smoke diagnostic.
+
+    This is not a full GOSH subset search. It is a bounded outlier-space screen
+    that reports how much each single study changes the pooled estimate.
+    """
+
+    y, v = _validate_effects(effects, variances)
+    if y.size < 3:
+        raise PairwiseMetaError("leave-one-out diagnostics require at least three studies.")
+
+    full = fit_pairwise_meta(
+        y,
+        v,
+        method=method,
+        hksj=hksj,
+        hksj_floor=hksj_floor,
+    )
+    diagnostics: list[LeaveOneOutDiagnostic] = []
+    for omitted_index in range(y.size):
+        keep = np.ones(y.size, dtype=bool)
+        keep[omitted_index] = False
+        refit = fit_pairwise_meta(
+            y[keep],
+            v[keep],
+            method=method,
+            hksj=hksj,
+            hksj_floor=hksj_floor,
+        )
+        delta = float(refit.estimate - full.estimate)
+        diagnostics.append(
+            LeaveOneOutDiagnostic(
+                omitted_index=int(omitted_index),
+                omitted_effect=float(y[omitted_index]),
+                omitted_variance=float(v[omitted_index]),
+                estimate=float(refit.estimate),
+                se=float(refit.se),
+                tau2=float(refit.tau2),
+                q=float(refit.q),
+                delta_estimate=delta,
+                absolute_delta_estimate=abs(delta),
+                standardized_delta=float(abs(delta) / max(full.se, 1e-12)),
+            )
+        )
+
+    warnings = list(full.warnings)
+    warnings.append(
+        "Leave-one-out outlier-space diagnostics are screening tools and do not replace full GOSH analyses."
+    )
+    return PairwiseOutlierSpaceDiagnostic(
+        method=full.method,
+        full_estimate=float(full.estimate),
+        full_se=float(full.se),
+        full_tau2=float(full.tau2),
+        full_q=float(full.q),
+        diagnostics=tuple(diagnostics),
         warnings=tuple(warnings),
     )
 

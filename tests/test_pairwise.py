@@ -3,7 +3,11 @@ import math
 import numpy as np
 import pytest
 
-from bias_nma_adv.pairwise import PairwiseMetaError, fit_pairwise_meta
+from bias_nma_adv.pairwise import (
+    PairwiseMetaError,
+    fit_pairwise_meta,
+    leave_one_out_outlier_diagnostic,
+)
 
 
 def test_fixed_effect_matches_inverse_variance_reference():
@@ -66,6 +70,36 @@ def test_prediction_interval_is_wider_than_confidence_interval_when_tau_positive
     pi_width = result.prediction_interval[1] - result.prediction_interval[0]
     assert result.tau2 > 0.0
     assert pi_width > ci_width
+
+
+def test_leave_one_out_outlier_diagnostic_flags_discordant_study():
+    y = np.array([0.0, 0.05, -0.02, 1.0])
+    v = np.array([0.04, 0.04, 0.04, 0.04])
+
+    diagnostic = leave_one_out_outlier_diagnostic(y, v, method="FE")
+
+    assert diagnostic.method == "FE"
+    assert diagnostic.full_estimate == pytest.approx(0.2575, abs=1e-12)
+    assert len(diagnostic.diagnostics) == 4
+    assert all(row.absolute_delta_estimate >= 0.0 for row in diagnostic.diagnostics)
+    assert all(math.isfinite(row.standardized_delta) for row in diagnostic.diagnostics)
+    assert any("do not replace full GOSH" in warning for warning in diagnostic.warnings)
+
+    most_influential = max(
+        diagnostic.diagnostics,
+        key=lambda row: row.absolute_delta_estimate,
+    )
+    assert most_influential.omitted_index == 3
+    assert most_influential.omitted_effect == pytest.approx(1.0)
+    assert most_influential.estimate == pytest.approx(0.01, abs=1e-12)
+
+
+def test_leave_one_out_outlier_diagnostic_requires_at_least_three_studies():
+    with pytest.raises(PairwiseMetaError, match="at least three studies"):
+        leave_one_out_outlier_diagnostic(
+            np.array([0.0, 1.0]),
+            np.array([0.04, 0.04]),
+        )
 
 
 def test_single_study_fails_closed_for_heterogeneity_but_returns_fixed_effect():
