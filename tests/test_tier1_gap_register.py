@@ -41,7 +41,15 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "multiarm_study_contribution_matrix_diagnostic"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "pairwise_leave_one_out_outlier_space_diagnostic"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "pairwise_exhaustive_gosh_subset_diagnostic"
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
@@ -100,13 +108,15 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
         "status_counts": {"blocking": 3},
         "implemented_capabilities": {
             "feature_completeness": [
-                "multiarm_prefit_design_diagnostic",
-                "multiarm_gls_influence_leverage_diagnostics",
-                "multiarm_gls_absolute_mapping_contribution_diagnostics",
-                "pairwise_leave_one_out_outlier_space_diagnostic",
-                "bounded_trim_and_fill_sensitivity_screen",
-                "fixed_effect_node_splitting_smoke_diagnostics",
-                "egger_small_study_effect_diagnostic",
+            "multiarm_prefit_design_diagnostic",
+            "multiarm_gls_influence_leverage_diagnostics",
+            "multiarm_gls_absolute_mapping_contribution_diagnostics",
+            "multiarm_study_contribution_matrix_diagnostic",
+            "pairwise_leave_one_out_outlier_space_diagnostic",
+            "pairwise_exhaustive_gosh_subset_diagnostic",
+            "bounded_trim_and_fill_sensitivity_screen",
+            "fixed_effect_node_splitting_smoke_diagnostics",
+            "egger_small_study_effect_diagnostic",
             ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",

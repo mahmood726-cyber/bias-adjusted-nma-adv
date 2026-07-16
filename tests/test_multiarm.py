@@ -177,6 +177,21 @@ def test_fixed_effect_contribution_diagnostics_are_nonnegative_and_normalized():
     assert any(row.target_treatment == "C" and row.contribution > 0.0 for row in multiarm_rows)
 
 
+def test_study_contribution_matrix_aggregates_nonnegative_contributions_by_target():
+    fit = fit_multiarm_gls(_rows_from_arms(FIXTURE_CONSISTENT), reference_treatment="A")
+
+    matrix = fit.study_contribution_matrix()
+
+    assert set(matrix) == set(fit.nonreference_treatments)
+    for target, study_values in matrix.items():
+        assert study_values
+        assert all(value >= 0.0 for value in study_values.values())
+        assert sum(study_values.values()) == pytest.approx(1.0, abs=1e-12)
+        assert "S6" in study_values
+        assert study_values["S6"] > 0.0
+        assert target in {"B", "C"}
+
+
 def test_influence_diagnostics_flag_deliberately_discordant_contrast():
     fit = fit_multiarm_gls(_rows_from_arms(FIXTURE_HETEROGENEOUS), reference_treatment="A")
 

@@ -189,6 +189,25 @@ class MultiArmNMAFit:
         var = max(var_a + var_b - 2.0 * cov_ab, 0.0)
         return float(est), float(math.sqrt(var))
 
+    def study_contribution_matrix(self) -> dict[str, dict[str, float]]:
+        """Aggregate normalized absolute GLS mapping contributions by study.
+
+        Rows are keyed by fitted non-reference treatment. Columns are study
+        identifiers. Values are nonnegative proportions that sum to one within
+        each target treatment when contribution diagnostics are available.
+        """
+
+        matrix: dict[str, dict[str, float]] = {
+            target: {} for target in self.nonreference_treatments
+        }
+        for row in self.contribution_diagnostics:
+            by_study = matrix.setdefault(row.target_treatment, {})
+            by_study[row.study] = by_study.get(row.study, 0.0) + row.contribution
+        return {
+            target: dict(sorted(study_values.items()))
+            for target, study_values in matrix.items()
+        }
+
     def _beta_var_cov(self, treatment: str, other: str) -> tuple[float, float, float]:
         if treatment == self.reference_treatment:
             beta = 0.0

@@ -10,6 +10,7 @@ validation target until independent artifacts are added.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import itertools
 import math
 
 import numpy as np
@@ -64,6 +65,34 @@ class PairwiseOutlierSpaceDiagnostic:
     full_tau2: float
     full_q: float
     diagnostics: tuple[LeaveOneOutDiagnostic, ...]
+    warnings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class GOSHSubsetDiagnostic:
+    """One subset refit in an exhaustive GOSH-style diagnostic."""
+
+    subset_indices: tuple[int, ...]
+    k_subset: int
+    estimate: float
+    se: float
+    tau2: float
+    q: float
+    delta_estimate: float
+    absolute_delta_estimate: float
+
+
+@dataclass(frozen=True)
+class PairwiseGOSHDiagnostic:
+    """Exhaustive bounded GOSH-style outlier-space diagnostic."""
+
+    method: str
+    full_estimate: float
+    full_tau2: float
+    min_subset_size: int
+    n_subsets: int
+    diagnostics: tuple[GOSHSubsetDiagnostic, ...]
+    max_abs_delta_estimate: float
     warnings: tuple[str, ...]
 
 
@@ -294,6 +323,75 @@ def leave_one_out_outlier_diagnostic(
         full_q=float(full.q),
         diagnostics=tuple(diagnostics),
         warnings=tuple(warnings),
+    )
+
+
+def gosh_outlier_space_diagnostic(
+    effects: np.ndarray,
+    variances: np.ndarray,
+    *,
+    method: str = "REML",
+    min_subset_size: int = 3,
+    max_subsets: int = 4096,
+) -> PairwiseGOSHDiagnostic:
+    """Run exhaustive subset refits for bounded GOSH-style diagnostics.
+
+    This is a deterministic subset refitting diagnostic for small to moderate
+    pairwise meta-analyses. It fails closed when the requested subset space is
+    larger than ``max_subsets``.
+    """
+
+    y, v = _validate_effects(effects, variances)
+    if min_subset_size < 2:
+        raise PairwiseMetaError("min_subset_size must be at least 2.")
+    if min_subset_size > y.size:
+        raise PairwiseMetaError("min_subset_size cannot exceed the number of studies.")
+    if max_subsets <= 0:
+        raise PairwiseMetaError("max_subsets must be positive.")
+
+    subset_count = sum(
+        math.comb(int(y.size), size) for size in range(min_subset_size, int(y.size) + 1)
+    )
+    if subset_count > max_subsets:
+        raise PairwiseMetaError(
+            f"GOSH subset space has {subset_count} refits, exceeding max_subsets={max_subsets}."
+        )
+
+    full = fit_pairwise_meta(y, v, method=method)
+    diagnostics: list[GOSHSubsetDiagnostic] = []
+    for size in range(min_subset_size, int(y.size) + 1):
+        for subset in itertools.combinations(range(int(y.size)), size):
+            subset_index = np.asarray(subset, dtype=int)
+            refit = fit_pairwise_meta(y[subset_index], v[subset_index], method=method)
+            delta = float(refit.estimate - full.estimate)
+            diagnostics.append(
+                GOSHSubsetDiagnostic(
+                    subset_indices=tuple(int(item) for item in subset),
+                    k_subset=int(size),
+                    estimate=float(refit.estimate),
+                    se=float(refit.se),
+                    tau2=float(refit.tau2),
+                    q=float(refit.q),
+                    delta_estimate=delta,
+                    absolute_delta_estimate=abs(delta),
+                )
+            )
+
+    max_abs_delta = (
+        max(item.absolute_delta_estimate for item in diagnostics) if diagnostics else 0.0
+    )
+    warnings = (
+        "GOSH-style subset diagnostics are exploratory screens and require reference matching before tier-one parity claims.",
+    )
+    return PairwiseGOSHDiagnostic(
+        method=full.method,
+        full_estimate=float(full.estimate),
+        full_tau2=float(full.tau2),
+        min_subset_size=int(min_subset_size),
+        n_subsets=int(subset_count),
+        diagnostics=tuple(diagnostics),
+        max_abs_delta_estimate=float(max_abs_delta),
+        warnings=warnings,
     )
 
 

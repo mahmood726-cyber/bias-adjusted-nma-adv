@@ -6,6 +6,7 @@ import pytest
 from bias_nma_adv.pairwise import (
     PairwiseMetaError,
     fit_pairwise_meta,
+    gosh_outlier_space_diagnostic,
     leave_one_out_outlier_diagnostic,
     numerical_stress_report,
     tau2_cross_check_report,
@@ -102,6 +103,45 @@ def test_leave_one_out_outlier_diagnostic_requires_at_least_three_studies():
         leave_one_out_outlier_diagnostic(
             np.array([0.0, 1.0]),
             np.array([0.04, 0.04]),
+        )
+
+
+def test_gosh_outlier_space_diagnostic_enumerates_bounded_subset_space():
+    y = np.array([0.0, 0.05, -0.02, 1.0])
+    v = np.array([0.04, 0.04, 0.04, 0.04])
+
+    diagnostic = gosh_outlier_space_diagnostic(
+        y,
+        v,
+        method="FE",
+        min_subset_size=3,
+    )
+
+    assert diagnostic.method == "FE"
+    assert diagnostic.full_estimate == pytest.approx(0.2575, abs=1e-12)
+    assert diagnostic.full_tau2 == 0.0
+    assert diagnostic.n_subsets == 5
+    assert len(diagnostic.diagnostics) == 5
+    assert diagnostic.max_abs_delta_estimate > 0.0
+    assert any("exploratory screens" in warning for warning in diagnostic.warnings)
+
+    most_extreme = max(
+        diagnostic.diagnostics,
+        key=lambda row: row.absolute_delta_estimate,
+    )
+    assert most_extreme.subset_indices == (0, 1, 2)
+    assert most_extreme.k_subset == 3
+    assert most_extreme.estimate == pytest.approx(0.01, abs=1e-12)
+    assert most_extreme.delta_estimate == pytest.approx(-0.2475, abs=1e-12)
+
+
+def test_gosh_outlier_space_diagnostic_fails_closed_when_subset_space_is_too_large():
+    with pytest.raises(PairwiseMetaError, match="exceeding max_subsets"):
+        gosh_outlier_space_diagnostic(
+            np.zeros(6),
+            np.full(6, 0.04),
+            min_subset_size=2,
+            max_subsets=3,
         )
 
 
