@@ -28,11 +28,12 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/stan_backend.py`: Fail-closed CmdStanPy/CmdStan preflight contract exposing required NUTS diagnostics before any Stan-backed reference run can count.
 - `src/bias_nma_adv/pairwise.py`: Experimental pairwise meta-analysis bridge for FE, DL, Paule-Mandel, REML, HKSJ, prediction-interval conventions, diagnostic-only leave-one-out and bounded exhaustive GOSH-style outlier-space screening, tau2 cross-checks, sparse/dominant-study stress reports, and bounded trim-and-fill sensitivity screening.
 - `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.
-- `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests, with pre-fit design diagnostics, deterministic fit-attempt reports, diagnostic-only GLS leverage, residual, approximate Cook-distance, row-level and study-level absolute mapping-contribution, and fail-closed covariance-validity outputs.
+- `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests, with pre-fit design diagnostics, deterministic fit-attempt reports, diagnostic-only GLS leverage, residual, approximate Cook-distance, row-level/study-level/heatmap-ready absolute mapping-contribution, and fail-closed covariance-validity outputs.
 - `src/bias_nma_adv/node_splitting.py`: Experimental fixed-effect node-splitting diagnostic for closed-loop direct-versus-indirect contrast checks.
 - `src/bias_nma_adv/km_reconstruction.py`: Fail-closed screen and deterministic curve-fidelity metrics for open-access Kaplan-Meier reconstruction results before they can enter survival validation artifacts.
-- `src/bias_nma_adv/publication_bias.py`: Registry outcome-switching auditor plus diagnostic-only Egger small-study-effect regression.
+- `src/bias_nma_adv/publication_bias.py`: Registry outcome-switching auditor plus diagnostic-only Egger small-study-effect regression and prespecified selection-weight sensitivity analysis.
 - `src/bias_nma_adv/ctgov_hr_network.py`: Source-verified ClinicalTrials.gov reported-HR network benchmark support.
+- `src/bias_nma_adv/dose_response_coverage.py`: Fail-closed source-coverage check showing whether dose-response benchmark data are currently registered from ClinicalTrials.gov, PubMed abstracts, or open-access papers.
 - `src/bias_nma_adv/benchmark_registry.py`: Machine-readable registry validator for local source-backed benchmark artifacts, source-check semantics, and pinned hashes.
 - `src/bias_nma_adv/grand_benchmark_plan.py`: Validator for the prespecified grand-benchmark plan separating real source-backed lanes from simulation-only operating-characteristic scenarios.
 - `src/bias_nma_adv/tier1_gap_register.py`: Validator for known blockers that prevent tier-one parity or superiority claims, including feature completeness, numerical stability, and Bayesian ecosystem integration.
@@ -53,6 +54,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/grand_benchmark_plan.toml`: Prespecified source-bound validation plan for real-data lanes and simulation scenarios; it contains no benchmark results and has `certification_effect = "none"`.
 - `validation/tier1_gap_register.toml`: Machine-readable blocker register for tier-one shortcomings. Current blockers are feature completeness, numerical stability, and Bayesian/Stan ecosystem integration.
 - `validation/html_delivery_contract.toml`: Machine-readable delivery contract for HTML dashboards versus backend-required engines and gates.
+- `validation/dose_response_source_coverage.toml`: Machine-readable check for dose-response real-data coverage. Current status is no registered source-backed dose-response benchmark data from the allowed evidence sources.
 - `validation/simulation_matrix.toml`: Executable simulation smoke matrix. It uses no real data and cannot support clinical or tier-one superiority claims.
 - `validation/portfolio_reuse_sources.toml`: Machine-readable inventory of local portfolio repositories worth inspecting for reusable code patterns. It stores repo names and relative assets only, not local absolute paths.
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.

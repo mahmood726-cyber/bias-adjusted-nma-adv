@@ -19,22 +19,24 @@ review_source = "multiperson_tier1_feedback"
 summary = "The current Python engine implements a basic estimation core but lacks the helper diagnostics expected from mature tier-one packages."
 tier_one_references = ["netmeta", "metafor", "meta"]
 missing_capabilities = [
-  "node_splitting",
-  "netheat_or_equivalent_contribution_heatmap",
-  "multi_arm_design_checks",
-  "publication_bias_adjustments",
-  "trim_and_fill_sensitivity",
+  "reference_matched_node_splitting",
+  "netheat_visualization_parity",
+  "mature_multi_arm_design_checks",
+  "reference_matched_publication_bias_adjustments",
+  "reference_matched_trim_and_fill_sensitivity",
 ]
 implemented_capabilities = [
   "multiarm_prefit_design_diagnostic",
   "multiarm_gls_influence_leverage_diagnostics",
   "multiarm_gls_absolute_mapping_contribution_diagnostics",
   "multiarm_study_contribution_matrix_diagnostic",
+  "multiarm_heatmap_ready_contribution_matrix",
   "pairwise_leave_one_out_outlier_space_diagnostic",
   "pairwise_exhaustive_gosh_subset_diagnostic",
   "bounded_trim_and_fill_sensitivity_screen",
   "fixed_effect_node_splitting_smoke_diagnostics",
   "egger_small_study_effect_diagnostic",
+  "selection_weight_publication_bias_sensitivity",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",

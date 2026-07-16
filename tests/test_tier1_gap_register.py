@@ -27,7 +27,7 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     assert {gap.status for gap in register.gaps} == {"blocking"}
 
     by_id = {gap.id: gap for gap in register.gaps}
-    assert "node_splitting" in by_id["feature_completeness"].missing_capabilities
+    assert "reference_matched_node_splitting" in by_id["feature_completeness"].missing_capabilities
     assert (
         "multiarm_prefit_design_diagnostic"
         in by_id["feature_completeness"].implemented_capabilities
@@ -42,6 +42,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     )
     assert (
         "multiarm_study_contribution_matrix_diagnostic"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "multiarm_heatmap_ready_contribution_matrix"
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
@@ -62,6 +66,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     )
     assert (
         "egger_small_study_effect_diagnostic"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "selection_weight_publication_bias_sensitivity"
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert "optimizer_stress_matrix" in by_id["numerical_stability"].missing_capabilities
@@ -112,11 +120,13 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "multiarm_gls_influence_leverage_diagnostics",
             "multiarm_gls_absolute_mapping_contribution_diagnostics",
             "multiarm_study_contribution_matrix_diagnostic",
+            "multiarm_heatmap_ready_contribution_matrix",
             "pairwise_leave_one_out_outlier_space_diagnostic",
             "pairwise_exhaustive_gosh_subset_diagnostic",
             "bounded_trim_and_fill_sensitivity_screen",
             "fixed_effect_node_splitting_smoke_diagnostics",
             "egger_small_study_effect_diagnostic",
+            "selection_weight_publication_bias_sensitivity",
             ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",

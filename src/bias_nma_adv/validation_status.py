@@ -19,6 +19,10 @@ from bias_nma_adv.certification import (
     summarize_reference_run_reports,
     summarize_reference_targets,
 )
+from bias_nma_adv.dose_response_coverage import (
+    load_dose_response_source_coverage,
+    summarize_dose_response_source_coverage,
+)
 from bias_nma_adv.grand_benchmark_plan import (
     summarize_grand_benchmark_plan,
     validate_grand_benchmark_plan,
@@ -93,6 +97,7 @@ def build_validation_status(
     real_benchmark_atlas_path = root / "validation" / "real_benchmark_atlas.json"
     tier1_gap_register_path = root / "validation" / "tier1_gap_register.toml"
     html_delivery_contract_path = root / "validation" / "html_delivery_contract.toml"
+    dose_response_coverage_path = root / "validation" / "dose_response_source_coverage.toml"
 
     registry = validate_source_benchmark_registry(registry_path, repo_root=root)
     assert_registry_covers_source_backed_artifacts(registry, repo_root=root)
@@ -108,6 +113,9 @@ def build_validation_status(
     portfolio_reuse_registry = load_portfolio_reuse_registry(portfolio_reuse_registry_path)
     tier1_gap_register = load_tier1_gap_register(tier1_gap_register_path)
     html_delivery_contract = load_html_delivery_contract(html_delivery_contract_path)
+    dose_response_coverage = load_dose_response_source_coverage(
+        dose_response_coverage_path
+    )
     improvement_review = load_improvement_review(improvement_review_path)
 
     targets = load_reference_targets(reference_targets_path)
@@ -168,6 +176,10 @@ def build_validation_status(
         "html_delivery_contract": {
             "contract": _relpath(html_delivery_contract_path, root),
             **summarize_html_delivery_contract(html_delivery_contract),
+        },
+        "dose_response_source_coverage": {
+            "coverage": _relpath(dose_response_coverage_path, root),
+            **summarize_dose_response_source_coverage(dose_response_coverage),
         },
         "ingestion_contract": summarize_proof_carrying_ingestion_contract(),
         "proof_effect_bundle": {

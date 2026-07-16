@@ -1,7 +1,10 @@
 import numpy as np
 import pytest
 
-from bias_nma_adv.publication_bias import egger_regression_diagnostic
+from bias_nma_adv.publication_bias import (
+    egger_regression_diagnostic,
+    selection_weight_sensitivity,
+)
 
 
 def test_egger_regression_diagnostic_recovers_small_study_intercept():
@@ -47,4 +50,42 @@ def test_egger_regression_diagnostic_rejects_invalid_inputs():
         egger_regression_diagnostic(
             np.array([0.1, 0.2, 0.3]),
             np.array([0.1, 0.0, 0.1]),
+        )
+
+
+def test_selection_weight_sensitivity_uses_prespecified_probabilities():
+    effects = np.array([0.1, 0.2, 0.8])
+    standard_errors = np.array([0.1, 0.1, 0.1])
+    selection_probabilities = np.array([1.0, 1.0, 0.25])
+
+    sensitivity = selection_weight_sensitivity(
+        effects,
+        standard_errors,
+        selection_probabilities,
+    )
+
+    assert sensitivity.k == 3
+    assert sensitivity.observed_estimate == pytest.approx(0.3666666667)
+    assert sensitivity.observed_se == pytest.approx(0.0577350269)
+    assert sensitivity.adjusted_estimate == pytest.approx(0.5833333333)
+    assert sensitivity.adjusted_se == pytest.approx(0.0707106781)
+    assert sensitivity.selection_probabilities == (1.0, 1.0, 0.25)
+    assert sensitivity.inverse_selection_weights == (1.0, 1.0, 4.0)
+    assert any("not a publication-bias proof" in warning for warning in sensitivity.warnings)
+    assert any("below 0.5" in warning for warning in sensitivity.warnings)
+
+
+def test_selection_weight_sensitivity_rejects_invalid_inputs():
+    with pytest.raises(ValueError, match="same length"):
+        selection_weight_sensitivity(
+            np.array([0.1, 0.2]),
+            np.array([0.1, 0.1]),
+            np.array([1.0]),
+        )
+
+    with pytest.raises(ValueError, match="in \\(0, 1\\]"):
+        selection_weight_sensitivity(
+            np.array([0.1, 0.2]),
+            np.array([0.1, 0.1]),
+            np.array([1.0, 0.0]),
         )

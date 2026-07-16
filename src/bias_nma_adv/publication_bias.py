@@ -23,6 +23,22 @@ class EggerRegressionDiagnostic:
     warnings: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class SelectionWeightSensitivity:
+    """Prespecified inverse-selection-probability sensitivity analysis."""
+
+    k: int
+    observed_estimate: float
+    observed_se: float
+    observed_ci: tuple[float, float]
+    adjusted_estimate: float
+    adjusted_se: float
+    adjusted_ci: tuple[float, float]
+    selection_probabilities: tuple[float, ...]
+    inverse_selection_weights: tuple[float, ...]
+    warnings: tuple[str, ...]
+
+
 class RegistryPublicationBiasAuditor:
     """Audits NMA networks against ClinicalTrials.gov registries to detect unpublished trials and outcome switching."""
 
@@ -166,5 +182,81 @@ def egger_regression_diagnostic(
         p_value=float(p_value),
         slope=float(coefficients[1]),
         residual_df=residual_df,
+        warnings=tuple(warnings),
+    )
+
+
+def selection_weight_sensitivity(
+    effects: np.ndarray,
+    standard_errors: np.ndarray,
+    selection_probabilities: np.ndarray,
+    *,
+    level: float = 0.95,
+) -> SelectionWeightSensitivity:
+    """Run a user-prespecified publication-selection sensitivity analysis.
+
+    The adjusted estimate is an inverse-selection-probability weighted
+    fixed-effect sensitivity estimate. It is useful for tipping-point and
+    robustness review, but it does not infer the selection probabilities and
+    should not be interpreted as proof or correction of publication bias.
+    """
+
+    y = np.asarray(effects, dtype=float).reshape(-1)
+    se = np.asarray(standard_errors, dtype=float).reshape(-1)
+    probabilities = np.asarray(selection_probabilities, dtype=float).reshape(-1)
+    if y.shape != se.shape or y.shape != probabilities.shape:
+        raise ValueError(
+            "effects, standard_errors, and selection_probabilities must have the same length."
+        )
+    if y.size < 2:
+        raise ValueError("selection-weight sensitivity requires at least two studies.")
+    if not np.all(np.isfinite(y)):
+        raise ValueError("all effects must be finite.")
+    if not np.all(np.isfinite(se)) or np.any(se <= 0.0):
+        raise ValueError("all standard errors must be finite and positive.")
+    if not np.all(np.isfinite(probabilities)) or np.any(probabilities <= 0.0) or np.any(
+        probabilities > 1.0
+    ):
+        raise ValueError("selection probabilities must be finite values in (0, 1].")
+    if not (0.0 < level < 1.0):
+        raise ValueError("level must be in (0, 1).")
+
+    base_weights = 1.0 / (se * se)
+    observed_estimate = float(np.sum(base_weights * y) / np.sum(base_weights))
+    observed_se = math.sqrt(float(1.0 / np.sum(base_weights)))
+
+    inverse_selection_weights = 1.0 / probabilities
+    adjusted_weights = base_weights * inverse_selection_weights
+    adjusted_estimate = float(np.sum(adjusted_weights * y) / np.sum(adjusted_weights))
+    adjusted_se = math.sqrt(
+        float(np.sum((adjusted_weights * se) ** 2) / (np.sum(adjusted_weights) ** 2))
+    )
+
+    alpha = 1.0 - level
+    critical = float(scipy.stats.norm.ppf(1.0 - alpha / 2.0))
+    observed_ci = (
+        float(observed_estimate - critical * observed_se),
+        float(observed_estimate + critical * observed_se),
+    )
+    adjusted_ci = (
+        float(adjusted_estimate - critical * adjusted_se),
+        float(adjusted_estimate + critical * adjusted_se),
+    )
+    warnings = [
+        "Selection-weight sensitivity uses prespecified probabilities and is not a publication-bias proof or correction."
+    ]
+    if np.any(probabilities < 0.5):
+        warnings.append("At least one study has selection probability below 0.5.")
+
+    return SelectionWeightSensitivity(
+        k=int(y.size),
+        observed_estimate=observed_estimate,
+        observed_se=float(observed_se),
+        observed_ci=observed_ci,
+        adjusted_estimate=adjusted_estimate,
+        adjusted_se=float(adjusted_se),
+        adjusted_ci=adjusted_ci,
+        selection_probabilities=tuple(float(item) for item in probabilities),
+        inverse_selection_weights=tuple(float(item) for item in inverse_selection_weights),
         warnings=tuple(warnings),
     )

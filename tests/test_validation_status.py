@@ -114,11 +114,13 @@ def test_validation_status_composes_all_current_gates():
             "multiarm_gls_influence_leverage_diagnostics",
             "multiarm_gls_absolute_mapping_contribution_diagnostics",
             "multiarm_study_contribution_matrix_diagnostic",
+            "multiarm_heatmap_ready_contribution_matrix",
             "pairwise_leave_one_out_outlier_space_diagnostic",
             "pairwise_exhaustive_gosh_subset_diagnostic",
             "bounded_trim_and_fill_sensitivity_screen",
             "fixed_effect_node_splitting_smoke_diagnostics",
             "egger_small_study_effect_diagnostic",
+            "selection_weight_publication_bias_sensitivity",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -148,6 +150,24 @@ def test_validation_status_composes_all_current_gates():
     }
     assert "statistical_estimation_engine" in html_contract["html_only_blocked_ids"]
     assert html_contract["certification_effect"] == "none"
+
+    dose_response_coverage = report["dose_response_source_coverage"]
+    assert dose_response_coverage["coverage"] == (
+        "validation/dose_response_source_coverage.toml"
+    )
+    assert dose_response_coverage["schema_version"] == "dose_response_source_coverage/v1"
+    assert dose_response_coverage["status"] == "missing_source_backed_dose_response_data"
+    assert dose_response_coverage["registered_benchmark_ids"] == []
+    assert dose_response_coverage["registered_source_counts"] == {
+        "clinicaltrials_gov": 0,
+        "open_access_paper": 0,
+        "pubmed_abstract": 0,
+    }
+    assert dose_response_coverage["has_source_backed_dose_response_data"] is False
+    assert "MBNMAdose_reference_run_before_certification" in dose_response_coverage[
+        "required_next_artifacts"
+    ]
+    assert dose_response_coverage["certification_effect"] == "none"
 
     ingestion_contract = report["ingestion_contract"]
     assert ingestion_contract["schema_version"] == "proof_carrying_effect/v1"
@@ -266,6 +286,9 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
         "allowed": 2,
         "blocked_for_html_only": 4,
     }
+    assert payload["dose_response_source_coverage"][
+        "has_source_backed_dose_response_data"
+    ] is False
     assert payload["proof_effect_bundle"]["n_records"] == 4
     assert payload["multiperson_review"]["n_rounds"] == 4
     assert payload["improvement_review"]["global_goal_complete"] is False

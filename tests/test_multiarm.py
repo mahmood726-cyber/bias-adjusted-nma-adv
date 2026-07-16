@@ -192,6 +192,21 @@ def test_study_contribution_matrix_aggregates_nonnegative_contributions_by_targe
         assert target in {"B", "C"}
 
 
+def test_study_contribution_heatmap_is_renderer_ready_and_normalized():
+    fit = fit_multiarm_gls(_rows_from_arms(FIXTURE_CONSISTENT), reference_treatment="A")
+
+    heatmap = fit.study_contribution_heatmap()
+
+    assert heatmap.target_treatments == fit.nonreference_treatments
+    assert heatmap.studies == tuple(sorted(heatmap.studies))
+    assert "S6" in heatmap.studies
+    assert len(heatmap.values) == len(fit.nonreference_treatments)
+    assert all(len(row) == len(heatmap.studies) for row in heatmap.values)
+    assert all(value >= 0.0 for row in heatmap.values for value in row)
+    assert all(sum(row) == pytest.approx(1.0, abs=1e-12) for row in heatmap.values)
+    assert any("not CINeMA" in warning for warning in heatmap.warnings)
+
+
 def test_influence_diagnostics_flag_deliberately_discordant_contrast():
     fit = fit_multiarm_gls(_rows_from_arms(FIXTURE_HETEROGENEOUS), reference_treatment="A")
 

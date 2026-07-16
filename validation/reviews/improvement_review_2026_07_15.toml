@@ -29,6 +29,8 @@ findings = [
   "The added absolute GLS mapping-contribution diagnostic is useful for audit and evidence-mapping review, but it is not yet a full netheat, CINeMA, or ROB-MEN contribution matrix.",
   "The pairwise leave-one-out outlier-space screen gives a bounded influence diagnostic, but it is not full GOSH subset enumeration or visualization parity.",
   "The new study-level contribution matrix and bounded exhaustive GOSH-style subset diagnostic close two narrow helper-function gaps without changing the broader tier-one blocker status.",
+  "The heatmap-ready contribution matrix supports HTML/report rendering without moving statistical estimation into HTML.",
+  "The selection-weight sensitivity adds a prespecified publication-bias stress test, but the probabilities are analyst inputs and not inferred evidence.",
   "The pairwise tau2 cross-check and numerical stress report reduce ambiguity around estimator sensitivity, sparse evidence, and dominant fixed-effect weights.",
   "The bounded trim-and-fill sensitivity screen adds a publication-bias sensitivity workflow, but it is not reference-matched Duval-Tweedie trim-and-fill parity.",
   "The local Bayesian sampler now exports R-hat/ESS/MCSE diagnostic warnings, but it remains a prototype sampler rather than Stan/NUTS or multinma parity.",
@@ -43,6 +45,7 @@ actions = [
   "Recorded absolute GLS mapping-contribution diagnostics as another partial feature-completeness capability while keeping contribution-matrix parity blocked.",
   "Recorded pairwise leave-one-out outlier-space screening as a partial feature-completeness capability while keeping full GOSH-style parity blocked.",
   "Recorded study-level contribution-matrix aggregation and bounded exhaustive GOSH-style subset enumeration as implemented helper diagnostics while keeping netheat, CINeMA, ROB-MEN, and visualization parity blocked.",
+  "Recorded heatmap-ready contribution-matrix data and selection-weight publication-bias sensitivity as implemented helper diagnostics while keeping reference-matched publication-bias workflows blocked.",
   "Recorded pairwise tau2 cross-checks and sparse/dominant-study stress reports as partial numerical-stability capabilities.",
   "Recorded bounded trim-and-fill sensitivity screening as partial publication-bias workflow progress while keeping full trim-and-fill parity blocked.",
   "Recorded local Bayesian MCMC diagnostic exports as partial Bayesian ecosystem progress while keeping Stan/NUTS and multinma matching blocked.",
@@ -68,14 +71,17 @@ scope = [
 findings = [
   "The source boundary now distinguishes effect-evidence sources from protocol-only registries.",
   "WHO ICTRP and other registries are allowed for protocol metadata only and rejected as model-ready extracted-effect sources.",
+  "Dose-response real-data coverage was checked against the registered artifacts: no dose-response benchmark data are currently included from ClinicalTrials.gov, PubMed abstracts, or open-access papers.",
 ]
 actions = [
   "Centralized effect-source and protocol-only source constants.",
   "Added tests that reject protocol-only sources in the proof-carrying effect ingestion path.",
   "Added the real benchmark atlas to summarize current source-backed benchmark coverage and non-claims.",
+  "Added a dose-response source-coverage artifact and validator that records the current absence of registered source-backed dose-response data.",
 ]
 remaining_blockers = [
   "Add open-access full-paper/table extraction artifacts beyond PubMed abstract token checks.",
+  "Add a source-backed dose-response manifest, dose-token/table checks, analysis artifact, and MBNMAdose reference run before dose-response validation claims.",
   "Add protocol discrepancy audits using WHO ICTRP or other registries without using them as effect sources.",
 ]
 verdict = "passed_current_milestone_not_global_goal"
@@ -128,6 +134,9 @@ findings = [
   "The pairwise leave-one-out diagnostic is deterministic and layered over the existing pairwise API instead of introducing a separate estimator.",
   "The GOSH-style subset diagnostic is capped by default and fails closed before combinatorial subset enumeration can become unbounded.",
   "The multi-arm study contribution matrix is an aggregation of already-tested absolute GLS mapping contributions, so it does not alter fitted treatment effects.",
+  "The heatmap-ready contribution output is data-only and can be rendered by HTML without recomputing model results.",
+  "The selection-weight publication-bias sensitivity validates input probabilities and preserves warnings in the returned object.",
+  "The dose-response coverage gate is static and fail-closed: it records absence of source-backed dose-response artifacts instead of inferring coverage from planned methods text.",
   "The pairwise tau2, stress, and trim-and-fill sensitivity diagnostics are deterministic wrappers over the existing pairwise API and preserve fail-closed input validation.",
   "The Bayesian diagnostic code is deterministic over stored draws and explicitly warns when single-chain output cannot support R-hat.",
   "The CmdStan preflight is an environment contract only and cannot certify Bayesian performance.",
@@ -141,6 +150,8 @@ actions = [
   "Added focused tests for multi-arm fit-attempt reports on successful, disconnected, incompatible-covariance, and empty-input cases.",
   "Added focused tests for pairwise leave-one-out outlier-space screening and too-few-study failure handling.",
   "Added focused tests for bounded exhaustive GOSH-style subset enumeration, subset-cap failure handling, and study-level contribution-matrix normalization.",
+  "Added focused tests for heatmap-ready contribution output and selection-weight publication-bias sensitivity input validation.",
+  "Added focused tests for dose-response source-coverage absence and validation-status exposure.",
   "Added focused tests for pairwise tau2 cross-checks, dominant-study stress warnings, bounded trim-and-fill sensitivity, and invalid trim-and-fill inputs.",
   "Added focused tests for Bayesian MCMC diagnostic exports and multi-chain R-hat availability.",
   "Added focused tests for CmdStan preflight summary shape, required diagnostics, and non-certifying status.",

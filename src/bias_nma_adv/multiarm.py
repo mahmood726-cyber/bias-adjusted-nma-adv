@@ -150,6 +150,16 @@ class ContrastContributionDiagnostic:
 
 
 @dataclass(frozen=True)
+class StudyContributionHeatmap:
+    """Heatmap-ready study contribution matrix for fitted treatment targets."""
+
+    target_treatments: tuple[str, ...]
+    studies: tuple[str, ...]
+    values: tuple[tuple[float, ...], ...]
+    warnings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class MultiArmNMAFit:
     """Result from experimental multi-arm contrast-level GLS NMA."""
 
@@ -207,6 +217,29 @@ class MultiArmNMAFit:
             target: dict(sorted(study_values.items()))
             for target, study_values in matrix.items()
         }
+
+    def study_contribution_heatmap(self) -> StudyContributionHeatmap:
+        """Return heatmap-ready study contribution values.
+
+        The object is intentionally data-only so HTML or report renderers can
+        consume it without recomputing statistical quantities.
+        """
+
+        matrix = self.study_contribution_matrix()
+        studies = tuple(sorted({study for values in matrix.values() for study in values}))
+        rows = tuple(
+            tuple(float(matrix[target].get(study, 0.0)) for study in studies)
+            for target in self.nonreference_treatments
+        )
+        warnings = (
+            "Contribution heatmap values are absolute GLS mapping proportions, not CINeMA or ROB-MEN certainty weights.",
+        )
+        return StudyContributionHeatmap(
+            target_treatments=self.nonreference_treatments,
+            studies=studies,
+            values=rows,
+            warnings=warnings,
+        )
 
     def _beta_var_cov(self, treatment: str, other: str) -> tuple[float, float, float]:
         if treatment == self.reference_treatment:
