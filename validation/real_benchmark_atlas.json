@@ -113,7 +113,7 @@
     {
       "artifact": "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml",
       "artifact_schema_version": "dose_response_benchmark/v1",
-      "artifact_sha256": "1626d0e18f011ddd3cacb1e92b1bc82a38d52a044893b11e6a789f97eaf397fb",
+      "artifact_sha256": "b92ee0d462eb176b7a0327658225cca8abb1c8fd5023fb859fb783bc221e57cd",
       "artifact_status": "local_pass",
       "certification_effect": "none",
       "domain": "dose_response_pairwise",

@@ -45,8 +45,8 @@ reference_arm_id = "placebo_pool"
 reference_lsmean = -2.29
 reference_se = 0.74
 estimate = -3.7
-se = 1.1269871339105872
-variance = 1.2700999999999998
+se = 1.12698713391
+variance = 1.2701
 effect_scale = "percentage_point_change_vs_placebo"
 variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
 
@@ -67,9 +67,9 @@ active_se = 0.84
 reference_arm_id = "placebo_pool"
 reference_lsmean = -2.29
 reference_se = 0.74
-estimate = -6.329999999999999
-se = 1.1194641575325224
-variance = 1.2531999999999999
+estimate = -6.33
+se = 1.11946415753
+variance = 1.2532
 effect_scale = "percentage_point_change_vs_placebo"
 variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
 
@@ -90,9 +90,9 @@ active_se = 0.85
 reference_arm_id = "placebo_pool"
 reference_lsmean = -2.29
 reference_se = 0.74
-estimate = -9.309999999999999
-se = 1.1269871339105872
-variance = 1.2700999999999998
+estimate = -9.31
+se = 1.12698713391
+variance = 1.2701
 effect_scale = "percentage_point_change_vs_placebo"
 variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
 
@@ -113,9 +113,9 @@ active_se = 0.85
 reference_arm_id = "placebo_pool"
 reference_lsmean = -2.29
 reference_se = 0.74
-estimate = -8.879999999999999
-se = 1.1269871339105872
-variance = 1.2700999999999998
+estimate = -8.88
+se = 1.12698713391
+variance = 1.2701
 effect_scale = "percentage_point_change_vs_placebo"
 variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
 
@@ -137,7 +137,7 @@ reference_arm_id = "placebo_pool"
 reference_lsmean = -2.29
 reference_se = 0.74
 estimate = -11.55
-se = 1.1119802156513396
+se = 1.11198021565
 variance = 1.2365
 effect_scale = "percentage_point_change_vs_placebo"
 variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled"
@@ -145,77 +145,77 @@ variance_source = "sqrt(active_se^2 + placebo_pool_se^2); shared placebo covaria
 [candidate.weighted_linear]
 model = "weighted_polynomial_degree_1_through_zero"
 degree = 1
-coefficients = [-32.89462467311137]
-coefficient_ses = [2.0340520898675556]
-q = 19.435304209581414
+coefficients = [-32.8946246731]
+coefficient_ses = [2.03405208987]
+q = 19.4353042096
 df = 4
 warnings = ["Local weighted polynomial fit is a source-backed smoke benchmark, not MBNMAdose parity.", "Shared placebo covariance is ignored in this simple artifact."]
 
 [[candidate.weighted_linear.fitted]]
 dose = 0.05
 observed = -3.7
-fitted = -1.6447312336555688
-residual = -2.0552687663444313
+fitted = -1.64473123366
+residual = -2.05526876634
 
 [[candidate.weighted_linear.fitted]]
 dose = 0.1
-observed = -6.329999999999999
-fitted = -3.2894624673111377
-residual = -3.0405375326888615
+observed = -6.33
+fitted = -3.28946246731
+residual = -3.04053753269
 
 [[candidate.weighted_linear.fitted]]
 dose = 0.2
-observed = -9.309999999999999
-fitted = -6.578924934622275
-residual = -2.7310750653777234
+observed = -9.31
+fitted = -6.57892493462
+residual = -2.73107506538
 
 [[candidate.weighted_linear.fitted]]
 dose = 0.3
-observed = -8.879999999999999
-fitted = -9.868387401933411
-residual = 0.9883874019334122
+observed = -8.88
+fitted = -9.86838740193
+residual = 0.988387401933
 
 [[candidate.weighted_linear.fitted]]
 dose = 0.4
 observed = -11.55
-fitted = -13.15784986924455
-residual = 1.60784986924455
+fitted = -13.1578498692
+residual = 1.60784986924
 
 [candidate.weighted_quadratic]
 model = "weighted_polynomial_degree_2_through_zero"
 degree = 2
-coefficients = [-62.99449814878353, 90.69843463580264]
-coefficient_ses = [8.070461513486697, 23.533264294346733]
-q = 4.5815840120821045
+coefficients = [-62.9944981488, 90.6984346358]
+coefficient_ses = [8.07046151349, 23.5332642943]
+q = 4.58158401208
 df = 3
 warnings = ["Local weighted polynomial fit is a source-backed smoke benchmark, not MBNMAdose parity.", "Shared placebo covariance is ignored in this simple artifact."]
 
 [[candidate.weighted_quadratic.fitted]]
 dose = 0.05
 observed = -3.7
-fitted = -2.92297882084967
-residual = -0.7770211791503301
+fitted = -2.92297882085
+residual = -0.77702117915
 
 [[candidate.weighted_quadratic.fitted]]
 dose = 0.1
-observed = -6.329999999999999
-fitted = -5.392465468520326
-residual = -0.937534531479673
+observed = -6.33
+fitted = -5.39246546852
+residual = -0.93753453148
 
 [[candidate.weighted_quadratic.fitted]]
 dose = 0.2
-observed = -9.309999999999999
-fitted = -8.9709622443246
-residual = -0.33903775567539896
+observed = -9.31
+fitted = -8.97096224432
+residual = -0.339037755675
 
 [[candidate.weighted_quadratic.fitted]]
 dose = 0.3
-observed = -8.879999999999999
-fitted = -10.735490327412819
-residual = 1.85549032741282
+observed = -8.88
+fitted = -10.7354903274
+residual = 1.85549032741
 
 [[candidate.weighted_quadratic.fitted]]
 dose = 0.4
 observed = -11.55
-fitted = -10.686049717784988
-residual = -0.8639502822150131
+fitted = -10.6860497178
+residual = -0.863950282215

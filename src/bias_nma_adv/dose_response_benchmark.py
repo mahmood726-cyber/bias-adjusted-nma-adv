@@ -399,18 +399,18 @@ def dose_response_effects(manifest: DoseResponseManifest) -> tuple[DoseResponseE
                 arm_id=arm.arm_id,
                 group_id=arm.group_id,
                 treatment=arm.treatment,
-                dose=float(arm.dose),
+                dose=_stable_float(arm.dose),
                 dose_unit=arm.dose_unit,
                 dose_frequency=arm.dose_frequency,
                 escalation=arm.escalation,
-                active_lsmean=float(arm.lsmean),
-                active_se=float(arm.se),
+                active_lsmean=_stable_float(arm.lsmean),
+                active_se=_stable_float(arm.se),
                 reference_arm_id=reference.arm_id,
-                reference_lsmean=float(reference.lsmean),
-                reference_se=float(reference.se),
-                estimate=float(estimate),
-                se=float(math.sqrt(variance)),
-                variance=float(variance),
+                reference_lsmean=_stable_float(reference.lsmean),
+                reference_se=_stable_float(reference.se),
+                estimate=_stable_float(estimate),
+                se=_stable_float(math.sqrt(variance)),
+                variance=_stable_float(variance),
                 effect_scale=manifest.effect_scale,
                 variance_source="sqrt(active_se^2 + placebo_pool_se^2); shared placebo covariance not modeled",
             )
@@ -487,9 +487,12 @@ def _weighted_polynomial_fit(effects: tuple[DoseResponseEffect, ...], *, degree:
     return {
         "model": f"weighted_polynomial_degree_{degree}_through_zero",
         "degree": int(degree),
-        "coefficients": [float(item) for item in beta],
-        "coefficient_ses": [float(math.sqrt(max(covariance[idx, idx], 0.0))) for idx in range(covariance.shape[0])],
-        "q": q,
+        "coefficients": [_stable_float(item) for item in beta],
+        "coefficient_ses": [
+            _stable_float(math.sqrt(max(covariance[idx, idx], 0.0)))
+            for idx in range(covariance.shape[0])
+        ],
+        "q": _stable_float(q),
         "df": df,
         "warnings": [
             "Local weighted polynomial fit is a source-backed smoke benchmark, not MBNMAdose parity.",
@@ -497,10 +500,10 @@ def _weighted_polynomial_fit(effects: tuple[DoseResponseEffect, ...], *, degree:
         ],
         "fitted": [
             {
-                "dose": float(dose),
-                "observed": float(observed),
-                "fitted": float(predicted),
-                "residual": float(obs_residual),
+                "dose": _stable_float(dose),
+                "observed": _stable_float(observed),
+                "fitted": _stable_float(predicted),
+                "residual": _stable_float(obs_residual),
             }
             for dose, observed, predicted, obs_residual in zip(doses, y, fitted, residual, strict=True)
         ],
@@ -546,3 +549,7 @@ def _relpath(path: Path, root: Path) -> str:
         return path.resolve().relative_to(root.resolve()).as_posix()
     except ValueError:
         return path.as_posix()
+
+
+def _stable_float(value: float) -> float:
+    return float(f"{float(value):.12g}")
