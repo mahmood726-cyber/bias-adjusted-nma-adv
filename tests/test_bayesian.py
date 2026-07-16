@@ -1,7 +1,7 @@
 import numpy as np
 from bias_nma_adv.data import EvidenceDataset
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
-from bias_nma_adv.bayesian import BayesianNMAMCMCSampler
+from bias_nma_adv.bayesian import BayesianNMAMCMCSampler, compute_mcmc_diagnostics
 
 def test_bayesian_mcmc_sampler():
     dataset = EvidenceDataset()
@@ -51,6 +51,12 @@ def test_bayesian_mcmc_sampler():
     assert "tau_rct" in fit.posterior_means
     assert fit.chains.shape == (500, 2)
     assert fit.acceptance_rate >= 0.0
+    assert set(fit.diagnostics) == {"trt_B", "tau_rct"}
+    assert any("R-hat unavailable" in warning for warning in fit.diagnostic_warnings)
+    assert fit.diagnostics["trt_B"].n_chains == 1
+    assert fit.diagnostics["trt_B"].r_hat is None
+    assert fit.diagnostics["trt_B"].ess_bulk > 0.0
+    assert fit.diagnostics["trt_B"].mcse_mean >= 0.0
     
     # Credible interval for trt_B
     ci = fit.credible_intervals["trt_B"]
@@ -58,3 +64,19 @@ def test_bayesian_mcmc_sampler():
     
     # SD should be positive
     assert fit.posterior_sds["trt_B"] > 0.0
+
+
+def test_compute_mcmc_diagnostics_exports_rhat_for_multiple_chains():
+    rng = np.random.default_rng(123)
+    draws = rng.normal(0.0, 1.0, size=(2, 500, 1))
+
+    diagnostics = compute_mcmc_diagnostics(draws, ("theta",))
+    diagnostic = diagnostics["theta"]
+
+    assert diagnostic.n_chains == 2
+    assert diagnostic.n_draws == 500
+    assert diagnostic.r_hat is not None
+    assert diagnostic.r_hat < 1.05
+    assert diagnostic.ess_bulk > 0.0
+    assert diagnostic.ess_tail > 0.0
+    assert diagnostic.mcse_mean >= 0.0

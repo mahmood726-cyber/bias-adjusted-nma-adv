@@ -88,6 +88,10 @@ missing_capabilities = [
   "joint_posterior_ranking_draws",
   "mlnmr_reference_examples",
 ]
+implemented_capabilities = [
+  "local_mcmc_rhat_ess_mcse_diagnostic_warnings",
+  "cmdstan_preflight_fail_closed_contract",
+]
 required_evidence_artifacts = [
   "stan_model_sources",
   "cmdstan_versioned_run_reports",

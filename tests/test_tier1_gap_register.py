@@ -74,6 +74,14 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["numerical_stability"].implemented_capabilities
     )
     assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
+    assert (
+        "local_mcmc_rhat_ess_mcse_diagnostic_warnings"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
+    assert (
+        "cmdstan_preflight_fail_closed_contract"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
 
 
@@ -105,7 +113,11 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "multiarm_deterministic_failure_reports",
                 "pairwise_alternative_tau2_cross_checks",
                 "pairwise_sparse_dominant_study_stress_report",
-            ]
+            ],
+            "bayesian_ecosystem_integration": [
+                "local_mcmc_rhat_ess_mcse_diagnostic_warnings",
+                "cmdstan_preflight_fail_closed_contract",
+            ],
         },
         "blocked_claims": [
             "tier_one_parity",

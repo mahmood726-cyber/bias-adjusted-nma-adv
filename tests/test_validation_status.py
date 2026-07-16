@@ -124,6 +124,10 @@ def test_validation_status_composes_all_current_gates():
             "pairwise_alternative_tau2_cross_checks",
             "pairwise_sparse_dominant_study_stress_report",
         ],
+        "bayesian_ecosystem_integration": [
+            "local_mcmc_rhat_ess_mcse_diagnostic_warnings",
+            "cmdstan_preflight_fail_closed_contract",
+        ],
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
     assert tier1_gaps["certification_effect"] == "none"

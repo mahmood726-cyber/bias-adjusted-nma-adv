@@ -30,6 +30,8 @@ findings = [
   "The pairwise leave-one-out outlier-space screen gives a bounded influence diagnostic, but it is not full GOSH subset enumeration or visualization parity.",
   "The pairwise tau2 cross-check and numerical stress report reduce ambiguity around estimator sensitivity, sparse evidence, and dominant fixed-effect weights.",
   "The bounded trim-and-fill sensitivity screen adds a publication-bias sensitivity workflow, but it is not reference-matched Duval-Tweedie trim-and-fill parity.",
+  "The local Bayesian sampler now exports R-hat/ESS/MCSE diagnostic warnings, but it remains a prototype sampler rather than Stan/NUTS or multinma parity.",
+  "The CmdStan preflight contract fails closed when CmdStanPy or CmdStan is unavailable and records the required NUTS diagnostics before any model run can count.",
 ]
 actions = [
   "Added a machine-readable tier-one gap register with three blocking gaps and required evidence artifacts.",
@@ -41,6 +43,8 @@ actions = [
   "Recorded pairwise leave-one-out outlier-space screening as a partial feature-completeness capability while keeping full GOSH-style parity blocked.",
   "Recorded pairwise tau2 cross-checks and sparse/dominant-study stress reports as partial numerical-stability capabilities.",
   "Recorded bounded trim-and-fill sensitivity screening as partial publication-bias workflow progress while keeping full trim-and-fill parity blocked.",
+  "Recorded local Bayesian MCMC diagnostic exports as partial Bayesian ecosystem progress while keeping Stan/NUTS and multinma matching blocked.",
+  "Recorded the CmdStan preflight contract as a fail-closed environment gate while keeping CmdStan backend implementation blocked.",
 ]
 remaining_blockers = [
   "Reference-match node-splitting behavior and add contribution heatmaps, outlier diagnostics, trim-and-fill, and selection-model sensitivity workflows.",
@@ -121,6 +125,8 @@ findings = [
   "The deterministic fit-attempt report records input, design, and fit-stage failures in a machine-readable form for the multi-arm GLS path.",
   "The pairwise leave-one-out diagnostic is deterministic and layered over the existing pairwise API instead of introducing a separate estimator.",
   "The pairwise tau2, stress, and trim-and-fill sensitivity diagnostics are deterministic wrappers over the existing pairwise API and preserve fail-closed input validation.",
+  "The Bayesian diagnostic code is deterministic over stored draws and explicitly warns when single-chain output cannot support R-hat.",
+  "The CmdStan preflight is an environment contract only and cannot certify Bayesian performance.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
@@ -131,6 +137,8 @@ actions = [
   "Added focused tests for multi-arm fit-attempt reports on successful, disconnected, incompatible-covariance, and empty-input cases.",
   "Added focused tests for pairwise leave-one-out outlier-space screening and too-few-study failure handling.",
   "Added focused tests for pairwise tau2 cross-checks, dominant-study stress warnings, bounded trim-and-fill sensitivity, and invalid trim-and-fill inputs.",
+  "Added focused tests for Bayesian MCMC diagnostic exports and multi-chain R-hat availability.",
+  "Added focused tests for CmdStan preflight summary shape, required diagnostics, and non-certifying status.",
 ]
 remaining_blockers = [
   "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit each capability milestone before treating the batch as reviewed.",

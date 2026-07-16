@@ -14,6 +14,22 @@ class BayesianMCMCFitResult:
     posterior_sds: dict[str, float]
     credible_intervals: dict[str, tuple[float, float]]
     acceptance_rate: float
+    diagnostics: dict[str, "MCMCDiagnostic"] = field(default_factory=dict)
+    diagnostic_warnings: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class MCMCDiagnostic:
+    """Convergence and Monte Carlo error diagnostic for one parameter."""
+
+    parameter: str
+    n_chains: int
+    n_draws: int
+    r_hat: float | None
+    ess_bulk: float
+    ess_tail: float
+    mcse_mean: float
+    warnings: tuple[str, ...]
 
 
 class BayesianNMAMCMCSampler:
@@ -135,13 +151,26 @@ class BayesianNMAMCMCSampler:
                 float(np.percentile(chain, 97.5))
             )
 
+        diagnostics = compute_mcmc_diagnostics(samples, tuple(all_names))
+        diagnostic_warnings: list[str] = []
+        if acceptance_rate < 0.15 or acceptance_rate > 0.95:
+            diagnostic_warnings.append(
+                "Metropolis-Hastings acceptance rate is outside the broad diagnostic range [0.15, 0.95]."
+            )
+        for diagnostic in diagnostics.values():
+            diagnostic_warnings.extend(
+                f"{diagnostic.parameter}: {warning}" for warning in diagnostic.warnings
+            )
+
         return BayesianMCMCFitResult(
             parameter_names=tuple(all_names),
             chains=samples,
             posterior_means=posterior_means,
             posterior_sds=posterior_sds,
             credible_intervals=credible_intervals,
-            acceptance_rate=acceptance_rate
+            acceptance_rate=acceptance_rate,
+            diagnostics=diagnostics,
+            diagnostic_warnings=tuple(diagnostic_warnings),
         )
 
     def _log_posterior(
@@ -187,3 +216,96 @@ class BayesianNMAMCMCSampler:
         log_prior_tau = -0.5 * np.sum(taus * taus)
 
         return log_lik + log_prior_beta + log_prior_tau
+
+
+def compute_mcmc_diagnostics(
+    draws: np.ndarray,
+    parameter_names: tuple[str, ...],
+) -> dict[str, MCMCDiagnostic]:
+    """Compute deterministic MCMC diagnostics for 2D or 3D posterior draws.
+
+    ``draws`` may be shaped as ``(draw, parameter)`` for a single chain or as
+    ``(chain, draw, parameter)`` for multiple chains. R-hat is intentionally
+    unavailable for single-chain output.
+    """
+
+    array = np.asarray(draws, dtype=float)
+    if array.ndim == 2:
+        array = array[np.newaxis, :, :]
+    if array.ndim != 3:
+        raise ValueError("draws must have shape (draw, parameter) or (chain, draw, parameter).")
+    n_chains, n_draws, n_parameters = array.shape
+    if n_parameters != len(parameter_names):
+        raise ValueError("parameter_names length must match the draws parameter dimension.")
+    if n_draws < 4:
+        raise ValueError("at least four draws are required for MCMC diagnostics.")
+    if not np.all(np.isfinite(array)):
+        raise ValueError("MCMC draws must be finite.")
+
+    diagnostics: dict[str, MCMCDiagnostic] = {}
+    for idx, name in enumerate(parameter_names):
+        parameter_draws = array[:, :, idx]
+        flattened = parameter_draws.reshape(-1)
+        ess = _effective_sample_size(flattened)
+        tail_ess = min(
+            _effective_sample_size(flattened[flattened <= np.percentile(flattened, 25.0)]),
+            _effective_sample_size(flattened[flattened >= np.percentile(flattened, 75.0)]),
+        )
+        sd = float(np.std(flattened, ddof=1)) if flattened.size > 1 else 0.0
+        mcse = float(sd / math.sqrt(max(ess, 1.0)))
+        r_hat = _split_r_hat(parameter_draws) if n_chains >= 2 else None
+        warnings: list[str] = []
+        if r_hat is None:
+            warnings.append("R-hat unavailable: at least two chains are required.")
+        elif r_hat > 1.01:
+            warnings.append(f"R-hat exceeds 1.01 ({r_hat:.4f}).")
+        if ess < 400.0:
+            warnings.append(f"Bulk ESS below 400 ({ess:.1f}).")
+        if tail_ess < 400.0:
+            warnings.append(f"Tail ESS below 400 ({tail_ess:.1f}).")
+        diagnostics[name] = MCMCDiagnostic(
+            parameter=name,
+            n_chains=int(n_chains),
+            n_draws=int(n_draws),
+            r_hat=r_hat,
+            ess_bulk=float(ess),
+            ess_tail=float(tail_ess),
+            mcse_mean=mcse,
+            warnings=tuple(warnings),
+        )
+    return diagnostics
+
+
+def _effective_sample_size(values: np.ndarray) -> float:
+    series = np.asarray(values, dtype=float).reshape(-1)
+    n = series.size
+    if n <= 1:
+        return float(n)
+    centered = series - float(np.mean(series))
+    variance = float(np.dot(centered, centered) / n)
+    if variance <= 0.0:
+        return float(n)
+    autocorrelation_sum = 0.0
+    for lag in range(1, n):
+        covariance = float(np.dot(centered[:-lag], centered[lag:]) / (n - lag))
+        rho = covariance / variance
+        if rho <= 0.0:
+            break
+        autocorrelation_sum += 2.0 * rho
+    return float(max(1.0, n / (1.0 + autocorrelation_sum)))
+
+
+def _split_r_hat(chains: np.ndarray) -> float:
+    n_chains, n_draws = chains.shape
+    split_draws = n_draws // 2
+    if split_draws < 2:
+        return float("inf")
+    split = chains[:, : split_draws * 2].reshape(n_chains * 2, split_draws)
+    chain_means = np.mean(split, axis=1)
+    chain_variances = np.var(split, axis=1, ddof=1)
+    within = float(np.mean(chain_variances))
+    if within <= 0.0:
+        return 1.0
+    between = float(split_draws * np.var(chain_means, ddof=1))
+    var_hat = ((split_draws - 1.0) / split_draws) * within + between / split_draws
+    return float(math.sqrt(max(var_hat / within, 0.0)))
