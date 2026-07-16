@@ -80,7 +80,27 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         "source_backed_dose_response_smoke_benchmark"
         in by_id["feature_completeness"].implemented_capabilities
     )
+    assert (
+        "aact_ctgov_ingestion_contract"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "ictrp_pactr_result_source_ingestion_contract"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "input_verified_reversal_yardstick_gate"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
     assert "dta_source_coverage_gate" in by_id["feature_completeness"].implemented_capabilities
+    assert (
+        "dta_bivariate_logitnormal_reml_prototype"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "dta_mada_reitsma_algorithmic_reference_adapter"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
     assert (
         "reference_matched_optimizer_stress_matrix"
         in by_id["numerical_stability"].missing_capabilities
@@ -165,8 +185,13 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "selection_weight_publication_bias_sensitivity",
             "native_python_guyot_reconstruction_check",
             "source_backed_dose_response_smoke_benchmark",
+            "aact_ctgov_ingestion_contract",
+            "ictrp_pactr_result_source_ingestion_contract",
+            "input_verified_reversal_yardstick_gate",
             "dta_source_coverage_gate",
-            ],
+            "dta_bivariate_logitnormal_reml_prototype",
+            "dta_mada_reitsma_algorithmic_reference_adapter",
+        ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",
                 "multiarm_deterministic_failure_reports",

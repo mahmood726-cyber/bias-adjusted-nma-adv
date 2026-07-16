@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from bias_nma_adv.r_reference_validation import (  # noqa: E402
     RReferenceValidationError,
     load_r_reference_output,
+    validate_dta_mada_reitsma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_meta_output,
 )
@@ -27,6 +28,8 @@ PAIRWISE_OUTPUT = Path("validation/reference_runs/pairwise_metafor_meta_output.j
 PAIRWISE_REPORT = Path("validation/reference_runs/pairwise_metafor_meta_reference.toml")
 MULTIARM_OUTPUT = Path("validation/reference_runs/multiarm_netmeta_output.json")
 MULTIARM_REPORT = Path("validation/reference_runs/multiarm_netmeta_reference.toml")
+DTA_OUTPUT = Path("validation/reference_runs/dta_mada_reitsma_output.json")
+DTA_REPORT = Path("validation/reference_runs/dta_mada_reitsma_reference.toml")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -36,6 +39,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pairwise-report", type=Path, default=PAIRWISE_REPORT)
     parser.add_argument("--multiarm-output", type=Path, default=MULTIARM_OUTPUT)
     parser.add_argument("--multiarm-report", type=Path, default=MULTIARM_REPORT)
+    parser.add_argument("--dta-output", type=Path, default=DTA_OUTPUT)
+    parser.add_argument("--dta-report", type=Path, default=DTA_REPORT)
     parser.add_argument("--tolerance", type=float, default=1e-6)
     parser.add_argument(
         "--checked-at",
@@ -57,6 +62,11 @@ def main(argv: list[str] | None = None) -> int:
             repo_root=root,
             tolerance=args.tolerance,
         )
+        dta_output = _resolve(root, args.dta_output)
+        dta_summary = validate_dta_mada_reitsma_output(
+            dta_output,
+            repo_root=root,
+        )
         _write_report(
             _resolve(root, args.pairwise_report),
             _pairwise_report(
@@ -65,6 +75,15 @@ def main(argv: list[str] | None = None) -> int:
                 summary=pairwise_summary,
                 checked_at=args.checked_at,
                 tolerance=args.tolerance,
+            ),
+        )
+        _write_report(
+            _resolve(root, args.dta_report),
+            _dta_report(
+                root=root,
+                output_path=dta_output,
+                summary=dta_summary,
+                checked_at=args.checked_at,
             ),
         )
         _write_report(
@@ -81,7 +100,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"R reference output validation failed: {exc}", file=sys.stderr)
         return 1
 
-    print(f"R reference output validation passed: {args.pairwise_report}, {args.multiarm_report}")
+    print(
+        "R reference output validation passed: "
+        f"{args.pairwise_report}, {args.multiarm_report}, {args.dta_report}"
+    )
     return 0
 
 
@@ -180,6 +202,63 @@ def _multiarm_report(
         "notes": [
             "This local fixture validates multi-arm covariance handling against netmeta outputs; it is not clinical evidence."
         ],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _dta_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    input_artifacts = [
+        Path("validation/dta/dta_algorithmic_fixture.csv"),
+        Path("validation/dta/dta_algorithmic_fixture.toml"),
+        Path("external/r/dta_mada_reitsma_fixture.R"),
+    ]
+    tolerances = summary["tolerance"]
+    tolerance_label = (
+        f"probability <= {tolerances['probability']:g}; "
+        f"log/auc <= {tolerances['log']:g}; "
+        f"variance <= {tolerances['variance']:g}; "
+        f"rho <= {tolerances['rho']:g}"
+    )
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "dta_bivariate_hsroc_reference",
+        "adapter_id": "r_mada_dta_reitsma_output_validation",
+        "reference_method": "mada::reitsma",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/dta_mada_reitsma_fixture.R",
+            "--input",
+            "validation/dta/dta_algorithmic_fixture.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": tolerance_label,
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
         "input_sha256": {
             path.as_posix(): sha256_file(root / path)
             for path in input_artifacts

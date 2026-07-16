@@ -1,7 +1,7 @@
 schema_version = "multiperson_review/v1"
 checked_at = "2026-07-15"
 certification_effect = "none"
-source_policy = "ClinicalTrials.gov records, PubMed abstracts, and open-access papers for effect evidence; WHO ICTRP or other registries are protocol-only metadata sources"
+source_policy = "AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, and public numeric ICTRP/PACTR result rows for effect evidence; protocol-only registry rows remain metadata sources"
 required_review_rounds = [
   "source_boundary_review",
   "statistical_methods_review",

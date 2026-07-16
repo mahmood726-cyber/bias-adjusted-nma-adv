@@ -22,12 +22,16 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
     assert atlas["status"] == "passed"
     assert atlas["certification_effect"] == "none"
     assert atlas["allowed_effect_evidence_sources"] == [
+        "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
         "open_access_paper",
+        "pactr_results",
         "pubmed_abstract",
+        "who_ictrp_results",
     ]
     assert atlas["allowed_protocol_only_sources"] == [
         "other_trial_registry_protocol",
+        "pactr_protocol",
         "who_ictrp_protocol",
     ]
     assert atlas["n_benchmarks"] == 5

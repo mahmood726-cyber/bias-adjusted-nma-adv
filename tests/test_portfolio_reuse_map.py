@@ -19,8 +19,8 @@ def test_portfolio_reuse_map_names_source_constrained_reuse_lanes():
         "C:\\Projects\\topo-transport-ma",
         "C:\\Projects\\allmeta\\shared\\nma-multiarm-v1.js",
         "C:\\Users\\mahmo\\code\\rct-extractor-v2",
-        "effect evidence from ClinicalTrials.gov records, PubMed abstracts, and open-access papers",
-        "protocol metadata may also come from WHO ICTRP or other registries",
+        "effect evidence from AACT/ClinicalTrials.gov records, public numeric ICTRP/PACTR result rows, PubMed abstracts, and open-access papers",
+        "protocol metadata may also come from ICTRP, PACTR, or other registries",
         "Static-Vs-Dynamic Hardcode Disclosure",
     ):
         assert required in text

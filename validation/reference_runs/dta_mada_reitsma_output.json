@@ -1,0 +1,49 @@
+{
+  "schema_version": "dta_mada_reitsma_fixture/v1",
+  "fixture_id": "dta_algorithmic_fixture",
+  "source_policy": "synthetic_algorithmic_fixture_not_clinical_evidence",
+  "certification_effect": "none",
+  "package_versions": {
+    "R": "4.6.0",
+    "mada": "0.5.12",
+    "jsonlite": "2.0.0"
+  },
+  "n_studies": 8,
+  "continuity_correction": 0.5,
+  "correction_control": "all",
+  "method": "reml",
+  "converged": true,
+  "logLik": 24.428664916171485,
+  "AIC": -38.85732983234297,
+  "BIC": -34.994386221144062,
+  "summary": {
+    "logit_sensitivity": 1.342215390010131,
+    "logit_fpr": -1.74825076349686,
+    "se_logit_sensitivity": 0.1453186666489537,
+    "se_logit_fpr": 0.1168821631805757,
+    "pooled_sensitivity": 0.7928540254492356,
+    "sensitivity_ci_low": 0.7421926102164694,
+    "sensitivity_ci_high": 0.8357630232585632,
+    "pooled_fpr": 0.1482679637343219,
+    "fpr_ci_low": 0.1216031518282094,
+    "fpr_ci_high": 0.1795843728164417,
+    "pooled_specificity": 0.8517320362656781,
+    "specificity_ci_low": 0.8204156271835583,
+    "specificity_ci_high": 0.8783968481717906,
+    "tau2_sensitivity": 0.01802732174827957,
+    "tau2_fpr": 0.02350613376869652,
+    "cov_sensitivity_fpr": 0.02058525288905583,
+    "rho_sensitivity_fpr": 0.9999999999999879,
+    "log_diagnostic_odds_ratio": 3.090466153506991,
+    "diagnostic_odds_ratio": 21.987325055905849,
+    "auc": 0.8885038267508946,
+    "partial_auc": 0.7757152344975395,
+    "vcov_logit_sensitivity": 0.02111751487662974,
+    "vcov_logit_fpr": 0.01366144006977072,
+    "vcov_logit_cov": 0.002717480012204127
+  },
+  "warnings": [
+    "Algorithmic DTA fixture only; not source-backed clinical evidence.",
+    "This reference output does not satisfy source-backed DTA validation requirements."
+  ]
+}

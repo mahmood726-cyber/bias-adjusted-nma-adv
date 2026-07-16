@@ -44,21 +44,26 @@ class RegistryPublicationBiasAuditor:
 
     def __init__(self):
         # Maps NCT ID to its registry metadata:
-        # {nct_id: {"registered_primary": str, "reported_primary": str, "status": str}}
-        self.registry_db: dict[str, dict[str, str]] = {}
+        # {nct_id: {"registered_primary": str, "reported_primary": str, "status": str,
+        #           "interventions": tuple[str, ...]}}
+        self.registry_db: dict[str, dict[str, object]] = {}
 
     def register_trial_protocol(
         self,
         nct_id: str,
         registered_primary: str,
         reported_primary: str,
-        status: str
+        status: str,
+        interventions: list[str] | tuple[str, ...] | None = None,
     ) -> None:
         """Register prospective trial protocol metadata from ClinicalTrials.gov."""
         self.registry_db[nct_id] = {
             "registered_primary": registered_primary.strip().lower(),
             "reported_primary": reported_primary.strip().lower(),
-            "status": status.strip().lower()
+            "status": status.strip().lower(),
+            "interventions": tuple(
+                item.strip().lower() for item in (interventions or ()) if item.strip()
+            ),
         }
 
     def audit_outcome_switching(self, nct_ids: list[str]) -> dict[str, float]:
@@ -74,8 +79,8 @@ class RegistryPublicationBiasAuditor:
                 bias_scores[nct_id] = 1.0
                 continue
                 
-            reg = meta["registered_primary"]
-            rep = meta["reported_primary"]
+            reg = str(meta["registered_primary"])
+            rep = str(meta["reported_primary"])
             
             # If primary outcome was modified or switched, assign score of 1.0
             if reg != rep and reg not in rep and rep not in reg:
@@ -90,25 +95,44 @@ class RegistryPublicationBiasAuditor:
 
         UTR = (Registered but Unpublished Trials) / (Total Registered Trials)
         """
+        target = drug_name.strip().lower()
+        if not target:
+            raise ValueError("drug_name must not be empty.")
         total_registered = 0
         unpublished = 0
-        
-        # Simple string matching helper to identify trials evaluating the target drug
+        completed_without_intervention_metadata = 0
+        published = {item.strip().upper() for item in published_nct_ids}
+
         for nct_id, meta in self.registry_db.items():
-            if meta["status"] in ["completed", "terminated"]:
-                total_registered += 1
-                if nct_id not in published_nct_ids:
-                    unpublished += 1
+            if str(meta["status"]) not in {"completed", "terminated"}:
+                continue
+            interventions = tuple(str(item) for item in meta.get("interventions", ()))
+            if not interventions:
+                completed_without_intervention_metadata += 1
+                continue
+            if not any(target in item or item in target for item in interventions):
+                continue
+            total_registered += 1
+            if nct_id.strip().upper() not in published:
+                unpublished += 1
                     
         if total_registered == 0:
+            if completed_without_intervention_metadata:
+                raise ValueError(
+                    "drug-specific unpublished ratio requires intervention metadata; "
+                    "the current registry records cannot be filtered by drug_name."
+                )
             return 0.0
             
         return float(unpublished / total_registered)
 
     def apply_bias_shrinkage(self, effect_estimate: float, utr: float) -> float:
-        """Apply a publication bias shrinkage factor to the pooled treatment effect.
+        """Apply a legacy publication-bias shrinkage sensitivity factor.
 
-        Shrinks the pooled log-HR toward 0 (the null) proportional to the unpublished ratio.
+        This helper is retained for backward-compatible exploratory sensitivity
+        tests only. It must not be used as an automatic correction on
+        registry-first inputs, where selection-correction layers are evaluated
+        separately and may worsen distance-to-truth.
         """
         # Shrinkage factor: (1 - UTR)
         shrinkage = 1.0 - utr

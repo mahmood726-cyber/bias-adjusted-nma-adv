@@ -1,0 +1,91 @@
+schema_version = "reversal_yardstick/v1"
+checked_at = "2026-07-16"
+status = "registered_not_source_backed"
+certification_effect = "none"
+purpose = "Non-certifying yardstick for input-verified evidence synthesis using historical reversal cases where a less-selected later source gives an answer key."
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+protocol_only_sources = ["other_trial_registry_protocol", "pactr_protocol", "who_ictrp_protocol"]
+truth_boundary = "Recovers what the trials found, not the absolute truth about the drug."
+headline_metric = "detected_taint"
+oracle_only_reporting_allowed = false
+global_goal_complete = false
+n_cases = 11
+priority_reversal_cases = 5
+case_data_status = "reconstructions_and_anchored_cases_not_validated_population_rate"
+negative_control_status = "required_not_complete"
+claim_limit = "No tier-one superiority, clinical, HTA, or production-certification claim is supported by this yardstick until source-backed reversal fixtures, negative controls, automated blind triggers, and external review pass."
+required_next_artifacts = [
+  "source_backed_reversal_case_fixtures_under_allowed_source_boundary",
+  "matched_negative_control_case_library",
+  "automated_blind_trigger_runner_frozen_before_scoring",
+  "flag_recover_two_axis_report",
+  "oracle_and_detected_taint_report",
+  "detector_specificity_report_with_confidence_intervals",
+  "external_multiperson_review_before_any_superiority_claim",
+]
+
+[source_artifact_hashes]
+fix_md = "79b24ba18b1e753a18258c6b191ccc0cdf7f9e83cca5c4a4088ab5d3758a5423"
+arena_json = "7d44232919405df9da4fec0c1a77220ec3d5df9a0449c618dd50650f42489451"
+ablate_json = "48de8618b9e0c4adcce00fabfb29371c845c9d8182a965c17dd1affdb6dacd60"
+reversals_md = "d7a1528f41febd9c44d5999cdce8a7356e36b751276f92a606c5e0a9fedb6209"
+model_md = "081b442c55a73b42b98eb4bca6a10c468ad015ec21d54fb96073dc569632f28a"
+
+[flag_recover]
+flag_caught = 4
+flag_total = 5
+recover_caught = 3
+recover_total = 5
+tamiflu_flag = "caught"
+tamiflu_recover = "missed"
+
+[detector]
+status = "underpowered_not_validated"
+auc = 0.68
+ci_lower = 0.33
+ci_upper = 0.95
+
+[oracle.vs_standard_dl]
+estimate = 0.7272727272727273
+ci_lower = 0.45454545454545453
+ci_upper = 1.0
+
+[oracle.vs_strong_standard]
+estimate = 0.6363636363636364
+ci_lower = 0.36363636363636365
+ci_upper = 0.9090909090909091
+
+[detected.vs_standard_dl]
+estimate = 0.5046818181818182
+ci_lower = 0.27198011363636365
+ci_upper = 0.7090073863636362
+
+[detected.vs_strong_standard]
+estimate = 0.4404545454545455
+ci_lower = 0.20799261363636368
+ci_upper = 0.684288068181818
+
+[mean_distance]
+standard_dl = 0.4671656537278997
+strong_standard = 0.4640818929314625
+ours_oracle = 0.24980579508547018
+ours_detected = 0.3243180127358019
+oracle_minus_detected_gap = 0.07451221765033172
+
+[subclass.verification_target]
+n_cases = 7
+oracle_winrate_vs_dl = 1.0
+detected_winrate_vs_dl = 0.6921428571428571
+claim_scope = "registry, harms-delta, or fraud cases where the corrective evidence existed at the time or the miss is explicitly reported."
+
+[subclass.small_study_effect]
+n_cases = 2
+oracle_winrate_vs_strong = 0.0
+detected_winrate_vs_strong = 0.0
+claim_scope = "Strong standard small-study methods remain the relevant comparator."
+
+[subclass.observational_confounding]
+n_cases = 2
+oracle_winrate_vs_dl = 0.0
+detected_winrate_vs_dl = 0.0
+claim_scope = "Outside the current input-verification pillars."

@@ -26,12 +26,16 @@ def test_grand_benchmark_plan_validates_against_source_registry():
 
     assert plan.certification_effect == "none"
     assert set(plan.allowed_evidence_sources) == {
+        "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
-        "pubmed_abstract",
         "open_access_paper",
+        "pactr_results",
+        "pubmed_abstract",
+        "who_ictrp_results",
     }
     assert set(plan.protocol_only_sources) == {
         "other_trial_registry_protocol",
+        "pactr_protocol",
         "who_ictrp_protocol",
     }
     assert "cannot supply model-ready effects" in plan.protocol_registry_rule
@@ -51,10 +55,11 @@ def test_grand_benchmark_plan_validates_against_source_registry():
         "real_data_lane_status_counts": {"active": 4},
         "n_simulation_scenarios": 3,
         "simulation_scenario_status_counts": {"planned": 3},
-        "allowed_protocol_only_sources": [
-            "other_trial_registry_protocol",
-            "who_ictrp_protocol",
-        ],
+            "allowed_protocol_only_sources": [
+                "other_trial_registry_protocol",
+                "pactr_protocol",
+                "who_ictrp_protocol",
+            ],
         "certification_effect": "none",
     }
 
@@ -101,7 +106,7 @@ def test_grand_benchmark_plan_loader_rejects_source_policy_drift(tmp_path):
     bad_plan = tmp_path / "bad_plan.toml"
     bad_plan.write_text(
         PLAN.read_text(encoding="utf-8").replace(
-            'allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]',
+            'allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]',
             'allowed_evidence_sources = ["pubmed_abstract"]',
             1,
         ),
@@ -116,7 +121,7 @@ def test_grand_benchmark_plan_loader_rejects_protocol_source_drift(tmp_path):
     bad_plan = tmp_path / "bad_protocol_plan.toml"
     bad_plan.write_text(
         PLAN.read_text(encoding="utf-8").replace(
-            'protocol_only_sources = ["other_trial_registry_protocol", "who_ictrp_protocol"]',
+            'protocol_only_sources = ["other_trial_registry_protocol", "pactr_protocol", "who_ictrp_protocol"]',
             'protocol_only_sources = ["who_ictrp_protocol"]',
             1,
         ),

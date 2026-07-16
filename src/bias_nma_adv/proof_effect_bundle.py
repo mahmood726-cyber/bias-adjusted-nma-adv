@@ -250,6 +250,7 @@ def _proof_effect_from_mapping(raw: dict[str, Any]) -> ProofCarryingEffectRecord
             nct_id=_optional_str(source.get("nct_id")),
             pmcid=_optional_str(source.get("pmcid")),
             doi=_optional_str(source.get("doi")),
+            registry_id=_optional_str(source.get("registry_id")),
             source_text=_optional_str(source.get("source_text")) or "",
         ),
         provenance=ExtractionProvenance(

@@ -26,9 +26,9 @@ def test_registry_publication_bias():
     auditor = RegistryPublicationBiasAuditor()
     
     # 1. Register trials
-    auditor.register_trial_protocol("NCT123", "mace", "mace", "completed") # No switching, published
-    auditor.register_trial_protocol("NCT456", "mortality", "mace", "completed") # Outcome switching!
-    auditor.register_trial_protocol("NCT789", "mace", "mace", "completed") # Unpublished trial
+    auditor.register_trial_protocol("NCT123", "mace", "mace", "completed", ["DrugX"]) # No switching, published
+    auditor.register_trial_protocol("NCT456", "mortality", "mace", "completed", ["DrugX"]) # Outcome switching!
+    auditor.register_trial_protocol("NCT789", "mace", "mace", "completed", ["DrugX"]) # Unpublished trial
     
     # 2. Check outcome switching
     switching_scores = auditor.audit_outcome_switching(["NCT123", "NCT456", "NCT999"])
@@ -165,7 +165,6 @@ def test_registry_sponsor_auditor():
     assert np.isclose(q1, 1.0)
     # NCT222 should be heavily penalized (industry + attrition)
     assert q2 < 0.80
-
 
 
 

@@ -4,6 +4,7 @@ from bias_nma_adv.evidence_sources import (
     ALLOWED_SOURCE_TYPES,
     EFFECT_EVIDENCE_SOURCE_TYPES,
     PROTOCOL_ONLY_SOURCE_TYPES,
+    REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES,
     EvidenceSource,
     EvidenceSourceError,
     validate_sources,
@@ -12,12 +13,20 @@ from bias_nma_adv.evidence_sources import (
 
 def test_allowed_source_types_are_the_project_boundary():
     assert EFFECT_EVIDENCE_SOURCE_TYPES == {
+        "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
         "pubmed_abstract",
         "open_access_paper",
+        "pactr_results",
+        "who_ictrp_results",
+    }
+    assert REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES == {
+        "pactr_results",
+        "who_ictrp_results",
     }
     assert PROTOCOL_ONLY_SOURCE_TYPES == {
         "other_trial_registry_protocol",
+        "pactr_protocol",
         "who_ictrp_protocol",
     }
     assert ALLOWED_SOURCE_TYPES == EFFECT_EVIDENCE_SOURCE_TYPES | PROTOCOL_ONLY_SOURCE_TYPES
@@ -25,6 +34,12 @@ def test_allowed_source_types_are_the_project_boundary():
 
 def test_validates_allowed_sources():
     sources = [
+        EvidenceSource(
+            source_type="aact_clinicaltrials_gov",
+            identifier="NCT03036124",
+            url="https://aact.ctti-clinicaltrials.org/",
+            access_statement="AACT public data mirror derived from ClinicalTrials.gov records.",
+        ),
         EvidenceSource(
             source_type="clinicaltrials_gov",
             identifier="NCT03036124",
@@ -44,10 +59,28 @@ def test_validates_allowed_sources():
             access_statement="Open access paper or publisher-designated OA full text.",
         ),
         EvidenceSource(
+            source_type="who_ictrp_results",
+            identifier="PACTR202001234567890",
+            url="https://trialsearch.who.int/Trial2.aspx?TrialID=PACTR202001234567890",
+            access_statement="WHO ICTRP downloaded public outcome result row with posted results.",
+        ),
+        EvidenceSource(
+            source_type="pactr_results",
+            identifier="PACTR202001234567890",
+            url="https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+            access_statement="PACTR public trial record with results available and outcome results.",
+        ),
+        EvidenceSource(
             source_type="who_ictrp_protocol",
             identifier="DAPA-HF-registry-crosscheck",
             url="https://trialsearch.who.int/Trial2.aspx?TrialID=NCT03036124",
             access_statement="WHO ICTRP registry protocol registration metadata only.",
+        ),
+        EvidenceSource(
+            source_type="pactr_protocol",
+            identifier="PACTR202001234567890",
+            url="https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+            access_statement="PACTR registry protocol registration metadata only.",
         ),
         EvidenceSource(
             source_type="other_trial_registry_protocol",
@@ -92,6 +125,26 @@ def test_rejects_malformed_identifiers():
         validate_sources([bad_pmid])
 
 
+def test_rejects_aact_source_without_aact_ctgov_identity_or_host():
+    missing_role = EvidenceSource(
+        source_type="aact_clinicaltrials_gov",
+        identifier="NCT03036124",
+        url="https://aact.ctti-clinicaltrials.org/",
+        access_statement="Public registry record.",
+    )
+    with pytest.raises(EvidenceSourceError, match="ClinicalTrials.gov-derived AACT"):
+        validate_sources([missing_role])
+
+    wrong_host = EvidenceSource(
+        source_type="aact_clinicaltrials_gov",
+        identifier="NCT03036124",
+        url="https://example.org/NCT03036124",
+        access_statement="AACT public data mirror derived from ClinicalTrials.gov records.",
+    )
+    with pytest.raises(EvidenceSourceError, match="AACT or ClinicalTrials.gov URL"):
+        validate_sources([wrong_host])
+
+
 def test_rejects_protocol_source_without_protocol_role_or_who_host():
     missing_role = EvidenceSource(
         source_type="other_trial_registry_protocol",
@@ -110,3 +163,41 @@ def test_rejects_protocol_source_without_protocol_role_or_who_host():
     )
     with pytest.raises(EvidenceSourceError, match="who.int"):
         validate_sources([wrong_who_host])
+
+    wrong_pactr_protocol_host = EvidenceSource(
+        source_type="pactr_protocol",
+        identifier="PACTR202001234567890",
+        url="https://example.org/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+        access_statement="PACTR registry protocol registration metadata only.",
+    )
+    with pytest.raises(EvidenceSourceError, match="PACTR registry URL"):
+        validate_sources([wrong_pactr_protocol_host])
+
+
+def test_rejects_registry_result_source_without_result_role_or_registry_host():
+    protocol_only_result = EvidenceSource(
+        source_type="who_ictrp_results",
+        identifier="PACTR202001234567890",
+        url="https://trialsearch.who.int/Trial2.aspx?TrialID=PACTR202001234567890",
+        access_statement="WHO ICTRP protocol-only registration metadata.",
+    )
+    with pytest.raises(EvidenceSourceError, match="protocol-only"):
+        validate_sources([protocol_only_result])
+
+    missing_result_role = EvidenceSource(
+        source_type="pactr_results",
+        identifier="PACTR202001234567890",
+        url="https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+        access_statement="PACTR public trial registry record.",
+    )
+    with pytest.raises(EvidenceSourceError, match="result or outcome role"):
+        validate_sources([missing_result_role])
+
+    wrong_pactr_host = EvidenceSource(
+        source_type="pactr_results",
+        identifier="PACTR202001234567890",
+        url="https://example.org/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+        access_statement="PACTR public record with results available and outcome results.",
+    )
+    with pytest.raises(EvidenceSourceError, match="PACTR registry URL"):
+        validate_sources([wrong_pactr_host])

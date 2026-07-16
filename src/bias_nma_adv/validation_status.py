@@ -50,6 +50,10 @@ from bias_nma_adv.real_benchmark_atlas import (
     build_real_benchmark_atlas,
     summarize_real_benchmark_atlas,
 )
+from bias_nma_adv.reversal_yardstick import (
+    load_reversal_yardstick,
+    summarize_reversal_yardstick,
+)
 from bias_nma_adv.review_ledger import summarize_review_ledger
 from bias_nma_adv.simulation_matrix import (
     summarize_simulation_matrix,
@@ -103,6 +107,7 @@ def build_validation_status(
     html_delivery_contract_path = root / "validation" / "html_delivery_contract.toml"
     dose_response_coverage_path = root / "validation" / "dose_response_source_coverage.toml"
     dta_coverage_path = root / "validation" / "dta_source_coverage.toml"
+    reversal_yardstick_path = root / "validation" / "reversal_yardstick.toml"
 
     registry = validate_source_benchmark_registry(registry_path, repo_root=root)
     assert_registry_covers_source_backed_artifacts(registry, repo_root=root)
@@ -122,6 +127,7 @@ def build_validation_status(
         dose_response_coverage_path
     )
     dta_coverage = load_dta_source_coverage(dta_coverage_path)
+    reversal_yardstick = load_reversal_yardstick(reversal_yardstick_path)
     improvement_review = load_improvement_review(improvement_review_path)
 
     targets = load_reference_targets(reference_targets_path)
@@ -148,7 +154,9 @@ def build_validation_status(
         "allowed_protocol_only_sources": list(ALLOWED_PROTOCOL_ONLY_SOURCES),
         "protocol_registry_rule": (
             "Protocol-only registry sources may verify registration, planned outcomes, "
-            "eligibility, and dates, but cannot supply model-ready effects."
+            "eligibility, and dates, but cannot supply model-ready effects; downloaded "
+            "ICTRP or PACTR result rows may supply effects only when public numeric "
+            "result text is source-bound."
         ),
         "certification_effect": "none",
         "clinical_hta_reporting_enabled": bool(production_targets),
@@ -190,6 +198,10 @@ def build_validation_status(
         "dta_source_coverage": {
             "coverage": _relpath(dta_coverage_path, root),
             **summarize_dta_source_coverage(dta_coverage),
+        },
+        "reversal_yardstick": {
+            "yardstick": _relpath(reversal_yardstick_path, root),
+            **summarize_reversal_yardstick(reversal_yardstick),
         },
         "ingestion_contract": summarize_proof_carrying_ingestion_contract(),
         "proof_effect_bundle": {

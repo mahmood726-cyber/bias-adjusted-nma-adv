@@ -2,7 +2,7 @@ schema_version = "tier1_gap_register/v1"
 checked_at = "2026-07-16"
 certification_effect = "none"
 purpose = "Machine-readable blocker register for gaps that prevent tier-one parity or superiority claims."
-source_boundary = "Effect evidence from ClinicalTrials.gov records, PubMed abstracts, and open-access papers; WHO ICTRP and other registries are protocol-only metadata sources and cannot supply model-ready effects."
+source_boundary = "Effect evidence from AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, and public numeric ICTRP/PACTR result rows; protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready effects."
 superiority_claim_rule = "No module may claim tier-one parity, superiority, production certification, clinical reporting, regulatory reporting, or HTA reporting while any gap remains blocking."
 blocked_claims = [
   "tier_one_parity",
@@ -39,7 +39,12 @@ implemented_capabilities = [
   "selection_weight_publication_bias_sensitivity",
   "native_python_guyot_reconstruction_check",
   "source_backed_dose_response_smoke_benchmark",
+  "aact_ctgov_ingestion_contract",
+  "ictrp_pactr_result_source_ingestion_contract",
+  "input_verified_reversal_yardstick_gate",
   "dta_source_coverage_gate",
+  "dta_bivariate_logitnormal_reml_prototype",
+  "dta_mada_reitsma_algorithmic_reference_adapter",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",

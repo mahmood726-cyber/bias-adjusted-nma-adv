@@ -3,7 +3,7 @@
 
 Checked: 2026-07-15
 
-This note records which nearby repositories can materially help this project become a stronger evidence-synthesis platform under the source constraint: effect evidence from ClinicalTrials.gov records, PubMed abstracts, and open-access papers; protocol metadata may also come from WHO ICTRP or other registries.
+This note records which nearby repositories can materially help this project become a stronger evidence-synthesis platform under the source constraint: effect evidence from AACT/ClinicalTrials.gov records, public numeric ICTRP/PACTR result rows, PubMed abstracts, and open-access papers; protocol metadata may also come from ICTRP, PACTR, or other registries.
 
 It is a reuse plan, not a certification claim. Any imported method must be ported or wrapped with source-backed tests before it can support a platform capability.
 
@@ -83,7 +83,7 @@ The portfolio scan requires four review rounds before any import: source-boundar
 | Local repo paths | Static local inspection | Disk scan on 2026-07-15 | Paths are documented for development only and must not be hardcoded into shipped code. |
 | Reusable method descriptions | Static review | README, source, and test files inspected locally | Descriptions guide porting work; they do not certify correctness. |
 | Existing validation numbers in source repos | Dynamic and untrusted until reproduced | Local JSON/test files | Must be regenerated or independently checked before becoming platform evidence. |
-| Trial identifiers and effect estimates | Dynamic source-backed fields | ClinicalTrials.gov, PubMed abstracts, and OA papers; WHO ICTRP or other registries for protocol metadata only | Must be validated per record before use in code, tests, dashboards, or claims. Protocol-only records cannot supply model-ready effects. |
+| Trial identifiers and effect estimates | Dynamic source-backed fields | AACT/ClinicalTrials.gov, numeric ICTRP/PACTR result rows, PubMed abstracts, and OA papers; protocol-only registries for metadata only | Must be validated per record before use in code, tests, dashboards, or claims. Protocol-only records cannot supply model-ready effects. |
 | New validation targets | Static registry entries | `validation/reference_targets.toml` | Targets remain `planned` until machine-verifiable artifacts exist. |
 | Portfolio reuse candidates | Static registry plus optional dynamic scan | `validation/portfolio_reuse_sources.toml` and `scripts/scan_portfolio_reuse.py` | Candidate repos are implementation inputs only; scan reports do not certify clinical evidence or method superiority. |
 

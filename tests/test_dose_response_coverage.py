@@ -21,19 +21,26 @@ def test_dose_response_source_coverage_records_current_allowed_source_data():
     assert coverage.status == "active_source_backed_dose_response_data"
     assert coverage.certification_effect == "none"
     assert coverage.allowed_evidence_sources == (
+        "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
-        "pubmed_abstract",
         "open_access_paper",
+        "pactr_results",
+        "pubmed_abstract",
+        "who_ictrp_results",
     )
     assert coverage.protocol_only_sources == (
         "other_trial_registry_protocol",
+        "pactr_protocol",
         "who_ictrp_protocol",
     )
     assert coverage.registered_benchmark_ids == ("semaglutide_obesity_dose_response",)
     assert coverage.registered_source_counts == {
+        "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 1,
         "open_access_paper": 0,
+        "pactr_results": 0,
         "pubmed_abstract": 1,
+        "who_ictrp_results": 0,
     }
     assert any(
         "semaglutide_obesity_dose_response" in item for item in coverage.source_search_summary
@@ -55,9 +62,12 @@ def test_dose_response_source_coverage_summary_is_validation_status_ready():
         "status": "active_source_backed_dose_response_data",
         "registered_benchmark_ids": ["semaglutide_obesity_dose_response"],
         "registered_source_counts": {
+            "aact_clinicaltrials_gov": 0,
             "clinicaltrials_gov": 1,
             "open_access_paper": 0,
+            "pactr_results": 0,
             "pubmed_abstract": 1,
+            "who_ictrp_results": 0,
         },
         "has_source_backed_dose_response_data": True,
         "required_next_artifacts": [
@@ -66,6 +76,7 @@ def test_dose_response_source_coverage_summary_is_validation_status_ready():
             "arm_level_or_contrast_effects_bound_to_source_snippets_or_tables",
             "source_identity_checks_for_clinicaltrials_gov_and_pubmed",
             "open_access_table_or_text_token_checks_for_dose_values_and_effects",
+            "aact_or_registry_result_row_checks_when_used",
             "dose_response_analysis_artifact",
             "MBNMAdose_reference_run_before_certification",
         ],

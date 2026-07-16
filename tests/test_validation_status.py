@@ -21,13 +21,17 @@ def test_validation_status_composes_all_current_gates():
     assert report["status"] == "passed"
     assert report["checked_at"] == "2026-07-15T00:00:00Z"
     assert report["allowed_evidence_sources"] == [
+        "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
         "open_access_paper",
+        "pactr_results",
         "pubmed_abstract",
+        "who_ictrp_results",
     ]
     assert report["allowed_effect_evidence_sources"] == report["allowed_evidence_sources"]
     assert report["allowed_protocol_only_sources"] == [
         "other_trial_registry_protocol",
+        "pactr_protocol",
         "who_ictrp_protocol",
     ]
     assert "cannot supply model-ready effects" in report["protocol_registry_rule"]
@@ -57,6 +61,7 @@ def test_validation_status_composes_all_current_gates():
     assert grand_plan["simulation_scenario_status_counts"] == {"planned": 3}
     assert grand_plan["allowed_protocol_only_sources"] == [
         "other_trial_registry_protocol",
+        "pactr_protocol",
         "who_ictrp_protocol",
     ]
     assert grand_plan["certification_effect"] == "none"
@@ -125,7 +130,12 @@ def test_validation_status_composes_all_current_gates():
             "selection_weight_publication_bias_sensitivity",
             "native_python_guyot_reconstruction_check",
             "source_backed_dose_response_smoke_benchmark",
+            "aact_ctgov_ingestion_contract",
+            "ictrp_pactr_result_source_ingestion_contract",
+            "input_verified_reversal_yardstick_gate",
             "dta_source_coverage_gate",
+            "dta_bivariate_logitnormal_reml_prototype",
+            "dta_mada_reitsma_algorithmic_reference_adapter",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -172,9 +182,12 @@ def test_validation_status_composes_all_current_gates():
         "semaglutide_obesity_dose_response"
     ]
     assert dose_response_coverage["registered_source_counts"] == {
+        "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 1,
         "open_access_paper": 0,
+        "pactr_results": 0,
         "pubmed_abstract": 1,
+        "who_ictrp_results": 0,
     }
     assert dose_response_coverage["has_source_backed_dose_response_data"] is True
     assert "MBNMAdose_reference_run_before_certification" in dose_response_coverage[
@@ -186,12 +199,15 @@ def test_validation_status_composes_all_current_gates():
     assert dta_coverage["coverage"] == "validation/dta_source_coverage.toml"
     assert dta_coverage["schema_version"] == "dta_source_coverage/v1"
     assert dta_coverage["status"] == "missing_source_backed_dta_data"
-    assert dta_coverage["model_status"] == "not_implemented"
+    assert dta_coverage["model_status"] == "prototype_not_source_backed"
     assert dta_coverage["registered_benchmark_ids"] == []
     assert dta_coverage["registered_source_counts"] == {
+        "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 0,
         "open_access_paper": 0,
+        "pactr_results": 0,
         "pubmed_abstract": 0,
+        "who_ictrp_results": 0,
     }
     assert dta_coverage["has_source_backed_dta_data"] is False
     assert dta_coverage["required_model_families"] == [
@@ -200,6 +216,18 @@ def test_validation_status_composes_all_current_gates():
     ]
     assert dta_coverage["certification_effect"] == "none"
 
+    reversal_yardstick = report["reversal_yardstick"]
+    assert reversal_yardstick["yardstick"] == "validation/reversal_yardstick.toml"
+    assert reversal_yardstick["schema_version"] == "reversal_yardstick/v1"
+    assert reversal_yardstick["headline_metric"] == "detected_taint"
+    assert reversal_yardstick["n_cases"] == 11
+    assert reversal_yardstick["flag_caught"] == 4
+    assert reversal_yardstick["recover_caught"] == 3
+    assert reversal_yardstick["detector_status"] == "underpowered_not_validated"
+    assert reversal_yardstick["negative_control_status"] == "required_not_complete"
+    assert reversal_yardstick["global_goal_complete"] is False
+    assert reversal_yardstick["certification_effect"] == "none"
+
     ingestion_contract = report["ingestion_contract"]
     assert ingestion_contract["schema_version"] == "proof_carrying_effect/v1"
     assert ingestion_contract["requires_source_identity"] is True
@@ -207,15 +235,25 @@ def test_validation_status_composes_all_current_gates():
     assert ingestion_contract["required_uncertainty"] == "complete_ci_or_standard_error"
     assert ingestion_contract["certification_effect"] == "none"
     assert ingestion_contract["allowed_effect_source_types"] == [
+        "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
         "open_access_paper",
+        "pactr_results",
         "pubmed_abstract",
+        "who_ictrp_results",
+    ]
+    assert ingestion_contract["registry_result_source_types"] == [
+        "pactr_results",
+        "who_ictrp_results",
     ]
     assert ingestion_contract["protocol_only_source_types"] == [
         "other_trial_registry_protocol",
+        "pactr_protocol",
         "who_ictrp_protocol",
     ]
     assert ingestion_contract["protocol_sources_can_supply_model_effects"] is False
+    assert ingestion_contract["registry_result_sources_can_supply_model_effects"] is True
+    assert ingestion_contract["registry_result_sources_require_numeric_result_text"] is True
     assert "HR" in ingestion_contract["allowed_effect_types"]
     assert "HR" in ingestion_contract["ratio_effect_types"]
 
@@ -265,11 +303,12 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 4
-    assert reference_runs["status_counts"] == {"failed": 2, "passed": 2}
+    assert reference_runs["n_reports"] == 6
+    assert reference_runs["status_counts"] == {"failed": 3, "passed": 3}
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
+        "validation/reference_runs/dta_mada_reitsma_output.json",
     }
     assert {item["certification_effect"] for item in reference_runs["reports"]} == {
         "none",
@@ -283,6 +322,8 @@ def test_validation_status_composes_all_current_gates():
         ("r_metafor_meta_pairwise_output_validation", "passed"),
         ("r_netmeta_multiarm_preflight", "failed"),
         ("r_netmeta_multiarm_output_validation", "passed"),
+        ("r_mada_dta_reitsma_preflight", "failed"),
+        ("r_mada_dta_reitsma_output_validation", "passed"),
     }
 
 
@@ -321,7 +362,9 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
         "has_source_backed_dose_response_data"
     ] is True
     assert payload["dta_source_coverage"]["has_source_backed_dta_data"] is False
-    assert payload["dta_source_coverage"]["model_status"] == "not_implemented"
+    assert payload["dta_source_coverage"]["model_status"] == "prototype_not_source_backed"
+    assert payload["reversal_yardstick"]["headline_metric"] == "detected_taint"
+    assert payload["reversal_yardstick"]["global_goal_complete"] is False
     assert payload["proof_effect_bundle"]["n_records"] == 4
     assert payload["multiperson_review"]["n_rounds"] == 4
     assert payload["improvement_review"]["global_goal_complete"] is False

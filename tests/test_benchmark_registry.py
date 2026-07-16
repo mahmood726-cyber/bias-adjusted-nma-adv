@@ -31,9 +31,12 @@ def test_source_benchmark_registry_validates_all_registered_artifacts():
 
     assert registry.checked_at == "2026-07-16"
     assert set(registry.allowed_evidence_sources) == {
+        "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
-        "pubmed_abstract",
         "open_access_paper",
+        "pactr_results",
+        "pubmed_abstract",
+        "who_ictrp_results",
     }
     assert {entry.id for entry in registry.benchmarks} == {
         "sglt2_hf_primary_log_or",

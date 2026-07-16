@@ -19,22 +19,29 @@ def test_dta_source_coverage_records_current_gap_without_overclaiming():
     coverage = load_dta_source_coverage(COVERAGE)
 
     assert coverage.status == "missing_source_backed_dta_data"
-    assert coverage.model_status == "not_implemented"
+    assert coverage.model_status == "prototype_not_source_backed"
     assert coverage.certification_effect == "none"
     assert coverage.allowed_evidence_sources == (
+        "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
-        "pubmed_abstract",
         "open_access_paper",
+        "pactr_results",
+        "pubmed_abstract",
+        "who_ictrp_results",
     )
     assert coverage.protocol_only_sources == (
         "other_trial_registry_protocol",
+        "pactr_protocol",
         "who_ictrp_protocol",
     )
     assert coverage.registered_benchmark_ids == ()
     assert coverage.registered_source_counts == {
+        "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 0,
         "open_access_paper": 0,
+        "pactr_results": 0,
         "pubmed_abstract": 0,
+        "who_ictrp_results": 0,
     }
     assert {"tp", "fp", "fn", "tn"} <= set(coverage.required_source_fields)
     assert {"bivariate_random_effects_glmm", "hsroc"} <= set(
@@ -49,12 +56,15 @@ def test_dta_source_coverage_summary_is_validation_status_ready():
         "schema_version": DTA_SOURCE_COVERAGE_SCHEMA_VERSION,
         "checked_at": "2026-07-16",
         "status": "missing_source_backed_dta_data",
-        "model_status": "not_implemented",
+        "model_status": "prototype_not_source_backed",
         "registered_benchmark_ids": [],
         "registered_source_counts": {
+            "aact_clinicaltrials_gov": 0,
             "clinicaltrials_gov": 0,
             "open_access_paper": 0,
+            "pactr_results": 0,
             "pubmed_abstract": 0,
+            "who_ictrp_results": 0,
         },
         "has_source_backed_dta_data": False,
         "required_model_families": [
@@ -64,6 +74,7 @@ def test_dta_source_coverage_summary_is_validation_status_ready():
         "required_next_artifacts": [
             "dta_source_manifest_with_nct_pmid_or_open_access_identifiers",
             "source_verified_tp_fp_fn_tn_2x2_tables",
+            "aact_ictrp_or_pactr_result_row_checks_when_used",
             "threshold_and_reference_standard_metadata",
             "bivariate_glmm_or_hsroc_model_artifact",
             "mada_or_metafor_or_reference_software_parity_before_certification",

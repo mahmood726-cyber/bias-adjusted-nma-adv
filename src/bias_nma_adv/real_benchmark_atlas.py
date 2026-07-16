@@ -102,7 +102,9 @@ def build_real_benchmark_atlas(
         "allowed_protocol_only_sources": sorted(PROTOCOL_ONLY_SOURCE_TYPES),
         "protocol_registry_rule": (
             "Protocol-only registry sources may verify registration, planned outcomes, "
-            "eligibility, and dates, but cannot supply model-ready effects."
+            "eligibility, and dates, but cannot supply model-ready effects; downloaded "
+            "ICTRP or PACTR result rows may supply effects only when public numeric "
+            "result text is source-bound."
         ),
         "registry": "validation/benchmark_registry.toml",
         "n_benchmarks": len(registry.benchmarks),

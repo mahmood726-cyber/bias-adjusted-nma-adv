@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import csv
 import json
 from pathlib import Path
 import tomllib
 from typing import Any
+
+from bias_nma_adv.dta import fit_bivariate_dta_reml
 
 
 class RReferenceValidationError(ValueError):
@@ -200,9 +203,172 @@ def validate_multiarm_netmeta_output(
     }
 
 
+def validate_dta_mada_reitsma_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    probability_tolerance: float = 1e-3,
+    log_tolerance: float = 2e-3,
+    variance_tolerance: float = 3e-3,
+    rho_tolerance: float = 6e-3,
+) -> dict[str, Any]:
+    """Validate ``mada::reitsma`` output against the local DTA fixture."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "fixture_id",
+            "source_policy",
+            "certification_effect",
+            "package_versions",
+            "n_studies",
+            "continuity_correction",
+            "correction_control",
+            "method",
+            "converged",
+            "summary",
+            "warnings",
+        },
+        label="DTA mada output",
+    )
+    if output["schema_version"] != "dta_mada_reitsma_fixture/v1":
+        raise RReferenceValidationError("DTA mada output schema_version mismatch.")
+    if output["fixture_id"] != "dta_algorithmic_fixture":
+        raise RReferenceValidationError("DTA mada output fixture_id mismatch.")
+    if output["source_policy"] != "synthetic_algorithmic_fixture_not_clinical_evidence":
+        raise RReferenceValidationError("DTA mada output must remain nonclinical.")
+    if output["certification_effect"] != "none":
+        raise RReferenceValidationError("DTA mada output JSON cannot certify a module.")
+    _require_package_versions(output["package_versions"], {"R", "mada", "jsonlite"})
+    if str(output["method"]) != "reml":
+        raise RReferenceValidationError("DTA mada output must use REML.")
+    if str(output["correction_control"]) != "all":
+        raise RReferenceValidationError("DTA mada output must use all-cell correction.")
+    if not bool(output["converged"]):
+        raise RReferenceValidationError("DTA mada output did not converge.")
+
+    fixture_path = root / "validation" / "dta" / "dta_algorithmic_fixture.csv"
+    fixture_rows = _load_dta_fixture_rows(fixture_path)
+    if int(output["n_studies"]) != len(fixture_rows):
+        raise RReferenceValidationError("DTA mada output n_studies mismatch.")
+
+    fit = fit_bivariate_dta_reml(
+        fixture_rows,
+        continuity_correction=float(output["continuity_correction"]),
+    )
+    summary = output["summary"]
+    _require_keys(
+        summary,
+        {
+            "logit_sensitivity",
+            "logit_fpr",
+            "se_logit_sensitivity",
+            "se_logit_fpr",
+            "pooled_sensitivity",
+            "pooled_specificity",
+            "tau2_sensitivity",
+            "tau2_fpr",
+            "cov_sensitivity_fpr",
+            "rho_sensitivity_fpr",
+            "log_diagnostic_odds_ratio",
+            "diagnostic_odds_ratio",
+            "auc",
+        },
+        label="DTA mada summary",
+    )
+
+    probability_diff = _assert_many_close(
+        {
+            "pooled_sensitivity": (
+                fit.pooled_sensitivity,
+                summary["pooled_sensitivity"],
+            ),
+            "pooled_specificity": (
+                fit.pooled_specificity,
+                summary["pooled_specificity"],
+            ),
+        },
+        probability_tolerance,
+    )
+    log_diff = _assert_many_close(
+        {
+            "logit_sensitivity": (fit.logit_sensitivity, summary["logit_sensitivity"]),
+            "logit_fpr": (fit.logit_fpr, summary["logit_fpr"]),
+            "log_diagnostic_odds_ratio": (
+                fit.log_diagnostic_odds_ratio,
+                summary["log_diagnostic_odds_ratio"],
+            ),
+            "auc": (fit.auc_trapezoid, summary["auc"]),
+        },
+        log_tolerance,
+    )
+    variance_diff = _assert_many_close(
+        {
+            "tau2_sensitivity": (fit.tau2_sensitivity, summary["tau2_sensitivity"]),
+            "tau2_fpr": (fit.tau2_fpr, summary["tau2_fpr"]),
+            "cov_sensitivity_fpr": (
+                fit.cov_sensitivity_fpr,
+                summary["cov_sensitivity_fpr"],
+            ),
+        },
+        variance_tolerance,
+    )
+    rho_diff = _assert_many_close(
+        {
+            "rho_sensitivity_fpr": (
+                fit.rho_sensitivity_fpr,
+                summary["rho_sensitivity_fpr"],
+            ),
+        },
+        rho_tolerance,
+    )
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "dta_bivariate_hsroc_reference",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "mada::reitsma",
+        "validated_components": [
+            "pooled_sensitivity_specificity",
+            "logit_summary_point",
+            "between_study_covariance",
+            "sroc_auc",
+            "nonclinical_fixture_boundary",
+        ],
+        "max_abs_difference": max(
+            probability_diff,
+            log_diff,
+            variance_diff,
+            rho_diff,
+        ),
+        "max_abs_probability_difference": probability_diff,
+        "max_abs_log_difference": log_diff,
+        "max_abs_variance_difference": variance_diff,
+        "max_abs_rho_difference": rho_diff,
+        "tolerance": {
+            "probability": probability_tolerance,
+            "log": log_tolerance,
+            "variance": variance_tolerance,
+            "rho": rho_tolerance,
+        },
+        "source_policy_note": (
+            "This is an algorithmic DTA fixture; it is not source-backed clinical evidence."
+        ),
+    }
+
+
 def _load_toml(path: Path) -> dict[str, Any]:
     with path.open("rb") as handle:
         return tomllib.load(handle)
+
+
+def _load_dta_fixture_rows(path: Path) -> list[dict[str, Any]]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
 
 
 def _require_keys(raw: dict[str, Any], required: set[str], *, label: str) -> None:
@@ -231,3 +397,10 @@ def _assert_close(label: str, observed: Any, expected: Any, tolerance: float) ->
             f"{label} differs by {difference:.6g}, exceeding tolerance {tolerance:.6g}."
         )
     return difference
+
+
+def _assert_many_close(checks: dict[str, tuple[Any, Any]], tolerance: float) -> float:
+    max_abs_diff = 0.0
+    for label, (observed, expected) in checks.items():
+        max_abs_diff = max(max_abs_diff, _assert_close(label, observed, expected, tolerance))
+    return max_abs_diff

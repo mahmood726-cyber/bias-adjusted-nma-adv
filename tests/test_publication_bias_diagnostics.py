@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from bias_nma_adv.publication_bias import (
+    RegistryPublicationBiasAuditor,
     egger_regression_diagnostic,
     selection_weight_sensitivity,
 )
@@ -89,3 +90,22 @@ def test_selection_weight_sensitivity_rejects_invalid_inputs():
             np.array([0.1, 0.1]),
             np.array([1.0, 0.0]),
         )
+
+
+def test_registry_unpublished_ratio_requires_drug_specific_intervention_metadata():
+    auditor = RegistryPublicationBiasAuditor()
+    auditor.register_trial_protocol("NCT00000001", "mace", "mace", "completed")
+    auditor.register_trial_protocol("NCT00000002", "mace", "mace", "completed")
+
+    with pytest.raises(ValueError, match="requires intervention metadata"):
+        auditor.calculate_unpublished_ratio("DrugX", ["NCT00000001"])
+
+
+def test_registry_unpublished_ratio_filters_by_drug_intervention():
+    auditor = RegistryPublicationBiasAuditor()
+    auditor.register_trial_protocol("NCT00000001", "mace", "mace", "completed", ["DrugX"])
+    auditor.register_trial_protocol("NCT00000002", "mace", "mace", "completed", ["DrugX"])
+    auditor.register_trial_protocol("NCT00000003", "mace", "mace", "completed", ["OtherDrug"])
+    auditor.register_trial_protocol("NCT00000004", "mace", "mace", "withdrawn", ["DrugX"])
+
+    assert auditor.calculate_unpublished_ratio("DrugX", ["NCT00000001"]) == pytest.approx(0.5)

@@ -13,6 +13,8 @@ from bias_nma_adv.evidence_sources import (
     EFFECT_EVIDENCE_SOURCE_TYPES,
     PROTOCOL_ONLY_SOURCE_TYPES,
     EvidenceSource,
+    EvidenceSourceError,
+    REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES,
     validate_sources,
 )
 
@@ -24,6 +26,8 @@ class IngestionProvenanceError(ValueError):
 _NCT_RE = re.compile(r"^NCT\d{8}$")
 _PMID_RE = re.compile(r"^\d{1,9}$")
 _PMCID_RE = re.compile(r"^PMC\d+$", re.IGNORECASE)
+_REGISTRY_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:/-]{2,127}$")
+_NUMERIC_RESULT_RE = re.compile(r"[-+]?\d+(?:[.,]\d+)?")
 PROOF_CARRYING_EFFECT_SCHEMA_VERSION = "proof_carrying_effect/v1"
 
 ALLOWED_EFFECT_TYPES = {
@@ -54,8 +58,11 @@ def summarize_proof_carrying_ingestion_contract() -> dict[str, object]:
         "schema_version": PROOF_CARRYING_EFFECT_SCHEMA_VERSION,
         "allowed_effect_types": sorted(ALLOWED_EFFECT_TYPES),
         "allowed_effect_source_types": sorted(EFFECT_EVIDENCE_SOURCE_TYPES),
+        "registry_result_source_types": sorted(REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES),
         "protocol_only_source_types": sorted(PROTOCOL_ONLY_SOURCE_TYPES),
         "protocol_sources_can_supply_model_effects": False,
+        "registry_result_sources_can_supply_model_effects": True,
+        "registry_result_sources_require_numeric_result_text": True,
         "ratio_effect_types": sorted(RATIO_EFFECT_TYPES),
         "allowed_provenance_source_types": sorted(ALLOWED_PROVENANCE_SOURCE_TYPES),
         "allowed_computation_origins": sorted(ALLOWED_COMPUTATION_ORIGINS),
@@ -133,6 +140,7 @@ class EvidenceIngestionRecord:
     nct_id: str | None = None
     pmcid: str | None = None
     doi: str | None = None
+    registry_id: str | None = None
     source_text: str = ""
 
     def validate(self) -> None:
@@ -145,10 +153,14 @@ class EvidenceIngestionRecord:
 
         if self.source_type == "clinicaltrials_gov":
             self._validate_clinicaltrials_source()
+        elif self.source_type == "aact_clinicaltrials_gov":
+            self._validate_aact_clinicaltrials_source()
         elif self.source_type == "pubmed_abstract":
             self._validate_pubmed_source()
         elif self.source_type == "open_access_paper":
             self._validate_open_access_source()
+        elif self.source_type in REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES:
+            self._validate_registry_result_source()
         elif self.source_type in PROTOCOL_ONLY_SOURCE_TYPES:
             raise IngestionProvenanceError(
                 f"{self.row_id}: source_type '{self.source_type}' is protocol-only and "
@@ -170,6 +182,10 @@ class EvidenceIngestionRecord:
             raise IngestionProvenanceError(f"{self.row_id}: malformed PMCID '{self.pmcid}'.")
         if self.doi is not None and not _normalise_doi(self.doi):
             raise IngestionProvenanceError(f"{self.row_id}: malformed DOI '{self.doi}'.")
+        if self.registry_id is not None and not _REGISTRY_ID_RE.match(self.registry_id):
+            raise IngestionProvenanceError(
+                f"{self.row_id}: malformed registry identifier '{self.registry_id}'."
+            )
 
     def _validate_clinicaltrials_source(self) -> None:
         if self.nct_id is None:
@@ -192,6 +208,44 @@ class EvidenceIngestionRecord:
         if self.nct_id.lower() not in _normalised_url_text(self.url):
             raise IngestionProvenanceError(
                 f"{self.row_id}: ClinicalTrials.gov URL must contain {self.nct_id}."
+            )
+
+    def _validate_aact_clinicaltrials_source(self) -> None:
+        if self.nct_id is None:
+            raise IngestionProvenanceError(
+                f"{self.row_id}: AACT ClinicalTrials.gov row needs nct_id."
+            )
+        try:
+            validate_sources(
+                [
+                    EvidenceSource(
+                        source_type="aact_clinicaltrials_gov",
+                        identifier=self.nct_id,
+                        url=self.url,
+                        access_statement=self.access_statement,
+                    )
+                ]
+            )
+        except EvidenceSourceError as exc:
+            raise IngestionProvenanceError(f"{self.row_id}: {exc}") from exc
+        host = _host(self.url)
+        allowed_host = (
+            host == "aact.ctti-clinicaltrials.org"
+            or host.endswith(".aact.ctti-clinicaltrials.org")
+            or host == "clinicaltrials.gov"
+            or host.endswith(".clinicaltrials.gov")
+        )
+        if not allowed_host:
+            raise IngestionProvenanceError(
+                f"{self.row_id}: AACT source URL must use AACT or ClinicalTrials.gov."
+            )
+        haystacks = (
+            _normalised_url_text(self.url),
+            _normalise_free_text(self.source_text),
+        )
+        if self.nct_id.lower() not in "".join(haystacks):
+            raise IngestionProvenanceError(
+                f"{self.row_id}: AACT source must contain {self.nct_id} in the URL or row text."
             )
 
     def _validate_pubmed_source(self) -> None:
@@ -239,6 +293,121 @@ class EvidenceIngestionRecord:
                 "verifiable article identity token matching the claimed PMID, PMCID, or DOI."
             )
 
+    def _validate_registry_result_source(self) -> None:
+        if self.registry_id is None:
+            raise IngestionProvenanceError(
+                f"{self.row_id}: registry result row needs registry_id."
+            )
+        try:
+            validate_sources(
+                [
+                    EvidenceSource(
+                        source_type=self.source_type,
+                        identifier=self.registry_id,
+                        url=self.url,
+                        access_statement=self.access_statement,
+                    )
+                ]
+            )
+        except EvidenceSourceError as exc:
+            raise IngestionProvenanceError(f"{self.row_id}: {exc}") from exc
+        if self.source_type == "who_ictrp_results":
+            host = _host(self.url)
+            if host != "trialsearch.who.int" and not host.endswith(".who.int"):
+                raise IngestionProvenanceError(
+                    f"{self.row_id}: WHO ICTRP result URL must use trialsearch.who.int or who.int."
+                )
+        if self.source_type == "pactr_results":
+            host = _host(self.url)
+            allowed_host = (
+                host == "pactr.samrc.ac.za"
+                or host.endswith(".pactr.samrc.ac.za")
+                or host == "pactr.org"
+                or host.endswith(".pactr.org")
+            )
+            if not allowed_host:
+                raise IngestionProvenanceError(
+                    f"{self.row_id}: PACTR result URL must use a PACTR registry host."
+                )
+        if not self._has_verifiable_registry_identity():
+            raise IngestionProvenanceError(
+                f"{self.row_id}: registry result URL/source text does not contain "
+                f"the claimed registry_id {self.registry_id}."
+            )
+        self._validate_registry_result_text()
+
+    def _has_verifiable_registry_identity(self) -> bool:
+        if self.registry_id is None:
+            return False
+        token = _normalise_free_text(self.registry_id)
+        haystacks = (
+            _normalised_url_text(self.url),
+            _normalise_free_text(self.source_text),
+        )
+        return any(token and token in haystack for haystack in haystacks)
+
+    def _validate_registry_result_text(self) -> None:
+        text = f"{self.access_statement}\n{self.source_text}".lower()
+        if any(
+            token in text
+            for token in (
+                "results available: no",
+                "results available no",
+                "no results available",
+                "results not available",
+                "not yet reported",
+                "not reported",
+                "protocol only",
+                "protocol-only",
+            )
+        ):
+            raise IngestionProvenanceError(
+                f"{self.row_id}: registry row is not a result-level evidence source."
+            )
+        if not any(
+            token in text
+            for token in (
+                "results available: yes",
+                "results available yes",
+                "posted result",
+                "reported result",
+                "result-level",
+                "outcome result",
+                "numeric outcome",
+                "classification outcome",
+                "model-ready",
+                "model ready",
+            )
+        ):
+            raise IngestionProvenanceError(
+                f"{self.row_id}: registry result source must explicitly state result availability."
+            )
+        numeric_terms = (
+            "hazard ratio",
+            "odds ratio",
+            "risk ratio",
+            "relative risk",
+            "confidence interval",
+            "standard error",
+            "events",
+            "event count",
+            "participants",
+            "mean",
+            "sd",
+            "tp",
+            "fp",
+            "fn",
+            "tn",
+            "sensitivity",
+            "specificity",
+        )
+        if not _NUMERIC_RESULT_RE.search(self.source_text) or not any(
+            term in text for term in numeric_terms
+        ):
+            raise IngestionProvenanceError(
+                f"{self.row_id}: registry result source must contain numeric model-ready result text."
+            )
+
     def _has_verifiable_article_identity(self) -> bool:
         haystacks = (
             _normalised_url_text(self.url),
@@ -259,6 +428,8 @@ class EvidenceIngestionRecord:
             if doi:
                 tokens.append(doi)
                 tokens.append(doi.replace("/", ""))
+        if self.registry_id:
+            tokens.append(_normalise_free_text(self.registry_id))
         return tuple(tokens)
 
 
@@ -456,6 +627,88 @@ def proof_effect_from_extractor_row(raw: dict[str, object]) -> ProofCarryingEffe
         is_subgroup=_optional_bool(raw.get("is_subgroup")) or False,
         computation_origin=str(raw.get("computation_origin") or "reported"),
         source=record_from_extractor_row(raw),
+        provenance=provenance,
+    )
+
+
+def record_from_registry_result_row(raw: dict[str, object]) -> EvidenceIngestionRecord:
+    """Create an ingestion record from a downloaded WHO ICTRP or PACTR result row.
+
+    Registry downloads are usually protocol metadata. This helper therefore keeps
+    the row fail-closed: callers must label the row as a result source and provide
+    a registry identifier, public URL, result-availability statement, and source
+    text containing numeric outcome/effect information.
+    """
+
+    source_type = str(
+        _first_present(raw, "source_type", "registry_source_type", default="")
+    ).strip()
+    if source_type not in REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES:
+        raise IngestionProvenanceError(
+            "registry result rows must use source_type 'who_ictrp_results' or 'pactr_results'."
+        )
+    registry_id = _clean_optional(
+        _first_present(raw, "registry_id", "trial_id", "TrialID", "trialid", "id")
+    )
+    url = str(_first_present(raw, "url", "trial_url", "public_url", "source_url", default=""))
+    source_text = str(
+        _first_present(
+            raw,
+            "source_text",
+            "result_text",
+            "results_text",
+            "outcome_results",
+            "results_summary",
+            default="",
+        )
+        or ""
+    )
+    access_statement = str(
+        _first_present(
+            raw,
+            "access_statement",
+            "result_access_statement",
+            default="Downloaded public registry row with posted result-level outcome data.",
+        )
+    )
+    return EvidenceIngestionRecord(
+        row_id=str(_first_present(raw, "row_id", "record_id", "registry_id", default="registry_row")),
+        source_type=source_type,
+        url=url,
+        access_statement=access_statement,
+        registry_id=registry_id,
+        source_text=source_text,
+    )
+
+
+def proof_effect_from_registry_result_row(raw: dict[str, object]) -> ProofCarryingEffectRecord:
+    """Create a proof-carrying effect from a downloaded registry result row."""
+
+    source = record_from_registry_result_row(raw)
+    provenance = ExtractionProvenance(
+        source_text=source.source_text,
+        source_type=str(_first_present(raw, "provenance_source_type", "source_origin", default="text")),
+        page_number=_optional_int(raw.get("page_number")),
+        char_start=_optional_int(raw.get("char_start")),
+        char_end=_optional_int(raw.get("char_end")),
+        figure_label=_clean_optional(raw.get("figure_label")),
+        table_label=_clean_optional(raw.get("table_label")),
+    )
+    return ProofCarryingEffectRecord(
+        record_id=str(_first_present(raw, "record_id", "row_id", "registry_id", default="registry_effect")),
+        study_id=str(_first_present(raw, "study_id", "registry_id", "trial_id", default="registry_study")),
+        outcome_name=str(_first_present(raw, "outcome_name", "outcome", default="registry_outcome")),
+        effect_type=str(_first_present(raw, "effect_type", "measure", default="")),
+        point_estimate=float(_first_present(raw, "point_estimate", "effect", default=math.nan)),
+        ci_lower=_optional_float(raw.get("ci_lower")),
+        ci_upper=_optional_float(raw.get("ci_upper")),
+        standard_error=_optional_float(_first_present(raw, "standard_error", "se")),
+        p_value=_optional_float(raw.get("p_value")),
+        timepoint=_clean_optional(raw.get("timepoint")),
+        is_primary=_optional_bool(raw.get("is_primary")),
+        is_subgroup=_optional_bool(raw.get("is_subgroup")) or False,
+        computation_origin=str(raw.get("computation_origin") or "reported"),
+        source=source,
         provenance=provenance,
     )
 

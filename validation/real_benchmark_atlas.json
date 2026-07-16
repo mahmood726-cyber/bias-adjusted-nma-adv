@@ -1,11 +1,15 @@
 {
   "allowed_effect_evidence_sources": [
+    "aact_clinicaltrials_gov",
     "clinicaltrials_gov",
     "open_access_paper",
-    "pubmed_abstract"
+    "pactr_results",
+    "pubmed_abstract",
+    "who_ictrp_results"
   ],
   "allowed_protocol_only_sources": [
     "other_trial_registry_protocol",
+    "pactr_protocol",
     "who_ictrp_protocol"
   ],
   "benchmarks": [
@@ -170,7 +174,7 @@
   "n_unique_nct_ids": 17,
   "n_unique_pmids": 7,
   "n_unique_study_ids": 21,
-  "protocol_registry_rule": "Protocol-only registry sources may verify registration, planned outcomes, eligibility, and dates, but cannot supply model-ready effects.",
+  "protocol_registry_rule": "Protocol-only registry sources may verify registration, planned outcomes, eligibility, and dates, but cannot supply model-ready effects; downloaded ICTRP or PACTR result rows may supply effects only when public numeric result text is source-bound.",
   "registry": "validation/benchmark_registry.toml",
   "required_next_gates": [
     "external reference runs for every applicable module",

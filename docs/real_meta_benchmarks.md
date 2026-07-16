@@ -13,7 +13,7 @@ Real-world validation inputs are restricted to:
 - PubMed abstracts;
 - open-access papers.
 
-WHO ICTRP and other trial registries are allowed for protocol-only metadata such as registration, planned outcomes, eligibility criteria, and dates. They are not admissible sources for model-ready effects under the current extraction contracts.
+Protocol-only ICTRP, PACTR, and other trial registries are allowed for metadata such as registration, planned outcomes, eligibility criteria, and dates. Downloaded ICTRP or PACTR result rows are admissible only when public numeric result text is source-bound; protocol-only rows remain barred from model-ready effects.
 
 Closed IPD, proprietary trial reports, secondary package fixtures, and unverified inline demo numbers are not admissible validation sources.
 
@@ -222,7 +222,7 @@ Limitations:
 | CT.gov reported-HR network snapshot | Dynamic public API check | `scripts/verify_ctgov_hr_network.py` against ClinicalTrials.gov API v2 | Verifies NCT identity, completed status, exact HR/CI analysis fields, outcome-title terms, and drug/placebo terms |
 | CT.gov reported-HR network benchmark | Dynamic computation | `scripts/write_ctgov_hr_network_benchmark.py` plus `bias_nma_adv.ctgov_hr_network` | Recomputes log-HR study effects and fixed/random contrast-GLS NMA from the verified CT.gov source snapshot |
 | Proof-carrying extracted effect | Static contract plus unit fixtures | `bias_nma_adv.ingestion.ProofCarryingEffectRecord` | Blocks model-ready extracted effects unless source provenance, source snippet, uncertainty, and effect-scale sanity checks pass |
-| Protocol-only registries | Static source-policy contract plus unit fixtures | `bias_nma_adv.evidence_sources`, `bias_nma_adv.ingestion`, and `tests/test_evidence_sources.py` | Allows WHO ICTRP and other registries for protocol metadata only; rejects those records as model-ready effects |
+| Registry result/protocol boundary | Static source-policy contract plus unit fixtures | `bias_nma_adv.evidence_sources`, `bias_nma_adv.ingestion`, and `tests/test_evidence_sources.py` | Allows AACT/ClinicalTrials.gov and public numeric ICTRP/PACTR result rows as effect sources; rejects protocol-only registry records as model-ready effects |
 | Real benchmark coverage atlas | Dynamic registry-derived summary | `validation/real_benchmark_atlas.json`, `scripts/write_real_benchmark_atlas.py`, and `tests/test_real_benchmark_atlas.py` | Summarizes registered real-data benchmark coverage and explicit non-claims; not tier-one parity or clinical evidence certification |
 | Source-check certification effect | Static contract | `certification_effect = "none"` in source-check artifacts | Source-token verification cannot certify model performance or tier-one parity |
 | Independent fixed-effect reference | Dynamic computation | `bias_nma_adv.real_meta.fixed_effect_log_or_reference` | Recomputed by tests from the CSV rows |

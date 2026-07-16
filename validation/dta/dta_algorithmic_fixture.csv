@@ -1,0 +1,9 @@
+study_id,tp,fp,fn,tn
+dta_fixture_01,30,12,5,80
+dta_fixture_02,45,20,9,90
+dta_fixture_03,22,6,8,60
+dta_fixture_04,55,25,11,100
+dta_fixture_05,18,8,7,70
+dta_fixture_06,41,18,10,95
+dta_fixture_07,34,10,6,88
+dta_fixture_08,27,15,12,76

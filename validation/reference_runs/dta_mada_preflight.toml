@@ -1,0 +1,26 @@
+schema_version = "reference_run/v1"
+target_id = "dta_bivariate_hsroc_reference"
+adapter_id = "r_mada_dta_reitsma_preflight"
+reference_method = "mada::reitsma"
+status = "failed"
+certification_effect = "none"
+checked_at = "2026-07-16T00:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/dta_mada_reitsma_fixture.R", "--input", "validation/dta/dta_algorithmic_fixture.csv", "--output", "validation/reference_runs/dta_mada_reitsma_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", jsonlite = "2.0.0", mada = "0.5.12"}
+input_artifacts = [
+  "validation/dta/dta_algorithmic_fixture.csv",
+  "validation/dta/dta_algorithmic_fixture.toml",
+  "external/r/dta_mada_reitsma_fixture.R",
+]
+output_artifacts = []
+tolerance = ""
+skip_reason = "Reference adapter prerequisites are available, but this preflight does not execute the DTA parity adapter. Run the command and validate output before certification."
+
+[input_sha256]
+"validation/dta/dta_algorithmic_fixture.csv" = "f35721806b201edfaeb356a9ee4ca9101b8da64da6280a6d168125caf24c6c4a"
+"validation/dta/dta_algorithmic_fixture.toml" = "cf1506e3dd9a1824fe1ed2468624b49ac72c5cdfa3da7b1462808688c1b95057"
+"external/r/dta_mada_reitsma_fixture.R" = "924270a142522f301f72d46d57c9bba9c2147db3d9aa562120e3e2334511ff25"
+
+[output_sha256]

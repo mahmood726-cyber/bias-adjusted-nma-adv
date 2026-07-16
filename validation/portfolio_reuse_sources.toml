@@ -3,7 +3,7 @@ checked_at = "2026-07-15"
 purpose = "Local portfolio reuse registry for methods, source-ingestion, and validation components that may help this platform. Entries are not evidence and do not certify method performance."
 source_policy = "local_reuse_registry_only_no_clinical_evidence"
 certification_effect = "none"
-claim_limit = "Portfolio reuse entries identify implementation candidates only. No source repo output may support clinical, HTA, tier-one parity, or superiority claims until it is revalidated inside this repository under the ClinicalTrials.gov, PubMed abstract, and open-access paper source policy."
+claim_limit = "Portfolio reuse entries identify implementation candidates only. No source repo output may support clinical, HTA, tier-one parity, or superiority claims until it is revalidated inside this repository under the AACT/ClinicalTrials.gov, public numeric ICTRP/PACTR result row, PubMed abstract, and open-access paper source policy."
 required_review_rounds = [
   "source_boundary_review",
   "statistical_methods_review",

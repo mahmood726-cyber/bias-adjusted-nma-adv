@@ -11,14 +11,20 @@ class EvidenceSourceError(ValueError):
     """Raised when a source is outside the allowed evidence boundary."""
 
 
+REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES = {
+    "pactr_results",
+    "who_ictrp_results",
+}
 EFFECT_EVIDENCE_SOURCE_TYPES = {
+    "aact_clinicaltrials_gov",
     "clinicaltrials_gov",
     "pubmed_abstract",
     "open_access_paper",
-}
+} | REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES
 PROTOCOL_ONLY_SOURCE_TYPES = {
-    "who_ictrp_protocol",
     "other_trial_registry_protocol",
+    "pactr_protocol",
+    "who_ictrp_protocol",
 }
 ALLOWED_SOURCE_TYPES = EFFECT_EVIDENCE_SOURCE_TYPES | PROTOCOL_ONLY_SOURCE_TYPES
 
@@ -48,7 +54,10 @@ class EvidenceSource:
         if not self.access_statement.strip():
             raise EvidenceSourceError("access_statement must describe why the source is admissible.")
 
-        if self.source_type == "clinicaltrials_gov" and not _NCT_RE.match(self.identifier):
+        if (
+            self.source_type in {"aact_clinicaltrials_gov", "clinicaltrials_gov"}
+            and not _NCT_RE.match(self.identifier)
+        ):
             raise EvidenceSourceError("ClinicalTrials.gov identifiers must look like NCT01234567.")
         if self.source_type == "pubmed_abstract" and not _PMID_RE.match(self.identifier):
             raise EvidenceSourceError("PubMed abstract identifiers must be numeric PMIDs.")
@@ -56,6 +65,50 @@ class EvidenceSource:
             statement = self.access_statement.lower()
             if "open access" not in statement and "oa" not in statement:
                 raise EvidenceSourceError("open_access_paper sources must state open-access status.")
+        if self.source_type == "aact_clinicaltrials_gov":
+            statement = self.access_statement.lower()
+            if "aact" not in statement or "clinicaltrials.gov" not in statement:
+                raise EvidenceSourceError(
+                    "AACT sources must state that they are ClinicalTrials.gov-derived AACT data."
+                )
+            host = (urlparse(self.url).hostname or "").lower()
+            allowed_aact_host = (
+                host == "aact.ctti-clinicaltrials.org"
+                or host.endswith(".aact.ctti-clinicaltrials.org")
+                or host == "clinicaltrials.gov"
+                or host.endswith(".clinicaltrials.gov")
+            )
+            if not allowed_aact_host:
+                raise EvidenceSourceError(
+                    "AACT sources must use an AACT or ClinicalTrials.gov URL."
+                )
+        if self.source_type in REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES:
+            statement = self.access_statement.lower()
+            if "protocol only" in statement or "protocol-only" in statement:
+                raise EvidenceSourceError(
+                    "registry result sources must not be described as protocol-only."
+                )
+            if not any(token in statement for token in ("result", "outcome", "posted")):
+                raise EvidenceSourceError(
+                    "registry result sources must state their public result or outcome role."
+                )
+            host = (urlparse(self.url).hostname or "").lower()
+            if self.source_type == "who_ictrp_results":
+                if host != "trialsearch.who.int" and not host.endswith(".who.int"):
+                    raise EvidenceSourceError(
+                        "WHO ICTRP result sources must use a who.int registry URL."
+                    )
+            if self.source_type == "pactr_results":
+                allowed_pactr_host = (
+                    host == "pactr.samrc.ac.za"
+                    or host.endswith(".pactr.samrc.ac.za")
+                    or host == "pactr.org"
+                    or host.endswith(".pactr.org")
+                )
+                if not allowed_pactr_host:
+                    raise EvidenceSourceError(
+                        "PACTR result sources must use a PACTR registry URL."
+                    )
         if self.source_type in PROTOCOL_ONLY_SOURCE_TYPES:
             statement = self.access_statement.lower()
             if not any(token in statement for token in ("protocol", "registration", "registry")):
@@ -67,6 +120,18 @@ class EvidenceSource:
                 if host != "trialsearch.who.int" and not host.endswith(".who.int"):
                     raise EvidenceSourceError(
                         "WHO ICTRP protocol sources must use a who.int registry URL."
+                    )
+            if self.source_type == "pactr_protocol":
+                host = (urlparse(self.url).hostname or "").lower()
+                allowed_pactr_host = (
+                    host == "pactr.samrc.ac.za"
+                    or host.endswith(".pactr.samrc.ac.za")
+                    or host == "pactr.org"
+                    or host.endswith(".pactr.org")
+                )
+                if not allowed_pactr_host:
+                    raise EvidenceSourceError(
+                        "PACTR protocol sources must use a PACTR registry URL."
                     )
 
 

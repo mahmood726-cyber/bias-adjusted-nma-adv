@@ -2,7 +2,7 @@ schema_version = 1
 checked_at = "2026-07-16"
 purpose = "Minimum external reference targets required before platform modules can claim tier-one parity or production certification."
 certification_rule = "A module cannot be marked reference_matched, simulation_validated, externally_reproduced, or production_certified unless required evidence_artifacts exist and are machine-verifiable."
-allowed_evidence_sources = ["clinicaltrials_gov", "pubmed_abstract", "open_access_paper"]
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
 
 [[targets]]
 id = "frequentist_nma_netmeta"
@@ -99,7 +99,7 @@ evidence_artifacts = []
 [[targets]]
 id = "dta_bivariate_hsroc_reference"
 domain = "diagnostic_test_accuracy"
-module = "planned:dta"
+module = "src/bias_nma_adv/dta.py"
 reference_method = "mada, metafor, or validated bivariate/HSROC reference implementation"
 status = "planned"
 acceptance_criteria = [

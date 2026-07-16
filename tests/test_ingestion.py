@@ -5,7 +5,9 @@ from bias_nma_adv.ingestion import (
     ExtractionProvenance,
     IngestionProvenanceError,
     ProofCarryingEffectRecord,
+    proof_effect_from_registry_result_row,
     proof_effect_from_extractor_row,
+    record_from_registry_result_row,
     record_from_extractor_row,
     validate_ingestion_records,
     validate_proof_carrying_effects,
@@ -14,6 +16,17 @@ from bias_nma_adv.ingestion import (
 
 def test_validates_clinicaltrials_pubmed_and_open_access_sources():
     records = [
+        EvidenceIngestionRecord(
+            row_id="aact_dapa_hf_results",
+            source_type="aact_clinicaltrials_gov",
+            nct_id="NCT03036124",
+            url="https://aact.ctti-clinicaltrials.org/",
+            access_statement="AACT public data mirror derived from ClinicalTrials.gov records.",
+            source_text=(
+                "AACT row for NCT03036124 from ClinicalTrials.gov results tables "
+                "with 386 events among 2373 participants."
+            ),
+        ),
         EvidenceIngestionRecord(
             row_id="ctgov_dapa_hf",
             source_type="clinicaltrials_gov",
@@ -122,6 +135,30 @@ def test_rejects_wrong_host_for_registry_and_pubmed_sources():
         pubmed.validate()
 
 
+def test_rejects_aact_source_without_nct_identity_or_aact_role():
+    missing_nct_text = EvidenceIngestionRecord(
+        row_id="aact_missing_identity",
+        source_type="aact_clinicaltrials_gov",
+        nct_id="NCT03036124",
+        url="https://aact.ctti-clinicaltrials.org/",
+        access_statement="AACT public data mirror derived from ClinicalTrials.gov records.",
+        source_text="Downloaded result row without the trial identifier.",
+    )
+    with pytest.raises(IngestionProvenanceError, match="NCT03036124"):
+        missing_nct_text.validate()
+
+    missing_aact_role = EvidenceIngestionRecord(
+        row_id="aact_missing_role",
+        source_type="aact_clinicaltrials_gov",
+        nct_id="NCT03036124",
+        url="https://aact.ctti-clinicaltrials.org/",
+        access_statement="Clinical trial results table.",
+        source_text="NCT03036124 result row.",
+    )
+    with pytest.raises(IngestionProvenanceError, match="ClinicalTrials.gov-derived AACT"):
+        missing_aact_role.validate()
+
+
 def test_protocol_only_registry_source_cannot_supply_model_ready_effect():
     protocol_source = EvidenceIngestionRecord(
         row_id="who_protocol_dapa_hf",
@@ -132,6 +169,109 @@ def test_protocol_only_registry_source_cannot_supply_model_ready_effect():
 
     with pytest.raises(IngestionProvenanceError, match="protocol-only"):
         protocol_source.validate()
+
+
+def test_result_level_registry_sources_can_supply_model_ready_effects_when_numeric():
+    records = [
+        EvidenceIngestionRecord(
+            row_id="who_ictrp_result_row",
+            source_type="who_ictrp_results",
+            registry_id="PACTR202001234567890",
+            url="https://trialsearch.who.int/Trial2.aspx?TrialID=PACTR202001234567890",
+            access_statement="WHO ICTRP downloaded public row with results available: yes.",
+            source_text=(
+                "PACTR202001234567890 outcome result: hazard ratio 0.82 "
+                "with 95% confidence interval 0.70 to 0.96."
+            ),
+        ),
+        EvidenceIngestionRecord(
+            row_id="pactr_result_row",
+            source_type="pactr_results",
+            registry_id="PACTR202001234567890",
+            url="https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+            access_statement="PACTR public trial record with results available: yes.",
+            source_text=(
+                "PACTR202001234567890 numeric outcome results: 14 events among "
+                "120 participants and 21 events among 118 participants."
+            ),
+        ),
+    ]
+
+    validate_ingestion_records(records)
+
+
+def test_registry_result_rows_are_fail_closed_for_protocol_or_non_numeric_rows():
+    protocol_only = EvidenceIngestionRecord(
+        row_id="who_protocol_result_mislabel",
+        source_type="who_ictrp_results",
+        registry_id="PACTR202001234567890",
+        url="https://trialsearch.who.int/Trial2.aspx?TrialID=PACTR202001234567890",
+        access_statement="WHO ICTRP protocol-only registration metadata.",
+        source_text="PACTR202001234567890 results available: no.",
+    )
+    with pytest.raises(IngestionProvenanceError, match="protocol-only|result-level"):
+        protocol_only.validate()
+
+    no_registry_id = EvidenceIngestionRecord(
+        row_id="pactr_missing_id",
+        source_type="pactr_results",
+        url="https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+        access_statement="PACTR public trial record with results available: yes.",
+        source_text="Outcome result: hazard ratio 0.90, 95% confidence interval 0.80 to 1.01.",
+    )
+    with pytest.raises(IngestionProvenanceError, match="registry_id"):
+        no_registry_id.validate()
+
+    non_numeric = EvidenceIngestionRecord(
+        row_id="pactr_non_numeric_result",
+        source_type="pactr_results",
+        registry_id="PACTR202001234567890",
+        url="https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+        access_statement="PACTR public trial record with results available: yes.",
+        source_text="PACTR202001234567890 outcome result was favourable.",
+    )
+    with pytest.raises(IngestionProvenanceError, match="numeric model-ready"):
+        non_numeric.validate()
+
+
+def test_downloaded_registry_result_row_helpers_create_proof_carrying_effects():
+    raw = {
+        "source_type": "pactr_results",
+        "registry_id": "PACTR202001234567890",
+        "url": "https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+        "access_statement": "PACTR public trial record with results available: yes.",
+        "source_text": (
+            "PACTR202001234567890 reported result-level outcome: hazard ratio 0.82, "
+            "95% confidence interval 0.70 to 0.96."
+        ),
+        "record_id": "pactr_demo_hr",
+        "study_id": "PACTR202001234567890",
+        "outcome_name": "time-to-event endpoint",
+        "effect_type": "HR",
+        "point_estimate": 0.82,
+        "ci_lower": 0.70,
+        "ci_upper": 0.96,
+    }
+
+    ingestion_record = record_from_registry_result_row(raw)
+    effect_record = proof_effect_from_registry_result_row(raw)
+
+    assert ingestion_record.registry_id == "PACTR202001234567890"
+    assert effect_record.source.source_type == "pactr_results"
+    assert effect_record.is_meta_analysis_ready is True
+    assert effect_record.to_dict()["source"]["registry_id"] == "PACTR202001234567890"
+
+
+def test_downloaded_registry_result_helper_rejects_protocol_source_type():
+    with pytest.raises(IngestionProvenanceError, match="registry result rows"):
+        record_from_registry_result_row(
+            {
+                "source_type": "who_ictrp_protocol",
+                "registry_id": "PACTR202001234567890",
+                "url": "https://trialsearch.who.int/Trial2.aspx?TrialID=PACTR202001234567890",
+                "source_text": "Protocol row only.",
+            }
+        )
 
 
 def _valid_effect_record(**overrides):

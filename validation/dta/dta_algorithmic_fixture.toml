@@ -1,0 +1,14 @@
+schema_version = "dta_algorithmic_fixture/v1"
+fixture_id = "dta_algorithmic_fixture"
+checked_at = "2026-07-16"
+certification_effect = "none"
+clinical_evidence = false
+source_policy = "synthetic_algorithmic_fixture_not_clinical_evidence"
+purpose = "Small deterministic 2x2 DTA fixture for validating model contracts and the mada::reitsma reference adapter."
+limitations = [
+  "not source-backed clinical evidence",
+  "not registered in the real benchmark registry",
+  "does not satisfy DTA source-backed validation requirements",
+  "does not certify diagnostic accuracy claims",
+]
+columns = ["study_id", "tp", "fp", "fn", "tn"]
