@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from bias_nma_adv.multiarm import ContrastRow, fit_multiarm_gls
+from bias_nma_adv.multiarm import ContrastRow, diagnose_multiarm_design, fit_multiarm_gls
 
 
 TOL = 1e-6
@@ -63,6 +63,29 @@ def test_fixed_effect_multiarm_matches_netmeta_portfolio_fixture():
     assert se_b == pytest.approx(0.2043271463, abs=TOL)
     assert est_c == pytest.approx(0.4841298055, abs=TOL)
     assert se_c == pytest.approx(0.2155057123, abs=TOL)
+
+
+def test_multiarm_design_diagnostic_reports_rank_connectivity_and_cliques():
+    diagnostic = diagnose_multiarm_design(
+        _rows_from_arms(FIXTURE_CONSISTENT),
+        reference_treatment="A",
+    )
+
+    assert diagnostic.reference_treatment == "A"
+    assert diagnostic.treatments == ("A", "B", "C")
+    assert diagnostic.n_studies == 6
+    assert diagnostic.n_contrast_rows == 8
+    assert diagnostic.n_parameters == 2
+    assert diagnostic.design_rank == 2
+    assert diagnostic.connected is True
+    assert diagnostic.disconnected_treatments == ()
+    assert diagnostic.estimable is True
+
+    by_study = {row.study: row for row in diagnostic.study_diagnostics}
+    assert by_study["S6"].multi_arm is True
+    assert by_study["S6"].n_contrasts == 3
+    assert by_study["S6"].expected_contrasts == 3
+    assert by_study["S6"].complete_pairwise_clique is True
 
 
 def test_fixed_effect_heterogeneous_multiarm_matches_netmeta_portfolio_fixture():
@@ -155,6 +178,23 @@ def test_incomplete_multiarm_clique_warns_and_drops_study():
     assert "S6" not in fit.multi_arm_studies
 
 
+def test_design_diagnostic_flags_incomplete_multiarm_clique_without_fitting():
+    rows = [
+        row
+        for row in _rows_from_arms(FIXTURE_CONSISTENT)
+        if not (row.study == "S6" and {row.t1, row.t2} == {"B", "C"})
+    ]
+
+    diagnostic = diagnose_multiarm_design(rows, reference_treatment="A")
+    by_study = {row.study: row for row in diagnostic.study_diagnostics}
+
+    assert by_study["S6"].multi_arm is True
+    assert by_study["S6"].n_contrasts == 2
+    assert by_study["S6"].expected_contrasts == 3
+    assert by_study["S6"].complete_pairwise_clique is False
+    assert any("S6" in warning for warning in diagnostic.warnings)
+
+
 def test_incompatible_multiarm_covariance_fails_closed():
     rows = [
         ContrastRow("S_bad", "A", "B", 0.1, 0.1),
@@ -171,6 +211,12 @@ def test_disconnected_network_fails_closed():
         ContrastRow("S1", "A", "B", 0.1, 0.2),
         ContrastRow("S2", "C", "D", 0.2, 0.2),
     ]
+
+    diagnostic = diagnose_multiarm_design(rows, reference_treatment="A")
+
+    assert diagnostic.connected is False
+    assert diagnostic.disconnected_treatments == ("C", "D")
+    assert diagnostic.estimable is False
 
     with pytest.raises(ValueError, match="disconnected"):
         fit_multiarm_gls(rows, reference_treatment="A")

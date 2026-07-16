@@ -24,11 +24,13 @@ findings = [
   "Feature completeness, numerical stability, and Bayesian ecosystem integration are legitimate blockers to tier-one parity.",
   "The new register keeps superiority, production certification, clinical reporting, and HTA reporting blocked while these gaps remain active.",
   "The added leverage, node-splitting, and Egger diagnostics are useful feature-completeness progress but not broad tier-one parity evidence.",
+  "The added multi-arm pre-fit design diagnostic improves method-routing safety for connectivity, clique completeness, design rank, and estimability checks.",
   "The added absolute GLS mapping-contribution diagnostic is useful for audit and evidence-mapping review, but it is not yet a full netheat, CINeMA, or ROB-MEN contribution matrix.",
 ]
 actions = [
   "Added a machine-readable tier-one gap register with three blocking gaps and required evidence artifacts.",
   "Wired the gap register into validation status so blocked claims are visible in CI-style reports.",
+  "Recorded multi-arm pre-fit design diagnostics as a partial feature-completeness capability while keeping full multi-arm design parity blocked.",
   "Recorded multi-arm influence diagnostics, fixed-effect node-splitting smoke diagnostics, and Egger small-study-effect diagnostics as implemented partial capabilities.",
   "Recorded absolute GLS mapping-contribution diagnostics as another partial feature-completeness capability while keeping contribution-matrix parity blocked.",
 ]
@@ -106,12 +108,14 @@ findings = [
   "The new governance contracts are test-covered and exposed through the unified validation status report.",
   "The docs now describe staged world-class ambitions without claiming that tier-one methods have already been beaten.",
   "The new diagnostics are isolated, deterministic, and covered by focused tests before full-suite validation.",
+  "The pre-fit design diagnostic gives a read-only contract for disconnected networks and incomplete multi-arm cliques before fitting.",
   "The multi-arm GLS path now rejects incompatible covariance inputs before inversion, reducing silent numerical failure risk without changing valid fixture estimates.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
   "Added targeted tests for GLS leverage invariants, node-splitting disconnected-network failure, and Egger regression input validation.",
   "Updated README and tier-one benchmark documentation to keep claims, code, and validation artifacts aligned.",
+  "Added focused tests for pre-fit multi-arm design diagnostics covering complete cliques, incomplete cliques, disconnected treatments, and estimability.",
   "Added focused tests for normalized absolute contribution diagnostics and fail-closed multi-arm covariance validation.",
 ]
 remaining_blockers = [

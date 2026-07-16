@@ -66,6 +66,35 @@ class _AssembledNetwork:
 
 
 @dataclass(frozen=True)
+class StudyDesignDiagnostic:
+    """Pre-fit design check for one study's contrast rows."""
+
+    study: str
+    n_arms: int
+    n_contrasts: int
+    expected_contrasts: int
+    multi_arm: bool
+    complete_pairwise_clique: bool
+
+
+@dataclass(frozen=True)
+class MultiArmDesignDiagnostic:
+    """Pre-fit network design check for contrast-level multi-arm NMA."""
+
+    reference_treatment: str
+    treatments: tuple[str, ...]
+    n_studies: int
+    n_contrast_rows: int
+    n_parameters: int
+    design_rank: int
+    connected: bool
+    disconnected_treatments: tuple[str, ...]
+    estimable: bool
+    study_diagnostics: tuple[StudyDesignDiagnostic, ...]
+    warnings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class ContrastInfluenceDiagnostic:
     """Diagnostic for one contrast row in a fitted GLS network model."""
 
@@ -243,6 +272,55 @@ def fit_multiarm_gls(
     )
 
 
+def diagnose_multiarm_design(
+    rows: Iterable[ContrastRow | dict[str, object]],
+    *,
+    reference_treatment: str | None = None,
+) -> MultiArmDesignDiagnostic:
+    """Run deterministic pre-fit checks for a contrast-level NMA design."""
+
+    parsed_rows = tuple(_coerce_row(row) for row in rows)
+    if not parsed_rows:
+        raise ValueError("no contrasts supplied.")
+
+    treatments = tuple(sorted({row.t1 for row in parsed_rows} | {row.t2 for row in parsed_rows}))
+    reference = reference_treatment or treatments[0]
+    if reference not in treatments:
+        raise ValueError(f"reference_treatment '{reference}' not present in network.")
+
+    study_diagnostics = _study_design_diagnostics(parsed_rows)
+    disconnected_treatments = _disconnected_treatments(parsed_rows, reference)
+    connected = not disconnected_treatments
+    warnings: list[str] = []
+    studies: tuple[_Study, ...] = ()
+    if connected:
+        try:
+            studies, warnings = _build_studies(parsed_rows)
+        except ValueError as exc:
+            warnings = [str(exc)]
+
+    n_parameters = max(len(treatments) - 1, 0)
+    design_rank = 0
+    if connected and studies:
+        assembled = _assemble(studies, treatments, reference)
+        design_rank = int(np.linalg.matrix_rank(assembled.x))
+    estimable = bool(connected and design_rank == n_parameters and len(parsed_rows) >= n_parameters)
+
+    return MultiArmDesignDiagnostic(
+        reference_treatment=reference,
+        treatments=treatments,
+        n_studies=len({row.study for row in parsed_rows}),
+        n_contrast_rows=len(parsed_rows),
+        n_parameters=n_parameters,
+        design_rank=design_rank,
+        connected=connected,
+        disconnected_treatments=disconnected_treatments,
+        estimable=estimable,
+        study_diagnostics=study_diagnostics,
+        warnings=tuple(warnings),
+    )
+
+
 def _coerce_row(row: ContrastRow | dict[str, object]) -> ContrastRow:
     if isinstance(row, ContrastRow):
         return row
@@ -253,6 +331,34 @@ def _coerce_row(row: ContrastRow | dict[str, object]) -> ContrastRow:
         est=float(row["est"]),
         se=float(row["se"]),
     )
+
+
+def _study_design_diagnostics(rows: tuple[ContrastRow, ...]) -> tuple[StudyDesignDiagnostic, ...]:
+    grouped: dict[str, list[ContrastRow]] = {}
+    order: list[str] = []
+    for row in rows:
+        if row.study not in grouped:
+            grouped[row.study] = []
+            order.append(row.study)
+        grouped[row.study].append(row)
+
+    diagnostics: list[StudyDesignDiagnostic] = []
+    for study_id in order:
+        study_rows = grouped[study_id]
+        arms = {row.t1 for row in study_rows} | {row.t2 for row in study_rows}
+        expected = len(arms) * (len(arms) - 1) // 2
+        unique_pairs = {tuple(sorted((row.t1, row.t2))) for row in study_rows}
+        diagnostics.append(
+            StudyDesignDiagnostic(
+                study=study_id,
+                n_arms=len(arms),
+                n_contrasts=len(unique_pairs),
+                expected_contrasts=expected,
+                multi_arm=len(arms) > 2,
+                complete_pairwise_clique=len(unique_pairs) == expected,
+            )
+        )
+    return tuple(diagnostics)
 
 
 def _build_studies(rows: tuple[ContrastRow, ...]) -> tuple[tuple[_Study, ...], list[str]]:
@@ -357,6 +463,15 @@ def _build_studies(rows: tuple[ContrastRow, ...]) -> tuple[tuple[_Study, ...], l
 
 
 def _validate_connected(rows: tuple[ContrastRow, ...], reference: str) -> None:
+    missing = _disconnected_treatments(rows, reference)
+    if missing:
+        raise ValueError(
+            "disconnected treatment network; reference component does not include "
+            f"{list(missing)}"
+        )
+
+
+def _disconnected_treatments(rows: tuple[ContrastRow, ...], reference: str) -> tuple[str, ...]:
     adjacency: dict[str, set[str]] = {}
     for row in rows:
         adjacency.setdefault(row.t1, set()).add(row.t2)
@@ -372,11 +487,7 @@ def _validate_connected(rows: tuple[ContrastRow, ...], reference: str) -> None:
                 stack.append(neighbour)
 
     missing = sorted(set(adjacency) - seen)
-    if missing:
-        raise ValueError(
-            "disconnected treatment network; reference component does not include "
-            f"{missing}"
-        )
+    return tuple(missing)
 
 
 def _assemble(

@@ -29,6 +29,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     by_id = {gap.id: gap for gap in register.gaps}
     assert "node_splitting" in by_id["feature_completeness"].missing_capabilities
     assert (
+        "multiarm_prefit_design_diagnostic"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "multiarm_gls_influence_leverage_diagnostics"
         in by_id["feature_completeness"].implemented_capabilities
     )
@@ -68,6 +72,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
         "status_counts": {"blocking": 3},
         "implemented_capabilities": {
             "feature_completeness": [
+                "multiarm_prefit_design_diagnostic",
                 "multiarm_gls_influence_leverage_diagnostics",
                 "multiarm_gls_absolute_mapping_contribution_diagnostics",
                 "fixed_effect_node_splitting_smoke_diagnostics",
