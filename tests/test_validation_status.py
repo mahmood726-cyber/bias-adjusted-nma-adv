@@ -114,12 +114,15 @@ def test_validation_status_composes_all_current_gates():
             "multiarm_gls_influence_leverage_diagnostics",
             "multiarm_gls_absolute_mapping_contribution_diagnostics",
             "pairwise_leave_one_out_outlier_space_diagnostic",
+            "bounded_trim_and_fill_sensitivity_screen",
             "fixed_effect_node_splitting_smoke_diagnostics",
             "egger_small_study_effect_diagnostic",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
             "multiarm_deterministic_failure_reports",
+            "pairwise_alternative_tau2_cross_checks",
+            "pairwise_sparse_dominant_study_stress_report",
         ],
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]

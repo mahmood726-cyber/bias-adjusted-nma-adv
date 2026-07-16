@@ -7,6 +7,9 @@ from bias_nma_adv.pairwise import (
     PairwiseMetaError,
     fit_pairwise_meta,
     leave_one_out_outlier_diagnostic,
+    numerical_stress_report,
+    tau2_cross_check_report,
+    trim_and_fill_sensitivity,
 )
 
 
@@ -99,6 +102,66 @@ def test_leave_one_out_outlier_diagnostic_requires_at_least_three_studies():
         leave_one_out_outlier_diagnostic(
             np.array([0.0, 1.0]),
             np.array([0.04, 0.04]),
+        )
+
+
+def test_tau2_cross_check_report_compares_estimators_without_certifying_choice():
+    y = np.array([-0.7, -0.1, 0.2, 0.8])
+    v = np.array([0.04, 0.05, 0.06, 0.05])
+
+    report = tau2_cross_check_report(y, v)
+
+    by_method = {row.method: row for row in report.diagnostics}
+    assert set(by_method) == {"FE", "DL", "PM", "REML"}
+    assert all(row.status == "passed" for row in report.diagnostics)
+    assert report.primary_method == "REML"
+    assert report.tau2_min == pytest.approx(0.0)
+    assert report.tau2_max is not None
+    assert report.tau2_max > 0.0
+    assert report.max_abs_estimate_delta is not None
+    assert report.max_abs_se_delta is not None
+    assert any("Alternative tau2" in warning for warning in report.warnings)
+
+
+def test_numerical_stress_report_flags_dominant_study_and_boundary_tau2():
+    y = np.array([0.0, 0.1, 0.2])
+    v = np.array([0.0001, 1.0, 1.0])
+
+    report = numerical_stress_report(y, v, dominant_weight_threshold=0.80)
+
+    assert report.k == 3
+    assert report.status == "warning"
+    assert report.max_weight_fraction > 0.99
+    assert report.min_variance == pytest.approx(0.0001)
+    assert report.max_variance == pytest.approx(1.0)
+    assert any("Dominant-study" in warning for warning in report.warnings)
+
+
+def test_trim_and_fill_sensitivity_mirrors_overrepresented_side():
+    y = np.array([0.0, 0.8, 0.9, 1.2])
+    se = np.array([0.2, 0.2, 0.2, 0.2])
+
+    sensitivity = trim_and_fill_sensitivity(y, se, method="FE", side="left")
+
+    assert sensitivity.k_observed == 4
+    assert sensitivity.k_filled == 2
+    assert sensitivity.fill_side == "left"
+    assert sensitivity.observed_estimate == pytest.approx(0.725, abs=1e-12)
+    assert sensitivity.adjusted_estimate < sensitivity.observed_estimate
+    assert len(sensitivity.filled_effects) == 2
+    assert len(sensitivity.filled_variances) == 2
+    assert any("not reference-matched" in warning for warning in sensitivity.warnings)
+
+
+def test_trim_and_fill_sensitivity_fails_closed_for_invalid_inputs():
+    with pytest.raises(PairwiseMetaError, match="at least three"):
+        trim_and_fill_sensitivity(np.array([0.0, 1.0]), np.array([0.2, 0.2]))
+
+    with pytest.raises(PairwiseMetaError, match="side"):
+        trim_and_fill_sensitivity(
+            np.array([0.0, 0.1, 0.2]),
+            np.array([0.2, 0.2, 0.2]),
+            side="magic",
         )
 
 

@@ -23,18 +23,24 @@ scope = [
 findings = [
   "Feature completeness, numerical stability, and Bayesian ecosystem integration are legitimate blockers to tier-one parity.",
   "The new register keeps superiority, production certification, clinical reporting, and HTA reporting blocked while these gaps remain active.",
+  "Gemini panel feedback was reviewed as planning input: source provenance and HKSJ-floor defaults are strengths, while optimizer stability and Stan/NUTS sampling remain hard blockers.",
   "The added leverage, node-splitting, and Egger diagnostics are useful feature-completeness progress but not broad tier-one parity evidence.",
   "The added multi-arm pre-fit design diagnostic improves method-routing safety for connectivity, clique completeness, design rank, and estimability checks.",
   "The added absolute GLS mapping-contribution diagnostic is useful for audit and evidence-mapping review, but it is not yet a full netheat, CINeMA, or ROB-MEN contribution matrix.",
   "The pairwise leave-one-out outlier-space screen gives a bounded influence diagnostic, but it is not full GOSH subset enumeration or visualization parity.",
+  "The pairwise tau2 cross-check and numerical stress report reduce ambiguity around estimator sensitivity, sparse evidence, and dominant fixed-effect weights.",
+  "The bounded trim-and-fill sensitivity screen adds a publication-bias sensitivity workflow, but it is not reference-matched Duval-Tweedie trim-and-fill parity.",
 ]
 actions = [
   "Added a machine-readable tier-one gap register with three blocking gaps and required evidence artifacts.",
   "Wired the gap register into validation status so blocked claims are visible in CI-style reports.",
+  "Recorded the Gemini critique in governance docs as input, not evidence of clinical suitability or global superiority.",
   "Recorded multi-arm pre-fit design diagnostics as a partial feature-completeness capability while keeping full multi-arm design parity blocked.",
   "Recorded multi-arm influence diagnostics, fixed-effect node-splitting smoke diagnostics, and Egger small-study-effect diagnostics as implemented partial capabilities.",
   "Recorded absolute GLS mapping-contribution diagnostics as another partial feature-completeness capability while keeping contribution-matrix parity blocked.",
   "Recorded pairwise leave-one-out outlier-space screening as a partial feature-completeness capability while keeping full GOSH-style parity blocked.",
+  "Recorded pairwise tau2 cross-checks and sparse/dominant-study stress reports as partial numerical-stability capabilities.",
+  "Recorded bounded trim-and-fill sensitivity screening as partial publication-bias workflow progress while keeping full trim-and-fill parity blocked.",
 ]
 remaining_blockers = [
   "Reference-match node-splitting behavior and add contribution heatmaps, outlier diagnostics, trim-and-fill, and selection-model sensitivity workflows.",
@@ -114,6 +120,7 @@ findings = [
   "The multi-arm GLS path now rejects incompatible covariance inputs before inversion, reducing silent numerical failure risk without changing valid fixture estimates.",
   "The deterministic fit-attempt report records input, design, and fit-stage failures in a machine-readable form for the multi-arm GLS path.",
   "The pairwise leave-one-out diagnostic is deterministic and layered over the existing pairwise API instead of introducing a separate estimator.",
+  "The pairwise tau2, stress, and trim-and-fill sensitivity diagnostics are deterministic wrappers over the existing pairwise API and preserve fail-closed input validation.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
@@ -123,6 +130,7 @@ actions = [
   "Added focused tests for normalized absolute contribution diagnostics and fail-closed multi-arm covariance validation.",
   "Added focused tests for multi-arm fit-attempt reports on successful, disconnected, incompatible-covariance, and empty-input cases.",
   "Added focused tests for pairwise leave-one-out outlier-space screening and too-few-study failure handling.",
+  "Added focused tests for pairwise tau2 cross-checks, dominant-study stress warnings, bounded trim-and-fill sensitivity, and invalid trim-and-fill inputs.",
 ]
 remaining_blockers = [
   "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit each capability milestone before treating the batch as reviewed.",
