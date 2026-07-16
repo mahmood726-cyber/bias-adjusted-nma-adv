@@ -33,6 +33,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "multiarm_gls_absolute_mapping_contribution_diagnostics"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "fixed_effect_node_splitting_smoke_diagnostics"
         in by_id["feature_completeness"].implemented_capabilities
     )
@@ -41,6 +45,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert "optimizer_stress_matrix" in by_id["numerical_stability"].missing_capabilities
+    assert (
+        "positive_definite_covariance_fail_closed_policy"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
     assert "cmdstan_backend" in by_id["bayesian_ecosystem_integration"].missing_capabilities
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
 
@@ -61,8 +69,12 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
         "implemented_capabilities": {
             "feature_completeness": [
                 "multiarm_gls_influence_leverage_diagnostics",
+                "multiarm_gls_absolute_mapping_contribution_diagnostics",
                 "fixed_effect_node_splitting_smoke_diagnostics",
                 "egger_small_study_effect_diagnostic",
+            ],
+            "numerical_stability": [
+                "positive_definite_covariance_fail_closed_policy",
             ]
         },
         "blocked_claims": [

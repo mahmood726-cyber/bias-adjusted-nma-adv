@@ -113,6 +113,24 @@ def test_fixed_effect_influence_diagnostics_preserve_gls_hat_invariants():
     ]
 
 
+def test_fixed_effect_contribution_diagnostics_are_nonnegative_and_normalized():
+    fit = fit_multiarm_gls(_rows_from_arms(FIXTURE_CONSISTENT), reference_treatment="A")
+
+    diagnostics = fit.contribution_diagnostics
+    assert len(diagnostics) == len(fit.nonreference_treatments) * len(fit.influence_diagnostics)
+    assert all(row.absolute_mapping_weight >= 0.0 for row in diagnostics)
+    assert all(row.contribution >= 0.0 for row in diagnostics)
+
+    for target in fit.nonreference_treatments:
+        target_rows = [row for row in diagnostics if row.target_treatment == target]
+        assert target_rows
+        assert sum(row.contribution for row in target_rows) == pytest.approx(1.0, abs=1e-12)
+
+    multiarm_rows = [row for row in diagnostics if row.study == "S6"]
+    assert any(row.target_treatment == "B" and row.contribution > 0.0 for row in multiarm_rows)
+    assert any(row.target_treatment == "C" and row.contribution > 0.0 for row in multiarm_rows)
+
+
 def test_influence_diagnostics_flag_deliberately_discordant_contrast():
     fit = fit_multiarm_gls(_rows_from_arms(FIXTURE_HETEROGENEOUS), reference_treatment="A")
 
@@ -135,6 +153,17 @@ def test_incomplete_multiarm_clique_warns_and_drops_study():
 
     assert any("S6" in warning for warning in fit.warnings)
     assert "S6" not in fit.multi_arm_studies
+
+
+def test_incompatible_multiarm_covariance_fails_closed():
+    rows = [
+        ContrastRow("S_bad", "A", "B", 0.1, 0.1),
+        ContrastRow("S_bad", "A", "C", 0.1, 0.1),
+        ContrastRow("S_bad", "B", "C", 0.1, 10.0),
+    ]
+
+    with pytest.raises(ValueError, match="recovered negative arm variance"):
+        fit_multiarm_gls(rows, reference_treatment="A")
 
 
 def test_disconnected_network_fails_closed():

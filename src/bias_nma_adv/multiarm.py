@@ -83,6 +83,25 @@ class ContrastInfluenceDiagnostic:
 
 
 @dataclass(frozen=True)
+class ContrastContributionDiagnostic:
+    """Absolute GLS mapping contribution for one row to one fitted parameter.
+
+    The signed mapping coefficient is retained for auditability, but the
+    contribution proportion is normalized from absolute coefficients so callers
+    do not interpret signed GLS algebra as a percentage evidence flow.
+    """
+
+    target_treatment: str
+    row_index: int
+    study: str
+    treatment_from: str
+    treatment_to: str
+    mapping_weight: float
+    absolute_mapping_weight: float
+    contribution: float
+
+
+@dataclass(frozen=True)
 class MultiArmNMAFit:
     """Result from experimental multi-arm contrast-level GLS NMA."""
 
@@ -98,6 +117,7 @@ class MultiArmNMAFit:
     multi_arm_studies: tuple[str, ...]
     warnings: tuple[str, ...]
     influence_diagnostics: tuple[ContrastInfluenceDiagnostic, ...]
+    contribution_diagnostics: tuple[ContrastContributionDiagnostic, ...]
 
     def effect_vs_reference(self, treatment: str) -> tuple[float, float]:
         """Return estimate and SE for treatment versus the reference."""
@@ -205,6 +225,7 @@ def fit_multiarm_gls(
 
     multi_arm = tuple(study.study_id for study in studies if study.multi_arm)
     influence_diagnostics = _influence_diagnostics(assembled, fit, diagnostic_v)
+    contribution_diagnostics = _contribution_diagnostics(assembled, fit)
     return MultiArmNMAFit(
         reference_treatment=reference,
         treatments=treatments,
@@ -218,6 +239,7 @@ def fit_multiarm_gls(
         multi_arm_studies=multi_arm,
         warnings=tuple(warnings),
         influence_diagnostics=influence_diagnostics,
+        contribution_diagnostics=contribution_diagnostics,
     )
 
 
@@ -301,7 +323,10 @@ def _build_studies(rows: tuple[ContrastRow, ...]) -> tuple[tuple[_Study, ...], l
             row_sum = float(np.sum(se2[idx, :]))
             variance = (row_sum - total_arm_variance) / (len(arms) - 2)
             if variance < -1e-10:
-                warnings.append(f"study {study_id}: recovered negative arm variance for {arm}")
+                raise ValueError(
+                    f"study {study_id}: recovered negative arm variance for {arm}; "
+                    "multi-arm covariance is incompatible with a positive-definite GLS fit"
+                )
             arm_variances[arm] = max(float(variance), 0.0)
 
         base = arms[0]
@@ -412,14 +437,37 @@ def _assemble(
 
 def _gls(x: np.ndarray, y: np.ndarray, v: np.ndarray) -> dict[str, np.ndarray] | None:
     try:
+        _validate_positive_definite_matrix(v, label="within-study covariance")
         v_inv = np.linalg.inv(v)
         xt_v_inv = x.T @ v_inv
         xt_v_inv_x = xt_v_inv @ x
         cov = np.linalg.inv(xt_v_inv_x)
     except np.linalg.LinAlgError:
         return None
+    _validate_positive_definite_matrix(cov, label="fitted-parameter covariance")
     d = cov @ xt_v_inv @ y
     return {"d": d, "cov": cov, "v_inv": v_inv}
+
+
+def _validate_positive_definite_matrix(matrix: np.ndarray, *, label: str) -> None:
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+        raise ValueError(f"{label} matrix must be square.")
+    if not np.all(np.isfinite(matrix)):
+        raise ValueError(f"{label} matrix must contain only finite values.")
+    if not np.allclose(matrix, matrix.T, rtol=1e-10, atol=1e-12):
+        raise ValueError(f"{label} matrix must be symmetric.")
+    diagonal = np.diag(matrix)
+    if np.any(diagonal <= 0.0):
+        raise ValueError(f"{label} matrix must have a positive diagonal.")
+    symmetrized = (matrix + matrix.T) / 2.0
+    try:
+        np.linalg.cholesky(symmetrized)
+    except np.linalg.LinAlgError as exc:
+        min_eigenvalue = float(np.min(np.linalg.eigvalsh(symmetrized)))
+        raise ValueError(
+            f"{label} matrix must be positive definite; "
+            f"minimum eigenvalue is {min_eigenvalue:.6g}."
+        ) from exc
 
 
 def _generalized_dl(
@@ -509,4 +557,34 @@ def _influence_diagnostics(
                 cook_distance=cook,
             )
         )
+    return tuple(diagnostics)
+
+
+def _contribution_diagnostics(
+    assembled: _AssembledNetwork,
+    fit: dict[str, np.ndarray],
+) -> tuple[ContrastContributionDiagnostic, ...]:
+    mapping = fit["cov"] @ assembled.x.T @ fit["v_inv"]
+    diagnostics: list[ContrastContributionDiagnostic] = []
+    for parameter_idx, target_treatment in enumerate(assembled.nonreference_treatments):
+        signed_weights = mapping[parameter_idx, :]
+        absolute_weights = np.abs(signed_weights)
+        denominator = float(np.sum(absolute_weights))
+        if denominator <= 0.0:
+            continue
+        for row_idx, study in enumerate(assembled.row_studies):
+            treatment_from, treatment_to = assembled.row_contrasts[row_idx]
+            absolute_weight = float(absolute_weights[row_idx])
+            diagnostics.append(
+                ContrastContributionDiagnostic(
+                    target_treatment=target_treatment,
+                    row_index=row_idx,
+                    study=study,
+                    treatment_from=treatment_from,
+                    treatment_to=treatment_to,
+                    mapping_weight=float(signed_weights[row_idx]),
+                    absolute_mapping_weight=absolute_weight,
+                    contribution=float(absolute_weight / denominator),
+                )
+            )
     return tuple(diagnostics)

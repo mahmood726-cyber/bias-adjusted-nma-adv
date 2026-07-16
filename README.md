@@ -26,7 +26,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
 - `src/bias_nma_adv/pairwise.py`: Experimental pairwise meta-analysis bridge for FE, DL, Paule-Mandel, REML, HKSJ, and prediction-interval conventions.
 - `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.
-- `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests, with diagnostic-only GLS leverage, residual, and approximate Cook-distance outputs.
+- `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests, with diagnostic-only GLS leverage, residual, approximate Cook-distance, absolute mapping-contribution, and fail-closed covariance-validity outputs.
 - `src/bias_nma_adv/node_splitting.py`: Experimental fixed-effect node-splitting diagnostic for closed-loop direct-versus-indirect contrast checks.
 - `src/bias_nma_adv/km_reconstruction.py`: Fail-closed screen and deterministic curve-fidelity metrics for open-access Kaplan-Meier reconstruction results before they can enter survival validation artifacts.
 - `src/bias_nma_adv/publication_bias.py`: Registry outcome-switching auditor plus diagnostic-only Egger small-study-effect regression.

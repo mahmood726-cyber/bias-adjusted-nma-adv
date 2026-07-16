@@ -111,9 +111,13 @@ def test_validation_status_composes_all_current_gates():
     assert tier1_gaps["implemented_capabilities"] == {
         "feature_completeness": [
             "multiarm_gls_influence_leverage_diagnostics",
+            "multiarm_gls_absolute_mapping_contribution_diagnostics",
             "fixed_effect_node_splitting_smoke_diagnostics",
             "egger_small_study_effect_diagnostic",
-        ]
+        ],
+        "numerical_stability": [
+            "positive_definite_covariance_fail_closed_policy",
+        ],
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
     assert tier1_gaps["certification_effect"] == "none"

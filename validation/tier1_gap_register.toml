@@ -29,6 +29,7 @@ missing_capabilities = [
 ]
 implemented_capabilities = [
   "multiarm_gls_influence_leverage_diagnostics",
+  "multiarm_gls_absolute_mapping_contribution_diagnostics",
   "fixed_effect_node_splitting_smoke_diagnostics",
   "egger_small_study_effect_diagnostic",
 ]
@@ -52,8 +53,10 @@ missing_capabilities = [
   "sparse_network_convergence_guards",
   "local_minimum_detection",
   "alternative_tau2_estimator_cross_checks",
-  "positive_definite_covariance_repair_or_fail_closed_policy",
   "deterministic_failure_reports",
+]
+implemented_capabilities = [
+  "positive_definite_covariance_fail_closed_policy",
 ]
 required_evidence_artifacts = [
   "prespecified_sparse_network_simulations",
