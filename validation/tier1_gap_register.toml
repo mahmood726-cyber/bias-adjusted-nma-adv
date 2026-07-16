@@ -87,14 +87,17 @@ missing_capabilities = [
   "cmdstan_backend",
   "nuts_sampling",
   "rhat_ess_divergence_exports",
-  "prior_predictive_checks",
-  "posterior_predictive_checks",
-  "joint_posterior_ranking_draws",
+  "stan_prior_predictive_checks",
+  "stan_posterior_predictive_checks",
+  "reference_matched_joint_posterior_ranking_draws",
   "mlnmr_reference_examples",
 ]
 implemented_capabilities = [
   "local_mcmc_rhat_ess_mcse_diagnostic_warnings",
   "cmdstan_preflight_fail_closed_contract",
+  "local_prior_predictive_check",
+  "local_posterior_predictive_check",
+  "joint_posterior_ranking_draws_from_local_mcmc",
 ]
 required_evidence_artifacts = [
   "stan_model_sources",

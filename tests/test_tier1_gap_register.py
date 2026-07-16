@@ -109,6 +109,18 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         "cmdstan_preflight_fail_closed_contract"
         in by_id["bayesian_ecosystem_integration"].implemented_capabilities
     )
+    assert (
+        "local_prior_predictive_check"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
+    assert (
+        "local_posterior_predictive_check"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
+    assert (
+        "joint_posterior_ranking_draws_from_local_mcmc"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
 
 
@@ -150,6 +162,9 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "bayesian_ecosystem_integration": [
                 "local_mcmc_rhat_ess_mcse_diagnostic_warnings",
                 "cmdstan_preflight_fail_closed_contract",
+                "local_prior_predictive_check",
+                "local_posterior_predictive_check",
+                "joint_posterior_ranking_draws_from_local_mcmc",
             ],
         },
         "blocked_claims": [

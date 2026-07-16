@@ -1,7 +1,14 @@
 import numpy as np
+import pytest
 from bias_nma_adv.data import EvidenceDataset
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
-from bias_nma_adv.bayesian import BayesianNMAMCMCSampler, compute_mcmc_diagnostics
+from bias_nma_adv.bayesian import (
+    BayesianNMAMCMCSampler,
+    compute_mcmc_diagnostics,
+    posterior_predictive_check,
+    posterior_treatment_ranking,
+    prior_predictive_check,
+)
 
 def test_bayesian_mcmc_sampler():
     dataset = EvidenceDataset()
@@ -65,6 +72,38 @@ def test_bayesian_mcmc_sampler():
     # SD should be positive
     assert fit.posterior_sds["trt_B"] > 0.0
 
+    posterior_check = posterior_predictive_check(
+        fit.chains,
+        fit.parameter_names,
+        y,
+        x,
+        v,
+        seed=101,
+    )
+    assert posterior_check.check_type == "posterior_predictive"
+    assert posterior_check.n_draws == 500
+    assert posterior_check.n_observations == len(y)
+    assert posterior_check.observed_mean == pytest.approx(float(np.mean(y)))
+    assert posterior_check.predictive_interval[0] < posterior_check.predictive_interval[1]
+    assert 0.0 <= posterior_check.bayesian_p_value <= 1.0
+    assert any("not Stan" in warning for warning in posterior_check.warnings)
+
+    ranking = posterior_treatment_ranking(
+        fit.chains,
+        fit.parameter_names,
+        reference_treatment="A",
+        beneficial_direction="lower",
+    )
+    assert ranking.treatments == ("A", "B")
+    assert ranking.n_draws == 500
+    assert set(ranking.rank_probabilities) == {"A", "B"}
+    assert all(
+        sum(probabilities) == pytest.approx(1.0, abs=1e-12)
+        for probabilities in ranking.rank_probabilities.values()
+    )
+    assert all(1.0 <= rank <= 2.0 for rank in ranking.mean_ranks.values())
+    assert any("not SUCRA" in warning for warning in ranking.warnings)
+
 
 def test_compute_mcmc_diagnostics_exports_rhat_for_multiple_chains():
     rng = np.random.default_rng(123)
@@ -80,3 +119,40 @@ def test_compute_mcmc_diagnostics_exports_rhat_for_multiple_chains():
     assert diagnostic.ess_bulk > 0.0
     assert diagnostic.ess_tail > 0.0
     assert diagnostic.mcse_mean >= 0.0
+
+
+def test_prior_predictive_check_simulates_from_declared_prior_scale():
+    x = np.array([[1.0], [0.5], [-0.5]])
+    v = np.diag([0.04, 0.05, 0.06])
+
+    check = prior_predictive_check(x, v, n_draws=100, beta_sd=0.5, seed=7)
+
+    assert check.check_type == "prior_predictive"
+    assert check.n_draws == 100
+    assert check.n_observations == 3
+    assert check.observed_mean is None
+    assert check.predictive_interval[0] < check.predictive_interval[1]
+    assert check.bayesian_p_value is None
+    assert any("not Stan" in warning for warning in check.warnings)
+
+
+def test_bayesian_predictive_and_ranking_helpers_reject_invalid_inputs():
+    draws = np.ones((3, 1))
+    with pytest.raises(ValueError, match="at least four draws"):
+        posterior_treatment_ranking(
+            draws,
+            ("trt_B",),
+            reference_treatment="A",
+        )
+
+    with pytest.raises(ValueError, match="2D design matrix"):
+        prior_predictive_check(np.array([1.0, 2.0]), np.eye(2))
+
+    with pytest.raises(ValueError, match="parameter_names length"):
+        posterior_predictive_check(
+            np.ones((4, 2)),
+            ("trt_B",),
+            np.array([0.0]),
+            np.ones((1, 1)),
+            np.eye(1),
+        )

@@ -32,6 +32,32 @@ class MCMCDiagnostic:
     warnings: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class BayesianPredictiveCheck:
+    """Prior or posterior predictive summary for aggregate model checks."""
+
+    check_type: str
+    n_draws: int
+    n_observations: int
+    observed_mean: float | None
+    predictive_mean: float
+    predictive_interval: tuple[float, float]
+    bayesian_p_value: float | None
+    warnings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class PosteriorTreatmentRanking:
+    """Draw-preserving posterior treatment ranking summary."""
+
+    treatments: tuple[str, ...]
+    beneficial_direction: str
+    n_draws: int
+    rank_probabilities: dict[str, tuple[float, ...]]
+    mean_ranks: dict[str, float]
+    warnings: tuple[str, ...]
+
+
 class BayesianNMAMCMCSampler:
     """Self-contained Bayesian MCMC sampler for advanced bias-adjusted NMA."""
 
@@ -274,6 +300,196 @@ def compute_mcmc_diagnostics(
             warnings=tuple(warnings),
         )
     return diagnostics
+
+
+def prior_predictive_check(
+    x: np.ndarray,
+    v: np.ndarray,
+    *,
+    n_draws: int = 1000,
+    beta_sd: float = 1.0,
+    seed: int = 123,
+) -> BayesianPredictiveCheck:
+    """Simulate a simple prior predictive distribution for the linear predictor."""
+
+    design = np.asarray(x, dtype=float)
+    variances = np.asarray(v, dtype=float)
+    if design.ndim != 2:
+        raise ValueError("x must be a 2D design matrix.")
+    if variances.shape != (design.shape[0], design.shape[0]):
+        raise ValueError("v must be a square covariance matrix matching x rows.")
+    if n_draws < 10:
+        raise ValueError("n_draws must be at least 10.")
+    if beta_sd <= 0.0:
+        raise ValueError("beta_sd must be positive.")
+    if not np.all(np.isfinite(design)):
+        raise ValueError("x must be finite.")
+    if not np.all(np.isfinite(variances)):
+        raise ValueError("v must be finite.")
+
+    rng = np.random.default_rng(seed)
+    beta_draws = rng.normal(0.0, beta_sd, size=(int(n_draws), design.shape[1]))
+    means = beta_draws @ design.T
+    predictive = _draw_multivariate_normal_rows(rng, means, variances)
+    predictive_means = np.mean(predictive, axis=1)
+    warnings = (
+        "Prior predictive check is a local prototype simulation and is not Stan/multinma parity.",
+    )
+    return BayesianPredictiveCheck(
+        check_type="prior_predictive",
+        n_draws=int(n_draws),
+        n_observations=int(design.shape[0]),
+        observed_mean=None,
+        predictive_mean=float(np.mean(predictive_means)),
+        predictive_interval=(
+            float(np.percentile(predictive_means, 2.5)),
+            float(np.percentile(predictive_means, 97.5)),
+        ),
+        bayesian_p_value=None,
+        warnings=warnings,
+    )
+
+
+def posterior_predictive_check(
+    draws: np.ndarray,
+    parameter_names: tuple[str, ...],
+    y: np.ndarray,
+    x: np.ndarray,
+    v: np.ndarray,
+    *,
+    seed: int = 123,
+) -> BayesianPredictiveCheck:
+    """Simulate posterior predictive means from stored beta draws."""
+
+    array = _coerce_draw_array(draws, parameter_names)
+    observed = np.asarray(y, dtype=float).reshape(-1)
+    design = np.asarray(x, dtype=float)
+    variances = np.asarray(v, dtype=float)
+    if design.ndim != 2:
+        raise ValueError("x must be a 2D design matrix.")
+    if observed.shape != (design.shape[0],):
+        raise ValueError("y length must match x rows.")
+    if variances.shape != (design.shape[0], design.shape[0]):
+        raise ValueError("v must be a square covariance matrix matching x rows.")
+    if design.shape[1] > array.shape[1]:
+        raise ValueError("draws must contain at least x.shape[1] beta parameters.")
+    if not np.all(np.isfinite(observed)):
+        raise ValueError("y must be finite.")
+    if not np.all(np.isfinite(design)) or not np.all(np.isfinite(variances)):
+        raise ValueError("x and v must be finite.")
+
+    rng = np.random.default_rng(seed)
+    beta_draws = array[:, : design.shape[1]]
+    means = beta_draws @ design.T
+    predictive = _draw_multivariate_normal_rows(rng, means, variances)
+    predictive_means = np.mean(predictive, axis=1)
+    observed_mean = float(np.mean(observed))
+    p_value = float(np.mean(predictive_means >= observed_mean))
+    warnings = (
+        "Posterior predictive check uses stored prototype MCMC draws and is not Stan/multinma parity.",
+    )
+    return BayesianPredictiveCheck(
+        check_type="posterior_predictive",
+        n_draws=int(array.shape[0]),
+        n_observations=int(observed.size),
+        observed_mean=observed_mean,
+        predictive_mean=float(np.mean(predictive_means)),
+        predictive_interval=(
+            float(np.percentile(predictive_means, 2.5)),
+            float(np.percentile(predictive_means, 97.5)),
+        ),
+        bayesian_p_value=p_value,
+        warnings=warnings,
+    )
+
+
+def posterior_treatment_ranking(
+    draws: np.ndarray,
+    parameter_names: tuple[str, ...],
+    *,
+    reference_treatment: str,
+    beneficial_direction: str = "lower",
+) -> PosteriorTreatmentRanking:
+    """Calculate rank probabilities from joint posterior treatment-effect draws."""
+
+    array = _coerce_draw_array(draws, parameter_names)
+    if beneficial_direction not in {"lower", "higher"}:
+        raise ValueError("beneficial_direction must be 'lower' or 'higher'.")
+    if not reference_treatment.strip():
+        raise ValueError("reference_treatment must not be empty.")
+
+    treatment_columns: list[tuple[str, int]] = []
+    for idx, name in enumerate(parameter_names):
+        if name.startswith("trt_") and "_x_" not in name:
+            treatment_columns.append((name[4:], idx))
+    if not treatment_columns:
+        raise ValueError("parameter_names must include at least one trt_ treatment effect.")
+
+    treatments = (reference_treatment, *tuple(treatment for treatment, _ in treatment_columns))
+    effect_draws = np.zeros((array.shape[0], len(treatments)), dtype=float)
+    for col_idx, (_, draw_idx) in enumerate(treatment_columns, start=1):
+        effect_draws[:, col_idx] = array[:, draw_idx]
+
+    if beneficial_direction == "lower":
+        order = np.argsort(effect_draws, axis=1)
+    else:
+        order = np.argsort(-effect_draws, axis=1)
+    ranks = np.empty_like(order)
+    draw_indices = np.arange(array.shape[0])[:, np.newaxis]
+    ranks[draw_indices, order] = np.arange(1, len(treatments) + 1)
+
+    rank_probabilities: dict[str, tuple[float, ...]] = {}
+    mean_ranks: dict[str, float] = {}
+    for idx, treatment in enumerate(treatments):
+        treatment_ranks = ranks[:, idx]
+        rank_probabilities[treatment] = tuple(
+            float(np.mean(treatment_ranks == rank))
+            for rank in range(1, len(treatments) + 1)
+        )
+        mean_ranks[treatment] = float(np.mean(treatment_ranks))
+
+    warnings = (
+        "Ranking preserves joint prototype MCMC draws but is not SUCRA/multinma reference parity.",
+    )
+    return PosteriorTreatmentRanking(
+        treatments=tuple(treatments),
+        beneficial_direction=beneficial_direction,
+        n_draws=int(array.shape[0]),
+        rank_probabilities=rank_probabilities,
+        mean_ranks=mean_ranks,
+        warnings=warnings,
+    )
+
+
+def _coerce_draw_array(draws: np.ndarray, parameter_names: tuple[str, ...]) -> np.ndarray:
+    array = np.asarray(draws, dtype=float)
+    if array.ndim == 3:
+        array = array.reshape(array.shape[0] * array.shape[1], array.shape[2])
+    if array.ndim != 2:
+        raise ValueError("draws must have shape (draw, parameter) or (chain, draw, parameter).")
+    if array.shape[1] != len(parameter_names):
+        raise ValueError("parameter_names length must match the draws parameter dimension.")
+    if array.shape[0] < 4:
+        raise ValueError("at least four draws are required.")
+    if not np.all(np.isfinite(array)):
+        raise ValueError("draws must be finite.")
+    return array
+
+
+def _draw_multivariate_normal_rows(
+    rng: np.random.Generator,
+    means: np.ndarray,
+    covariance: np.ndarray,
+) -> np.ndarray:
+    sign, _ = np.linalg.slogdet(covariance)
+    if sign <= 0:
+        raise ValueError("v must be positive definite.")
+    noise = rng.multivariate_normal(
+        np.zeros(covariance.shape[0], dtype=float),
+        covariance,
+        size=means.shape[0],
+    )
+    return means + noise
 
 
 def _effective_sample_size(values: np.ndarray) -> float:

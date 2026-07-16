@@ -24,7 +24,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
   - `data.py`: Structured data classes and validation schemas.
   - `ingestion.py`: Source-backed ingestion provenance checks and proof-carrying extracted-effect contracts for PubMed, ClinicalTrials.gov, and open-access paper rows. WHO ICTRP and other registries are protocol-only metadata sources and cannot supply model-ready effects.
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
-- `src/bias_nma_adv/bayesian.py`: Experimental Metropolis-Hastings Bayesian sampler with local R-hat/ESS/MCSE diagnostic warnings; it is not a Stan/NUTS replacement.
+- `src/bias_nma_adv/bayesian.py`: Experimental Metropolis-Hastings Bayesian sampler with local R-hat/ESS/MCSE diagnostic warnings, prior/posterior predictive checks, and draw-preserving treatment ranking; it is not a Stan/NUTS replacement.
 - `src/bias_nma_adv/stan_backend.py`: Fail-closed CmdStanPy/CmdStan preflight contract exposing required NUTS diagnostics before any Stan-backed reference run can count.
 - `src/bias_nma_adv/pairwise.py`: Experimental pairwise meta-analysis bridge for FE, DL, Paule-Mandel, REML, HKSJ, prediction-interval conventions, diagnostic-only leave-one-out and bounded exhaustive GOSH-style outlier-space screening, tau2 cross-checks, sparse/dominant-study stress reports, REML profile/local-minimum screens, stress-matrix reports, and bounded trim-and-fill sensitivity screening.
 - `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.

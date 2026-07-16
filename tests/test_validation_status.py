@@ -133,6 +133,9 @@ def test_validation_status_composes_all_current_gates():
         "bayesian_ecosystem_integration": [
             "local_mcmc_rhat_ess_mcse_diagnostic_warnings",
             "cmdstan_preflight_fail_closed_contract",
+            "local_prior_predictive_check",
+            "local_posterior_predictive_check",
+            "joint_posterior_ranking_draws_from_local_mcmc",
         ],
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
