@@ -22,7 +22,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 ## Repository Structure
 - `src/bias_nma_adv/`: Core python package containing:
   - `data.py`: Structured data classes and validation schemas.
-  - `ingestion.py`: Source-backed ingestion provenance checks and proof-carrying extracted-effect contracts for AACT/ClinicalTrials.gov, PubMed, open-access paper, and rare result-level ICTRP/PACTR rows. Protocol-only registry rows cannot supply model-ready effects.
+  - `ingestion.py`: Source-backed ingestion provenance checks and proof-carrying extracted-effect contracts for AACT/ClinicalTrials.gov, PubMed, open-access papers, rare result-level ICTRP/PACTR rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance. Protocol-only registry rows cannot supply model-ready effects, but can feed registered-primary-outcome and completeness-denominator ledgers.
   - `model.py`: Fitting engine implementing REML optimization, GLS with prior shrinkage, HKSJ covariance scaling, and down-weighting.
 - `src/bias_nma_adv/bayesian.py`: Experimental Metropolis-Hastings Bayesian sampler with local R-hat/ESS/MCSE diagnostic warnings, prior/posterior predictive checks, and draw-preserving treatment ranking; it is not a Stan/NUTS replacement.
 - `src/bias_nma_adv/stan_backend.py`: Fail-closed CmdStanPy/CmdStan preflight contract exposing required NUTS diagnostics before any Stan-backed reference run can count.
@@ -34,7 +34,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/publication_bias.py`: Registry outcome-switching auditor plus diagnostic-only Egger small-study-effect regression and prespecified selection-weight sensitivity analysis.
 - `src/bias_nma_adv/ctgov_hr_network.py`: Source-verified ClinicalTrials.gov reported-HR network benchmark support, including sparse design-bias diagnostics for underidentified cross-design borrowing.
 - `src/bias_nma_adv/dose_response_benchmark.py`: Source-verified CT.gov/PubMed dose-response smoke benchmark support for dose-level effects that remain non-certifying until `MBNMAdose` reference matching.
-- `src/bias_nma_adv/dose_response_coverage.py`: Fail-closed source-coverage check showing whether dose-response benchmark data are currently registered from AACT/ClinicalTrials.gov, ICTRP/PACTR result rows, PubMed abstracts, or open-access papers.
+- `src/bias_nma_adv/dose_response_coverage.py`: Fail-closed source-coverage check showing whether dose-response benchmark data are currently registered from AACT/ClinicalTrials.gov, ICTRP/PACTR result rows, PubMed abstracts, open-access papers, or public FDA/EMA regulatory review rows.
 - `src/bias_nma_adv/dta.py`: Experimental bivariate logit-normal REML DTA prototype for algorithmic fixture validation against `mada::reitsma`; it is not source-backed clinical DTA evidence.
 - `src/bias_nma_adv/dta_coverage.py`: Fail-closed DTA coverage gate requiring source-backed TP/FP/FN/TN tables and bivariate GLMM/HSROC modeling before diagnostic-accuracy claims.
 - `src/bias_nma_adv/benchmark_registry.py`: Machine-readable registry validator for local source-backed benchmark artifacts, source-check semantics, and pinned hashes.
@@ -65,7 +65,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/reviews/`: Non-certifying review ledgers recording multiperson review findings, actions, and next gates.
 - `validation/reviews/improvement_review_2026_07_15.toml`: Current improvement-review ledger for tier-one blockers, source boundaries, HTML delivery, and implementation polish. It passes the current milestone but explicitly keeps the global goal incomplete.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
-- `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, and rare public result-level ICTRP/PACTR rows. Protocol-only registry rows remain metadata only.
+- `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, rare public result-level ICTRP/PACTR rows, and public FDA/EMA regulatory review rows when numeric per-trial result text is source-bound. Protocol-only registry rows remain metadata only.
 - `validation/benchmark_registry.toml`: Canonical inventory of local source-backed benchmark artifacts. Every entry must retain `certification_effect = "none"` until an external reference run passes, and every source-check report is revalidated against its specialized schema.
 - `validation/source_checks/`: Public-source identity snapshots and PubMed abstract event-count token checks.
 - `validation/ingestion/`: Proof-carrying extracted-effect bundles. These are model-ingestion evidence contracts only and carry `certification_effect = "none"`.

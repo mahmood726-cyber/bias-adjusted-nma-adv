@@ -15,7 +15,7 @@ Any statement in those files about treatment ranking, clinical recommendations, 
 
 Acceptable evidence artifacts are limited to:
 
-- source manifests constrained to AACT/ClinicalTrials.gov, numeric ICTRP/PACTR result rows, PubMed abstracts, or open-access papers;
+- source manifests constrained to AACT/ClinicalTrials.gov, numeric ICTRP/PACTR result rows, PubMed abstracts, open-access papers, or public FDA/EMA regulatory review rows with numeric per-trial provenance;
 - source-verification snapshots under `validation/source_checks/`;
 - benchmark contracts under `validation/real_meta/` or `validation/survival/`;
 - reference-run reports under `validation/reference_runs/`;

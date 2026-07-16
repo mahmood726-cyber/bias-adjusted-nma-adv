@@ -1,7 +1,7 @@
 schema_version = "multiperson_review/v1"
 checked_at = "2026-07-15"
 certification_effect = "none"
-source_policy = "AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, and public numeric ICTRP/PACTR result rows for effect evidence; protocol-only registry rows remain metadata sources"
+source_policy = "AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance for effect evidence; protocol-only registry rows remain metadata sources for registered-primary-outcome anchors and completeness denominators"
 required_review_rounds = [
   "source_boundary_review",
   "statistical_methods_review",

@@ -24,6 +24,8 @@ def test_dta_source_coverage_records_current_gap_without_overclaiming():
     assert coverage.allowed_evidence_sources == (
         "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
+        "ema_epar",
+        "fda_review",
         "open_access_paper",
         "pactr_results",
         "pubmed_abstract",
@@ -38,6 +40,8 @@ def test_dta_source_coverage_records_current_gap_without_overclaiming():
     assert coverage.registered_source_counts == {
         "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 0,
+        "ema_epar": 0,
+        "fda_review": 0,
         "open_access_paper": 0,
         "pactr_results": 0,
         "pubmed_abstract": 0,
@@ -61,6 +65,8 @@ def test_dta_source_coverage_summary_is_validation_status_ready():
         "registered_source_counts": {
             "aact_clinicaltrials_gov": 0,
             "clinicaltrials_gov": 0,
+            "ema_epar": 0,
+            "fda_review": 0,
             "open_access_paper": 0,
             "pactr_results": 0,
             "pubmed_abstract": 0,
@@ -75,6 +81,7 @@ def test_dta_source_coverage_summary_is_validation_status_ready():
             "dta_source_manifest_with_nct_pmid_or_open_access_identifiers",
             "source_verified_tp_fp_fn_tn_2x2_tables",
             "aact_ictrp_or_pactr_result_row_checks_when_used",
+            "fda_or_ema_regulatory_review_row_checks_when_used",
             "threshold_and_reference_standard_metadata",
             "bivariate_glmm_or_hsroc_model_artifact",
             "mada_or_metafor_or_reference_software_parity_before_certification",

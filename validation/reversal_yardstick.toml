@@ -3,9 +3,11 @@ checked_at = "2026-07-16"
 status = "registered_not_source_backed"
 certification_effect = "none"
 purpose = "Non-certifying yardstick for input-verified evidence synthesis using historical reversal cases where a less-selected later source gives an answer key."
-allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
 protocol_only_sources = ["other_trial_registry_protocol", "pactr_protocol", "who_ictrp_protocol"]
 truth_boundary = "Recovers what the trials found, not the absolute truth about the drug."
+regulatory_rebuild_status = "possible_future_replacement"
+answer_key_replacement_policy = "Current reversal numbers are read from this yardstick and remain non-certifying; FDA or EMA regulatory review recovery may replace the external key files, so consumers must not bake these values into code as clinical constants."
 headline_metric = "detected_taint"
 oracle_only_reporting_allowed = false
 global_goal_complete = false
@@ -25,7 +27,7 @@ required_next_artifacts = [
 ]
 
 [source_artifact_hashes]
-fix_md = "79b24ba18b1e753a18258c6b191ccc0cdf7f9e83cca5c4a4088ab5d3758a5423"
+fix_md = "d894d8f928b0f2f4daeaae129e11e5035030d555e76945e3881dd4678d69139f"
 arena_json = "7d44232919405df9da4fec0c1a77220ec3d5df9a0449c618dd50650f42489451"
 ablate_json = "48de8618b9e0c4adcce00fabfb29371c845c9d8182a965c17dd1affdb6dacd60"
 reversals_md = "d7a1528f41febd9c44d5999cdce8a7356e36b751276f92a606c5e0a9fedb6209"

@@ -154,9 +154,10 @@ def build_validation_status(
         "allowed_protocol_only_sources": list(ALLOWED_PROTOCOL_ONLY_SOURCES),
         "protocol_registry_rule": (
             "Protocol-only registry sources may verify registration, planned outcomes, "
-            "eligibility, and dates, but cannot supply model-ready effects; downloaded "
-            "ICTRP or PACTR result rows may supply effects only when public numeric "
-            "result text is source-bound."
+            "eligibility, dates, registered-primary-outcome anchors, and completeness "
+            "denominators, but cannot supply model-ready effects; downloaded ICTRP or "
+            "PACTR result rows and public FDA/EMA regulatory review rows may supply "
+            "effects only when public numeric result text is source-bound."
         ),
         "certification_effect": "none",
         "clinical_hta_reporting_enabled": bool(production_targets),

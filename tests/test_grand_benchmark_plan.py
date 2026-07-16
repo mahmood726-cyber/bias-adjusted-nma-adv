@@ -28,6 +28,8 @@ def test_grand_benchmark_plan_validates_against_source_registry():
     assert set(plan.allowed_evidence_sources) == {
         "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
+        "ema_epar",
+        "fda_review",
         "open_access_paper",
         "pactr_results",
         "pubmed_abstract",
@@ -106,7 +108,7 @@ def test_grand_benchmark_plan_loader_rejects_source_policy_drift(tmp_path):
     bad_plan = tmp_path / "bad_plan.toml"
     bad_plan.write_text(
         PLAN.read_text(encoding="utf-8").replace(
-            'allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]',
+            'allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]',
             'allowed_evidence_sources = ["pubmed_abstract"]',
             1,
         ),

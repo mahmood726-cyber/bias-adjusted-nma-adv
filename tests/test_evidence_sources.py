@@ -5,6 +5,7 @@ from bias_nma_adv.evidence_sources import (
     EFFECT_EVIDENCE_SOURCE_TYPES,
     PROTOCOL_ONLY_SOURCE_TYPES,
     REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES,
+    REGULATORY_REVIEW_EVIDENCE_SOURCE_TYPES,
     EvidenceSource,
     EvidenceSourceError,
     validate_sources,
@@ -17,12 +18,18 @@ def test_allowed_source_types_are_the_project_boundary():
         "clinicaltrials_gov",
         "pubmed_abstract",
         "open_access_paper",
+        "ema_epar",
+        "fda_review",
         "pactr_results",
         "who_ictrp_results",
     }
     assert REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES == {
         "pactr_results",
         "who_ictrp_results",
+    }
+    assert REGULATORY_REVIEW_EVIDENCE_SOURCE_TYPES == {
+        "ema_epar",
+        "fda_review",
     }
     assert PROTOCOL_ONLY_SOURCE_TYPES == {
         "other_trial_registry_protocol",
@@ -69,6 +76,18 @@ def test_validates_allowed_sources():
             identifier="PACTR202001234567890",
             url="https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
             access_statement="PACTR public trial record with results available and outcome results.",
+        ),
+        EvidenceSource(
+            source_type="fda_review",
+            identifier="NDA 020639",
+            url="https://www.accessdata.fda.gov/drugsatfda_docs/nda/2001/020639.cfm",
+            access_statement="Public FDA Drugs@FDA statistical review package with per-trial results.",
+        ),
+        EvidenceSource(
+            source_type="ema_epar",
+            identifier="EMEA/H/C/000123",
+            url="https://www.ema.europa.eu/en/medicines/human/EPAR/example",
+            access_statement="Public EMA EPAR assessment report with trial outcome tables.",
         ),
         EvidenceSource(
             source_type="who_ictrp_protocol",
@@ -201,3 +220,32 @@ def test_rejects_registry_result_source_without_result_role_or_registry_host():
     )
     with pytest.raises(EvidenceSourceError, match="PACTR registry URL"):
         validate_sources([wrong_pactr_host])
+
+
+def test_rejects_regulatory_review_source_without_review_role_or_host():
+    missing_review_role = EvidenceSource(
+        source_type="fda_review",
+        identifier="NDA 020639",
+        url="https://www.accessdata.fda.gov/drugsatfda_docs/nda/2001/020639.cfm",
+        access_statement="FDA public page.",
+    )
+    with pytest.raises(EvidenceSourceError, match="FDA review-package role"):
+        validate_sources([missing_review_role])
+
+    wrong_fda_host = EvidenceSource(
+        source_type="fda_review",
+        identifier="NDA 020639",
+        url="https://example.org/020639.cfm",
+        access_statement="Public FDA Drugs@FDA statistical review package with per-trial results.",
+    )
+    with pytest.raises(EvidenceSourceError, match="fda.gov"):
+        validate_sources([wrong_fda_host])
+
+    wrong_ema_host = EvidenceSource(
+        source_type="ema_epar",
+        identifier="EMEA/H/C/000123",
+        url="https://example.org/epar/000123",
+        access_statement="Public EMA EPAR assessment report with trial outcome tables.",
+    )
+    with pytest.raises(EvidenceSourceError, match="ema.europa.eu"):
+        validate_sources([wrong_ema_host])

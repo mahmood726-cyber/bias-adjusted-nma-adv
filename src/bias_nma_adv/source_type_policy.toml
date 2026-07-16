@@ -1,0 +1,108 @@
+schema_version = "source_type_policy/v1"
+
+[[source_types]]
+id = "aact_clinicaltrials_gov"
+role = "effect"
+category = "clinical_trial_registry"
+identifier_pattern = "^NCT\\d{8}$"
+identifier_error = "ClinicalTrials.gov identifiers must look like NCT01234567."
+allowed_hosts = ["aact.ctti-clinicaltrials.org", "*.aact.ctti-clinicaltrials.org", "clinicaltrials.gov", "*.clinicaltrials.gov"]
+host_error = "AACT sources must use an AACT or ClinicalTrials.gov URL."
+required_statement_all = ["aact", "clinicaltrials.gov"]
+statement_error = "AACT sources must state that they are ClinicalTrials.gov-derived AACT data."
+
+[[source_types]]
+id = "clinicaltrials_gov"
+role = "effect"
+category = "clinical_trial_registry"
+identifier_pattern = "^NCT\\d{8}$"
+identifier_error = "ClinicalTrials.gov identifiers must look like NCT01234567."
+allowed_hosts = ["clinicaltrials.gov", "*.clinicaltrials.gov"]
+host_error = "ClinicalTrials.gov sources must use a clinicaltrials.gov URL."
+
+[[source_types]]
+id = "pubmed_abstract"
+role = "effect"
+category = "abstract"
+identifier_pattern = "^\\d{1,9}$"
+identifier_error = "PubMed abstract identifiers must be numeric PMIDs."
+allowed_hosts = ["pubmed.ncbi.nlm.nih.gov"]
+host_error = "PubMed abstract sources must use pubmed.ncbi.nlm.nih.gov."
+
+[[source_types]]
+id = "open_access_paper"
+role = "effect"
+category = "open_access_full_text"
+required_statement_any = ["open access", "oa"]
+statement_error = "open_access_paper sources must state open-access status."
+
+[[source_types]]
+id = "who_ictrp_results"
+role = "effect"
+category = "trial_registry_results"
+identifier_pattern = "^[A-Za-z0-9][A-Za-z0-9_.:/-]{2,127}$"
+allowed_hosts = ["trialsearch.who.int", "*.who.int"]
+host_error = "WHO ICTRP result sources must use a who.int registry URL."
+forbidden_statement_any = ["protocol only", "protocol-only"]
+forbidden_statement_error = "registry result sources must not be described as protocol-only."
+required_statement_any = ["result", "outcome", "posted"]
+statement_error = "registry result sources must state their public result or outcome role."
+
+[[source_types]]
+id = "pactr_results"
+role = "effect"
+category = "trial_registry_results"
+identifier_pattern = "^[A-Za-z0-9][A-Za-z0-9_.:/-]{2,127}$"
+allowed_hosts = ["pactr.samrc.ac.za", "*.pactr.samrc.ac.za", "pactr.org", "*.pactr.org"]
+host_error = "PACTR result sources must use a PACTR registry URL."
+forbidden_statement_any = ["protocol only", "protocol-only"]
+forbidden_statement_error = "registry result sources must not be described as protocol-only."
+required_statement_any = ["result", "outcome", "posted"]
+statement_error = "registry result sources must state their public result or outcome role."
+
+[[source_types]]
+id = "fda_review"
+role = "effect"
+category = "regulatory_review"
+identifier_pattern = "^[A-Za-z0-9][A-Za-z0-9_.:/ -]{2,127}$"
+allowed_hosts = ["fda.gov", "*.fda.gov", "accessdata.fda.gov", "*.accessdata.fda.gov"]
+host_error = "FDA review sources must use a public fda.gov or accessdata.fda.gov URL."
+required_statement_all = ["fda"]
+required_statement_any = ["review", "drugs@fda", "statistical", "medical", "summary basis"]
+statement_error = "FDA review sources must state their public FDA review-package role."
+
+[[source_types]]
+id = "ema_epar"
+role = "effect"
+category = "regulatory_review"
+identifier_pattern = "^[A-Za-z0-9][A-Za-z0-9_.:/ -]{2,127}$"
+allowed_hosts = ["ema.europa.eu", "*.ema.europa.eu"]
+host_error = "EMA EPAR sources must use a public ema.europa.eu URL."
+required_statement_all = ["epar"]
+required_statement_any = ["ema", "european medicines agency"]
+statement_error = "EMA EPAR sources must state their public EMA EPAR role."
+
+[[source_types]]
+id = "who_ictrp_protocol"
+role = "protocol_only"
+category = "trial_registry_protocol"
+allowed_hosts = ["trialsearch.who.int", "*.who.int"]
+host_error = "WHO ICTRP protocol sources must use a who.int registry URL."
+required_statement_any = ["protocol", "registration", "registry"]
+statement_error = "protocol-only registry sources must state their protocol or registration role."
+
+[[source_types]]
+id = "pactr_protocol"
+role = "protocol_only"
+category = "trial_registry_protocol"
+allowed_hosts = ["pactr.samrc.ac.za", "*.pactr.samrc.ac.za", "pactr.org", "*.pactr.org"]
+host_error = "PACTR protocol sources must use a PACTR registry URL."
+required_statement_any = ["protocol", "registration", "registry"]
+statement_error = "protocol-only registry sources must state their protocol or registration role."
+
+[[source_types]]
+id = "other_trial_registry_protocol"
+role = "protocol_only"
+category = "trial_registry_protocol"
+required_statement_any = ["protocol", "registration", "registry"]
+statement_error = "protocol-only registry sources must state their protocol or registration role."

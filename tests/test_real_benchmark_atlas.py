@@ -24,6 +24,8 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
     assert atlas["allowed_effect_evidence_sources"] == [
         "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
+        "ema_epar",
+        "fda_review",
         "open_access_paper",
         "pactr_results",
         "pubmed_abstract",

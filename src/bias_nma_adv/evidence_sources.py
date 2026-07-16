@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from importlib import resources
 import re
+import tomllib
 from urllib.parse import urlparse
 
 
@@ -11,25 +13,107 @@ class EvidenceSourceError(ValueError):
     """Raised when a source is outside the allowed evidence boundary."""
 
 
-REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES = {
-    "pactr_results",
-    "who_ictrp_results",
-}
+SOURCE_TYPE_POLICY_SCHEMA_VERSION = "source_type_policy/v1"
+
+
+@dataclass(frozen=True)
+class SourceTypePolicy:
+    """Validation policy for one evidence source type.
+
+    Source types are loaded from ``source_type_policy.toml`` so widening the
+    boundary is a policy-data change rather than a rewrite of every validator.
+    """
+
+    id: str
+    role: str
+    category: str
+    identifier_pattern: str | None
+    identifier_error: str
+    allowed_hosts: tuple[str, ...]
+    host_error: str
+    required_statement_all: tuple[str, ...]
+    required_statement_any: tuple[str, ...]
+    forbidden_statement_any: tuple[str, ...]
+    statement_error: str
+    forbidden_statement_error: str
+
+    @classmethod
+    def from_mapping(cls, raw: dict[str, object]) -> "SourceTypePolicy":
+        return cls(
+            id=str(raw["id"]),
+            role=str(raw["role"]),
+            category=str(raw["category"]),
+            identifier_pattern=(
+                str(raw["identifier_pattern"]).strip()
+                if raw.get("identifier_pattern") is not None
+                and str(raw["identifier_pattern"]).strip()
+                else None
+            ),
+            identifier_error=str(raw.get("identifier_error") or "source identifier is malformed."),
+            allowed_hosts=tuple(str(item).lower() for item in raw.get("allowed_hosts", [])),
+            host_error=str(raw.get("host_error") or "source URL host is outside the allowed boundary."),
+            required_statement_all=tuple(
+                str(item).lower() for item in raw.get("required_statement_all", [])
+            ),
+            required_statement_any=tuple(
+                str(item).lower() for item in raw.get("required_statement_any", [])
+            ),
+            forbidden_statement_any=tuple(
+                str(item).lower() for item in raw.get("forbidden_statement_any", [])
+            ),
+            statement_error=str(raw.get("statement_error") or "access_statement is insufficient."),
+            forbidden_statement_error=str(
+                raw.get("forbidden_statement_error") or "access_statement contains a forbidden term."
+            ),
+        )
+
+
+def load_source_type_policies() -> dict[str, SourceTypePolicy]:
+    """Load source-type policies bundled with the package."""
+
+    policy_text = resources.files(__package__).joinpath("source_type_policy.toml").read_text(
+        encoding="utf-8"
+    )
+    raw = tomllib.loads(policy_text)
+    if raw.get("schema_version") != SOURCE_TYPE_POLICY_SCHEMA_VERSION:
+        raise EvidenceSourceError(
+            f"source type policy schema_version must be {SOURCE_TYPE_POLICY_SCHEMA_VERSION}."
+        )
+    policies = {
+        policy.id: policy
+        for policy in (
+            SourceTypePolicy.from_mapping(item) for item in raw.get("source_types", [])
+        )
+    }
+    if not policies:
+        raise EvidenceSourceError("source type policy must define at least one source type.")
+    if len(policies) != len(raw.get("source_types", [])):
+        raise EvidenceSourceError("source type policy contains duplicate source type ids.")
+    return policies
+
+
+SOURCE_TYPE_POLICIES = load_source_type_policies()
 EFFECT_EVIDENCE_SOURCE_TYPES = {
-    "aact_clinicaltrials_gov",
-    "clinicaltrials_gov",
-    "pubmed_abstract",
-    "open_access_paper",
-} | REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES
+    source_type
+    for source_type, policy in SOURCE_TYPE_POLICIES.items()
+    if policy.role == "effect"
+}
+REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES = {
+    source_type
+    for source_type, policy in SOURCE_TYPE_POLICIES.items()
+    if policy.role == "effect" and policy.category == "trial_registry_results"
+}
+REGULATORY_REVIEW_EVIDENCE_SOURCE_TYPES = {
+    source_type
+    for source_type, policy in SOURCE_TYPE_POLICIES.items()
+    if policy.role == "effect" and policy.category == "regulatory_review"
+}
 PROTOCOL_ONLY_SOURCE_TYPES = {
-    "other_trial_registry_protocol",
-    "pactr_protocol",
-    "who_ictrp_protocol",
+    source_type
+    for source_type, policy in SOURCE_TYPE_POLICIES.items()
+    if policy.role == "protocol_only"
 }
 ALLOWED_SOURCE_TYPES = EFFECT_EVIDENCE_SOURCE_TYPES | PROTOCOL_ONLY_SOURCE_TYPES
-
-_NCT_RE = re.compile(r"^NCT\d{8}$")
-_PMID_RE = re.compile(r"^\d{1,9}$")
 
 
 @dataclass(frozen=True)
@@ -42,7 +126,8 @@ class EvidenceSource:
     access_statement: str
 
     def validate(self) -> None:
-        if self.source_type not in ALLOWED_SOURCE_TYPES:
+        policy = SOURCE_TYPE_POLICIES.get(self.source_type)
+        if policy is None:
             raise EvidenceSourceError(
                 f"source_type '{self.source_type}' is not allowed; use one of "
                 f"{sorted(ALLOWED_SOURCE_TYPES)}."
@@ -54,85 +139,9 @@ class EvidenceSource:
         if not self.access_statement.strip():
             raise EvidenceSourceError("access_statement must describe why the source is admissible.")
 
-        if (
-            self.source_type in {"aact_clinicaltrials_gov", "clinicaltrials_gov"}
-            and not _NCT_RE.match(self.identifier)
-        ):
-            raise EvidenceSourceError("ClinicalTrials.gov identifiers must look like NCT01234567.")
-        if self.source_type == "pubmed_abstract" and not _PMID_RE.match(self.identifier):
-            raise EvidenceSourceError("PubMed abstract identifiers must be numeric PMIDs.")
-        if self.source_type == "open_access_paper":
-            statement = self.access_statement.lower()
-            if "open access" not in statement and "oa" not in statement:
-                raise EvidenceSourceError("open_access_paper sources must state open-access status.")
-        if self.source_type == "aact_clinicaltrials_gov":
-            statement = self.access_statement.lower()
-            if "aact" not in statement or "clinicaltrials.gov" not in statement:
-                raise EvidenceSourceError(
-                    "AACT sources must state that they are ClinicalTrials.gov-derived AACT data."
-                )
-            host = (urlparse(self.url).hostname or "").lower()
-            allowed_aact_host = (
-                host == "aact.ctti-clinicaltrials.org"
-                or host.endswith(".aact.ctti-clinicaltrials.org")
-                or host == "clinicaltrials.gov"
-                or host.endswith(".clinicaltrials.gov")
-            )
-            if not allowed_aact_host:
-                raise EvidenceSourceError(
-                    "AACT sources must use an AACT or ClinicalTrials.gov URL."
-                )
-        if self.source_type in REGISTRY_RESULT_EVIDENCE_SOURCE_TYPES:
-            statement = self.access_statement.lower()
-            if "protocol only" in statement or "protocol-only" in statement:
-                raise EvidenceSourceError(
-                    "registry result sources must not be described as protocol-only."
-                )
-            if not any(token in statement for token in ("result", "outcome", "posted")):
-                raise EvidenceSourceError(
-                    "registry result sources must state their public result or outcome role."
-                )
-            host = (urlparse(self.url).hostname or "").lower()
-            if self.source_type == "who_ictrp_results":
-                if host != "trialsearch.who.int" and not host.endswith(".who.int"):
-                    raise EvidenceSourceError(
-                        "WHO ICTRP result sources must use a who.int registry URL."
-                    )
-            if self.source_type == "pactr_results":
-                allowed_pactr_host = (
-                    host == "pactr.samrc.ac.za"
-                    or host.endswith(".pactr.samrc.ac.za")
-                    or host == "pactr.org"
-                    or host.endswith(".pactr.org")
-                )
-                if not allowed_pactr_host:
-                    raise EvidenceSourceError(
-                        "PACTR result sources must use a PACTR registry URL."
-                    )
-        if self.source_type in PROTOCOL_ONLY_SOURCE_TYPES:
-            statement = self.access_statement.lower()
-            if not any(token in statement for token in ("protocol", "registration", "registry")):
-                raise EvidenceSourceError(
-                    "protocol-only registry sources must state their protocol or registration role."
-                )
-            if self.source_type == "who_ictrp_protocol":
-                host = (urlparse(self.url).hostname or "").lower()
-                if host != "trialsearch.who.int" and not host.endswith(".who.int"):
-                    raise EvidenceSourceError(
-                        "WHO ICTRP protocol sources must use a who.int registry URL."
-                    )
-            if self.source_type == "pactr_protocol":
-                host = (urlparse(self.url).hostname or "").lower()
-                allowed_pactr_host = (
-                    host == "pactr.samrc.ac.za"
-                    or host.endswith(".pactr.samrc.ac.za")
-                    or host == "pactr.org"
-                    or host.endswith(".pactr.org")
-                )
-                if not allowed_pactr_host:
-                    raise EvidenceSourceError(
-                        "PACTR protocol sources must use a PACTR registry URL."
-                    )
+        _validate_identifier(self.identifier, policy)
+        _validate_host(self.url, policy)
+        _validate_statement(self.access_statement, policy)
 
 
 def validate_sources(sources: list[EvidenceSource]) -> None:
@@ -142,3 +151,44 @@ def validate_sources(sources: list[EvidenceSource]) -> None:
         raise EvidenceSourceError("at least one evidence source is required.")
     for source in sources:
         source.validate()
+
+
+def _validate_identifier(identifier: str, policy: SourceTypePolicy) -> None:
+    if policy.identifier_pattern and re.match(policy.identifier_pattern, identifier) is None:
+        raise EvidenceSourceError(policy.identifier_error)
+
+
+def _validate_host(url: str, policy: SourceTypePolicy) -> None:
+    if not policy.allowed_hosts:
+        return
+    host = (urlparse(url).hostname or "").lower()
+    if not any(_host_matches(host, pattern) for pattern in policy.allowed_hosts):
+        raise EvidenceSourceError(policy.host_error)
+
+
+def _validate_statement(statement: str, policy: SourceTypePolicy) -> None:
+    lowered = statement.lower()
+    if any(token in lowered for token in policy.forbidden_statement_any):
+        raise EvidenceSourceError(policy.forbidden_statement_error)
+    if policy.required_statement_all and not all(
+        token in lowered for token in policy.required_statement_all
+    ):
+        raise EvidenceSourceError(policy.statement_error)
+    if policy.required_statement_any and not any(
+        token in lowered for token in policy.required_statement_any
+    ):
+        raise EvidenceSourceError(policy.statement_error)
+
+
+def _host_matches(host: str, pattern: str) -> bool:
+    if pattern.startswith("*."):
+        suffix = pattern[1:]
+        return host.endswith(suffix) and host != suffix.lstrip(".")
+    return host == pattern
+
+
+def _optional_string(value: object | None) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None

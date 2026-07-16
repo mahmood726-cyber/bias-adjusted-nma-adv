@@ -23,6 +23,8 @@ def test_validation_status_composes_all_current_gates():
     assert report["allowed_evidence_sources"] == [
         "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
+        "ema_epar",
+        "fda_review",
         "open_access_paper",
         "pactr_results",
         "pubmed_abstract",
@@ -132,6 +134,9 @@ def test_validation_status_composes_all_current_gates():
             "source_backed_dose_response_smoke_benchmark",
             "aact_ctgov_ingestion_contract",
             "ictrp_pactr_result_source_ingestion_contract",
+            "fda_ema_regulatory_review_source_tier_contract",
+            "protocol_only_registry_metadata_ledger",
+            "config_driven_study_design_policy",
             "input_verified_reversal_yardstick_gate",
             "dta_source_coverage_gate",
             "dta_bivariate_logitnormal_reml_prototype",
@@ -184,6 +189,8 @@ def test_validation_status_composes_all_current_gates():
     assert dose_response_coverage["registered_source_counts"] == {
         "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 1,
+        "ema_epar": 0,
+        "fda_review": 0,
         "open_access_paper": 0,
         "pactr_results": 0,
         "pubmed_abstract": 1,
@@ -204,6 +211,8 @@ def test_validation_status_composes_all_current_gates():
     assert dta_coverage["registered_source_counts"] == {
         "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 0,
+        "ema_epar": 0,
+        "fda_review": 0,
         "open_access_paper": 0,
         "pactr_results": 0,
         "pubmed_abstract": 0,
@@ -237,6 +246,8 @@ def test_validation_status_composes_all_current_gates():
     assert ingestion_contract["allowed_effect_source_types"] == [
         "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
+        "ema_epar",
+        "fda_review",
         "open_access_paper",
         "pactr_results",
         "pubmed_abstract",
@@ -246,14 +257,22 @@ def test_validation_status_composes_all_current_gates():
         "pactr_results",
         "who_ictrp_results",
     ]
+    assert ingestion_contract["regulatory_review_source_types"] == [
+        "ema_epar",
+        "fda_review",
+    ]
     assert ingestion_contract["protocol_only_source_types"] == [
         "other_trial_registry_protocol",
         "pactr_protocol",
         "who_ictrp_protocol",
     ]
     assert ingestion_contract["protocol_sources_can_supply_model_effects"] is False
+    assert ingestion_contract["protocol_sources_can_supply_registered_primary_outcomes"] is True
+    assert ingestion_contract["protocol_sources_can_supply_completeness_denominators"] is True
     assert ingestion_contract["registry_result_sources_can_supply_model_effects"] is True
     assert ingestion_contract["registry_result_sources_require_numeric_result_text"] is True
+    assert ingestion_contract["regulatory_review_sources_can_supply_model_effects"] is True
+    assert ingestion_contract["regulatory_review_sources_require_numeric_result_text"] is True
     assert "HR" in ingestion_contract["allowed_effect_types"]
     assert "HR" in ingestion_contract["ratio_effect_types"]
 

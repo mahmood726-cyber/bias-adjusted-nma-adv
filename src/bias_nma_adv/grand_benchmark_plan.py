@@ -19,6 +19,7 @@ ALLOWED_EVIDENCE_CLASSES = {"real_source_backed", "simulation"}
 ALLOWED_SOURCE_POLICIES = {
     "clinicaltrials_gov + pubmed_abstract only",
     "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+    "clinicaltrials_gov + pubmed_abstract + open_access_paper + regulatory_review only",
 }
 REQUIRED_SIMULATION_METRICS = {
     "bias",

@@ -2,9 +2,9 @@ schema_version = "improvement_review/v1"
 checked_at = "2026-07-16"
 certification_effect = "none"
 overall_status = "passed_current_milestone_with_global_goal_blockers"
-goal_statement = "Build toward a world-class evidence-synthesis platform that can beat tier-one workflows under the source limits of AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, and public numeric ICTRP/PACTR result rows, with protocol-only registry rows used for metadata only."
+goal_statement = "Build toward a world-class evidence-synthesis platform that can beat tier-one workflows under the source limits of AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance, with protocol-only registry rows used for metadata only."
 thread_limit_note = "Fresh sub-agent review was attempted for this milestone, but the collaboration thread limit was reached; this ledger records a local multiperson-style role review and must not be represented as independent external reproduction."
-source_boundary = "Effect evidence from AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, and public numeric ICTRP/PACTR result rows; protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready effects."
+source_boundary = "Effect evidence from AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance; protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready effects but can supply registered-primary-outcome anchors and completeness denominators."
 global_goal_complete = false
 
 [[rounds]]
@@ -83,6 +83,8 @@ findings = [
   "Protocol-only ICTRP, PACTR, and other registries are rejected as model-ready extracted-effect sources; public numeric ICTRP/PACTR result rows require source-bound row text.",
   "Dose-response real-data coverage was checked against the registered artifacts: one CT.gov/PubMed semaglutide dose-response smoke benchmark is now included, with open-access paper count still zero.",
   "DTA coverage was checked separately: no source-backed TP/FP/FN/TN benchmark data are currently registered, although an algorithmic DTA fixture now validates the prototype against mada::reitsma.",
+  "FDA/EMA regulatory review rows are now an explicit effect-source tier only when public numeric per-trial provenance is present.",
+  "Protocol-only ICTRP/PACTR rows now have a non-effect metadata ledger path for registered primary outcomes and completeness denominators.",
 ]
 actions = [
   "Centralized effect-source and protocol-only source constants.",
@@ -90,6 +92,8 @@ actions = [
   "Added the real benchmark atlas to summarize current source-backed benchmark coverage and non-claims.",
   "Added a dose-response source-coverage artifact and validator that records the current source-backed semaglutide dose-response smoke benchmark.",
   "Added a DTA source-coverage artifact and validator that records the current absence of registered source-backed DTA 2x2 data while allowing a nonclinical prototype/model-reference fixture to be tracked separately.",
+  "Added a config-backed source-type policy for FDA/EMA regulatory review sources and protocol-only registry sources.",
+  "Added a protocol-only registry metadata ledger and a config-backed study-design policy.",
 ]
 remaining_blockers = [
   "Add open-access full-paper/table extraction artifacts beyond PubMed abstract token checks.",

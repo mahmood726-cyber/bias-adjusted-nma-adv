@@ -9,9 +9,10 @@ claims.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
 from pathlib import Path
 import tomllib
-from typing import Any
+from typing import Any, Mapping
 
 from bias_nma_adv.evidence_sources import EFFECT_EVIDENCE_SOURCE_TYPES, PROTOCOL_ONLY_SOURCE_TYPES
 
@@ -80,6 +81,7 @@ class ReversalYardstick:
     detected_vs_standard_dl: WinRateInterval
     detected_vs_strong_standard: WinRateInterval
     mean_distance: dict[str, float]
+    source_artifact_hashes: dict[str, str]
     required_next_artifacts: tuple[str, ...]
 
     @classmethod
@@ -106,6 +108,7 @@ class ReversalYardstick:
             "oracle",
             "detected",
             "mean_distance",
+            "source_artifact_hashes",
             "required_next_artifacts",
         }
         missing = sorted(required - set(raw))
@@ -147,6 +150,10 @@ class ReversalYardstick:
             detected_vs_standard_dl=WinRateInterval.from_mapping(detected["vs_standard_dl"]),
             detected_vs_strong_standard=WinRateInterval.from_mapping(detected["vs_strong_standard"]),
             mean_distance={str(key): float(value) for key, value in raw["mean_distance"].items()},
+            source_artifact_hashes={
+                str(key): str(value).strip().lower()
+                for key, value in raw["source_artifact_hashes"].items()
+            },
             required_next_artifacts=tuple(str(item) for item in raw["required_next_artifacts"]),
         )
         yardstick.validate()
@@ -205,6 +212,67 @@ class ReversalYardstick:
         }
         if not required_artifacts <= set(self.required_next_artifacts):
             raise ReversalYardstickError("required_next_artifacts is missing yardstick blockers.")
+        if "fix_md" not in self.source_artifact_hashes:
+            raise ReversalYardstickError("source_artifact_hashes must include fix_md.")
+        invalid_hashes = [
+            key
+            for key, value in self.source_artifact_hashes.items()
+            if len(value) != 64 or any(char not in "0123456789abcdef" for char in value)
+        ]
+        if invalid_hashes:
+            raise ReversalYardstickError(
+                f"source_artifact_hashes contains invalid SHA-256 pins: {invalid_hashes}"
+            )
+
+    def verify_source_artifact_pins(
+        self,
+        artifact_paths: Mapping[str, str | Path],
+        *,
+        require_all: bool = False,
+    ) -> dict[str, Any]:
+        """Verify external answer-key artifact pins when those files are available.
+
+        Missing files are reported as unavailable rather than silently treated as
+        verified. Files that are present but drift from their pinned SHA-256 fail
+        closed with `ReversalYardstickError`.
+        """
+
+        unknown = sorted(set(artifact_paths) - set(self.source_artifact_hashes))
+        if unknown:
+            raise ReversalYardstickError(f"unknown source artifacts requested: {unknown}")
+
+        verified: dict[str, str] = {}
+        unavailable: list[str] = []
+        mismatched: dict[str, dict[str, str]] = {}
+        for artifact_id, raw_path in artifact_paths.items():
+            path = Path(raw_path)
+            expected = self.source_artifact_hashes[artifact_id]
+            if not path.exists():
+                unavailable.append(artifact_id)
+                continue
+            actual = hashlib.sha256(path.read_bytes()).hexdigest()
+            if actual != expected:
+                mismatched[artifact_id] = {
+                    "expected_sha256": expected,
+                    "actual_sha256": actual,
+                }
+                continue
+            verified[artifact_id] = actual
+
+        if require_all:
+            not_provided = sorted(set(self.source_artifact_hashes) - set(artifact_paths))
+            unavailable.extend(not_provided)
+        if mismatched:
+            raise ReversalYardstickError(
+                "source artifact hash drift: " + ", ".join(sorted(mismatched))
+            )
+
+        return {
+            "schema_version": REVERSAL_YARDSTICK_SCHEMA_VERSION,
+            "status": "verified" if not unavailable else "unavailable",
+            "verified_artifacts": dict(sorted(verified.items())),
+            "unavailable_artifacts": tuple(sorted(set(unavailable))),
+        }
 
 
 def load_reversal_yardstick(path: str | Path) -> ReversalYardstick:

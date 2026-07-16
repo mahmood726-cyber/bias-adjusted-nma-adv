@@ -23,6 +23,8 @@ def test_dose_response_source_coverage_records_current_allowed_source_data():
     assert coverage.allowed_evidence_sources == (
         "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
+        "ema_epar",
+        "fda_review",
         "open_access_paper",
         "pactr_results",
         "pubmed_abstract",
@@ -37,6 +39,8 @@ def test_dose_response_source_coverage_records_current_allowed_source_data():
     assert coverage.registered_source_counts == {
         "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 1,
+        "ema_epar": 0,
+        "fda_review": 0,
         "open_access_paper": 0,
         "pactr_results": 0,
         "pubmed_abstract": 1,
@@ -64,6 +68,8 @@ def test_dose_response_source_coverage_summary_is_validation_status_ready():
         "registered_source_counts": {
             "aact_clinicaltrials_gov": 0,
             "clinicaltrials_gov": 1,
+            "ema_epar": 0,
+            "fda_review": 0,
             "open_access_paper": 0,
             "pactr_results": 0,
             "pubmed_abstract": 1,
@@ -77,6 +83,7 @@ def test_dose_response_source_coverage_summary_is_validation_status_ready():
             "source_identity_checks_for_clinicaltrials_gov_and_pubmed",
             "open_access_table_or_text_token_checks_for_dose_values_and_effects",
             "aact_or_registry_result_row_checks_when_used",
+            "fda_or_ema_regulatory_review_row_checks_when_used",
             "dose_response_analysis_artifact",
             "MBNMAdose_reference_run_before_certification",
         ],

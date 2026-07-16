@@ -2,7 +2,7 @@ schema_version = "tier1_gap_register/v1"
 checked_at = "2026-07-16"
 certification_effect = "none"
 purpose = "Machine-readable blocker register for gaps that prevent tier-one parity or superiority claims."
-source_boundary = "Effect evidence from AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, and public numeric ICTRP/PACTR result rows; protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready effects."
+source_boundary = "Effect evidence from AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance; protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready effects but can supply registered-primary-outcome anchors and completeness denominators."
 superiority_claim_rule = "No module may claim tier-one parity, superiority, production certification, clinical reporting, regulatory reporting, or HTA reporting while any gap remains blocking."
 blocked_claims = [
   "tier_one_parity",
@@ -24,6 +24,7 @@ missing_capabilities = [
   "mature_multi_arm_design_checks",
   "reference_matched_publication_bias_adjustments",
   "reference_matched_trim_and_fill_sensitivity",
+  "redescending_robust_fraud_containment_core",
 ]
 implemented_capabilities = [
   "multiarm_prefit_design_diagnostic",
@@ -41,6 +42,9 @@ implemented_capabilities = [
   "source_backed_dose_response_smoke_benchmark",
   "aact_ctgov_ingestion_contract",
   "ictrp_pactr_result_source_ingestion_contract",
+  "fda_ema_regulatory_review_source_tier_contract",
+  "protocol_only_registry_metadata_ledger",
+  "config_driven_study_design_policy",
   "input_verified_reversal_yardstick_gate",
   "dta_source_coverage_gate",
   "dta_bivariate_logitnormal_reml_prototype",
@@ -52,7 +56,7 @@ required_evidence_artifacts = [
   "source_backed_real_network_examples",
   "failure_mode_tests_for_sparse_or_disconnected_networks",
 ]
-claim_limit = "Blocks feature-parity and superiority claims until implemented diagnostics are reference matched or deliberately documented as conservative substitutes."
+claim_limit = "Blocks feature-parity and superiority claims until implemented diagnostics are reference matched or deliberately documented as conservative substitutes. The current rob_weight path is analyst-driven quality weighting, not redescending fraud containment."
 certification_effect = "none"
 
 [[gaps]]

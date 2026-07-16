@@ -1,0 +1,36 @@
+schema_version = "study_design_policy/v1"
+
+[[designs]]
+id = "rct"
+role = "effect_design"
+label = "randomized controlled trial"
+
+[[designs]]
+id = "nrs"
+role = "effect_design"
+label = "non-randomized study"
+
+[[designs]]
+id = "other"
+role = "effect_design"
+label = "other evidence design"
+
+[[designs]]
+id = "registry_only"
+role = "metadata_frame"
+label = "registry-only protocol metadata"
+
+[[designs]]
+id = "csr_backed"
+role = "effect_design"
+label = "clinical-study-report backed study"
+
+[[designs]]
+id = "regulatory_review_backed"
+role = "effect_design"
+label = "regulatory review package backed study"
+
+[[designs]]
+id = "preprint"
+role = "effect_design"
+label = "preprint-backed study"

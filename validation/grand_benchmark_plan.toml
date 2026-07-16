@@ -1,9 +1,9 @@
 schema_version = "grand_benchmark_plan/v1"
 checked_at = "2026-07-16"
 purpose = "Prespecified validation plan for proving source-backed evidence-synthesis performance without overclaiming superiority."
-allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
 protocol_only_sources = ["other_trial_registry_protocol", "pactr_protocol", "who_ictrp_protocol"]
-protocol_registry_rule = "Protocol-only ICTRP, PACTR, and other trial-registry rows may verify registration, planned outcomes, eligibility criteria, and dates, but cannot supply model-ready effects; downloaded ICTRP or PACTR result rows may supply effects only when public numeric result text is source-bound."
+protocol_registry_rule = "Protocol-only ICTRP, PACTR, and other trial-registry rows may verify registration, planned outcomes, eligibility criteria, and dates, but cannot supply model-ready effects; downloaded ICTRP or PACTR result rows and public FDA/EMA regulatory review rows may supply effects only when public numeric result text is source-bound."
 certification_effect = "none"
 superiority_claim_policy = "No native method is described as better than tier-one specialist software until source-backed real-data benchmarks, prespecified simulations, and external reference matching all pass with machine-verifiable artifacts."
 

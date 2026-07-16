@@ -41,12 +41,11 @@ def test_registry_publication_bias():
     # 1 out of 3 trials is unpublished (NCT789)
     assert np.isclose(utr, 1.0 / 3.0)
     
-    # 4. Check bias shrinkage
+    # 4. Legacy automatic shrinkage is quarantined; use explicit sensitivity instead.
     pooled_effect = -0.30 # log-HR
-    shrunk_effect = auditor.apply_bias_shrinkage(pooled_effect, utr)
-    # Effect should be shrunk closer to 0 (closer to the null)
-    assert shrunk_effect > pooled_effect
-    assert np.isclose(shrunk_effect, -0.20)
+    import pytest
+    with pytest.raises(NotImplementedError, match="quarantined"):
+        auditor.apply_bias_shrinkage(pooled_effect, utr)
 
 def test_symbolic_regression():
     from bias_nma_adv.symbolic import SymbolicHazardRegressor
@@ -165,7 +164,6 @@ def test_registry_sponsor_auditor():
     assert np.isclose(q1, 1.0)
     # NCT222 should be heavily penalized (industry + attrition)
     assert q2 < 0.80
-
 
 
 

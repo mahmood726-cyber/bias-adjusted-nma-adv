@@ -127,16 +127,17 @@ class RegistryPublicationBiasAuditor:
         return float(unpublished / total_registered)
 
     def apply_bias_shrinkage(self, effect_estimate: float, utr: float) -> float:
-        """Apply a legacy publication-bias shrinkage sensitivity factor.
+        """Refuse the legacy Copas-lite publication-bias shrinkage shortcut.
 
-        This helper is retained for backward-compatible exploratory sensitivity
-        tests only. It must not be used as an automatic correction on
-        registry-first inputs, where selection-correction layers are evaluated
-        separately and may worsen distance-to-truth.
+        The 2026 reversal-yardstick review classified this family of inferred
+        shrinkage corrections as harmful on registry-first inputs. Use
+        `selection_weight_sensitivity(...)` for explicitly prespecified
+        tipping-point analyses instead.
         """
-        # Shrinkage factor: (1 - UTR)
-        shrinkage = 1.0 - utr
-        return effect_estimate * max(0.0, shrinkage)
+        raise NotImplementedError(
+            "automatic publication-bias shrinkage is quarantined; use "
+            "selection_weight_sensitivity with prespecified probabilities."
+        )
 
 
 def egger_regression_diagnostic(

@@ -1,7 +1,7 @@
 schema_version = "source_benchmark_registry/v1"
 checked_at = "2026-07-16"
 purpose = "Machine-readable inventory of local source-backed benchmark artifacts. Entries are validation evidence only within their stated scope and do not certify tier-one parity."
-allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
 certification_rule = "Every registered local benchmark must keep certification_effect = none until a passed external reference run promotes it through validation/reference_targets.toml."
 
 [[benchmarks]]

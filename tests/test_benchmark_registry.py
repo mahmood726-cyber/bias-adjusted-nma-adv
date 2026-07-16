@@ -33,6 +33,8 @@ def test_source_benchmark_registry_validates_all_registered_artifacts():
     assert set(registry.allowed_evidence_sources) == {
         "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
+        "ema_epar",
+        "fda_review",
         "open_access_paper",
         "pactr_results",
         "pubmed_abstract",

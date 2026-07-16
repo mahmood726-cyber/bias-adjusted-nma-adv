@@ -4,8 +4,13 @@ from bias_nma_adv.ingestion import (
     EvidenceIngestionRecord,
     ExtractionProvenance,
     IngestionProvenanceError,
+    ProtocolOnlyRegistryRecord,
     ProofCarryingEffectRecord,
+    build_protocol_completeness_ledger,
+    proof_effect_from_regulatory_review_row,
     proof_effect_from_registry_result_row,
+    record_from_protocol_registry_row,
+    record_from_regulatory_review_row,
     proof_effect_from_extractor_row,
     record_from_registry_result_row,
     record_from_extractor_row,
@@ -55,6 +60,17 @@ def test_validates_clinicaltrials_pubmed_and_open_access_sources():
             doi="10.1056/NEJMoa1911303",
             url="https://www.nejm.org/doi/full/10.1056/NEJMoa1911303",
             access_statement="Open access paper or publisher-designated OA full text.",
+        ),
+        EvidenceIngestionRecord(
+            row_id="fda_review_row",
+            source_type="fda_review",
+            regulatory_id="NDA 020639",
+            url="https://www.accessdata.fda.gov/drugsatfda_docs/nda/2001/020639.cfm",
+            access_statement="Public FDA Drugs@FDA statistical review package with per-trial results.",
+            source_text=(
+                "NDA 020639 Study 301 result: hazard ratio 0.82 with 95% confidence "
+                "interval 0.70 to 0.96 among 512 participants."
+            ),
         ),
     ]
 
@@ -171,6 +187,84 @@ def test_protocol_only_registry_source_cannot_supply_model_ready_effect():
         protocol_source.validate()
 
 
+def test_protocol_only_registry_records_feed_metadata_ledger_not_effect_pool():
+    records = [
+        record_from_protocol_registry_row(
+            {
+                "source_type": "who_ictrp_protocol",
+                "registry_id": "PACTR202001234567890",
+                "url": "https://trialsearch.who.int/Trial2.aspx?TrialID=PACTR202001234567890",
+                "access_statement": "WHO ICTRP registry protocol registration metadata only.",
+                "registered_primary_outcome": "all-cause mortality",
+                "reported_primary_outcome": "cardiovascular death",
+                "status": "completed",
+                "interventions": ["DrugX"],
+                "source_text": (
+                    "PACTR202001234567890 registered primary outcome: all-cause mortality."
+                ),
+            }
+        ),
+        ProtocolOnlyRegistryRecord(
+            row_id="pactr_protocol_without_results",
+            source_type="pactr_protocol",
+            registry_id="PACTR202009876543210",
+            url="https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202009876543210",
+            access_statement="PACTR registry protocol registration metadata only.",
+            registered_primary_outcome="hospitalization",
+            status="completed",
+            interventions=("drugx",),
+            source_text="PACTR202009876543210 registered primary outcome: hospitalization.",
+        ),
+    ]
+
+    ledger = build_protocol_completeness_ledger(
+        records,
+        reported_registry_ids=["PACTR202001234567890"],
+    )
+
+    assert all(record.model_ready_effect is False for record in records)
+    assert ledger["schema_version"] == "protocol_completeness_ledger/v1"
+    assert ledger["model_ready_effect"] is False
+    assert ledger["n_denominator_records"] == 2
+    assert ledger["n_reported_records"] == 1
+    assert ledger["n_unreported_records"] == 1
+    assert ledger["unreported_ratio"] == pytest.approx(0.5)
+    assert ledger["source_type_counts"] == {
+        "pactr_protocol": 1,
+        "who_ictrp_protocol": 1,
+    }
+    assert ledger["registered_primary_outcomes"]["PACTR202001234567890"] == (
+        "all-cause mortality"
+    )
+    assert ledger["outcome_switching_scores"]["PACTR202001234567890"] == 1.0
+
+
+def test_protocol_only_registry_record_rejects_result_source_type_or_missing_identity():
+    with pytest.raises(IngestionProvenanceError, match="protocol-only"):
+        record_from_protocol_registry_row(
+            {
+                "source_type": "pactr_results",
+                "registry_id": "PACTR202001234567890",
+                "url": "https://pactr.samrc.ac.za/TrialDisplay.aspx?TrialID=PACTR202001234567890",
+                "access_statement": "PACTR registry protocol registration metadata only.",
+                "registered_primary_outcome": "mortality",
+                "source_text": "PACTR202001234567890 registered primary outcome: mortality.",
+            }
+        ).validate()
+
+    missing_identity = ProtocolOnlyRegistryRecord(
+        row_id="who_protocol_missing_identity",
+        source_type="who_ictrp_protocol",
+        registry_id="PACTR202001234567890",
+        url="https://trialsearch.who.int/Trial2.aspx?TrialID=OTHER",
+        access_statement="WHO ICTRP registry protocol registration metadata only.",
+        registered_primary_outcome="mortality",
+        source_text="No matching trial identifier here.",
+    )
+    with pytest.raises(IngestionProvenanceError, match="claimed registry_id"):
+        missing_identity.validate()
+
+
 def test_result_level_registry_sources_can_supply_model_ready_effects_when_numeric():
     records = [
         EvidenceIngestionRecord(
@@ -270,6 +364,70 @@ def test_downloaded_registry_result_helper_rejects_protocol_source_type():
                 "registry_id": "PACTR202001234567890",
                 "url": "https://trialsearch.who.int/Trial2.aspx?TrialID=PACTR202001234567890",
                 "source_text": "Protocol row only.",
+            }
+        )
+
+
+def test_regulatory_review_rows_can_supply_model_ready_effects_when_numeric():
+    raw = {
+        "source_type": "fda_review",
+        "regulatory_id": "NDA 020639",
+        "url": "https://www.accessdata.fda.gov/drugsatfda_docs/nda/2001/020639.cfm",
+        "access_statement": "Public FDA Drugs@FDA statistical review package with per-trial results.",
+        "source_text": (
+            "NDA 020639 Study 301 reported result: hazard ratio 0.82, "
+            "95% confidence interval 0.70 to 0.96."
+        ),
+        "record_id": "fda_demo_hr",
+        "study_id": "Study 301",
+        "outcome_name": "time-to-event endpoint",
+        "effect_type": "HR",
+        "point_estimate": 0.82,
+        "ci_lower": 0.70,
+        "ci_upper": 0.96,
+    }
+
+    ingestion_record = record_from_regulatory_review_row(raw)
+    effect_record = proof_effect_from_regulatory_review_row(raw)
+
+    assert ingestion_record.regulatory_id == "NDA 020639"
+    assert effect_record.source.source_type == "fda_review"
+    assert effect_record.is_meta_analysis_ready is True
+    assert effect_record.to_dict()["source"]["regulatory_id"] == "NDA 020639"
+
+
+def test_regulatory_review_rows_are_fail_closed_for_summary_only_or_wrong_host():
+    summary_only = EvidenceIngestionRecord(
+        row_id="fda_summary_only",
+        source_type="fda_review",
+        regulatory_id="NDA 020639",
+        url="https://www.accessdata.fda.gov/drugsatfda_docs/nda/2001/020639.cfm",
+        access_statement="Public FDA Drugs@FDA statistical review package.",
+        source_text="NDA 020639 summary only; no per-trial numerical result is reported.",
+    )
+    with pytest.raises(IngestionProvenanceError, match="per-trial source"):
+        summary_only.validate()
+
+    wrong_host = EvidenceIngestionRecord(
+        row_id="fda_wrong_host",
+        source_type="fda_review",
+        regulatory_id="NDA 020639",
+        url="https://example.org/nda/020639.cfm",
+        access_statement="Public FDA Drugs@FDA statistical review package with per-trial results.",
+        source_text="NDA 020639 Study 301 result: hazard ratio 0.82, 95% confidence interval 0.70 to 0.96.",
+    )
+    with pytest.raises(IngestionProvenanceError, match="fda.gov"):
+        wrong_host.validate()
+
+
+def test_regulatory_review_helper_rejects_non_regulatory_source_type():
+    with pytest.raises(IngestionProvenanceError, match="regulatory review rows"):
+        record_from_regulatory_review_row(
+            {
+                "source_type": "pubmed_abstract",
+                "regulatory_id": "NDA 020639",
+                "url": "https://pubmed.ncbi.nlm.nih.gov/31535829/",
+                "source_text": "Not a regulatory review row.",
             }
         )
 

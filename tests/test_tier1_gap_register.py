@@ -29,6 +29,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     by_id = {gap.id: gap for gap in register.gaps}
     assert "reference_matched_node_splitting" in by_id["feature_completeness"].missing_capabilities
     assert (
+        "redescending_robust_fraud_containment_core"
+        in by_id["feature_completeness"].missing_capabilities
+    )
+    assert (
         "multiarm_prefit_design_diagnostic"
         in by_id["feature_completeness"].implemented_capabilities
     )
@@ -86,6 +90,18 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     )
     assert (
         "ictrp_pactr_result_source_ingestion_contract"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "fda_ema_regulatory_review_source_tier_contract"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "protocol_only_registry_metadata_ledger"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "config_driven_study_design_policy"
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
@@ -187,6 +203,9 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "source_backed_dose_response_smoke_benchmark",
             "aact_ctgov_ingestion_contract",
             "ictrp_pactr_result_source_ingestion_contract",
+            "fda_ema_regulatory_review_source_tier_contract",
+            "protocol_only_registry_metadata_ledger",
+            "config_driven_study_design_policy",
             "input_verified_reversal_yardstick_gate",
             "dta_source_coverage_gate",
             "dta_bivariate_logitnormal_reml_prototype",

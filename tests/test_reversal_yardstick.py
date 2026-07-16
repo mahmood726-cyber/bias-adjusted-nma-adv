@@ -1,4 +1,5 @@
 from pathlib import Path
+import hashlib
 
 import pytest
 
@@ -74,6 +75,30 @@ def test_reversal_yardstick_rejects_oracle_only_or_superiority_shortcuts():
         ReversalYardstick.from_mapping(raw)
 
 
+def test_reversal_yardstick_verifies_source_artifact_pins_when_available(tmp_path):
+    raw = _yardstick_to_mapping(load_reversal_yardstick(YARDSTICK))
+    pinned = tmp_path / "fix.md"
+    pinned.write_text("stable answer key", encoding="utf-8")
+    raw["source_artifact_hashes"] = {
+        "fix_md": hashlib.sha256(pinned.read_bytes()).hexdigest()
+    }
+    yardstick = ReversalYardstick.from_mapping(raw)
+
+    report = yardstick.verify_source_artifact_pins({"fix_md": pinned})
+    assert report["status"] == "verified"
+    assert report["verified_artifacts"]["fix_md"] == yardstick.source_artifact_hashes["fix_md"]
+
+    missing = tmp_path / "missing.md"
+    unavailable = yardstick.verify_source_artifact_pins({"fix_md": missing})
+    assert unavailable["status"] == "unavailable"
+    assert unavailable["unavailable_artifacts"] == ("fix_md",)
+
+    drifted = tmp_path / "fix.md"
+    drifted.write_text("changed answer key", encoding="utf-8")
+    with pytest.raises(ReversalYardstickError, match="hash drift"):
+        yardstick.verify_source_artifact_pins({"fix_md": drifted})
+
+
 def _yardstick_to_mapping(yardstick: ReversalYardstick) -> dict[str, object]:
     return {
         "schema_version": REVERSAL_YARDSTICK_SCHEMA_VERSION,
@@ -113,5 +138,6 @@ def _yardstick_to_mapping(yardstick: ReversalYardstick) -> dict[str, object]:
             "vs_strong_standard": yardstick.detected_vs_strong_standard.__dict__,
         },
         "mean_distance": dict(yardstick.mean_distance),
+        "source_artifact_hashes": dict(yardstick.source_artifact_hashes),
         "required_next_artifacts": list(yardstick.required_next_artifacts),
     }

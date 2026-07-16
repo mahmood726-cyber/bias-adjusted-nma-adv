@@ -45,6 +45,7 @@ BENCHMARK_REGISTRY_SCHEMA_VERSION = "source_benchmark_registry/v1"
 ALLOWED_SOURCE_POLICIES = {
     "clinicaltrials_gov + pubmed_abstract only",
     "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+    "clinicaltrials_gov + pubmed_abstract + open_access_paper + regulatory_review only",
 }
 SUPPORTED_SOURCE_CHECK_SCHEMA_VERSIONS = {
     SOURCE_VERIFICATION_SCHEMA_VERSION,

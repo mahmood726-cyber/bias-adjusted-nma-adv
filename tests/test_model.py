@@ -3,7 +3,7 @@
 import pytest
 import numpy as np
 
-from bias_nma_adv.data import EvidenceDataset, ValidationError
+from bias_nma_adv.data import ALLOWED_STUDY_DESIGNS, EFFECT_STUDY_DESIGNS, EvidenceDataset, ValidationError
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
 
 def test_validation_errors():
@@ -25,6 +25,40 @@ def test_validation_errors():
     # Continuous outcome without SE
     with pytest.raises(ValidationError):
         dataset.add_outcome_ad("S1", "A1", "O1", "continuous", 10.0, se=None)
+
+
+def test_study_design_policy_is_extensible_but_metadata_frames_cannot_enter_effect_pool():
+    assert {"rct", "nrs", "other", "regulatory_review_backed", "csr_backed"} <= set(
+        ALLOWED_STUDY_DESIGNS
+    )
+    assert "registry_only" not in EFFECT_STUDY_DESIGNS
+
+    dataset = EvidenceDataset()
+    dataset.add_study("S_FDA", "regulatory_review_backed")
+    assert dataset.studies["S_FDA"].design == "regulatory_review_backed"
+
+    dataset.add_study("S_PROTOCOL", "registry_only")
+    with pytest.raises(ValidationError, match="metadata-only design"):
+        dataset.add_arm("S_PROTOCOL", "arm1", "A", 100)
+
+
+def test_run_in_applicability_is_context_or_indirectness_not_rob_weight():
+    dataset = EvidenceDataset()
+    dataset.add_study(
+        "S_RUNIN",
+        "rct",
+        rob_weight=1.0,
+        covariates={"run_in": 1.0},
+        indirectness="enriched run-in population; GRADE indirectness review only",
+    )
+
+    study = dataset.studies["S_RUNIN"]
+    assert study.rob_weight == 1.0
+    assert study.covariates["run_in"] == pytest.approx(1.0)
+    assert "GRADE indirectness" in study.indirectness
+
+    with pytest.raises(ValidationError, match="indirectness"):
+        dataset.add_study("S_BLANK", "rct", indirectness=" ")
 
 
 def test_network_connectivity():
@@ -292,7 +326,5 @@ def test_exact_binomial_rare_events():
     assert "B" in fit.treatment_effects
     assert fit.treatment_effects["B"] > 0.0
     assert fit.treatment_ses["B"] > 0.0
-
-
 
 

@@ -4,11 +4,11 @@ status = "missing_source_backed_dta_data"
 model_status = "prototype_not_source_backed"
 certification_effect = "none"
 purpose = "Machine-readable gate for diagnostic test accuracy source data and model readiness."
-allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
 protocol_only_sources = ["other_trial_registry_protocol", "pactr_protocol", "who_ictrp_protocol"]
-protocol_registry_rule = "Protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready DTA 2x2 tables or accuracy estimates; downloaded registry result rows may supply DTA effects only when public numeric TP/FP/FN/TN or accuracy text is source-bound."
+protocol_registry_rule = "Protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready DTA 2x2 tables or accuracy estimates; downloaded registry result rows and public FDA/EMA regulatory review rows may supply DTA effects only when public numeric TP/FP/FN/TN or accuracy text is source-bound."
 registered_benchmark_ids = []
-registered_source_counts = {aact_clinicaltrials_gov = 0, clinicaltrials_gov = 0, open_access_paper = 0, pactr_results = 0, pubmed_abstract = 0, who_ictrp_results = 0}
+registered_source_counts = {aact_clinicaltrials_gov = 0, clinicaltrials_gov = 0, ema_epar = 0, fda_review = 0, open_access_paper = 0, pactr_results = 0, pubmed_abstract = 0, who_ictrp_results = 0}
 required_source_fields = [
   "tp",
   "fp",
@@ -33,6 +33,7 @@ required_next_artifacts = [
   "dta_source_manifest_with_nct_pmid_or_open_access_identifiers",
   "source_verified_tp_fp_fn_tn_2x2_tables",
   "aact_ictrp_or_pactr_result_row_checks_when_used",
+  "fda_or_ema_regulatory_review_row_checks_when_used",
   "threshold_and_reference_standard_metadata",
   "bivariate_glmm_or_hsroc_model_artifact",
   "mada_or_metafor_or_reference_software_parity_before_certification",

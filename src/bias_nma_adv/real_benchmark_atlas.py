@@ -103,8 +103,8 @@ def build_real_benchmark_atlas(
         "protocol_registry_rule": (
             "Protocol-only registry sources may verify registration, planned outcomes, "
             "eligibility, and dates, but cannot supply model-ready effects; downloaded "
-            "ICTRP or PACTR result rows may supply effects only when public numeric "
-            "result text is source-bound."
+            "ICTRP or PACTR result rows and public FDA/EMA regulatory review rows may "
+            "supply effects only when public numeric result text is source-bound."
         ),
         "registry": "validation/benchmark_registry.toml",
         "n_benchmarks": len(registry.benchmarks),
