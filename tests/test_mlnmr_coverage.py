@@ -1,4 +1,5 @@
 from pathlib import Path
+import tomllib
 
 import pytest
 
@@ -13,6 +14,7 @@ from bias_nma_adv.mlnmr_coverage import (
 
 ROOT = Path(__file__).resolve().parents[1]
 COVERAGE = ROOT / "validation" / "mlnmr_source_coverage.toml"
+SOURCE_SEARCH = ROOT / "validation" / "mlnmr_source_search_2026_07_17.toml"
 
 
 def test_mlnmr_source_coverage_records_current_real_data_blocker():
@@ -129,6 +131,31 @@ def test_mlnmr_source_coverage_rejects_pseudo_ipd_shortcuts_and_premature_certif
     raw["certification_effect"] = "production_certified"
     with pytest.raises(MLNMRCoverageError, match="cannot certify"):
         MLNMRSourceCoverage.from_mapping(raw)
+
+
+def test_mlnmr_source_search_audit_records_excluded_candidates():
+    with SOURCE_SEARCH.open("rb") as handle:
+        audit = tomllib.load(handle)
+
+    assert audit["schema_version"] == "mlnmr_source_search/v1"
+    assert audit["status"] == "no_admissible_real_mlnmr_domain_found"
+    assert "clinicaltrials_gov" in audit["allowed_evidence_sources"]
+    assert "pubmed_abstract" in audit["allowed_evidence_sources"]
+    assert "open_access_paper" in audit["allowed_evidence_sources"]
+
+    candidates = {candidate["id"]: candidate for candidate in audit["candidates"]}
+    assert {
+        "portfolio_advanced_nma_pooling_example_mlnmr",
+        "multinma_plaque_psoriasis_example",
+        "multinma_ndmm_example",
+        "jrssa_mlnmr_external_validation_ndmm",
+    } <= set(candidates)
+    assert all(candidate["eligibility"] == "excluded" for candidate in candidates.values())
+    reasons = " ".join(candidate["exclusion_reason"].lower() for candidate in candidates.values())
+    assert "synthetic" in reasons
+    assert "simulated" in reasons
+    assert "nct" in reasons
+    assert "pmid" in reasons
 
 
 def _coverage_to_mapping(coverage: MLNMRSourceCoverage) -> dict[str, object]:

@@ -25,10 +25,10 @@ excluded_source_patterns = [
   "closed, proprietary, credentialed, or requester-only patient datasets",
 ]
 source_search_summary = [
-  "The local feature-parity matrix still records mlnmr_multinma as planned with no evidence artifacts.",
-  "Portfolio search found WorldIPD-style public-health survey registries and IPD browser demos, but those are not source-backed trial IPD plus aggregate covariate networks under this project's allowed evidence boundary.",
-  "Registry-IPD and Wasserstein contain useful pseudo-IPD and KM-reconstruction infrastructure; pseudo-IPD remains excluded from real ML-NMR validation and can only support non-certifying survival reconstruction experiments.",
-  "The public multinma plaque-psoriasis vignette is useful for a future simulated reference adapter, but its IPD are simulated and cannot clear the missing real ML-NMR domain.",
+  "The 2026-07-17 bounded local and web source search is recorded in validation/mlnmr_source_search_2026_07_17.toml and found no admissible public trial IPD plus aggregate covariate NMA dataset under the allowed source boundary.",
+  "advanced-nma-pooling has reusable ML-NMR and multinma adapter infrastructure, but its example ML-NMR rows use synthetic study IDs and no source-backed NCT, PMID, DOI, or open-access article identity.",
+  "Public multinma plaque-psoriasis and NDMM examples are useful for adapter design, but available public examples use simulated/synthetic IPD or reconstructed survival inputs and cannot clear real ML-NMR validation.",
+  "Protocol-only ICTRP and PACTR records remain admissible for registered-outcome anchors and completeness denominators, not for ML-NMR model-ready IPD rows, aggregate covariate distributions, or treatment effects.",
 ]
 required_next_artifacts = [
   "public_trial_ipd_manifest_with_nct_pmid_doi_or_oa_source",

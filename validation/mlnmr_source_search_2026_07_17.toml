@@ -1,0 +1,78 @@
+schema_version = "mlnmr_source_search/v1"
+checked_at = "2026-07-17"
+status = "no_admissible_real_mlnmr_domain_found"
+purpose = "Bounded source-search audit for real ML-NMR validation data under the project source boundary."
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+required_admissible_components = [
+  "public randomized-trial IPD rows with treatment, outcome, covariates, and source identity",
+  "source-bound aggregate covariate distributions for at least one connected aggregate study",
+  "shared treatment/outcome/estimand mapping between IPD and aggregate studies",
+  "NCT, PMID, DOI, or open-access article identity validation",
+  "covariate-overlap diagnostics",
+  "multinma ML-NMR reference output before certification",
+]
+search_limit = "This audit records candidates found in a bounded local portfolio and web search. It is an evidence gate, not proof that no admissible dataset exists globally."
+
+[[searches]]
+source = "local_portfolio_index"
+query = "ML-NMR public trial IPD aggregate covariate network multinma"
+result = "advanced-nma-pooling was the only strong local infrastructure hit; it provides ML-NMR pipelines and a multinma adapter but not source-backed real trial IPD."
+
+[[searches]]
+source = "local_repository_search"
+query = "ML-NMR OR multilevel network meta-regression OR public trial IPD OR aggregate covariate"
+result = "Local hits were implementation scaffolds, simulated examples, pseudo-IPD/KM infrastructure, or survey/IPD browser projects rather than source-backed trial IPD plus aggregate NMA covariates."
+
+[[searches]]
+source = "web_search"
+query = "ML-NMR individual participant data aggregate data public dataset; multinma plaque psoriasis simulated IPD; multilevel network meta-regression open access public IPD"
+result = "Public examples located were useful for method documentation or reference-adapter design, but candidates either used simulated/synthetic IPD, requester-controlled sponsor data, or lacked a connected aggregate covariate network."
+
+[[candidates]]
+id = "portfolio_advanced_nma_pooling_example_mlnmr"
+name = "advanced-nma-pooling example ML-NMR configuration"
+source_kind = "local_portfolio_infrastructure"
+source = "advanced-nma-pooling/configs/example-mlnmr.json"
+eligibility = "excluded"
+exclusion_reason = "Example rows use synthetic study IDs such as IP1, IP2, AD3, and AD4 and do not carry NCT, PMID, DOI, or open-access source identity."
+usable_for = "code reuse and non-certifying simulated reference-adapter smoke tests"
+
+[[candidates]]
+id = "multinma_plaque_psoriasis_example"
+name = "multinma plaque psoriasis ML-NMR example"
+source_kind = "official_method_documentation"
+url = "https://dmphillippo.github.io/multinma/articles/example_plaque_psoriasis.html"
+eligibility = "excluded"
+exclusion_reason = "Useful public ML-NMR example, but the available IPD in the documentation/package context are simulated or example data rather than source-backed public trial IPD rows under this repository's evidence boundary."
+usable_for = "multinma adapter design only"
+
+[[candidates]]
+id = "multinma_ndmm_example"
+name = "multinma newly diagnosed multiple myeloma example"
+source_kind = "official_method_documentation"
+url = "https://dmphillippo.github.io/multinma/articles/example_multiple_myeloma.html"
+eligibility = "excluded"
+exclusion_reason = "The official example describes simulated IPD and aggregate survival inputs reconstructed from Kaplan-Meier curves, which remain excluded from real ML-NMR validation."
+usable_for = "non-certifying survival/ML-NMR reference design notes"
+
+[[candidates]]
+id = "jrssa_mlnmr_external_validation_ndmm"
+name = "JRSS A ML-NMR external validation data/code example"
+source_kind = "open_access_paper_or_code"
+url = "https://academic.oup.com/jrsssa/advance-article/doi/10.1093/jrsssa/qnaf169/8305677"
+eligibility = "excluded"
+exclusion_reason = "The article states that original IPD were not available to the authors and synthetic data were constructed; synthetic IPD cannot clear the real-data ML-NMR gate."
+usable_for = "methodological reference only"
+
+[[candidates]]
+id = "worldipd_style_public_hubs"
+name = "WorldIPD-style public IPD registry and browser projects"
+source_kind = "local_portfolio_or_public_data_hub"
+eligibility = "excluded"
+exclusion_reason = "These projects can catalogue IPD availability, but no candidate located here contained a connected randomized-trial IPD plus aggregate-covariate NMA dataset with source-bound NCT/PMID/DOI identity."
+usable_for = "future discovery workflow"
+
+[[candidate_policy]]
+candidate_class = "protocol_only_ictrp_or_pactr"
+eligibility = "excluded_from_model_ready_mlnmr_effects"
+reason = "Protocol-only registry records can anchor registered outcomes and completeness denominators, but cannot supply IPD rows, aggregate covariate distributions, or model-ready treatment effects."

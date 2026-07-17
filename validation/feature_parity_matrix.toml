@@ -200,13 +200,18 @@ reference_methods = ["source-backed real benchmark corpus", "prespecified simula
 status = "blocking"
 evidence_artifacts = [
   "validation/benchmark_registry.toml",
+  "validation/real_benchmark_atlas.json",
   "validation/simulation_matrix.toml",
+  "validation/simulation_full_report.json",
   "validation/large_scale_validation.toml",
+  "validation/mlnmr_source_coverage.toml",
+  "validation/mlnmr_source_search_2026_07_17.toml",
+  "validation/validation_status.json",
 ]
 required_next_artifacts = [
-  "twenty_or_more_source_backed_networks",
-  "ten_or_more_passed_reference_reports",
-  "ten_thousand_or_more_prespecified_simulation_iterations",
+  "source_backed_real_mlnmr_domain_or_formal_out_of_scope_decision",
+  "broad_feature_family_reference_matching_promotions",
+  "externally_reproducible_reference_candidate_artifact_bundle",
 ]
-claim_limit = "Current validation evidence exists but is not large-scale validation."
+claim_limit = "Most breadth thresholds are now met, but large-scale validation remains partial because the real ML-NMR domain is missing and feature families are not broad-reference-matched."
 certification_effect = "none"
