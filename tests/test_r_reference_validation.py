@@ -13,6 +13,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
     validate_dta_mada_source_table_output,
+    validate_multinma_sglt2_binary_nma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_meta_output,
     validate_survival_hr_metafor_pairwise_output,
@@ -21,6 +22,7 @@ from bias_nma_adv.r_reference_validation import (
 
 ROOT = Path(__file__).resolve().parents[1]
 PAIRWISE_OUTPUT = ROOT / "validation" / "reference_runs" / "pairwise_metafor_meta_output.json"
+MULTINMA_OUTPUT = ROOT / "validation" / "reference_runs" / "multinma_sglt2_binary_nma_output.json"
 MULTIARM_OUTPUT = ROOT / "validation" / "reference_runs" / "multiarm_netmeta_output.json"
 DTA_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_output.json"
 DTA_SOURCE_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_midkine_source_output.json"
@@ -46,6 +48,19 @@ def test_pairwise_metafor_output_matches_source_backed_python_artifact():
     assert summary["certification_effect"] == "evidence_candidate"
     assert summary["max_abs_difference"] < 1e-12
     assert "hksj_floor_difference_documented" in summary["validated_components"]
+
+
+def test_multinma_sglt2_binary_nma_output_matches_source_backed_reference():
+    summary = validate_multinma_sglt2_binary_nma_output(MULTINMA_OUTPUT, repo_root=ROOT)
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "bayesian_nma_multinma_cmdstan"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == "multinma fixed-effect binomial NMA via rstan"
+    assert summary["max_abs_difference"] <= 0.03
+    assert "multinma_fixed_effect_log_or" in summary["validated_components"]
+    assert "not broad Bayesian NMA" in summary["source_policy_note"]
 
 
 def test_multiarm_netmeta_output_matches_python_multiarm_fixture_artifact():
@@ -181,6 +196,17 @@ def test_pairwise_reference_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="fixed_effect estimate"):
         validate_pairwise_metafor_meta_output(mutated, repo_root=ROOT)
+
+
+def test_multinma_reference_validation_rejects_diagnostic_drift(tmp_path):
+    payload = load_r_reference_output(MULTINMA_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["diagnostics"]["divergent_transitions"] = 1
+    mutated = tmp_path / "multinma_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="divergent transitions"):
+        validate_multinma_sglt2_binary_nma_output(mutated, repo_root=ROOT)
 
 
 def test_multiarm_reference_validation_rejects_numeric_drift(tmp_path):

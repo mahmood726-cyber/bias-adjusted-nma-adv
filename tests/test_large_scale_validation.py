@@ -63,7 +63,7 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         "required": 50,
     }
     assert summary["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 12,
+        "observed": 13,
         "required": 10,
     }
     assert summary["dynamic_counts"]["tau2_positive_benchmarks"] == {

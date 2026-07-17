@@ -94,9 +94,12 @@ evidence_artifacts = [
   "validation/reference_runs/stan_nuts_cmdstan_reference.toml",
   "validation/reference_runs/stan_nuts_cmdstan_output.json",
   "validation/dependency_preflights/tier1_r_dependency_preflight.toml",
+  "external/r/multinma_sglt2_binary_nma.R",
+  "validation/reference_runs/multinma_sglt2_binary_nma_reference.toml",
+  "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
 ]
 required_next_artifacts = [
-  "multinma_reference_output",
+  "additional_multinma_reference_outputs",
   "stan_prior_predictive_check_output",
   "stan_posterior_predictive_check_output",
   "joint_posterior_ranking_reference_output",

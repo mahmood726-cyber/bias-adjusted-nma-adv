@@ -119,6 +119,173 @@ def validate_pairwise_metafor_meta_output(
     }
 
 
+def validate_multinma_sglt2_binary_nma_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    mean_tolerance: float = 0.03,
+    sd_tolerance: float = 0.02,
+    max_rhat: float = 1.01,
+    min_neff: float = 400.0,
+) -> dict[str, Any]:
+    """Validate a source-backed ``multinma`` binary NMA reference candidate."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "model",
+            "package_versions",
+            "study_arms",
+            "relative_effect",
+            "diagnostics",
+            "limitations",
+        },
+        label="multinma SGLT2 binary output",
+    )
+    if output["schema_version"] != "multinma_sglt2_binary_nma/v1":
+        raise RReferenceValidationError("multinma SGLT2 output schema_version mismatch.")
+    if output["benchmark_id"] != "sglt2_hf_primary_log_or":
+        raise RReferenceValidationError("multinma SGLT2 output benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract only":
+        raise RReferenceValidationError("multinma SGLT2 output source_policy mismatch.")
+    if output["effect_scale"] != "log_or":
+        raise RReferenceValidationError("multinma SGLT2 output must use log_or scale.")
+    _require_package_versions(output["package_versions"], {"R", "multinma", "rstan", "jsonlite"})
+
+    model = output["model"]
+    _require_keys(
+        model,
+        {
+            "engine",
+            "likelihood",
+            "link",
+            "consistency",
+            "trt_effects",
+            "reference_treatment",
+            "chains",
+            "iter",
+            "warmup",
+            "seed",
+        },
+        label="multinma SGLT2 model",
+    )
+    expected_model = {
+        "engine": "multinma",
+        "likelihood": "binomial",
+        "link": "logit",
+        "consistency": "consistency",
+        "trt_effects": "fixed",
+        "reference_treatment": "Placebo",
+    }
+    for field, expected in expected_model.items():
+        if str(model[field]) != expected:
+            raise RReferenceValidationError(f"multinma SGLT2 model {field} mismatch.")
+    if int(model["chains"]) < 4:
+        raise RReferenceValidationError("multinma SGLT2 reference must use at least 4 chains.")
+
+    expected_rows = _load_event_rows(root / "validation" / "real_meta" / "sglt2_hf_primary_events.csv")
+    observed_rows = {
+        (str(row["study_id"]), str(row["arm_role"]), str(row["treatment"])): row
+        for row in output["study_arms"]
+    }
+    if set(observed_rows) != set(expected_rows):
+        raise RReferenceValidationError("multinma SGLT2 study arms do not match source CSV rows.")
+    for key, expected in expected_rows.items():
+        observed = observed_rows[key]
+        for field in ("trial", "nct_id", "outcome_id", "outcome_label"):
+            if str(observed[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{key}: multinma SGLT2 {field} mismatch.")
+        if str(observed["pmid"]) != str(expected["pmid"]):
+            raise RReferenceValidationError(f"{key}: multinma SGLT2 PMID mismatch.")
+        for field in ("events", "n"):
+            if int(observed[field]) != int(expected[field]):
+                raise RReferenceValidationError(f"{key}: multinma SGLT2 {field} mismatch.")
+
+    benchmark = _load_toml(root / "validation" / "real_meta" / "sglt2_hf_primary_benchmark.toml")
+    reference = benchmark["reference"]["fixed_effect_log_or"]
+    relative_effect = output["relative_effect"]
+    _require_keys(
+        relative_effect,
+        {"mean", "sd", "ci_low", "ci_high", "bulk_ess", "tail_ess", "rhat"},
+        label="multinma SGLT2 relative effect",
+    )
+    mean_diff = _assert_close(
+        "multinma SGLT2 posterior mean vs fixed-effect log-OR",
+        relative_effect["mean"],
+        reference["estimate"],
+        mean_tolerance,
+    )
+    sd_diff = _assert_close(
+        "multinma SGLT2 posterior sd vs fixed-effect SE",
+        relative_effect["sd"],
+        reference["se"],
+        sd_tolerance,
+    )
+    if not float(relative_effect["ci_low"]) < float(relative_effect["mean"]) < float(relative_effect["ci_high"]):
+        raise RReferenceValidationError("multinma SGLT2 CrI does not contain posterior mean.")
+    if float(relative_effect["bulk_ess"]) < min_neff:
+        raise RReferenceValidationError("multinma SGLT2 relative-effect bulk ESS below threshold.")
+    if float(relative_effect["tail_ess"]) < min_neff:
+        raise RReferenceValidationError("multinma SGLT2 relative-effect tail ESS below threshold.")
+    if float(relative_effect["rhat"]) > max_rhat:
+        raise RReferenceValidationError("multinma SGLT2 relative-effect R-hat exceeds threshold.")
+
+    diagnostics = output["diagnostics"]
+    _require_keys(
+        diagnostics,
+        {"max_rhat", "min_neff", "divergent_transitions", "max_treedepth_observed"},
+        label="multinma SGLT2 diagnostics",
+    )
+    if float(diagnostics["max_rhat"]) > max_rhat:
+        raise RReferenceValidationError("multinma SGLT2 maximum R-hat exceeds threshold.")
+    if float(diagnostics["min_neff"]) < min_neff:
+        raise RReferenceValidationError("multinma SGLT2 minimum n_eff below threshold.")
+    if int(diagnostics["divergent_transitions"]) != 0:
+        raise RReferenceValidationError("multinma SGLT2 reference has divergent transitions.")
+    if int(diagnostics["max_treedepth_observed"]) > 10:
+        raise RReferenceValidationError("multinma SGLT2 treedepth exceeds configured limit.")
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not broad bayesian nma parity" in item for item in limitations):
+        raise RReferenceValidationError("multinma SGLT2 output must preserve broad-parity limitation.")
+    if not any("not ml-nmr" in item for item in limitations):
+        raise RReferenceValidationError("multinma SGLT2 output must preserve ML-NMR limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "bayesian_nma_multinma_cmdstan",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "multinma fixed-effect binomial NMA via rstan",
+        "validated_components": [
+            "source_backed_binary_arm_counts",
+            "multinma_fixed_effect_log_or",
+            "posterior_mean_matches_fixed_effect_reference",
+            "rhat_ess_and_divergence_diagnostics",
+            "broad_bayesian_parity_limitation_preserved",
+        ],
+        "max_abs_difference": max(mean_diff, sd_diff),
+        "tolerance": {
+            "mean": mean_tolerance,
+            "sd": sd_tolerance,
+            "rhat": max_rhat,
+            "neff": min_neff,
+        },
+        "diagnostics": diagnostics,
+        "source_policy_note": (
+            "This validates one source-backed two-treatment SGLT2 binomial NMA "
+            "against multinma/rstan only. It is not broad Bayesian NMA, ML-NMR, "
+            "ranking, inconsistency, clinical, or HTA certification."
+        ),
+    }
+
+
 def validate_multiarm_netmeta_output(
     output_path: str | Path,
     *,
@@ -1154,6 +1321,15 @@ def _load_component_fixture_rows(path: Path) -> list[dict[str, Any]]:
         }
         for row in rows
     ]
+
+
+def _load_event_rows(path: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    return {
+        (str(row["study_id"]), str(row["arm_role"]), str(row["treatment"])): row
+        for row in rows
+    }
 
 
 def _require_keys(raw: dict[str, Any], required: set[str], *, label: str) -> None:

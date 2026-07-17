@@ -341,6 +341,8 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "stan_nuts_cmdstan_reference_preflight_report",
                 "source_backed_cmdstan_nuts_sglt2i_reference_candidate",
                 "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports",
+                "source_backed_multinma_sglt2i_reference_candidate",
+                "multinma_rstan_rhat_ess_divergence_treedepth_exports",
             ],
         },
         "blocked_claims": [

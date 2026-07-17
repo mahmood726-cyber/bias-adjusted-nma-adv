@@ -1,0 +1,27 @@
+schema_version = "reference_run/v1"
+target_id = "bayesian_nma_multinma_cmdstan"
+adapter_id = "r_multinma_sglt2_binary_nma_output_validation"
+reference_method = "multinma fixed-effect binomial NMA via rstan"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-17T12:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/multinma_sglt2_binary_nma.R", "--events", "validation/real_meta/sglt2_hf_primary_events.csv", "--output", "validation/reference_runs/multinma_sglt2_binary_nma_output.json", "--chains", "4", "--iter", "1500", "--warmup", "500", "--seed", "20260717", "--adapt-delta", "0.95"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", multinma = "0.9.1", rstan = "2.32.7", jsonlite = "2.0.0"}
+input_artifacts = ["validation/real_meta/sglt2_hf_primary_events.csv", "validation/real_meta/sglt2_hf_primary_sources.toml", "validation/real_meta/sglt2_hf_primary_benchmark.toml", "external/r/multinma_sglt2_binary_nma.R"]
+output_artifacts = ["validation/reference_runs/multinma_sglt2_binary_nma_output.json"]
+tolerance = "posterior mean abs <= 0.03; posterior sd abs <= 0.02; R-hat <= 1.01; n_eff >= 400; divergences = 0; treedepth <= 10"
+skip_reason = ""
+validated_components = ["source_backed_binary_arm_counts", "multinma_fixed_effect_log_or", "posterior_mean_matches_fixed_effect_reference", "rhat_ess_and_divergence_diagnostics", "broad_bayesian_parity_limitation_preserved"]
+max_abs_difference = 0.00034182063556509323
+notes = ["This validates one source-backed two-treatment SGLT2 binomial NMA against multinma/rstan only. It is not broad Bayesian NMA, ML-NMR, ranking, inconsistency, clinical, or HTA certification."]
+
+[input_sha256]
+"validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
+"validation/real_meta/sglt2_hf_primary_sources.toml" = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d"
+"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "53144036e8d87aa82c58176828b768c11451f0e6a6061e2e96c86f5a957dd0ba"
+"external/r/multinma_sglt2_binary_nma.R" = "9cc386f3a84b17a1d85e9d22c126a4e22028734777dd42e2895b216d877d841e"
+
+[output_sha256]
+"validation/reference_runs/multinma_sglt2_binary_nma_output.json" = "f6d0e1e5dba13cbc30d1dfa60f8181a232d13e5c73657dff36f393b942b79965"

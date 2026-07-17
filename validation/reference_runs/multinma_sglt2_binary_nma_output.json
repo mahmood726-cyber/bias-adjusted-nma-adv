@@ -1,0 +1,162 @@
+{
+  "schema_version": "multinma_sglt2_binary_nma/v1",
+  "benchmark_id": "sglt2_hf_primary_log_or",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract only",
+  "effect_scale": "log_or",
+  "model": {
+    "engine": "multinma",
+    "likelihood": "binomial",
+    "link": "logit",
+    "consistency": "consistency",
+    "trt_effects": "fixed",
+    "reference_treatment": "Placebo",
+    "prior_intercept": "normal(scale=10)",
+    "prior_trt": "normal(scale=2.5)",
+    "chains": 4,
+    "iter": 1500,
+    "warmup": 500,
+    "seed": 20260717,
+    "adapt_delta": 0.95
+  },
+  "package_versions": {
+    "R": "4.6.0",
+    "multinma": "0.9.1",
+    "rstan": "2.32.7",
+    "jsonlite": "2.0.0"
+  },
+  "study_arms": [
+    {
+      "study_id": "DAPA-HF",
+      "trial": "Dapagliflozin in HFrEF",
+      "nct_id": "NCT03036124",
+      "pmid": 31535829,
+      "outcome_id": "hf_primary",
+      "outcome_label": "worsening heart failure or cardiovascular death",
+      "arm_role": "active",
+      "treatment": "SGLT2i",
+      "events": 386,
+      "n": 2373
+    },
+    {
+      "study_id": "DAPA-HF",
+      "trial": "Dapagliflozin in HFrEF",
+      "nct_id": "NCT03036124",
+      "pmid": 31535829,
+      "outcome_id": "hf_primary",
+      "outcome_label": "worsening heart failure or cardiovascular death",
+      "arm_role": "control",
+      "treatment": "Placebo",
+      "events": 502,
+      "n": 2371
+    },
+    {
+      "study_id": "EMPEROR-Reduced",
+      "trial": "Empagliflozin in HFrEF",
+      "nct_id": "NCT03057977",
+      "pmid": 32865377,
+      "outcome_id": "hf_primary",
+      "outcome_label": "cardiovascular death or hospitalization for heart failure",
+      "arm_role": "active",
+      "treatment": "SGLT2i",
+      "events": 361,
+      "n": 1863
+    },
+    {
+      "study_id": "EMPEROR-Reduced",
+      "trial": "Empagliflozin in HFrEF",
+      "nct_id": "NCT03057977",
+      "pmid": 32865377,
+      "outcome_id": "hf_primary",
+      "outcome_label": "cardiovascular death or hospitalization for heart failure",
+      "arm_role": "control",
+      "treatment": "Placebo",
+      "events": 462,
+      "n": 1867
+    },
+    {
+      "study_id": "DELIVER",
+      "trial": "Dapagliflozin in HFmrEF/HFpEF",
+      "nct_id": "NCT03619213",
+      "pmid": 36027570,
+      "outcome_id": "hf_primary",
+      "outcome_label": "worsening heart failure or cardiovascular death",
+      "arm_role": "active",
+      "treatment": "SGLT2i",
+      "events": 512,
+      "n": 3131
+    },
+    {
+      "study_id": "DELIVER",
+      "trial": "Dapagliflozin in HFmrEF/HFpEF",
+      "nct_id": "NCT03619213",
+      "pmid": 36027570,
+      "outcome_id": "hf_primary",
+      "outcome_label": "worsening heart failure or cardiovascular death",
+      "arm_role": "control",
+      "treatment": "Placebo",
+      "events": 610,
+      "n": 3132
+    },
+    {
+      "study_id": "EMPEROR-Preserved",
+      "trial": "Empagliflozin in HFpEF",
+      "nct_id": "NCT03057951",
+      "pmid": 34449189,
+      "outcome_id": "hf_primary",
+      "outcome_label": "cardiovascular death or hospitalization for heart failure",
+      "arm_role": "active",
+      "treatment": "SGLT2i",
+      "events": 415,
+      "n": 2997
+    },
+    {
+      "study_id": "EMPEROR-Preserved",
+      "trial": "Empagliflozin in HFpEF",
+      "nct_id": "NCT03057951",
+      "pmid": 34449189,
+      "outcome_id": "hf_primary",
+      "outcome_label": "cardiovascular death or hospitalization for heart failure",
+      "arm_role": "control",
+      "treatment": "Placebo",
+      "events": 511,
+      "n": 2991
+    }
+  ],
+  "relative_effect": {
+    "row_names": "1",
+    "columns": {
+      ".trtb": "SGLT2i",
+      ".trta": "Placebo",
+      "parameter": "d[SGLT2i]",
+      "mean": -0.268641801261426,
+      "sd": 0.0365496319784117,
+      "X2.5.": -0.340597623044433,
+      "X25.": -0.293190919311305,
+      "X50.": -0.268014086023556,
+      "X75.": -0.244495583005532,
+      "X97.5.": -0.197165548123359,
+      "Bulk_ESS": 2096.91304898779,
+      "Tail_ESS": 2609.35914059357,
+      "Rhat": 1.00115824629269
+    },
+    "mean": -0.268641801261426,
+    "sd": 0.0365496319784117,
+    "ci_low": -0.340597623044433,
+    "ci_high": -0.197165548123359,
+    "bulk_ess": 2096.91304898779,
+    "tail_ess": 2609.35914059357,
+    "rhat": 1.00115824629269
+  },
+  "diagnostics": {
+    "max_rhat": 1.00213201113408,
+    "min_neff": 1836,
+    "divergent_transitions": 0,
+    "max_treedepth_observed": 4,
+    "n_parameters": 30
+  },
+  "limitations": [
+    "Single source-backed two-treatment binary NMA only.",
+    "This is a narrow multinma reference candidate, not broad Bayesian NMA parity.",
+    "This is not ML-NMR, ranking, inconsistency, or clinical/HTA certification."
+  ]
+}

@@ -232,6 +232,8 @@ def test_validation_status_composes_all_current_gates():
             "stan_nuts_cmdstan_reference_preflight_report",
             "source_backed_cmdstan_nuts_sglt2i_reference_candidate",
             "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports",
+            "source_backed_multinma_sglt2i_reference_candidate",
+            "multinma_rstan_rhat_ess_divergence_treedepth_exports",
         ],
     }
     assert "tier_one_superiority" in tier1_gaps["blocked_claims"]
@@ -363,7 +365,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 12,
+        "observed": 13,
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
@@ -487,13 +489,14 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 16
+    assert reference_runs["n_reports"] == 17
     assert reference_runs["status_counts"] == {
         "failed": 4,
-        "passed": 12,
+        "passed": 13,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
+        "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",
         "validation/reference_runs/dta_mada_reitsma_midkine_source_output.json",
@@ -516,6 +519,7 @@ def test_validation_status_composes_all_current_gates():
     } == {
         ("r_metafor_meta_pairwise_preflight", "failed"),
         ("r_metafor_meta_pairwise_output_validation", "passed"),
+        ("r_multinma_sglt2_binary_nma_output_validation", "passed"),
         ("r_netmeta_multiarm_preflight", "failed"),
         ("r_netmeta_multiarm_output_validation", "passed"),
         ("r_mada_dta_reitsma_preflight", "failed"),

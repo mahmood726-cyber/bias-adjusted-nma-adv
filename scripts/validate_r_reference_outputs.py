@@ -22,6 +22,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
     validate_dta_mada_source_table_output,
+    validate_multinma_sglt2_binary_nma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_meta_output,
     validate_survival_hr_metafor_pairwise_output,
@@ -31,6 +32,8 @@ from bias_nma_adv.real_meta import sha256_file  # noqa: E402
 
 PAIRWISE_OUTPUT = Path("validation/reference_runs/pairwise_metafor_meta_output.json")
 PAIRWISE_REPORT = Path("validation/reference_runs/pairwise_metafor_meta_reference.toml")
+MULTINMA_OUTPUT = Path("validation/reference_runs/multinma_sglt2_binary_nma_output.json")
+MULTINMA_REPORT = Path("validation/reference_runs/multinma_sglt2_binary_nma_reference.toml")
 MULTIARM_OUTPUT = Path("validation/reference_runs/multiarm_netmeta_output.json")
 MULTIARM_REPORT = Path("validation/reference_runs/multiarm_netmeta_reference.toml")
 DTA_OUTPUT = Path("validation/reference_runs/dta_mada_reitsma_output.json")
@@ -54,6 +57,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--pairwise-output", type=Path, default=PAIRWISE_OUTPUT)
     parser.add_argument("--pairwise-report", type=Path, default=PAIRWISE_REPORT)
+    parser.add_argument("--multinma-output", type=Path, default=MULTINMA_OUTPUT)
+    parser.add_argument("--multinma-report", type=Path, default=MULTINMA_REPORT)
     parser.add_argument("--multiarm-output", type=Path, default=MULTIARM_OUTPUT)
     parser.add_argument("--multiarm-report", type=Path, default=MULTIARM_REPORT)
     parser.add_argument("--dta-output", type=Path, default=DTA_OUTPUT)
@@ -85,6 +90,11 @@ def main(argv: list[str] | None = None) -> int:
             pairwise_output,
             repo_root=root,
             tolerance=args.tolerance,
+        )
+        multinma_output = _resolve(root, args.multinma_output)
+        multinma_summary = validate_multinma_sglt2_binary_nma_output(
+            multinma_output,
+            repo_root=root,
         )
         multiarm_summary = validate_multiarm_netmeta_output(
             multiarm_output,
@@ -139,6 +149,15 @@ def main(argv: list[str] | None = None) -> int:
                 summary=pairwise_summary,
                 checked_at=args.checked_at,
                 tolerance=args.tolerance,
+            ),
+        )
+        _write_report(
+            _resolve(root, args.multinma_report),
+            _multinma_report(
+                root=root,
+                output_path=multinma_output,
+                summary=multinma_summary,
+                checked_at=args.checked_at,
             ),
         )
         _write_report(
@@ -226,7 +245,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print(
         "R reference output validation passed: "
-        f"{args.pairwise_report}, {args.multiarm_report}, {args.dta_report}, "
+        f"{args.pairwise_report}, {args.multinma_report}, {args.multiarm_report}, {args.dta_report}, "
         f"{args.dta_source_report}, {args.dose_response_report}, {args.sglt2_survival_report}, "
         f"{args.pcsk9_survival_report}, {args.ctgov_hr_network_report}, {args.component_report}"
     )
@@ -275,6 +294,75 @@ def _pairwise_report(
         "validated_components": summary["validated_components"],
         "max_abs_difference": float(summary["max_abs_difference"]),
         "notes": [summary["hksj_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _multinma_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    input_artifacts = [
+        Path("validation/real_meta/sglt2_hf_primary_events.csv"),
+        Path("validation/real_meta/sglt2_hf_primary_sources.toml"),
+        Path("validation/real_meta/sglt2_hf_primary_benchmark.toml"),
+        Path("external/r/multinma_sglt2_binary_nma.R"),
+    ]
+    tolerances = summary["tolerance"]
+    tolerance_label = (
+        f"posterior mean abs <= {tolerances['mean']:g}; "
+        f"posterior sd abs <= {tolerances['sd']:g}; "
+        f"R-hat <= {tolerances['rhat']:g}; "
+        f"n_eff >= {tolerances['neff']:g}; divergences = 0; treedepth <= 10"
+    )
+    model = output["model"]
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "bayesian_nma_multinma_cmdstan",
+        "adapter_id": "r_multinma_sglt2_binary_nma_output_validation",
+        "reference_method": "multinma fixed-effect binomial NMA via rstan",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/multinma_sglt2_binary_nma.R",
+            "--events",
+            "validation/real_meta/sglt2_hf_primary_events.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+            "--chains",
+            str(model["chains"]),
+            "--iter",
+            str(model["iter"]),
+            "--warmup",
+            str(model["warmup"]),
+            "--seed",
+            str(model["seed"]),
+            "--adapt-delta",
+            str(model["adapt_delta"]),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": tolerance_label,
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
         "input_sha256": {
             path.as_posix(): sha256_file(root / path)
             for path in input_artifacts

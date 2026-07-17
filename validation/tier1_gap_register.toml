@@ -113,7 +113,7 @@ certification_effect = "none"
 id = "bayesian_ecosystem_integration"
 status = "blocking"
 review_source = "multiperson_tier1_feedback"
-summary = "The custom Bayesian sampler is suitable for small prototypes only; the repository now has one source-backed CmdStan/NUTS candidate, but not broad Stan, multinma, or ML-NMR parity."
+summary = "The custom Bayesian sampler is suitable for small prototypes only; the repository now has source-backed CmdStan/NUTS and multinma candidates, but not broad Stan, multinma, ranking, or ML-NMR parity."
 tier_one_references = ["multinma", "CmdStan", "Stan NUTS"]
 missing_capabilities = [
   "stan_prior_predictive_checks",
@@ -132,6 +132,8 @@ implemented_capabilities = [
   "stan_nuts_cmdstan_reference_preflight_report",
   "source_backed_cmdstan_nuts_sglt2i_reference_candidate",
   "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports",
+  "source_backed_multinma_sglt2i_reference_candidate",
+  "multinma_rstan_rhat_ess_divergence_treedepth_exports",
 ]
 required_evidence_artifacts = [
   "stan_model_sources",
