@@ -115,6 +115,8 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/write_dose_response_benchmark.py`: Writes the deterministic non-certifying dose-response smoke benchmark from a verified source check.
 - `scripts/verify_component_sources.py`: Regenerates live CT.gov/PubMed source checks for the source-backed component-NMA manifest and exits nonzero on failed verification.
 - `scripts/write_component_benchmark.py`: Writes the deterministic non-certifying component-NMA smoke benchmark from a verified source check.
+- `scripts/verify_cross_design_sources.py`: Regenerates live PubMed abstract source checks for the source-backed RCT/NRS cross-design routing manifest and exits nonzero on failed verification.
+- `scripts/write_cross_design_benchmark.py`: Writes the deterministic non-certifying cross-design benchmark that reports RCT and NRS summaries separately and blocks combined borrowing when estimands differ.
 - `.github/workflows/validation.yml`: CI workflow running pytest, the source-backed benchmark registry gate, the unified validation-status writer, and the simulation-matrix smoke runner. Uploaded artifacts are evidence of gate execution, not certification.
 - `docs/portfolio_reuse_map.md`: Local portfolio scan describing reusable methods and hard stops before porting them.
 - `docs/review_artifact_policy.md`: Scope guard for historical review transcripts that contain hypotheses or critique, not certified evidence.

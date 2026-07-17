@@ -182,6 +182,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["numerical_stability"].implemented_capabilities
     )
     assert (
+        "source_backed_cross_design_routing_benchmark"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
         "large_scale_validation_evidence_gate"
         in by_id["numerical_stability"].implemented_capabilities
     )
@@ -282,6 +286,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "pairwise_reml_local_minimum_profile_diagnostic",
                 "pairwise_optimizer_stress_matrix",
                 "ctgov_sparse_design_bias_guard",
+                "source_backed_cross_design_routing_benchmark",
                 "large_scale_validation_evidence_gate",
             ],
             "bayesian_ecosystem_integration": [

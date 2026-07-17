@@ -1,0 +1,150 @@
+schema_version = "cross_design_hr_benchmark/v1"
+benchmark_id = "sglt2_rct_nrs_cross_design"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract_cross_design"
+effect_scale = "log_hr"
+cross_design_strategy = "separated_reporting_first"
+source_manifest = "validation/cross_design/sglt2_rct_nrs_cross_design.toml"
+source_manifest_sha256 = "17e99f8e65fedb6f964a566e883d7f0beb6753d76397b5e5c3c5de61201737c0"
+source_verification_report = "validation/source_checks/sglt2_rct_nrs_cross_design_check.json"
+source_verification_report_sha256 = "d9380e6eb2be20d9552f9c95204e820169fbdcdd74394392d4a7199bdd339519"
+n_studies = 4
+limitations = ["RCT and NRS rows are source verified but not assumed exchangeable", "combined borrowing is blocked when target population, comparator, or outcome estimands differ", "this is a cross-design routing benchmark, not crossnma reference matching", "does not certify model performance"]
+
+[source_bundle]
+benchmark_id = "sglt2_rct_nrs_cross_design"
+manifest_sha256 = "17e99f8e65fedb6f964a566e883d7f0beb6753d76397b5e5c3c5de61201737c0"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+design_counts = {nrs = 2, rct = 2}
+source_counts = {pubmed_abstract = 4}
+
+[model_config]
+summary_method = "separated_inverse_variance_fixed_effect"
+combined_borrowing = "blocked_unless_estimands_match"
+level = 0.95
+
+[compatibility]
+status = "separated_only_estimand_mismatch"
+combined_borrowing_allowed = false
+mismatched_fields = {comparator_class = ["active_non_sglt2_glucose_lowering", "placebo"], control_treatment = ["other glucose-lowering drugs", "placebo"], outcome_id = ["hf_or_cv_death", "hhf_or_death"], target_population = ["heart_failure_reduced_ejection_fraction", "type_2_diabetes_real_world"]}
+certification_effect = "none"
+
+[[study_effects]]
+study_id = "DAPA-HF"
+trial = "Dapagliflozin in HFrEF"
+design = "rct"
+nct_id = "NCT03036124"
+pmid = "31535829"
+outcome_id = "hf_or_cv_death"
+outcome_label = "worsening heart failure or cardiovascular death"
+target_population = "heart_failure_reduced_ejection_fraction"
+active_treatment = "dapagliflozin"
+control_treatment = "placebo"
+comparator_class = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.74
+ci_lower = 0.65
+ci_upper = 0.85
+estimate = -0.3011050927839216
+variance = 0.004683478976527634
+se = 0.06843594798443019
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "EMPEROR-Reduced"
+trial = "Empagliflozin in HFrEF"
+design = "rct"
+nct_id = "NCT03057977"
+pmid = "32865377"
+outcome_id = "hf_or_cv_death"
+outcome_label = "cardiovascular death or hospitalization for heart failure"
+target_population = "heart_failure_reduced_ejection_fraction"
+active_treatment = "empagliflozin"
+control_treatment = "placebo"
+comparator_class = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.75
+ci_lower = 0.65
+ci_upper = 0.86
+estimate = -0.2876820724517809
+variance = 0.005100771608957223
+se = 0.07141968642438318
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "CVD-REAL"
+trial = "CVD-REAL"
+design = "nrs"
+nct_id = "NCT02993614"
+pmid = "28522450"
+outcome_id = "hhf_or_death"
+outcome_label = "hospitalization for heart failure or death"
+target_population = "type_2_diabetes_real_world"
+active_treatment = "SGLT-2 inhibitor class"
+control_treatment = "other glucose-lowering drugs"
+comparator_class = "active_non_sglt2_glucose_lowering"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.54
+ci_lower = 0.48
+ci_upper = 0.6
+estimate = -0.616186139423817
+variance = 0.003240503596243164
+se = 0.056925421353233426
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "CVD-REAL-2"
+trial = "CVD-REAL 2"
+design = "nrs"
+nct_id = "NCT02993614"
+pmid = "29540325"
+outcome_id = "hhf_or_death"
+outcome_label = "death or hospitalization for heart failure"
+target_population = "type_2_diabetes_real_world"
+active_treatment = "SGLT-2 inhibitor class"
+control_treatment = "other glucose-lowering drugs"
+comparator_class = "active_non_sglt2_glucose_lowering"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.6
+ci_lower = 0.47
+ci_upper = 0.76
+estimate = -0.5108256237659907
+variance = 0.01503092073242425
+se = 0.12260065551384401
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.nrs_minus_rct_diagnostic]
+status = "diagnostic_only"
+certification_effect = "none"
+estimate = -0.30282024390701334
+se = 0.07146608856586713
+ci_low = -0.4428912036120627
+ci_high = -0.16274928420196402
+
+[candidate.separated_by_design.rct]
+n_studies = 2
+estimate = -0.29467982464735654
+se = 0.04941268383698658
+ci_low = -0.3915269053473147
+ci_high = -0.1978327439473984
+hr = 0.7447700062953602
+hr_ci_low = 0.6760238615932221
+hr_ci_high = 0.820507076436534
+
+[candidate.separated_by_design.nrs]
+n_studies = 2
+estimate = -0.5975000685543699
+se = 0.05163127434927757
+ci_low = -0.6986955067548606
+ci_high = -0.4963046303538791
+hr = 0.5501853439331041
+hr_ci_low = 0.4972335186698837
+hr_ci_high = 0.6087761611255234

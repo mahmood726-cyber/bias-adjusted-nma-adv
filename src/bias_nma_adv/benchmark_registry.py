@@ -21,6 +21,12 @@ from bias_nma_adv.component_benchmark import (
     load_component_manifest,
     validate_component_source_bundle,
 )
+from bias_nma_adv.cross_design_benchmark import (
+    CROSS_DESIGN_HR_VERIFICATION_SCHEMA_VERSION,
+    CrossDesignHRVerificationReport,
+    load_cross_design_manifest,
+    validate_cross_design_source_bundle,
+)
 from bias_nma_adv.data import ValidationError
 from bias_nma_adv.dose_response_benchmark import (
     DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION,
@@ -67,6 +73,7 @@ SUPPORTED_SOURCE_CHECK_SCHEMA_VERSIONS = {
     DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION,
     DTA_VERIFICATION_SCHEMA_VERSION,
     COMPONENT_VERIFICATION_SCHEMA_VERSION,
+    CROSS_DESIGN_HR_VERIFICATION_SCHEMA_VERSION,
 }
 
 
@@ -278,6 +285,7 @@ def discover_source_backed_benchmark_artifacts(repo_root: str | Path) -> tuple[s
         *sorted((root / "validation" / "networks").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "dose_response").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "component").glob("*_source_benchmark.toml")),
+        *sorted((root / "validation" / "cross_design").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "dta").glob("*_benchmark.toml")),
     ]
     return tuple(path.relative_to(root).as_posix() for path in candidates)
@@ -360,6 +368,9 @@ def _validate_source_check_payload(
         elif schema_version == COMPONENT_VERIFICATION_SCHEMA_VERSION:
             report = ComponentVerificationReport.from_mapping(source_check)
             _validate_component_reference(entry, report, repo_root=repo_root)
+        elif schema_version == CROSS_DESIGN_HR_VERIFICATION_SCHEMA_VERSION:
+            report = CrossDesignHRVerificationReport.from_mapping(source_check)
+            _validate_cross_design_reference(entry, report, repo_root=repo_root)
     except ValidationError as exc:
         raise BenchmarkRegistryError(f"{entry.id}: specialized source-check validation failed: {exc}") from exc
 
@@ -484,6 +495,22 @@ def _validate_component_reference(
     )
     manifest = load_component_manifest(repo_root / report.manifest)
     validate_component_source_bundle(manifest, report)
+
+
+def _validate_cross_design_reference(
+    entry: SourceBenchmarkEntry,
+    report: CrossDesignHRVerificationReport,
+    *,
+    repo_root: Path,
+) -> None:
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.manifest,
+        report.manifest_sha256,
+        label="cross-design verification manifest",
+    )
+    manifest = load_cross_design_manifest(repo_root / report.manifest)
+    validate_cross_design_source_bundle(manifest, report)
 
 
 def _assert_registered_source_manifest_sha(

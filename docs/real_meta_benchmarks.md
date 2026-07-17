@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 7 benchmark artifacts, 57 study-effect rows, 18 unique NCT IDs, and 8 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, component-NMA parity, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 8 benchmark artifacts, 61 study-effect rows, 19 unique NCT IDs, and 10 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -238,6 +238,34 @@ Limitations:
 - same-trial arm covariance is not modeled;
 - the artifact is not broad `netmeta` CNMA parity and cannot support component hierarchy or clinical superiority claims.
 
+## Benchmark 5: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
+
+Cross-design manifest: `validation/cross_design/sglt2_rct_nrs_cross_design.toml`
+
+Cross-design source snapshot: `validation/source_checks/sglt2_rct_nrs_cross_design_check.json`
+
+Cross-design local benchmark: `validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml`
+
+Evidence source: PubMed abstract reported hazard ratios with NCT identifiers. The two randomized rows are DAPA-HF (NCT03036124, PMID 31535829) and EMPEROR-Reduced (NCT03057977, PMID 32865377). The two observational rows are CVD-REAL (NCT02993614, PMID 28522450) and CVD-REAL-2 (NCT02993614, PMID 29540325).
+
+Scale currently tested: log hazard ratio derived from reported HR and 95% CI tokens.
+
+Current tests:
+
+- validate the manifest schema, study designs, NCT IDs, PMIDs, comparator labels, population labels, outcomes, and no certification effect;
+- verify PubMed article identity and exact HR/CI tokens near a hazard-ratio or HR anchor before effects are computed;
+- derive log-HR study effects separately for randomized and non-randomized rows;
+- compute separated inverse-variance fixed-effect summaries by design;
+- require `combined_borrowing_allowed = false` when comparator, population, or outcome definitions differ across designs;
+- require the generated artifact to retain `certification_effect = "none"` and state that it is not `crossnma` reference matching.
+
+Limitations:
+
+- this is a cross-design routing and governance benchmark, not a Bayesian cross-design synthesis model;
+- DAPA-HF and EMPEROR-Reduced are heart-failure RCTs, while CVD-REAL rows are diabetes real-world cohorts, so the estimands differ materially;
+- combined RCT/NRS borrowing is blocked by design in this artifact;
+- the artifact is not broad `crossnma` parity and cannot support clinical or HTA decision claims.
+
 ## Static-Vs-Dynamic Hardcode Disclosure
 
 | Item | Static or dynamic | Evidence source | Disclosure |
@@ -255,6 +283,7 @@ Limitations:
 | CT.gov reported-HR network snapshot | Dynamic public API check | `scripts/verify_ctgov_hr_network.py` against ClinicalTrials.gov API v2 | Verifies NCT identity, completed status, exact HR/CI analysis fields, outcome-title terms, and drug/placebo terms |
 | CT.gov reported-HR network benchmark | Dynamic computation | `scripts/write_ctgov_hr_network_benchmark.py` plus `bias_nma_adv.ctgov_hr_network` | Recomputes log-HR study effects and fixed/random contrast-GLS NMA from the verified CT.gov source snapshot |
 | CT.gov/PubMed component-NMA smoke benchmark | Dynamic computation | `scripts/verify_component_sources.py`, `scripts/write_component_benchmark.py`, `validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml`, and `tests/test_component_benchmark.py` | Verifies one factorial CT.gov/PubMed component benchmark and recomputes additive WLS contrasts; same-trial covariance and broad CNMA parity remain blocked |
+| PubMed cross-design routing benchmark | Dynamic computation | `scripts/verify_cross_design_sources.py`, `scripts/write_cross_design_benchmark.py`, `validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml`, and `tests/test_cross_design_benchmark.py` | Verifies four PubMed abstract reported-HR rows and recomputes separated RCT/NRS summaries; combined borrowing, sparse hierarchical shrinkage, and broad `crossnma` parity remain blocked |
 | Proof-carrying extracted effect | Static contract plus unit fixtures | `bias_nma_adv.ingestion.ProofCarryingEffectRecord` | Blocks model-ready extracted effects unless source provenance, source snippet, uncertainty, and effect-scale sanity checks pass |
 | Registry/regulatory/protocol boundary | Static source-policy contract plus unit fixtures | `bias_nma_adv.source_type_policy`, `bias_nma_adv.evidence_sources`, `bias_nma_adv.ingestion`, and source-boundary tests | Allows AACT/ClinicalTrials.gov, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows as effect sources when numeric per-trial provenance is present; rejects protocol-only registry records as model-ready effects while allowing metadata ledgers |
 | Real benchmark coverage atlas | Dynamic registry-derived summary | `validation/real_benchmark_atlas.json`, `scripts/write_real_benchmark_atlas.py`, and `tests/test_real_benchmark_atlas.py` | Summarizes registered real-data benchmark coverage and explicit non-claims; not tier-one parity or clinical evidence certification |

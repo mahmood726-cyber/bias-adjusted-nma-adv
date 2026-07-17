@@ -148,6 +148,29 @@ required_limitations = [
 ]
 
 [[benchmarks]]
+id = "sglt2_rct_nrs_cross_design"
+domain = "cross_design_nma"
+artifact_path = "validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml"
+artifact_sha256 = "f52879b1e2b2ce15d4fc50bbf752e48459267a2cb939458de1a1959fadda208b"
+artifact_schema_version = "cross_design_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract_cross_design"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/cross_design/sglt2_rct_nrs_cross_design.toml"]
+source_manifest_sha256 = { "validation/cross_design/sglt2_rct_nrs_cross_design.toml" = "17e99f8e65fedb6f964a566e883d7f0beb6753d76397b5e5c3c5de61201737c0" }
+source_checks = ["validation/source_checks/sglt2_rct_nrs_cross_design_check.json"]
+source_check_sha256 = { "validation/source_checks/sglt2_rct_nrs_cross_design_check.json" = "d9380e6eb2be20d9552f9c95204e820169fbdcdd74394392d4a7199bdd339519" }
+required_limitations = [
+  "not assumed exchangeable",
+  "combined borrowing is blocked",
+  "not crossnma reference matching",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
 id = "midkine_elisa_cancer_dta"
 domain = "diagnostic_test_accuracy"
 artifact_path = "validation/dta/midkine_elisa_cancer_dta_benchmark.toml"

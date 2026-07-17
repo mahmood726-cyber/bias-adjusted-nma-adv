@@ -47,6 +47,7 @@ def test_source_benchmark_registry_validates_all_registered_artifacts():
         "t2d_mace_ctgov_hr_network",
         "semaglutide_obesity_dose_response",
         "sitagliptin_pioglitazone_component",
+        "sglt2_rct_nrs_cross_design",
         "midkine_elisa_cancer_dta",
     }
     for entry in registry.benchmarks:
@@ -66,6 +67,7 @@ def test_source_benchmark_registry_covers_every_source_backed_benchmark_artifact
         "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
         "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml",
         "validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml",
+        "validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml",
         "validation/dta/midkine_elisa_cancer_dta_benchmark.toml",
     )
     assert_registry_covers_source_backed_artifacts(registry, repo_root=ROOT)
@@ -123,7 +125,7 @@ def test_validate_benchmark_registry_script_emits_machine_readable_summary():
     assert payload["status"] == "passed"
     assert payload["certification_effect"] == "none"
     assert payload["registry"] == "validation/benchmark_registry.toml"
-    assert payload["n_benchmarks"] == 7
+    assert payload["n_benchmarks"] == 8
     assert set(payload["benchmark_ids"]) == {
         "sglt2_hf_primary_log_or",
         "sglt2_hf_reported_hr",
@@ -131,6 +133,7 @@ def test_validate_benchmark_registry_script_emits_machine_readable_summary():
         "t2d_mace_ctgov_hr_network",
         "semaglutide_obesity_dose_response",
         "sitagliptin_pioglitazone_component",
+        "sglt2_rct_nrs_cross_design",
         "midkine_elisa_cancer_dta",
     }
 

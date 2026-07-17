@@ -36,14 +36,15 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "pactr_protocol",
         "who_ictrp_protocol",
     ]
-    assert atlas["n_benchmarks"] == 7
-    assert atlas["n_benchmark_study_effects"] == 57
-    assert atlas["n_unique_study_ids"] == 53
-    assert atlas["n_unique_nct_ids"] == 18
-    assert atlas["n_unique_pmids"] == 8
+    assert atlas["n_benchmarks"] == 8
+    assert atlas["n_benchmark_study_effects"] == 61
+    assert atlas["n_unique_study_ids"] == 55
+    assert atlas["n_unique_nct_ids"] == 19
+    assert atlas["n_unique_pmids"] == 10
     assert atlas["domain_counts"] == {
         "binary_pairwise_meta": 1,
         "component_nma": 1,
+        "cross_design_nma": 1,
         "diagnostic_test_accuracy": 1,
         "dose_response_pairwise": 1,
         "reported_hr_star_network": 1,
@@ -56,6 +57,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "pubmed_abstract_event_counts": 1,
         "reported_hr_clinicaltrials_gov_results": 1,
         "reported_hr_pubmed_abstract": 2,
+        "reported_hr_pubmed_abstract_cross_design": 1,
     }
     assert atlas["source_check_scope_counts"] == {
         "clinicaltrials_gov_component_lsmean": 1,
@@ -64,6 +66,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "identity_and_reachability": 20,
         "open_access_jats_table_2x2": 11,
         "pubmed_abstract_component_identity": 1,
+        "pubmed_abstract_cross_design_reported_hr_tokens": 4,
         "pubmed_abstract_dose_response_identity": 1,
         "pubmed_abstract_event_count_tokens": 4,
         "pubmed_abstract_reported_hr_tokens": 6,
@@ -71,7 +74,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
     assert atlas["source_type_counts"] == {
         "clinicaltrials_gov": 22,
         "open_access_paper": 11,
-        "pubmed_abstract": 22,
+        "pubmed_abstract": 26,
     }
     assert "tier-one parity" in atlas["does_not_prove"]
     assert "closed-loop source-backed networks before inconsistency-performance claims" in atlas[
@@ -84,6 +87,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "t2d_mace_ctgov_hr_network",
         "semaglutide_obesity_dose_response",
         "sitagliptin_pioglitazone_component",
+        "sglt2_rct_nrs_cross_design",
         "midkine_elisa_cancer_dta",
     }
     assert {item["certification_effect"] for item in atlas["benchmarks"]} == {"none"}
@@ -119,13 +123,14 @@ def test_real_benchmark_atlas_summary_is_validation_status_ready():
     assert summarize_real_benchmark_atlas(atlas) == {
         "schema_version": REAL_BENCHMARK_ATLAS_SCHEMA_VERSION,
         "status": "passed",
-        "n_benchmarks": 7,
-        "n_benchmark_study_effects": 57,
-        "n_unique_nct_ids": 18,
-        "n_unique_pmids": 8,
+        "n_benchmarks": 8,
+        "n_benchmark_study_effects": 61,
+        "n_unique_nct_ids": 19,
+        "n_unique_pmids": 10,
         "domain_counts": {
             "binary_pairwise_meta": 1,
             "component_nma": 1,
+            "cross_design_nma": 1,
             "diagnostic_test_accuracy": 1,
             "dose_response_pairwise": 1,
             "reported_hr_star_network": 1,
@@ -134,7 +139,7 @@ def test_real_benchmark_atlas_summary_is_validation_status_ready():
         "source_type_counts": {
             "clinicaltrials_gov": 22,
             "open_access_paper": 11,
-            "pubmed_abstract": 22,
+            "pubmed_abstract": 26,
         },
         "certification_effect": "none",
     }

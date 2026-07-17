@@ -41,8 +41,8 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
     assert summary["global_feature_parity_complete"] is False
     assert summary["status_counts"] == {
         "blocking": 1,
-        "local_implemented": 3,
-        "planned": 3,
+        "local_implemented": 4,
+        "planned": 2,
         "reference_candidate": 5,
     }
     assert summary["reference_matched_ids"] == []

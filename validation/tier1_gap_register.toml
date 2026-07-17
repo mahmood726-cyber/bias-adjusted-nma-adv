@@ -88,6 +88,7 @@ implemented_capabilities = [
   "pairwise_reml_local_minimum_profile_diagnostic",
   "pairwise_optimizer_stress_matrix",
   "ctgov_sparse_design_bias_guard",
+  "source_backed_cross_design_routing_benchmark",
   "large_scale_validation_evidence_gate",
 ]
 required_evidence_artifacts = [
