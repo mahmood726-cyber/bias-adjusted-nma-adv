@@ -1,5 +1,5 @@
 schema_version = "multiperson_review/v1"
-checked_at = "2026-07-15"
+checked_at = "2026-07-17"
 certification_effect = "none"
 source_policy = "AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance for effect evidence; protocol-only registry rows remain metadata sources for registered-primary-outcome anchors and completeness denominators"
 required_review_rounds = [
@@ -24,10 +24,13 @@ scope = [
 findings = [
   "Extracted model-ready effects need source snippets, source-manifest hashes, and source-check hashes before model ingestion.",
   "Existing Wasserstein survival outputs can guide method design but cannot be imported as clinical evidence without OA figure/source revalidation.",
+  "Gemini panel feedback agrees that proof-carrying extracted-effect bundles and KM synthetic-IPD blocking give this repository a provenance layer that standard estimator packages do not provide.",
+  "The panel's native-Guyot concern is now partly addressed by the local native Guyot reconstruction check; the next gate remains an OA figure manifest with source-bound curve and risk-table provenance.",
 ]
 actions = [
   "Commit 67204e5 added the proof-effect bundle validator and SGLT2 reported-HR proof bundle.",
   "The bundle validates PubMed abstract source identifiers, HR/CI snippets, source-check hashes, and certification_effect = none.",
+  "Recorded the current KM reconstruction status as native algorithmic validation plus fail-closed source screening, not as certified survival evidence.",
 ]
 next_gate = "Add the first OA Kaplan-Meier figure manifest with PMID/NCT/figure provenance, curve/IPD hashes, reproduced HR, and discrepancy."
 
@@ -44,9 +47,12 @@ scope = [
 findings = [
   "Current real-meta SGLT2 evidence is a source-governed plumbing benchmark, not proof of random-effects, survival-NMA, or tier-one superiority.",
   "Pairwise reported-HR fixtures and CT.gov star networks remain local regression evidence until external reference adapters pass.",
+  "Gemini panel feedback correctly identifies the HKSJ q-floor as a safer default than unfloored HKSJ when Q < k - 1.",
+  "The same feedback correctly keeps optimizer stability, sparse-network convergence, and mature diagnostic breadth as tier-one blockers.",
 ]
 actions = [
   "Docs and validation status retain clinical_hta_reporting_enabled = false and certification_effect = none.",
+  "The tier-one gap register keeps numerical stability and feature-completeness blockers active despite narrow R reference matches.",
 ]
 next_gate = "Run external netmeta/metafor/multinma adapters with package versions, input/output hashes, and prespecified tolerances when R/package dependencies are available."
 
@@ -62,10 +68,13 @@ scope = [
 findings = [
   "The ingestion contract needed a generated artifact test, mutation tests, and inclusion in the unified validation status report.",
   "Proof snippets should be minimal HR/CI-bearing text rather than broad PubMed abstract windows.",
+  "Gemini panel feedback on topological positivity is tracked as experimental capability only: transportability diagnostics remain non-certifying and cannot substitute for clinical validation.",
+  "The answer-key pin feedback is now implemented as a dedicated external source-artifact verifier that fails closed on hash drift.",
 ]
 actions = [
   "Commit 67204e5 added bundle validation tests for non-certification, hash drift, and missing HR-token mutations.",
   "The writer now stores compact HR/CI snippets and the status report exposes the bundle summary.",
+  "Added `scripts/verify_reversal_source_artifacts.py` so external FIX.md-style pins can be verified without committing local private paths.",
 ]
 next_gate = "Promote additional reported-effect bundles only when their source-check reports and source manifests have specialized validators."
 
@@ -83,9 +92,11 @@ scope = [
 findings = [
   "Historical adversarial and journal-review notes contain clinical, guideline, publication-status, and tier-one superiority language that must remain quarantined as hypotheses.",
   "Every historical review note must start with a non-evidence disclaimer and must not be treated as source, certification, clinical, regulatory, or HTA evidence.",
+  "Gemini panel feedback correctly concludes that the repository remains a verifiability-first prototype and validation harness rather than validated clinical, HTA, or regulatory evidence.",
 ]
 actions = [
   "Existing review-artifact policy and tests require the non-evidence disclaimer at the start of historical review notes.",
   "This ledger records the claim-governance finding as an active next gate rather than treating historical review notes as validation evidence.",
+  "Clinical and HTA reporting remain disabled unless a module reaches Production Certified status through machine-readable evidence.",
 ]
 next_gate = "Add a stricter claim-hygiene denylist for historical review notes if any release-facing exporter starts ingesting docs content."

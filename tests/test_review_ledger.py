@@ -35,7 +35,7 @@ def test_review_ledger_summary_is_validation_status_ready():
 
     assert summary == {
         "schema_version": MULTIPERSON_REVIEW_SCHEMA_VERSION,
-        "checked_at": "2026-07-15",
+        "checked_at": "2026-07-17",
         "n_rounds": 4,
         "round_ids": [
             "source_boundary_review",

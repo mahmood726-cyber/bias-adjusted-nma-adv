@@ -280,3 +280,30 @@ def test_unadjusted_pooler_matches_metafor_fixed_effect_golden_reference():
     assert fit.treatment_ses["SGLT2i"] == pytest.approx(reference["se"], abs=1e-12)
     assert fit.taus == {"rct": 0.0}
     assert fit.warnings == ()
+
+
+def test_default_pooler_stays_on_metafor_path_when_weights_are_identity_and_no_covariates():
+    rows = load_arm_event_rows(SGLT2_EVENTS)
+    dataset = build_dataset_from_arm_events(rows)
+    assert all(study.rob_weight == 1.0 for study in dataset.studies.values())
+    assert all(not study.covariates for study in dataset.studies.values())
+
+    fit = AdvancedBiasAdjustedNMAPooler().fit(
+        dataset,
+        "hf_primary",
+        reference_treatment="Placebo",
+    )
+    reference = json.loads(PAIRWISE_METAFOR_OUTPUT.read_text(encoding="utf-8"))["metafor"][
+        "fixed_effect"
+    ]
+
+    # The fixed-effect unadjusted path above is the 1e-12 estimate/SE golden
+    # reference. Defaults intentionally traverse the random-effects/HKSJ
+    # uncertainty path, so this test pins the point estimate and no-hidden-bias
+    # channel invariant rather than the fixed-effect standard error.
+    assert fit.treatment_effects["SGLT2i"] == pytest.approx(reference["estimate"], abs=1e-10)
+    assert fit.treatment_ses["SGLT2i"] >= reference["se"]
+    assert fit.q_factor == pytest.approx(1.0)
+    assert fit.taus["rct"] < 1e-4
+    assert fit.target_population == "enriched_as_randomised"
+    assert fit.warnings == ()

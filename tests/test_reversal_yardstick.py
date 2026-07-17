@@ -1,5 +1,7 @@
 from pathlib import Path
 import hashlib
+import subprocess
+import sys
 
 import pytest
 
@@ -14,6 +16,7 @@ from bias_nma_adv.reversal_yardstick import (
 
 ROOT = Path(__file__).resolve().parents[1]
 YARDSTICK = ROOT / "validation" / "reversal_yardstick.toml"
+VERIFY_SCRIPT = ROOT / "scripts" / "verify_reversal_source_artifacts.py"
 
 
 def test_reversal_yardstick_preserves_detected_not_oracle_headline():
@@ -99,6 +102,67 @@ def test_reversal_yardstick_verifies_source_artifact_pins_when_available(tmp_pat
         yardstick.verify_source_artifact_pins({"fix_md": drifted})
 
 
+def test_reversal_source_artifact_pin_cli_fails_closed(tmp_path):
+    raw = _yardstick_to_mapping(load_reversal_yardstick(YARDSTICK))
+    pinned = tmp_path / "FIX.md"
+    pinned.write_text("stable answer key", encoding="utf-8")
+    raw["source_artifact_hashes"] = {
+        "fix_md": hashlib.sha256(pinned.read_bytes()).hexdigest()
+    }
+    yardstick_path = tmp_path / "reversal_yardstick.toml"
+    _write_minimal_yardstick_toml(raw, yardstick_path)
+
+    verified = subprocess.run(
+        [
+            sys.executable,
+            str(VERIFY_SCRIPT),
+            "--yardstick",
+            str(yardstick_path),
+            "--source-artifact",
+            f"fix_md={pinned}",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert verified.returncode == 0
+    assert '"status": "verified"' in verified.stdout
+
+    missing = subprocess.run(
+        [
+            sys.executable,
+            str(VERIFY_SCRIPT),
+            "--yardstick",
+            str(yardstick_path),
+            "--source-artifact",
+            f"fix_md={tmp_path / 'missing.md'}",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert missing.returncode == 1
+    assert '"status": "unavailable"' in missing.stdout
+
+    drifted = tmp_path / "drifted_FIX.md"
+    drifted.write_text("changed answer key", encoding="utf-8")
+    failed = subprocess.run(
+        [
+            sys.executable,
+            str(VERIFY_SCRIPT),
+            "--yardstick",
+            str(yardstick_path),
+            "--source-artifact",
+            f"fix_md={drifted}",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert failed.returncode == 1
+    assert "hash drift" in failed.stdout
+
+
 def _yardstick_to_mapping(yardstick: ReversalYardstick) -> dict[str, object]:
     return {
         "schema_version": REVERSAL_YARDSTICK_SCHEMA_VERSION,
@@ -141,3 +205,69 @@ def _yardstick_to_mapping(yardstick: ReversalYardstick) -> dict[str, object]:
         "source_artifact_hashes": dict(yardstick.source_artifact_hashes),
         "required_next_artifacts": list(yardstick.required_next_artifacts),
     }
+
+
+def _write_minimal_yardstick_toml(raw: dict[str, object], path: Path) -> None:
+    def q(value: object) -> str:
+        return '"' + str(value).replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+    def qlist(values: object) -> str:
+        return "[" + ", ".join(q(item) for item in values) + "]"
+
+    lines = [
+        f"schema_version = {q(raw['schema_version'])}",
+        f"checked_at = {q(raw['checked_at'])}",
+        f"status = {q(raw['status'])}",
+        f"certification_effect = {q(raw['certification_effect'])}",
+        f"purpose = {q(raw['purpose'])}",
+        f"allowed_evidence_sources = {qlist(raw['allowed_evidence_sources'])}",
+        f"protocol_only_sources = {qlist(raw['protocol_only_sources'])}",
+        f"truth_boundary = {q(raw['truth_boundary'])}",
+        f"headline_metric = {q(raw['headline_metric'])}",
+        f"oracle_only_reporting_allowed = {str(raw['oracle_only_reporting_allowed']).lower()}",
+        f"global_goal_complete = {str(raw['global_goal_complete']).lower()}",
+        f"n_cases = {raw['n_cases']}",
+        f"priority_reversal_cases = {raw['priority_reversal_cases']}",
+        f"case_data_status = {q(raw['case_data_status'])}",
+        f"negative_control_status = {q(raw['negative_control_status'])}",
+        f"claim_limit = {q(raw['claim_limit'])}",
+        f"required_next_artifacts = {qlist(raw['required_next_artifacts'])}",
+        "",
+        "[source_artifact_hashes]",
+    ]
+    lines.extend(
+        f"{key} = {q(value)}"
+        for key, value in raw["source_artifact_hashes"].items()
+    )
+    lines.extend(
+        [
+            "",
+            "[flag_recover]",
+            f"flag_caught = {raw['flag_recover']['flag_caught']}",
+            f"flag_total = {raw['flag_recover']['flag_total']}",
+            f"recover_caught = {raw['flag_recover']['recover_caught']}",
+            f"recover_total = {raw['flag_recover']['recover_total']}",
+            "",
+            "[detector]",
+            f"status = {q(raw['detector']['status'])}",
+            f"auc = {raw['detector']['auc']}",
+            f"ci_lower = {raw['detector']['ci_lower']}",
+            f"ci_upper = {raw['detector']['ci_upper']}",
+            "",
+        ]
+    )
+    for section in ("oracle", "detected"):
+        for comparator in ("vs_standard_dl", "vs_strong_standard"):
+            values = raw[section][comparator]
+            lines.extend(
+                [
+                    f"[{section}.{comparator}]",
+                    f"estimate = {values['estimate']}",
+                    f"ci_lower = {values['ci_lower']}",
+                    f"ci_upper = {values['ci_upper']}",
+                    "",
+                ]
+            )
+    lines.append("[mean_distance]")
+    lines.extend(f"{key} = {value}" for key, value in raw["mean_distance"].items())
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
