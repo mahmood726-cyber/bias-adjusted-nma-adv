@@ -1,0 +1,66 @@
+schema_version = "tier1_r_dependency_preflight/v1"
+checked_at = "2026-07-17"
+status = "partial"
+certification_effect = "none"
+purpose = "Local R dependency preflight for tier-one reference adapters. This records package/runtime availability only and is not reference matching."
+r_version = "4.6.0"
+jags_runtime_status = "missing"
+jags_install_attempt_status = "blocked"
+jags_install_attempt_note = "The JAGS 4.3.2 Windows installer was downloaded from SourceForge with curl -L, but silent execution was canceled at the Windows installer/elevation boundary; crossnma/rjags cannot run until JAGS 4.x is installed."
+claim_limit = "Dependency availability is not model validation, reference matching, tier-one parity, or production certification."
+
+[[packages]]
+name = "netmeta"
+version = "3.5.0"
+load_status = "loaded"
+adapter_role = "frequentist_nma_and_component_nma_reference"
+runtime_blocker = ""
+
+[[packages]]
+name = "metafor"
+version = "5.0.1"
+load_status = "loaded"
+adapter_role = "pairwise_and_reported_hr_reference"
+runtime_blocker = ""
+
+[[packages]]
+name = "meta"
+version = "8.5.0"
+load_status = "loaded"
+adapter_role = "pairwise_reference_and_netmeta_dependency"
+runtime_blocker = ""
+
+[[packages]]
+name = "mada"
+version = "0.5.12"
+load_status = "loaded"
+adapter_role = "diagnostic_test_accuracy_reference"
+runtime_blocker = ""
+
+[[packages]]
+name = "multinma"
+version = "0.9.1"
+load_status = "loaded"
+adapter_role = "bayesian_nma_and_mlnmr_reference_candidate"
+runtime_blocker = "No source-backed real ML-NMR IPD plus aggregate covariate dataset has been registered."
+
+[[packages]]
+name = "rstan"
+version = "2.32.7"
+load_status = "loaded"
+adapter_role = "multinma_sampling_dependency"
+runtime_blocker = ""
+
+[[packages]]
+name = "MBNMAdose"
+version = "0.5.1"
+load_status = "loaded"
+adapter_role = "dose_response_nma_reference_candidate"
+runtime_blocker = "Package loads, but model execution is JAGS-dependent; JAGS runtime is missing."
+
+[[packages]]
+name = "crossnma"
+version = "1.3.1"
+load_status = "installed_but_unloadable"
+adapter_role = "cross_design_nma_reference_candidate"
+runtime_blocker = "rjags cannot locate JAGS 4.x."
