@@ -29,6 +29,7 @@ DTA_R_ADAPTER = ROOT / "external" / "r" / "dta_mada_reitsma_fixture.R"
 DTA_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_dta_mada_adapter.py"
 DOSE_RESPONSE_R_ADAPTER = ROOT / "external" / "r" / "dose_response_metafor_polynomial.R"
 SURVIVAL_HR_R_ADAPTER = ROOT / "external" / "r" / "survival_hr_metafor_pairwise.R"
+CTGOV_HR_NETWORK_R_ADAPTER = ROOT / "external" / "r" / "ctgov_hr_network_netmeta.R"
 STAN_MODEL = ROOT / "external" / "stan" / "standard_binary_nma.stan"
 STAN_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_stan_nuts_adapter.py"
 STAN_REFERENCE_SCRIPT = ROOT / "scripts" / "run_stan_nuts_reference.py"
@@ -49,6 +50,7 @@ def test_reference_targets_registry_is_valid():
         "dta_bivariate_hsroc_reference",
         "pairwise_metafor_meta",
         "reported_hr_survival_metafor_pairwise",
+        "ctgov_hr_network_netmeta_star",
     }
 
     summary = summarize_reference_targets(targets)
@@ -101,7 +103,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 4, "passed": 7}
+    assert summary == {"failed": 4, "passed": 8}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -114,6 +116,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_metafor_dose_response_polynomial_output_validation",
         "r_metafor_sglt2_survival_hr_output_validation",
         "r_metafor_pcsk9_survival_hr_output_validation",
+        "r_netmeta_t2d_ctgov_hr_network_output_validation",
         "python_cmdstan_nuts_preflight",
         "python_cmdstan_nuts_output_validation",
     }
@@ -252,6 +255,22 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert SURVIVAL_HR_R_ADAPTER.is_file()
 
+    ctgov_hr_network_reference = by_adapter["r_netmeta_t2d_ctgov_hr_network_output_validation"]
+    assert ctgov_hr_network_reference.target_id == "ctgov_hr_network_netmeta_star"
+    assert ctgov_hr_network_reference.status == "passed"
+    assert ctgov_hr_network_reference.certification_effect == "evidence_candidate"
+    assert ctgov_hr_network_reference.reference_method == (
+        "netmeta fixed-effect CT.gov reported-HR star network"
+    )
+    assert ctgov_hr_network_reference.output_artifacts == (
+        "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
+    )
+    assert (
+        "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml"
+        in ctgov_hr_network_reference.input_artifacts
+    )
+    assert CTGOV_HR_NETWORK_R_ADAPTER.is_file()
+
     for report in reports:
         for artifact, expected_sha in report.input_sha256.items():
             assert sha256_file(ROOT / artifact) == expected_sha
@@ -265,6 +284,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/dose_response_metafor_polynomial_output.json",
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
+        "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
     }
 
 

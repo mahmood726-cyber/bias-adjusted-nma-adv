@@ -7,6 +7,7 @@ import pytest
 from bias_nma_adv.r_reference_validation import (
     RReferenceValidationError,
     load_r_reference_output,
+    validate_ctgov_hr_network_netmeta_output,
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
     validate_multiarm_netmeta_output,
@@ -22,6 +23,7 @@ DTA_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_output.j
 DOSE_RESPONSE_OUTPUT = ROOT / "validation" / "reference_runs" / "dose_response_metafor_polynomial_output.json"
 SGLT2_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "sglt2_survival_hr_metafor_output.json"
 PCSK9_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "pcsk9_survival_hr_metafor_output.json"
+CTGOV_HR_NETWORK_OUTPUT = ROOT / "validation" / "reference_runs" / "t2d_ctgov_hr_network_netmeta_output.json"
 
 
 def test_pairwise_metafor_output_matches_source_backed_python_artifact():
@@ -101,6 +103,19 @@ def test_survival_hr_metafor_output_matches_source_backed_reported_hr_artifact(
     assert "not KM reconstruction" in summary["source_policy_note"]
 
 
+def test_ctgov_hr_network_netmeta_output_matches_source_backed_star_network():
+    summary = validate_ctgov_hr_network_netmeta_output(CTGOV_HR_NETWORK_OUTPUT, repo_root=ROOT)
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "ctgov_hr_network_netmeta_star"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == "netmeta fixed-effect CT.gov reported-HR star network"
+    assert summary["max_abs_difference"] < 1e-10
+    assert "star_network_limitation_preserved" in summary["validated_components"]
+    assert "not closed-loop inconsistency" in summary["source_policy_note"]
+
+
 def test_pairwise_reference_validation_rejects_numeric_drift(tmp_path):
     payload = load_r_reference_output(PAIRWISE_OUTPUT)
     payload = copy.deepcopy(payload)
@@ -154,3 +169,14 @@ def test_survival_hr_reference_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="fixed_effect estimate"):
         validate_survival_hr_metafor_pairwise_output(mutated, repo_root=ROOT)
+
+
+def test_ctgov_hr_network_netmeta_validation_rejects_numeric_drift(tmp_path):
+    payload = load_r_reference_output(CTGOV_HR_NETWORK_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["netmeta"]["common"]["GLP-1 RA"]["estimate"] += 0.01
+    mutated = tmp_path / "ctgov_hr_network_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="GLP-1 RA netmeta common estimate"):
+        validate_ctgov_hr_network_netmeta_output(mutated, repo_root=ROOT)

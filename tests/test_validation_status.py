@@ -261,7 +261,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 20,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 7,
+        "observed": 8,
         "required": 10,
     }
     assert "diagnostic_test_accuracy" in large_scale["missing_required_real_domains"]
@@ -365,10 +365,10 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 11
+    assert reference_runs["n_reports"] == 12
     assert reference_runs["status_counts"] == {
         "failed": 4,
-        "passed": 7,
+        "passed": 8,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
@@ -378,6 +378,7 @@ def test_validation_status_composes_all_current_gates():
         "validation/reference_runs/dose_response_metafor_polynomial_output.json",
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
+        "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
     }
     assert {item["certification_effect"] for item in reference_runs["reports"]} == {
         "none",
@@ -396,6 +397,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_metafor_dose_response_polynomial_output_validation", "passed"),
         ("r_metafor_sglt2_survival_hr_output_validation", "passed"),
         ("r_metafor_pcsk9_survival_hr_output_validation", "passed"),
+        ("r_netmeta_t2d_ctgov_hr_network_output_validation", "passed"),
         ("python_cmdstan_nuts_preflight", "failed"),
         ("python_cmdstan_nuts_output_validation", "passed"),
     }

@@ -1,3 +1,4 @@
+import csv
 import copy
 from pathlib import Path
 import subprocess
@@ -25,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "validation" / "networks" / "t2d_mace_ctgov_hrs.toml"
 REPORT = ROOT / "validation" / "source_checks" / "t2d_mace_ctgov_hr_network_check.json"
 ARTIFACT = ROOT / "validation" / "networks" / "t2d_mace_ctgov_hr_network_benchmark.toml"
+EFFECTS_CSV = ROOT / "validation" / "networks" / "t2d_mace_ctgov_hr_network_effects.csv"
 WRITER_SCRIPT = ROOT / "scripts" / "write_ctgov_hr_network_benchmark.py"
 VERIFY_SCRIPT = ROOT / "scripts" / "verify_ctgov_hr_network.py"
 
@@ -218,6 +220,25 @@ def test_ctgov_hr_network_artifact_recomputes_from_verified_sources():
                 "hr_ci_high",
             ):
                 assert abs(observed_effect[field] - expected_effect[field]) < 1e-14
+
+
+def test_ctgov_hr_network_effects_csv_matches_source_backed_artifact():
+    with ARTIFACT.open("rb") as handle:
+        artifact = tomllib.load(handle)
+    with EFFECTS_CSV.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+
+    expected = {row["study_id"]: row for row in artifact["study_effects"]}
+    observed = {row["study_id"]: row for row in rows}
+    assert set(observed) == set(expected)
+    for study_id, expected_row in expected.items():
+        observed_row = observed[study_id]
+        assert observed_row["nct_id"] == expected_row["nct_id"]
+        assert observed_row["analysis_treatment"] == expected_row["analysis_treatment"]
+        assert observed_row["control_treatment"] == expected_row["control_treatment"]
+        assert float(observed_row["estimate"]) == pytest.approx(expected_row["estimate"])
+        assert float(observed_row["se"]) == pytest.approx(expected_row["se"])
+        assert float(observed_row["variance"]) == pytest.approx(expected_row["variance"])
 
 
 def test_ctgov_hr_network_writer_regenerates_same_artifact(tmp_path):

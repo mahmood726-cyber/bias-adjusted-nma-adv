@@ -188,6 +188,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "ctgov_hr_network_netmeta_star"
+domain = "reported_hr_star_network"
+module = "src/bias_nma_adv/ctgov_hr_network.py"
+reference_method = "netmeta fixed-effect CT.gov reported-HR star network"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed CT.gov reported-HR star-network study effects and class labels",
+  "match fixed-effect class log-HR estimates and standard errors against netmeta",
+  "preserve the limitation that placebo-centered star networks cannot assess closed-loop inconsistency or broad netmeta parity",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "source_backed_ingestion_rct_extractor"
 domain = "evidence_ingestion"
 module = "src/bias_nma_adv/ingestion.py"

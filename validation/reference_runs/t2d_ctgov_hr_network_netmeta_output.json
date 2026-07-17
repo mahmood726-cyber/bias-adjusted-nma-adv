@@ -1,0 +1,127 @@
+{
+  "schema_version": "ctgov_hr_network_netmeta/v1",
+  "benchmark_id": "t2d_mace_ctgov_hr_network",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+  "effect_scale": "log_hr",
+  "reference_treatment": "placebo",
+  "package_versions": {
+    "R": "4.6.0",
+    "netmeta": "3.5.0",
+    "jsonlite": "2.0.0"
+  },
+  "study_effects": [
+    {
+      "study_id": "TECOS",
+      "nct_id": "NCT00790205",
+      "analysis_treatment": "DPP-4 inhibitor",
+      "control_treatment": "placebo",
+      "estimate": -0.0202027073175195,
+      "se": 0.054595663348671,
+      "variance": 0.00298068645648142
+    },
+    {
+      "study_id": "CANVAS",
+      "nct_id": "NCT01032629",
+      "analysis_treatment": "SGLT2 inhibitor",
+      "control_treatment": "placebo",
+      "estimate": -0.0725706928348354,
+      "se": 0.0922950746695492,
+      "variance": 0.00851838080825766
+    },
+    {
+      "study_id": "EMPA-REG-OUTCOME",
+      "nct_id": "NCT01131676",
+      "analysis_treatment": "SGLT2 inhibitor",
+      "control_treatment": "placebo",
+      "estimate": -0.150822889734584,
+      "se": 0.0742500268439173,
+      "variance": 0.00551306648632244
+    },
+    {
+      "study_id": "EXSCEL",
+      "nct_id": "NCT01144338",
+      "analysis_treatment": "GLP-1 RA",
+      "control_treatment": "placebo",
+      "estimate": -0.0943106794712413,
+      "se": 0.0479383450187642,
+      "variance": 0.00229808492313808
+    },
+    {
+      "study_id": "REWIND",
+      "nct_id": "NCT01394952",
+      "analysis_treatment": "GLP-1 RA",
+      "control_treatment": "placebo",
+      "estimate": -0.127833371509885,
+      "se": 0.0575704450305313,
+      "variance": 0.00331435614101342
+    },
+    {
+      "study_id": "CARMELINA",
+      "nct_id": "NCT01897532",
+      "analysis_treatment": "DPP-4 inhibitor",
+      "control_treatment": "placebo",
+      "estimate": 0.0198026272961797,
+      "se": 0.0697812733354402,
+      "variance": 0.00486942610831542
+    },
+    {
+      "study_id": "VERTIS-CV",
+      "nct_id": "NCT01986881",
+      "analysis_treatment": "SGLT2 inhibitor",
+      "control_treatment": "placebo",
+      "estimate": -0.0304592074847086,
+      "se": 0.0696012240141627,
+      "variance": 0.00484433038426966
+    },
+    {
+      "study_id": "CREDENCE",
+      "nct_id": "NCT02065791",
+      "analysis_treatment": "SGLT2 inhibitor",
+      "control_treatment": "placebo",
+      "estimate": -0.22314355131421,
+      "se": 0.0890792573138832,
+      "variance": 0.00793511408359302
+    },
+    {
+      "study_id": "HARMONY-Outcomes",
+      "nct_id": "NCT02465515",
+      "analysis_treatment": "GLP-1 RA",
+      "control_treatment": "placebo",
+      "estimate": -0.2484613592985,
+      "se": 0.0715069173120385,
+      "variance": 0.00511323922347071
+    },
+    {
+      "study_id": "PIONEER-6",
+      "nct_id": "NCT03914326",
+      "analysis_treatment": "GLP-1 RA",
+      "control_treatment": "placebo",
+      "estimate": -0.150822889734584,
+      "se": 0.0562619444422871,
+      "variance": 0.003165406392427
+    }
+  ],
+  "netmeta": {
+    "common": {
+      "DPP-4 inhibitor": {
+        "estimate": -0.0050126883100948,
+        "se": 0.0429990732066541
+      },
+      "GLP-1 RA": {
+        "estimate": -0.140864037925545,
+        "se": 0.0283029732215653
+      },
+      "SGLT2 inhibitor": {
+        "estimate": -0.111346641554257,
+        "se": 0.039802134882674
+      }
+    },
+    "q": 6.87852485882721,
+    "df": 7
+  },
+  "limitations": [
+    "ClinicalTrials.gov reported HR and CI values are verified, but no closed-loop inconsistency can be assessed.",
+    "The network is a placebo-centered star; this is not broad netmeta parity.",
+    "Class labels are analyst-defined treatment groupings and are not clinical superiority claims."
+  ]
+}

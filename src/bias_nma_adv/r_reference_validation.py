@@ -596,6 +596,138 @@ def validate_survival_hr_metafor_pairwise_output(
     }
 
 
+def validate_ctgov_hr_network_netmeta_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``netmeta`` output against the CT.gov reported-HR star network."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "reference_treatment",
+            "package_versions",
+            "study_effects",
+            "netmeta",
+            "limitations",
+        },
+        label="CT.gov HR netmeta output",
+    )
+    if output["schema_version"] != "ctgov_hr_network_netmeta/v1":
+        raise RReferenceValidationError("CT.gov HR netmeta output schema_version mismatch.")
+    if output["benchmark_id"] != "t2d_mace_ctgov_hr_network":
+        raise RReferenceValidationError("CT.gov HR netmeta output benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("CT.gov HR netmeta output source_policy mismatch.")
+    if output["effect_scale"] != "log_hr":
+        raise RReferenceValidationError("CT.gov HR netmeta output must use log_hr scale.")
+    if output["reference_treatment"] != "placebo":
+        raise RReferenceValidationError("CT.gov HR netmeta output reference_treatment mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "netmeta", "jsonlite"})
+
+    benchmark = _load_toml(root / "validation" / "networks" / "t2d_mace_ctgov_hr_network_benchmark.toml")
+    expected_effects = {
+        str(effect["study_id"]): effect for effect in benchmark["study_effects"]
+    }
+    observed_effects = {
+        str(effect["study_id"]): effect for effect in output["study_effects"]
+    }
+    if set(expected_effects) != set(observed_effects):
+        raise RReferenceValidationError("CT.gov HR netmeta study effects do not match benchmark effects.")
+
+    max_abs_diff = 0.0
+    for study_id, expected in expected_effects.items():
+        observed = observed_effects[study_id]
+        if str(observed["nct_id"]) != expected["nct_id"]:
+            raise RReferenceValidationError(f"{study_id}: CT.gov HR netmeta NCT ID mismatch.")
+        if str(observed["analysis_treatment"]) != expected["analysis_treatment"]:
+            raise RReferenceValidationError(f"{study_id}: CT.gov HR netmeta treatment mismatch.")
+        if str(observed["control_treatment"]) != expected["control_treatment"]:
+            raise RReferenceValidationError(f"{study_id}: CT.gov HR netmeta control mismatch.")
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"{study_id} estimate",
+                observed["estimate"],
+                expected["estimate"],
+                tolerance,
+            ),
+            _assert_close(f"{study_id} se", observed["se"], expected["se"], tolerance),
+            _assert_close(
+                f"{study_id} variance",
+                observed["variance"],
+                expected["variance"],
+                tolerance,
+            ),
+        )
+
+    expected_fixed = {
+        str(effect["treatment"]): effect
+        for effect in benchmark["candidate"]["fixed_gls"]["effects"]
+    }
+    observed_fixed = output["netmeta"]["common"]
+    if set(expected_fixed) != set(observed_fixed):
+        raise RReferenceValidationError("CT.gov HR netmeta treatment effects mismatch.")
+    for treatment, expected in expected_fixed.items():
+        observed = observed_fixed[treatment]
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"{treatment} netmeta common estimate",
+                observed["estimate"],
+                expected["estimate"],
+                tolerance,
+            ),
+            _assert_close(
+                f"{treatment} netmeta common se",
+                observed["se"],
+                expected["se"],
+                tolerance,
+            ),
+        )
+
+    expected_random = benchmark["candidate"]["random_gls"]
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_close("CT.gov HR netmeta Q", output["netmeta"]["q"], expected_random["q"], tolerance),
+    )
+    if int(output["netmeta"]["df"]) != int(expected_random["df"]):
+        raise RReferenceValidationError("CT.gov HR netmeta df mismatch.")
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not broad netmeta parity" in item for item in limitations):
+        raise RReferenceValidationError("CT.gov HR netmeta output must preserve broad-parity limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "ctgov_hr_network_netmeta_star",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "netmeta fixed-effect CT.gov reported-HR star network",
+        "validated_components": [
+            "source_backed_ctgov_reported_hr_effects",
+            "fixed_effect_class_log_hr",
+            "fixed_effect_class_standard_error",
+            "network_q_df",
+            "star_network_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates a CT.gov reported-HR star network only; it is not "
+            "closed-loop inconsistency validation or broad netmeta parity."
+        ),
+    }
+
+
 def _load_toml(path: Path) -> dict[str, Any]:
     with path.open("rb") as handle:
         return tomllib.load(handle)

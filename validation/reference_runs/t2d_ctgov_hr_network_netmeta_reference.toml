@@ -1,0 +1,28 @@
+schema_version = "reference_run/v1"
+target_id = "ctgov_hr_network_netmeta_star"
+adapter_id = "r_netmeta_t2d_ctgov_hr_network_output_validation"
+reference_method = "netmeta fixed-effect CT.gov reported-HR star network"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-17T09:22:00Z"
+command = ["Rscript", "--vanilla", "external/r/ctgov_hr_network_netmeta.R", "--effects", "validation/networks/t2d_mace_ctgov_hr_network_effects.csv", "--output", "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json", "--reference", "placebo"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", netmeta = "3.5.0", jsonlite = "2.0.0"}
+input_artifacts = ["validation/networks/t2d_mace_ctgov_hr_network_effects.csv", "validation/networks/t2d_mace_ctgov_hrs.toml", "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml", "validation/source_checks/t2d_mace_ctgov_hr_network_check.json", "external/r/ctgov_hr_network_netmeta.R"]
+output_artifacts = ["validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_ctgov_reported_hr_effects", "fixed_effect_class_log_hr", "fixed_effect_class_standard_error", "network_q_df", "star_network_limitation_preserved"]
+max_abs_difference = 4.7552239923476236e-14
+notes = ["This validates a CT.gov reported-HR star network only; it is not closed-loop inconsistency validation or broad netmeta parity."]
+
+[input_sha256]
+"validation/networks/t2d_mace_ctgov_hr_network_effects.csv" = "3196dad0677615ee7a41e01a9166c52773daa89e82e0e492f3d4ea760795e05f"
+"validation/networks/t2d_mace_ctgov_hrs.toml" = "d74c2278b6513a09a0c0a170c33e830a0e68d3a2199f288a500c1255f39bec87"
+"validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml" = "f29606cdaca0b734c13e212af46ce4d86b0aa50a8446f326fc6f2a0077a6d6da"
+"validation/source_checks/t2d_mace_ctgov_hr_network_check.json" = "023487eba94d1164011b2492dab6a82acb5f20191fb75f0fd3b63fe8da676e02"
+"external/r/ctgov_hr_network_netmeta.R" = "38abf5c754a915a7e8bdbf4dfef394d0a8782db5d6b0d4adeaec32a844d772dd"
+
+[output_sha256]
+"validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json" = "a05c5880a161e48b0f544d780e67aac9a0466e05bbe7a9c106bc29bdb7bc64f3"

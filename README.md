@@ -81,7 +81,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/real_benchmark_atlas.json`: Generated coverage atlas over the registered real-data benchmark artifacts. It records current source-backed coverage and explicit non-claims; it is not certification evidence.
 - `validation/survival/`: Source-backed survival HR benchmark manifests and effects CSVs; current entries verify reported HR tokens from PubMed abstracts and support narrow `metafor` fixed-effect reported-HR checks. KM reconstruction remains non-certifying and requires OA figure provenance before any real KM artifact can enter validation.
 - `validation/dose_response/`: Source-backed semaglutide dose-response manifest, effects CSV, and generated local benchmark artifact from ClinicalTrials.gov results plus PubMed identity verification.
-- `validation/networks/`: Source-backed network benchmark manifests and generated artifacts, including the CT.gov T2D MACE reported-HR star network.
+- `validation/networks/`: Source-backed network benchmark manifests, effects CSVs, and generated artifacts, including the CT.gov T2D MACE reported-HR star network with a narrow `netmeta` fixed-effect reference check.
 - `validation/survival/km_reconstruction_policy.toml`: Static OA-only KM reconstruction policy; blocks text-only HR and synthetic-IPD fallbacks from validation evidence.
 - `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; current dose-response smoke validation uses `metafor`, while later targets include `multinma`, `MBNMAdose`, and `crossnma`.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
