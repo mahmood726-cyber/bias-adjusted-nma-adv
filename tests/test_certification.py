@@ -54,6 +54,7 @@ def test_reference_targets_registry_is_valid():
         "pairwise_metafor_meta",
         "reported_hr_survival_metafor_pairwise",
         "ctgov_hr_network_netmeta_star",
+        "ctgov_binary_network_netmeta_closed_loop",
     }
 
     summary = summarize_reference_targets(targets)
@@ -106,7 +107,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 4, "passed": 10}
+    assert summary == {"failed": 4, "passed": 11}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -121,6 +122,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_metafor_sglt2_survival_hr_output_validation",
         "r_metafor_pcsk9_survival_hr_output_validation",
         "r_netmeta_t2d_ctgov_hr_network_output_validation",
+        "r_netmeta_psoriasis_ctgov_binary_network_output_validation",
         "r_netmeta_component_cnma_output_validation",
         "python_cmdstan_nuts_preflight",
         "python_cmdstan_nuts_output_validation",
@@ -290,6 +292,25 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert CTGOV_HR_NETWORK_R_ADAPTER.is_file()
 
+    ctgov_binary_network_reference = by_adapter[
+        "r_netmeta_psoriasis_ctgov_binary_network_output_validation"
+    ]
+    assert ctgov_binary_network_reference.target_id == "ctgov_binary_network_netmeta_closed_loop"
+    assert ctgov_binary_network_reference.status == "passed"
+    assert ctgov_binary_network_reference.certification_effect == "evidence_candidate"
+    assert ctgov_binary_network_reference.reference_method == (
+        "netmeta CT.gov arm-count closed-loop binary network"
+    )
+    assert ctgov_binary_network_reference.output_artifacts == (
+        "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
+    )
+    assert (
+        "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml"
+        in ctgov_binary_network_reference.input_artifacts
+    )
+    assert "absolute <= 1e-06" in ctgov_binary_network_reference.tolerance
+    assert MULTIARM_R_ADAPTER.is_file()
+
     component_reference = by_adapter["r_netmeta_component_cnma_output_validation"]
     assert component_reference.target_id == "component_nma_netmeta_cnma"
     assert component_reference.status == "passed"
@@ -320,6 +341,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
+        "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
         "validation/reference_runs/component_netmeta_cnma_output.json",
     }
 

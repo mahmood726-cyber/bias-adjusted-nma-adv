@@ -31,6 +31,7 @@ class LargeScaleThresholds:
     minimum_unique_nct_ids: int
     minimum_unique_pmids: int
     minimum_passed_reference_reports: int
+    minimum_tau2_positive_benchmarks: int
     minimum_simulation_jobs: int
     minimum_simulation_iterations: int
     required_real_domains: tuple[str, ...]
@@ -43,6 +44,7 @@ class LargeScaleThresholds:
             "minimum_unique_nct_ids",
             "minimum_unique_pmids",
             "minimum_passed_reference_reports",
+            "minimum_tau2_positive_benchmarks",
             "minimum_simulation_jobs",
             "minimum_simulation_iterations",
             "required_real_domains",
@@ -56,6 +58,7 @@ class LargeScaleThresholds:
             minimum_unique_nct_ids=int(raw["minimum_unique_nct_ids"]),
             minimum_unique_pmids=int(raw["minimum_unique_pmids"]),
             minimum_passed_reference_reports=int(raw["minimum_passed_reference_reports"]),
+            minimum_tau2_positive_benchmarks=int(raw["minimum_tau2_positive_benchmarks"]),
             minimum_simulation_jobs=int(raw["minimum_simulation_jobs"]),
             minimum_simulation_iterations=int(raw["minimum_simulation_iterations"]),
             required_real_domains=tuple(str(item) for item in raw["required_real_domains"]),
@@ -70,6 +73,7 @@ class LargeScaleThresholds:
             "minimum_unique_nct_ids": self.minimum_unique_nct_ids,
             "minimum_unique_pmids": self.minimum_unique_pmids,
             "minimum_passed_reference_reports": self.minimum_passed_reference_reports,
+            "minimum_tau2_positive_benchmarks": self.minimum_tau2_positive_benchmarks,
             "minimum_simulation_jobs": self.minimum_simulation_jobs,
             "minimum_simulation_iterations": self.minimum_simulation_iterations,
         }
@@ -185,6 +189,10 @@ def summarize_large_scale_validation(
         "passed_reference_reports": (
             len(passed_reference_reports),
             thresholds.minimum_passed_reference_reports,
+        ),
+        "tau2_positive_benchmarks": (
+            int(real_benchmark_atlas.get("n_tau2_positive_benchmarks", 0)),
+            thresholds.minimum_tau2_positive_benchmarks,
         ),
         "simulation_jobs": (len(simulation_matrix.jobs), thresholds.minimum_simulation_jobs),
         "simulation_iterations": (

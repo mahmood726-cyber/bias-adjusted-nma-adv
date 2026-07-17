@@ -1,5 +1,5 @@
 schema_version = "source_benchmark_registry/v1"
-checked_at = "2026-07-16"
+checked_at = "2026-07-17"
 purpose = "Machine-readable inventory of local source-backed benchmark artifacts. Entries are validation evidence only within their stated scope and do not certify tier-one parity."
 allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
 certification_rule = "Every registered local benchmark must keep certification_effect = none until a passed external reference run promotes it through validation/reference_targets.toml."
@@ -98,6 +98,29 @@ source_check_sha256 = { "validation/source_checks/t2d_mace_ctgov_hr_network_chec
 required_limitations = [
   "closed-loop inconsistency cannot be assessed",
   "not clinical superiority claims",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "psoriasis_pasi90_ctgov_binary_network"
+domain = "arm_count_binary_closed_loop_network"
+artifact_path = "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml"
+artifact_sha256 = "a0e3cf9cacad5796c04d0b96edcfa84fa2a7d40ba68899b4e6eb0bf1c750baf8"
+artifact_schema_version = "ctgov_binary_network_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_arm_level_binary_counts"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 2
+source_manifests = ["validation/networks/psoriasis_pasi90_ctgov_binary_network.toml"]
+source_manifest_sha256 = { "validation/networks/psoriasis_pasi90_ctgov_binary_network.toml" = "d9ac68d511fea8088e122d97bd057a694e7f2699296fbf124132e2764e598669" }
+source_checks = ["validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json"]
+source_check_sha256 = { "validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json" = "9d4e58991659916af5575fe3485d9453abec768c1c51ccab58da23dd09728b7e" }
+required_limitations = [
+  "closed-loop source-backed smoke benchmark",
+  "not broad inconsistency performance",
+  "not netmeta or multinma reference parity",
   "does not certify model performance",
 ]
 

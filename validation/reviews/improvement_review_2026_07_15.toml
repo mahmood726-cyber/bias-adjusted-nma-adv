@@ -19,6 +19,9 @@ scope = [
   "src/bias_nma_adv/publication_bias.py",
   "docs/tier1_benchmark.md",
   "validation/reference_targets.toml",
+  "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml",
+  "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_reference.toml",
+  "validation/large_scale_validation.toml",
 ]
 findings = [
   "Feature completeness, numerical stability, and Bayesian ecosystem integration are legitimate blockers to tier-one parity.",
@@ -41,6 +44,8 @@ findings = [
   "The CT.gov sparse design-bias guard blocks one-RCT/one-NRS style cross-design borrowing without hierarchical shrinkage, but it is not a crossnma replacement.",
   "The DTA gate now records one source-backed open-access diagnostic test accuracy 2x2 benchmark and a narrow mada::reitsma source-table smoke reference, but this is not broad HSROC or diagnostic-accuracy parity.",
   "Gemini's transportability panel feedback matches local code coverage: topological support, non-collapsibility guards, and local ported tests are present, but they remain exploratory diagnostics rather than clinical evidence.",
+  "The source-backed CT.gov/PubMed psoriasis PASI 90 benchmark closes the previous absence of a closed-loop real binary network, and the local netmeta reference validates its multi-arm estimates and standard errors.",
+  "The psoriasis benchmark estimates tau2 = 0, so it still cannot stress-test positive heterogeneity; the large-scale gate now records zero source-backed positive-tau2 benchmarks and requires at least one before heterogeneity-stress claims.",
 ]
 actions = [
   "Added a machine-readable tier-one gap register with three blocking gaps and required evidence artifacts.",
@@ -60,11 +65,14 @@ actions = [
   "Recorded local Bayesian prior predictive, posterior predictive, and joint-draw ranking checks as implemented prototype diagnostics while keeping Stan/multinma parity blocked.",
   "Recorded native Python Guyot-style reconstruction, sparse CT.gov design-bias diagnostics, the source-backed dose-response smoke benchmark, the source-backed DTA smoke benchmark, and the nonclinical DTA/mada fixture adapter as partial capabilities without changing blocker status.",
   "Recorded causal transportability and topological positivity as locally tested exploratory diagnostics, not as independent external reproduction.",
+  "Registered the psoriasis PASI 90 closed-loop binary network as a source-backed benchmark and added a narrow netmeta reference-output validation candidate.",
+  "Added a real-benchmark atlas field and large-scale validation threshold for source-backed positive-tau2 benchmarks.",
 ]
 remaining_blockers = [
   "Reference-match node-splitting behavior and add contribution heatmaps, outlier diagnostics, trim-and-fill, and selection-model sensitivity workflows.",
   "Run broader sparse-network numerical stability stress tests against tier-one references.",
   "Add Stan/NUTS or externally matched Bayesian reference artifacts before Bayesian tier-one claims.",
+  "Add at least one source-backed benchmark with positive tau2 and at least one closed-loop network with reference-matched inconsistency diagnostics before treating real-network validation as discriminating.",
 ]
 verdict = "passed_current_milestone_not_global_goal"
 
@@ -77,6 +85,8 @@ scope = [
   "src/bias_nma_adv/ingestion.py",
   "validation/grand_benchmark_plan.toml",
   "validation/real_benchmark_atlas.json",
+  "validation/networks/psoriasis_pasi90_ctgov_binary_network.toml",
+  "validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json",
 ]
 findings = [
   "The source boundary now distinguishes effect-evidence sources from protocol-only registries.",
@@ -85,6 +95,7 @@ findings = [
   "DTA coverage was checked separately: one source-backed open-access TP/FP/FN/TN benchmark is now registered, with a narrow mada::reitsma source-table smoke reference and no broad HSROC parity.",
   "FDA/EMA regulatory review rows are now an explicit effect-source tier only when public numeric per-trial provenance is present.",
   "Protocol-only ICTRP/PACTR rows now have a non-effect metadata ledger path for registered primary outcomes and completeness denominators.",
+  "The new psoriasis PASI 90 binary network uses CT.gov arm-level numeric counts with PubMed identity verification; it does not depend on protocol-only registry rows.",
 ]
 actions = [
   "Centralized effect-source and protocol-only source constants.",
@@ -94,12 +105,14 @@ actions = [
   "Updated the DTA source-coverage artifact and validator to record the Midkine ELISA open-access 2x2 benchmark while keeping the nonclinical prototype/model-reference fixture tracked separately.",
   "Added a config-backed source-type policy for FDA/EMA regulatory review sources and protocol-only registry sources.",
   "Added a protocol-only registry metadata ledger and a config-backed study-design policy.",
+  "Added CT.gov/PubMed source verification for FIXTURE and UNCOVER-3 PASI 90 arm-count records before computing model-ready contrasts.",
 ]
 remaining_blockers = [
   "Add open-access full-paper/table extraction artifacts beyond PubMed abstract token checks.",
   "Add broader source-backed dose-response manifests, open-access table checks, and an MBNMAdose reference run before dose-response validation claims.",
   "Add source-backed DTA 2x2 manifests and broader bivariate GLMM/HSROC reference artifacts before DTA validation claims.",
   "Add protocol discrepancy audits using ICTRP, PACTR, or other registries without treating protocol-only rows as effect sources.",
+  "Add more source-backed closed-loop networks from allowed sources so the current single-dermatology smoke benchmark is not overinterpreted.",
 ]
 verdict = "passed_current_milestone_not_global_goal"
 
@@ -140,6 +153,9 @@ scope = [
   "tests/test_validation_status.py",
   "README.md",
   "docs/tier1_benchmark.md",
+  "tests/test_ctgov_binary_network.py",
+  "tests/test_r_reference_validation.py",
+  "tests/test_large_scale_validation.py",
 ]
 findings = [
   "The new governance contracts are test-covered and exposed through the unified validation status report.",
@@ -162,6 +178,8 @@ findings = [
   "The dose-response benchmark is generated from a verified manifest and source-check report, and its artifact states single-trial and shared-placebo covariance limitations.",
   "The native KM reconstruction and sparse design-bias helpers are focused diagnostics with direct tests and non-certifying output.",
   "The DTA prototype is isolated from certification claims: tests validate the nonclinical fixture and one source-backed Midkine table against mada::reitsma while the coverage gate still blocks broad DTA real-data validation.",
+  "The closed-loop psoriasis tests lock source-bound arm counts, artifact regeneration, non-certification, and exact netmeta output matching while preserving the current node-splitting non-estimability limitation.",
+  "The large-scale validation tests now fail closed if positive real heterogeneity is absent, preventing homogeneous source-backed benchmarks from satisfying heterogeneity-stress evidence.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
@@ -182,8 +200,10 @@ actions = [
   "Added focused tests for source-backed dose-response manifest validation, artifact regeneration, and overclaim rejection.",
   "Added focused tests for native Guyot-style reconstruction fidelity reporting and sparse design-bias underidentification.",
   "Added focused tests for DTA source coverage, bivariate prototype behavior, mada::reitsma fixture/source-table validation, and validation-status exposure.",
+  "Added focused tests for the CT.gov binary closed-loop benchmark, the psoriasis netmeta reference-output validator, and the positive-tau2 large-scale validation gate.",
 ]
 remaining_blockers = [
   "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit each capability milestone before treating the batch as reviewed.",
+  "Add a genuinely heterogeneous source-backed real network and rerun the full gate before upgrading the current review verdict.",
 ]
 verdict = "passed_current_milestone_not_global_goal"

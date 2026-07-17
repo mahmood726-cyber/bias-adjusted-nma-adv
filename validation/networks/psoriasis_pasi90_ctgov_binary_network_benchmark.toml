@@ -1,0 +1,655 @@
+schema_version = "ctgov_binary_network_benchmark/v1"
+benchmark_id = "psoriasis_pasi90_ctgov_binary_network"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_arm_level_binary_counts"
+network_type = "closed_loop_arm_level_binary_network"
+effect_scale = "log_or"
+continuity_policy = "no_continuity_correction_zero_cells_fail_closed"
+reference_treatment = "placebo"
+source_manifest = "validation/networks/psoriasis_pasi90_ctgov_binary_network.toml"
+source_manifest_sha256 = "d9ac68d511fea8088e122d97bd057a694e7f2699296fbf124132e2764e598669"
+source_verification_report = "validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json"
+source_verification_report_sha256 = "9d4e58991659916af5575fe3485d9453abec768c1c51ccab58da23dd09728b7e"
+n_studies = 2
+n_treatments = 6
+n_arms = 8
+n_contrast_rows = 12
+closed_loop_cycle_rank = 6
+limitations = ["single dermatology endpoint family only", "closed-loop source-backed smoke benchmark, not broad inconsistency performance", "node-splitting diagnostics are local fixed-effect smoke checks, not netmeta or multinma reference parity", "same-trial multi-arm correlations are modeled through the contrast covariance but this is not CINeMA or ROB-MEN certainty", "does not certify model performance"]
+
+[source_bundle]
+manifest_status = "candidate_source_verified"
+verification_status = "verified"
+nct_ids = ["NCT01358578", "NCT01646177"]
+pmids = ["25007392", "26072109"]
+source_types = ["clinicaltrials_gov", "pubmed_abstract"]
+
+[model_config]
+contrast_generation = "all_pairwise_log_or_contrasts_from_arm_counts"
+continuity_correction = "none"
+zero_cell_policy = "fail_closed"
+fixed_effect_engine = "multiarm_gls"
+random_effect_engine = "multiarm_generalized_dl"
+node_splitting_engine = "fixed_effect_direct_indirect_smoke"
+
+[[arm_counts]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+arm_id = "fixture_secukinumab_150"
+group_id = "OG000"
+treatment = "secukinumab_150mg"
+group_title = "AIN457 150mg"
+events = 137
+n = 327
+
+[[arm_counts]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+arm_id = "fixture_secukinumab_300"
+group_id = "OG001"
+treatment = "secukinumab_300mg"
+group_title = "AIN457 300mg"
+events = 175
+n = 323
+
+[[arm_counts]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+arm_id = "fixture_etanercept"
+group_id = "OG002"
+treatment = "etanercept"
+group_title = "Etanercept"
+events = 67
+n = 323
+
+[[arm_counts]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+arm_id = "fixture_placebo"
+group_id = "OG003"
+treatment = "placebo"
+group_title = "Placebo"
+events = 5
+n = 324
+
+[[arm_counts]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+arm_id = "uncover3_placebo"
+group_id = "OG000"
+treatment = "placebo"
+group_title = "Placebo"
+events = 6
+n = 193
+
+[[arm_counts]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+arm_id = "uncover3_etanercept"
+group_id = "OG001"
+treatment = "etanercept"
+group_title = "50 mg Etanercept"
+events = 98
+n = 382
+
+[[arm_counts]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+arm_id = "uncover3_ixekizumab_q4w"
+group_id = "OG002"
+treatment = "ixekizumab_q4w"
+group_title = "80 mg Ixekizumab Dosing Regimen 2 (Q4W)"
+events = 252
+n = 386
+
+[[arm_counts]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+arm_id = "uncover3_ixekizumab_q2w"
+group_id = "OG003"
+treatment = "ixekizumab_q2w"
+group_title = "80 mg Ixekizumab Dosing Regimen 1 (Q2W)"
+events = 262
+n = 385
+
+[[study_effects]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "secukinumab_150mg"
+treatment_to = "secukinumab_300mg"
+events_from = 137
+n_from = 327
+events_to = 175
+n_to = 323
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = 0.4946168464917602
+variance = 0.025033470438772017
+se = 0.1582196904268619
+
+[[study_effects]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "secukinumab_150mg"
+treatment_to = "etanercept"
+events_from = 137
+n_from = 327
+events_to = 67
+n_to = 323
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = -1.013441678756235
+variance = 0.0313940511020579
+se = 0.1771836648849377
+
+[[study_effects]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "secukinumab_150mg"
+treatment_to = "placebo"
+events_from = 137
+n_from = 327
+events_to = 5
+n_to = 324
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = -3.8287100440183828
+variance = 0.2156972242059741
+se = 0.4644321524248446
+
+[[study_effects]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "secukinumab_300mg"
+treatment_to = "etanercept"
+events_from = 175
+n_from = 323
+events_to = 67
+n_to = 323
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = -1.5080585252479954
+variance = 0.03130266560537083
+se = 0.17692559341534178
+
+[[study_effects]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "secukinumab_300mg"
+treatment_to = "placebo"
+events_from = 175
+n_from = 323
+events_to = 5
+n_to = 324
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = -4.323326890510143
+variance = 0.21560583870928698
+se = 0.4643337578825031
+
+[[study_effects]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "etanercept"
+treatment_to = "placebo"
+events_from = 67
+n_from = 323
+events_to = 5
+n_to = 324
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = -2.8152683652621473
+variance = 0.22196641937257283
+se = 0.4711331227716566
+
+[[study_effects]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "placebo"
+treatment_to = "etanercept"
+events_from = 6
+n_from = 193
+events_to = 98
+n_to = 382
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = 2.3753423881358975
+variance = 0.1857394686427708
+se = 0.4309750209034983
+
+[[study_effects]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "placebo"
+treatment_to = "ixekizumab_q4w"
+events_from = 6
+n_from = 193
+events_to = 252
+n_to = 386
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = 4.070938435187044
+variance = 0.18344520078497245
+se = 0.42830503240677953
+
+[[study_effects]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "placebo"
+treatment_to = "ixekizumab_q2w"
+events_from = 6
+n_from = 193
+events_to = 262
+n_to = 385
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = 4.195509296015211
+variance = 0.1839611354434971
+se = 0.42890690766586764
+
+[[study_effects]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "etanercept"
+treatment_to = "ixekizumab_q4w"
+events_from = 98
+n_from = 382
+events_to = 252
+n_to = 386
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = 1.6955960470511462
+variance = 0.025156148928634586
+se = 0.15860690063371954
+
+[[study_effects]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "etanercept"
+treatment_to = "ixekizumab_q2w"
+events_from = 98
+n_from = 382
+events_to = 262
+n_to = 385
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = 1.8201669078793135
+variance = 0.025672083587159226
+se = 0.16022510286206473
+
+[[study_effects]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+treatment_from = "ixekizumab_q4w"
+treatment_to = "ixekizumab_q2w"
+events_from = 252
+n_from = 386
+events_to = 262
+n_to = 385
+effect_direction = "treatment_to_minus_treatment_from"
+effect_scale = "log_or"
+continuity_correction = "none_zero_cells_fail_closed"
+estimate = 0.12457086082816726
+variance = 0.023377815729360926
+se = 0.15289805665658712
+
+[candidate.fixed_effect]
+model = "fixed"
+tau2 = 0.0
+q = ""
+df = ""
+multi_arm_studies = ["FIXTURE", "UNCOVER-3"]
+warnings = []
+study_contribution_heatmap = {studies = ["FIXTURE", "UNCOVER-3"], target_treatments = ["etanercept", "ixekizumab_q2w", "ixekizumab_q4w", "secukinumab_150mg", "secukinumab_300mg"], values = [[0.455572200703122, 0.544427799296878], [0.21095385829095617, 0.7890461417090437], [0.210953858290956, 0.789046141709044], [0.7508807179274783, 0.24911928207252174], [0.7508807179274785, 0.24911928207252143]], warnings = ["Contribution heatmap values are absolute GLS mapping proportions, not CINeMA or ROB-MEN certainty weights."]}
+
+[[candidate.fixed_effect.effects]]
+treatment = "etanercept"
+reference_treatment = "placebo"
+estimate = 2.5757604336817774
+se = 0.31799643104248054
+ci_low = 1.9524988816262407
+ci_high = 3.199021985737314
+
+[[candidate.fixed_effect.effects]]
+treatment = "ixekizumab_q2w"
+reference_treatment = "placebo"
+estimate = 4.381117460489614
+se = 0.33374689763663845
+ci_low = 3.7269855611698266
+ci_high = 5.035249359809401
+
+[[candidate.fixed_effect.effects]]
+treatment = "ixekizumab_q4w"
+reference_treatment = "placebo"
+estimate = 4.256546599661447
+se = 0.33297305750399114
+ci_low = 3.60393139913144
+ci_high = 4.909161800191454
+
+[[candidate.fixed_effect.effects]]
+treatment = "secukinumab_150mg"
+reference_treatment = "placebo"
+estimate = 3.609521956844895
+se = 0.3383602148603397
+ci_low = 2.946348121917395
+ci_high = 4.272695791772395
+
+[[candidate.fixed_effect.effects]]
+treatment = "secukinumab_300mg"
+reference_treatment = "placebo"
+estimate = 4.104138803336655
+se = 0.33822514617285354
+ci_low = 3.4412296981720667
+ci_high = 4.767047908501243
+
+[candidate.random_effect]
+model = "random"
+tau2 = 0.0
+q = 0.4746923481840964
+df = 1
+multi_arm_studies = ["FIXTURE", "UNCOVER-3"]
+warnings = []
+study_contribution_heatmap = {studies = ["FIXTURE", "UNCOVER-3"], target_treatments = ["etanercept", "ixekizumab_q2w", "ixekizumab_q4w", "secukinumab_150mg", "secukinumab_300mg"], values = [[0.455572200703122, 0.544427799296878], [0.21095385829095617, 0.7890461417090437], [0.210953858290956, 0.789046141709044], [0.7508807179274783, 0.24911928207252174], [0.7508807179274785, 0.24911928207252143]], warnings = ["Contribution heatmap values are absolute GLS mapping proportions, not CINeMA or ROB-MEN certainty weights."]}
+
+[[candidate.random_effect.effects]]
+treatment = "etanercept"
+reference_treatment = "placebo"
+estimate = 2.5757604336817774
+se = 0.31799643104248054
+ci_low = 1.9524988816262407
+ci_high = 3.199021985737314
+
+[[candidate.random_effect.effects]]
+treatment = "ixekizumab_q2w"
+reference_treatment = "placebo"
+estimate = 4.381117460489614
+se = 0.33374689763663845
+ci_low = 3.7269855611698266
+ci_high = 5.035249359809401
+
+[[candidate.random_effect.effects]]
+treatment = "ixekizumab_q4w"
+reference_treatment = "placebo"
+estimate = 4.256546599661447
+se = 0.33297305750399114
+ci_low = 3.60393139913144
+ci_high = 4.909161800191454
+
+[[candidate.random_effect.effects]]
+treatment = "secukinumab_150mg"
+reference_treatment = "placebo"
+estimate = 3.609521956844895
+se = 0.3383602148603397
+ci_low = 2.946348121917395
+ci_high = 4.272695791772395
+
+[[candidate.random_effect.effects]]
+treatment = "secukinumab_300mg"
+reference_treatment = "placebo"
+estimate = 4.104138803336655
+se = 0.33822514617285354
+ci_low = 3.4412296981720667
+ci_high = 4.767047908501243
+
+[candidate.node_splitting]
+n_diagnostics = 11
+n_estimable = 0
+claim_limit = "Local fixed-effect smoke diagnostic only; not reference-matched node-splitting parity."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "etanercept"
+treatment_to = "ixekizumab_q2w"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = 1.8201669078793137
+direct_se = 0.16022510286206473
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "etanercept"
+treatment_to = "ixekizumab_q4w"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = 1.6955960470511462
+direct_se = 0.15860690063371954
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "etanercept"
+treatment_to = "placebo"
+status = "not_estimable"
+n_direct_contrasts = 2
+direct_estimate = -2.5757604336817748
+direct_se = 0.31799643104248065
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "study FIXTURE: multi-arm (4 arms) but only 5/6 pairwise contrasts present; cannot recover arm covariance; study UNCOVER-3: multi-arm (4 arms) but only 5/6 pairwise contrasts present; cannot recover arm covariance"
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "etanercept"
+treatment_to = "secukinumab_150mg"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = 1.013441678756235
+direct_se = 0.1771836648849377
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "etanercept"
+treatment_to = "secukinumab_300mg"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = 1.5080585252479954
+direct_se = 0.17692559341534178
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "ixekizumab_q2w"
+treatment_to = "ixekizumab_q4w"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = -0.12457086082816726
+direct_se = 0.15289805665658712
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "ixekizumab_q2w"
+treatment_to = "placebo"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = -4.195509296015211
+direct_se = 0.42890690766586764
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "ixekizumab_q4w"
+treatment_to = "placebo"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = -4.070938435187044
+direct_se = 0.4283050324067795
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "placebo"
+treatment_to = "secukinumab_150mg"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = 3.8287100440183828
+direct_se = 0.4644321524248446
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "placebo"
+treatment_to = "secukinumab_300mg"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = 4.323326890510143
+direct_se = 0.4643337578825031
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."
+
+[[candidate.node_splitting.diagnostics]]
+treatment_from = "secukinumab_150mg"
+treatment_to = "secukinumab_300mg"
+status = "not_estimable"
+n_direct_contrasts = 1
+direct_estimate = 0.4946168464917602
+direct_se = 0.1582196904268619
+indirect_estimate = ""
+indirect_se = ""
+difference = ""
+difference_se = ""
+z_value = ""
+p_value = ""
+warning = "insufficient contrasts (N=3 < K=5)."

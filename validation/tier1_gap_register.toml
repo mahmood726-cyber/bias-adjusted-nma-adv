@@ -1,5 +1,5 @@
 schema_version = "tier1_gap_register/v1"
-checked_at = "2026-07-16"
+checked_at = "2026-07-17"
 certification_effect = "none"
 purpose = "Machine-readable blocker register for gaps that prevent tier-one parity or superiority claims."
 source_boundary = "Effect evidence from AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance; protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready effects but can supply registered-primary-outcome anchors and completeness denominators."
@@ -57,6 +57,8 @@ implemented_capabilities = [
   "component_nma_additive_core_with_estimability_checks",
   "netmeta_discomb_component_reference_adapter",
   "source_backed_component_smoke_benchmark",
+  "source_backed_closed_loop_binary_network_benchmark",
+  "netmeta_source_backed_closed_loop_reference_candidate",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",
@@ -94,6 +96,7 @@ implemented_capabilities = [
   "sponsor_bias_missing_attrition_conservative_policy",
   "ctgov_sparse_design_bias_guard",
   "source_backed_cross_design_routing_benchmark",
+  "source_backed_closed_loop_multiarm_netmeta_reference_candidate",
   "large_scale_validation_evidence_gate",
 ]
 required_evidence_artifacts = [

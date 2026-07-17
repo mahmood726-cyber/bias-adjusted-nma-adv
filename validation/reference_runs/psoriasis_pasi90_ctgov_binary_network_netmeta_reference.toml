@@ -1,0 +1,28 @@
+schema_version = "reference_run/v1"
+target_id = "ctgov_binary_network_netmeta_closed_loop"
+adapter_id = "r_netmeta_psoriasis_ctgov_binary_network_output_validation"
+reference_method = "netmeta CT.gov arm-count closed-loop binary network"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-17T17:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/multiarm_netmeta_fixture.R", "--arms", "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_arms.csv", "--output", "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json", "--reference", "placebo"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", netmeta = "3.5.0", meta = "8.5.0"}
+input_artifacts = ["validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_arms.csv", "validation/networks/psoriasis_pasi90_ctgov_binary_network.toml", "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml", "validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json", "external/r/multiarm_netmeta_fixture.R"]
+output_artifacts = ["validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_arm_count_rows", "netmeta_common_effect_estimates", "netmeta_common_effect_standard_errors", "netmeta_random_tau2_q_df", "closed_loop_source_backed_network", "broad_inconsistency_limitation_preserved"]
+max_abs_difference = 7.105427357601002e-15
+notes = ["This validates one CT.gov arm-count closed-loop psoriasis network against netmeta; it is not broad netmeta parity, node-splitting parity, clinical guidance, or HTA certification."]
+
+[input_sha256]
+"validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_arms.csv" = "8491a715f7a51069e9aad2d7e94b1314a96059ac8d80c553a131569817b2f54e"
+"validation/networks/psoriasis_pasi90_ctgov_binary_network.toml" = "d9ac68d511fea8088e122d97bd057a694e7f2699296fbf124132e2764e598669"
+"validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml" = "a0e3cf9cacad5796c04d0b96edcfa84fa2a7d40ba68899b4e6eb0bf1c750baf8"
+"validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json" = "9d4e58991659916af5575fe3485d9453abec768c1c51ccab58da23dd09728b7e"
+"external/r/multiarm_netmeta_fixture.R" = "367c107d645c6d9f2fab8e54889956cd0e255190fd3694b637d09f534b55d685"
+
+[output_sha256]
+"validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json" = "2899423ef1bf63ab9cb99ea2c95dacd670c8b1b73c64a81bc6bec0312c975e3b"

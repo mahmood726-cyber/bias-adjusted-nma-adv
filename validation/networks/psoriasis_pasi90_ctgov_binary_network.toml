@@ -1,0 +1,103 @@
+schema_version = "ctgov_binary_network_manifest/v1"
+benchmark_id = "psoriasis_pasi90_ctgov_binary_network"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_arm_level_binary_counts"
+status = "candidate_source_verified"
+certification_effect = "none"
+reference_treatment = "placebo"
+network_type = "closed_loop_arm_level_binary_network"
+effect_scale = "log_or"
+continuity_policy = "no_continuity_correction_zero_cells_fail_closed"
+reuse_origin = "new_ctgov_result_table_binary_network"
+
+[[studies]]
+study_id = "FIXTURE"
+trial = "Secukinumab compared with etanercept and placebo in plaque psoriasis"
+nct_id = "NCT01358578"
+pmid = "25007392"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+source_url = "https://clinicaltrials.gov/study/NCT01358578"
+pubmed_url = "https://pubmed.ncbi.nlm.nih.gov/25007392/"
+access_statement = "ClinicalTrials.gov results record reports arm-level PASI 90 responder counts and denominators."
+outcome_search_terms = ["PASI 90", "Week 12", "Etanercept and Placebo"]
+source_terms = ["secukinumab", "etanercept", "placebo"]
+pubmed_title_terms = ["secukinumab", "psoriasis"]
+
+[[studies.arms]]
+arm_id = "fixture_secukinumab_150"
+group_id = "OG000"
+treatment = "secukinumab_150mg"
+group_title = "AIN457 150mg"
+events = 137
+n = 327
+
+[[studies.arms]]
+arm_id = "fixture_secukinumab_300"
+group_id = "OG001"
+treatment = "secukinumab_300mg"
+group_title = "AIN457 300mg"
+events = 175
+n = 323
+
+[[studies.arms]]
+arm_id = "fixture_etanercept"
+group_id = "OG002"
+treatment = "etanercept"
+group_title = "Etanercept"
+events = 67
+n = 323
+
+[[studies.arms]]
+arm_id = "fixture_placebo"
+group_id = "OG003"
+treatment = "placebo"
+group_title = "Placebo"
+events = 5
+n = 324
+
+[[studies]]
+study_id = "UNCOVER-3"
+trial = "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis"
+nct_id = "NCT01646177"
+pmid = "26072109"
+outcome_id = "pasi90_week12"
+outcome_label = "PASI 90 response at week 12"
+source_url = "https://clinicaltrials.gov/study/NCT01646177"
+pubmed_url = "https://pubmed.ncbi.nlm.nih.gov/26072109/"
+access_statement = "ClinicalTrials.gov results record reports arm-level PASI 90 responder counts and denominators."
+outcome_search_terms = ["PASI 90", "Week 12"]
+source_terms = ["Ixekizumab", "Etanercept", "Placebo"]
+pubmed_title_terms = ["ixekizumab", "etanercept", "placebo", "psoriasis"]
+
+[[studies.arms]]
+arm_id = "uncover3_placebo"
+group_id = "OG000"
+treatment = "placebo"
+group_title = "Placebo"
+events = 6
+n = 193
+
+[[studies.arms]]
+arm_id = "uncover3_etanercept"
+group_id = "OG001"
+treatment = "etanercept"
+group_title = "50 mg Etanercept"
+events = 98
+n = 382
+
+[[studies.arms]]
+arm_id = "uncover3_ixekizumab_q4w"
+group_id = "OG002"
+treatment = "ixekizumab_q4w"
+group_title = "80 mg Ixekizumab Dosing Regimen 2 (Q4W)"
+events = 252
+n = 386
+
+[[studies.arms]]
+arm_id = "uncover3_ixekizumab_q2w"
+group_id = "OG003"
+treatment = "ixekizumab_q2w"
+group_title = "80 mg Ixekizumab Dosing Regimen 1 (Q2W)"
+events = 262
+n = 385

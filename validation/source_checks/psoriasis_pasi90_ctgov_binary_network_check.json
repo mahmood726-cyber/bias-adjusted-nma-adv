@@ -1,0 +1,131 @@
+{
+  "benchmark_id": "psoriasis_pasi90_ctgov_binary_network",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T17:00:00Z",
+  "manifest": "validation/networks/psoriasis_pasi90_ctgov_binary_network.toml",
+  "manifest_sha256": "d9ac68d511fea8088e122d97bd057a694e7f2699296fbf124132e2764e598669",
+  "records": [
+    {
+      "details": {
+        "arm_checks": [
+          {
+            "arm_id": "fixture_secukinumab_150",
+            "events_found": true,
+            "group_id": "OG000",
+            "group_title_found": true,
+            "n_found": true
+          },
+          {
+            "arm_id": "fixture_secukinumab_300",
+            "events_found": true,
+            "group_id": "OG001",
+            "group_title_found": true,
+            "n_found": true
+          },
+          {
+            "arm_id": "fixture_etanercept",
+            "events_found": true,
+            "group_id": "OG002",
+            "group_title_found": true,
+            "n_found": true
+          },
+          {
+            "arm_id": "fixture_placebo",
+            "events_found": true,
+            "group_id": "OG003",
+            "group_title_found": true,
+            "n_found": true
+          }
+        ],
+        "arm_counts_found": true,
+        "matched_outcome_title": "Efficacy of Secukinumab Compared to Etanercept and Placebo in Subjects With Moderate to Severe Chronic Plaque-type Psoriasis Measure: PASI 90 at Week 12",
+        "matched_param_type": "NUMBER",
+        "nct_id_found": true,
+        "outcome_found": true,
+        "source_terms_found": true,
+        "status_completed": true
+      },
+      "evidence_scope": "clinicaltrials_gov_arm_level_binary_counts",
+      "identifier": "NCT01358578",
+      "response_sha256": "e7a0253341ba0784b2fd343f3c4cbaf4c0329aa368fac193dade0eeff243429d",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "FIXTURE",
+      "verified": true
+    },
+    {
+      "details": {
+        "pmid_found": true,
+        "title": "Secukinumab in plaque psoriasis--results of two phase 3 trials.",
+        "title_terms_found": true
+      },
+      "evidence_scope": "pubmed_abstract_binary_network_identity",
+      "identifier": "25007392",
+      "response_sha256": "7fe686088a61b657625e0d8f5fd730d03dad47676c539623126637a4d0b7c3e3",
+      "source_type": "pubmed_abstract",
+      "study_id": "FIXTURE",
+      "verified": true
+    },
+    {
+      "details": {
+        "arm_checks": [
+          {
+            "arm_id": "uncover3_placebo",
+            "events_found": true,
+            "group_id": "OG000",
+            "group_title_found": true,
+            "n_found": true
+          },
+          {
+            "arm_id": "uncover3_etanercept",
+            "events_found": true,
+            "group_id": "OG001",
+            "group_title_found": true,
+            "n_found": true
+          },
+          {
+            "arm_id": "uncover3_ixekizumab_q4w",
+            "events_found": true,
+            "group_id": "OG002",
+            "group_title_found": true,
+            "n_found": true
+          },
+          {
+            "arm_id": "uncover3_ixekizumab_q2w",
+            "events_found": true,
+            "group_id": "OG003",
+            "group_title_found": true,
+            "n_found": true
+          }
+        ],
+        "arm_counts_found": true,
+        "matched_outcome_title": "Number of Participants Achieving \u226590% (PASI 90) Improvement (Efficacy of Ixekizumab in Participants With Moderate to Severe Chronic Plaque Psoriasis. Measure: PASI)",
+        "matched_param_type": "COUNT_OF_PARTICIPANTS",
+        "nct_id_found": true,
+        "outcome_found": true,
+        "source_terms_found": true,
+        "status_completed": true
+      },
+      "evidence_scope": "clinicaltrials_gov_arm_level_binary_counts",
+      "identifier": "NCT01646177",
+      "response_sha256": "c5ecf6e3e2b2af97af88bdf6eeb0e14c0dff287016555e372c20fce6bd12cb3e",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "UNCOVER-3",
+      "verified": true
+    },
+    {
+      "details": {
+        "pmid_found": true,
+        "title": "Comparison of ixekizumab with etanercept or placebo in moderate-to-severe psoriasis (UNCOVER-2 and UNCOVER-3): results from two phase 3 randomised trials.",
+        "title_terms_found": true
+      },
+      "evidence_scope": "pubmed_abstract_binary_network_identity",
+      "identifier": "26072109",
+      "response_sha256": "a921249c2b9ff36e2d9a81e04a0d3f7ab47f2d3747d2c29d252969fe7dfd5d18",
+      "source_type": "pubmed_abstract",
+      "study_id": "UNCOVER-3",
+      "verified": true
+    }
+  ],
+  "schema_version": "ctgov_binary_network_verification/v1",
+  "status": "verified"
+}

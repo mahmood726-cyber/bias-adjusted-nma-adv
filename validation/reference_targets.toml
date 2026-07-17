@@ -1,5 +1,5 @@
 schema_version = 1
-checked_at = "2026-07-16"
+checked_at = "2026-07-17"
 purpose = "Minimum external reference targets required before platform modules can claim tier-one parity or production certification."
 certification_rule = "A module cannot be marked reference_matched, simulation_validated, externally_reproduced, or production_certified unless required evidence_artifacts exist and are machine-verifiable."
 allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
@@ -210,6 +210,19 @@ acceptance_criteria = [
   "match source-backed CT.gov reported-HR star-network study effects and class labels",
   "match fixed-effect class log-HR estimates and standard errors against netmeta",
   "preserve the limitation that placebo-centered star networks cannot assess closed-loop inconsistency or broad netmeta parity",
+]
+evidence_artifacts = []
+
+[[targets]]
+id = "ctgov_binary_network_netmeta_closed_loop"
+domain = "arm_count_binary_closed_loop_network"
+module = "src/bias_nma_adv/ctgov_binary_network.py"
+reference_method = "netmeta CT.gov arm-count closed-loop binary network"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed CT.gov arm-count log-OR treatment estimates and standard errors against netmeta",
+  "preserve complete multi-arm covariance handling for closed-loop psoriasis PASI 90 counts",
+  "preserve the limitation that one closed-loop smoke benchmark is not broad netmeta or node-splitting parity",
 ]
 evidence_artifacts = []
 

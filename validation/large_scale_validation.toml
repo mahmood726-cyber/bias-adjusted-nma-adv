@@ -1,5 +1,5 @@
 schema_version = "large_scale_validation/v1"
-checked_at = "2026-07-16"
+checked_at = "2026-07-17"
 purpose = "Dynamic gate for whether validation evidence is broad enough to support large-scale performance claims."
 source_boundary = "Large-scale evidence must use AACT/ClinicalTrials.gov records, public numeric ICTRP/PACTR result rows, PubMed abstracts, open-access papers, or public FDA/EMA regulatory review rows with numeric per-trial provenance; protocol-only registry rows cannot supply model-ready effects."
 certification_effect = "none"
@@ -12,12 +12,14 @@ minimum_benchmark_study_effects = 200
 minimum_unique_nct_ids = 100
 minimum_unique_pmids = 50
 minimum_passed_reference_reports = 10
+minimum_tau2_positive_benchmarks = 1
 minimum_simulation_jobs = 25
 minimum_simulation_iterations = 10000
 required_real_domains = [
   "binary_pairwise_meta",
   "reported_survival_hr_pairwise",
   "reported_hr_star_network",
+  "arm_count_binary_closed_loop_network",
   "dose_response_pairwise",
   "diagnostic_test_accuracy",
   "component_nma",

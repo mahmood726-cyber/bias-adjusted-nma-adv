@@ -1,0 +1,63 @@
+{
+  "schema_version": "multiarm_netmeta_fixture/v1",
+  "effect_scale": "log_or",
+  "package_versions": {
+    "R": "4.6.0",
+    "netmeta": "3.5.0",
+    "meta": "8.5.0"
+  },
+  "fixtures": [
+    {
+      "fixture_id": "psoriasis_pasi90_ctgov_binary_network",
+      "reference_treatment": "placebo",
+      "treatments": ["etanercept", "ixekizumab_q2w", "ixekizumab_q4w", "placebo", "secukinumab_150mg", "secukinumab_300mg"],
+      "tau2": 0,
+      "q": 0.474692348184097,
+      "df": 1,
+      "common": {
+        "etanercept": {
+          "estimate": 2.57576043368177,
+          "se": 0.317996431042481
+        },
+        "ixekizumab_q2w": {
+          "estimate": 4.38111746048961,
+          "se": 0.333746897636639
+        },
+        "ixekizumab_q4w": {
+          "estimate": 4.25654659966145,
+          "se": 0.332973057503991
+        },
+        "secukinumab_150mg": {
+          "estimate": 3.60952195684489,
+          "se": 0.33836021486034
+        },
+        "secukinumab_300mg": {
+          "estimate": 4.10413880333666,
+          "se": 0.338225146172854
+        }
+      },
+      "random": {
+        "etanercept": {
+          "estimate": 2.57576043368177,
+          "se": 0.317996431042481
+        },
+        "ixekizumab_q2w": {
+          "estimate": 4.38111746048961,
+          "se": 0.333746897636639
+        },
+        "ixekizumab_q4w": {
+          "estimate": 4.25654659966145,
+          "se": 0.332973057503991
+        },
+        "secukinumab_150mg": {
+          "estimate": 3.60952195684489,
+          "se": 0.33836021486034
+        },
+        "secukinumab_300mg": {
+          "estimate": 4.10413880333666,
+          "se": 0.338225146172854
+        }
+      }
+    }
+  ]
+}

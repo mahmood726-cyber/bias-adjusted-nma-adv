@@ -41,10 +41,14 @@ def build_real_benchmark_atlas(
     unique_pmids: set[str] = set()
     unique_study_ids: set[str] = set()
     n_study_effects = 0
+    n_tau2_positive_benchmarks = 0
     benchmark_summaries: list[dict[str, Any]] = []
 
     for entry in registry.benchmarks:
         artifact = _load_toml(root / entry.artifact_path)
+        has_positive_tau2 = _has_positive_tau2(artifact)
+        if has_positive_tau2:
+            n_tau2_positive_benchmarks += 1
         _count(domain_counts, entry.domain)
         _count(evidence_mode_counts, entry.evidence_mode)
         _count(source_policy_counts, entry.source_policy)
@@ -86,6 +90,7 @@ def build_real_benchmark_atlas(
                 "effect_scale": str(artifact.get("effect_scale", "not_reported")),
                 "n_studies": entry.n_studies,
                 "n_study_effects": len(study_effects) if isinstance(study_effects, list) else 0,
+                "has_positive_tau2": has_positive_tau2,
                 "source_manifests": list(entry.source_manifests),
                 "source_checks": list(entry.source_checks),
                 "required_limitations": list(entry.required_limitations),
@@ -109,6 +114,7 @@ def build_real_benchmark_atlas(
         "registry": "validation/benchmark_registry.toml",
         "n_benchmarks": len(registry.benchmarks),
         "n_benchmark_study_effects": n_study_effects,
+        "n_tau2_positive_benchmarks": n_tau2_positive_benchmarks,
         "n_unique_study_ids": len(unique_study_ids),
         "n_unique_nct_ids": len(unique_nct_ids),
         "n_unique_pmids": len(unique_pmids),
@@ -135,7 +141,8 @@ def build_real_benchmark_atlas(
         "required_next_gates": [
             "external reference runs for every applicable module",
             "open-access Kaplan-Meier curve artifacts before KM reconstruction claims",
-            "closed-loop source-backed networks before inconsistency-performance claims",
+            "additional source-backed closed-loop networks and external inconsistency references before performance claims",
+            "at least one source-backed benchmark with positive tau2 before heterogeneity-stress claims",
             "prespecified simulation expansion before statistical superiority claims",
         ],
     }
@@ -149,6 +156,7 @@ def summarize_real_benchmark_atlas(atlas: dict[str, Any]) -> dict[str, Any]:
         "status": atlas["status"],
         "n_benchmarks": atlas["n_benchmarks"],
         "n_benchmark_study_effects": atlas["n_benchmark_study_effects"],
+        "n_tau2_positive_benchmarks": atlas["n_tau2_positive_benchmarks"],
         "n_unique_nct_ids": atlas["n_unique_nct_ids"],
         "n_unique_pmids": atlas["n_unique_pmids"],
         "domain_counts": atlas["domain_counts"],
@@ -198,6 +206,28 @@ def _add_if_present(values: set[str], value: Any) -> None:
 
 def _count(counts: dict[str, int], key: str) -> None:
     counts[key] = counts.get(key, 0) + 1
+
+
+def _has_positive_tau2(value: Any) -> bool:
+    if isinstance(value, dict):
+        for key, nested_value in value.items():
+            if key == "tau2" and _is_positive_number(nested_value):
+                return True
+            if _has_positive_tau2(nested_value):
+                return True
+        return False
+    if isinstance(value, list):
+        return any(_has_positive_tau2(item) for item in value)
+    return False
+
+
+def _is_positive_number(value: Any) -> bool:
+    if isinstance(value, bool):
+        return False
+    try:
+        return float(value) > 0.0
+    except (TypeError, ValueError):
+        return False
 
 
 def _sorted_counts(counts: dict[str, int]) -> dict[str, int]:

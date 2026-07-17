@@ -38,24 +38,28 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
     assert summary["status"] == "partial_not_large_scale"
     assert summary["global_large_scale_validation_complete"] is False
     assert summary["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 8,
+        "observed": 9,
         "required": 20,
     }
     assert summary["dynamic_counts"]["benchmark_study_effects"] == {
-        "observed": 61,
+        "observed": 73,
         "required": 200,
     }
     assert summary["dynamic_counts"]["unique_nct_ids"] == {
-        "observed": 19,
+        "observed": 21,
         "required": 100,
     }
     assert summary["dynamic_counts"]["unique_pmids"] == {
-        "observed": 10,
+        "observed": 12,
         "required": 50,
     }
     assert summary["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 10,
+        "observed": 11,
         "required": 10,
+    }
+    assert summary["dynamic_counts"]["tau2_positive_benchmarks"] == {
+        "observed": 0,
+        "required": 1,
     }
     assert "diagnostic_test_accuracy" not in summary["missing_required_real_domains"]
     assert "component_nma" not in summary["missing_required_real_domains"]
@@ -81,6 +85,7 @@ def test_large_scale_validation_gate_rejects_static_completion_claim():
             "minimum_unique_nct_ids": gate.thresholds.minimum_unique_nct_ids,
             "minimum_unique_pmids": gate.thresholds.minimum_unique_pmids,
             "minimum_passed_reference_reports": gate.thresholds.minimum_passed_reference_reports,
+            "minimum_tau2_positive_benchmarks": gate.thresholds.minimum_tau2_positive_benchmarks,
             "minimum_simulation_jobs": gate.thresholds.minimum_simulation_jobs,
             "minimum_simulation_iterations": gate.thresholds.minimum_simulation_iterations,
             "required_real_domains": list(gate.thresholds.required_real_domains),

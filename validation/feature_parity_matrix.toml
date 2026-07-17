@@ -1,5 +1,5 @@
 schema_version = "feature_parity_matrix/v1"
-checked_at = "2026-07-16"
+checked_at = "2026-07-17"
 purpose = "Fine-grained feature-parity ledger against mature evidence-synthesis methods."
 certification_effect = "none"
 global_feature_parity_complete = false
@@ -30,13 +30,16 @@ status = "reference_candidate"
 evidence_artifacts = [
   "validation/reference_runs/multiarm_netmeta_reference.toml",
   "validation/reference_runs/multiarm_netmeta_output.json",
+  "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml",
+  "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_reference.toml",
+  "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
 ]
 required_next_artifacts = [
-  "published_multiarm_network_corpus",
+  "additional_source_backed_closed_loop_networks",
   "inconsistency_reference_cases",
   "netheat_and_contribution_reference_cases",
 ]
-claim_limit = "This is a narrow GLS fixture candidate, not full netmeta feature parity."
+claim_limit = "This includes one source-backed closed-loop CT.gov binary benchmark and narrow GLS fixtures, not full netmeta feature parity."
 certification_effect = "none"
 
 [[features]]
@@ -47,7 +50,7 @@ status = "local_implemented"
 evidence_artifacts = ["src/bias_nma_adv/node_splitting.py"]
 required_next_artifacts = [
   "reference_matched_node_splitting_outputs",
-  "closed_loop_source_backed_networks",
+  "source_backed_closed_loop_networks_with_estimable_indirect_splits",
 ]
 claim_limit = "Local node splitting is a smoke diagnostic, not reference-matched inconsistency parity."
 certification_effect = "none"

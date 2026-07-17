@@ -1,7 +1,7 @@
 <!-- sentinel:skip-file -->
 # Real Meta-Analysis Benchmarks
 
-Checked: 2026-07-15
+Checked: 2026-07-17
 
 This document records source-backed real-data benchmarks. These benchmarks are validation evidence only when the tests and generated artifacts pass; they are not superiority claims.
 
@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 8 benchmark artifacts, 61 study-effect rows, 19 unique NCT IDs, and 10 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 9 benchmark artifacts, 73 study-effect rows, 21 unique NCT IDs, and 12 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -205,10 +205,44 @@ Limitations:
 - this is a placebo-centered star network, so closed-loop inconsistency and node-splitting cannot be assessed;
 - class labels are analyst-defined groupings and do not prove class exchangeability or clinical superiority;
 - composite outcome definitions are similar but not identical across trials;
-- CT.gov results records are verified, but this is not yet external `netmeta`, `multinma`, or CmdStan parity;
+- CT.gov results records are verified and fixed-effect class estimates have a narrow local `netmeta` reference check, but this is not broad `netmeta`, `multinma`, or CmdStan parity;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
-## Benchmark 4: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
+## Benchmark 4: Psoriasis PASI 90 Closed-Loop Binary Network
+
+CT.gov arm-count network manifest: `validation/networks/psoriasis_pasi90_ctgov_binary_network.toml`
+
+CT.gov/PubMed source snapshot: `validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json`
+
+Local benchmark artifact: `validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml`
+
+External `netmeta` reference output: `validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_reference.toml` validates `validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json`.
+
+Trials: FIXTURE (`NCT01358578`, PMID 25007392) and UNCOVER-3 (`NCT01646177`, PMID 26072109).
+
+Outcome: PASI 90 responders at week 12, using CT.gov arm-level participant counts and denominators.
+
+Scale currently tested: log odds ratio, generated from all pairwise contrasts within each multi-arm trial with no continuity correction.
+
+Current tests:
+
+- verify CT.gov NCT identity, completed status, outcome text, arm group IDs, responder counts, and denominators;
+- verify PubMed publication identity for both trials;
+- require all arm counts to satisfy `0 < events < n` because zero-cell continuity correction is not used;
+- fit fixed-effect and generalized-DL random-effect multi-arm GLS models with shared-arm covariance handling;
+- run a local fixed-effect node-splitting smoke diagnostic, which currently returns non-estimable after direct-edge removal because the contrast-level solver drops incomplete multi-arm cliques;
+- match the source-backed multi-arm estimates and standard errors against local R `netmeta` output within deterministic tolerance.
+
+The random-effects artifact estimates `tau2 = 0.0` with `Q = 0.4747` and `df = 1`.
+
+Limitations:
+
+- this is one dermatology endpoint family, not a broad closed-loop corpus;
+- node-splitting is not reference matched and is not estimable on this artifact with the current contrast-level incomplete-clique policy;
+- the `netmeta` reference report is a narrow evidence candidate, not full `netmeta`, `multinma`, CINeMA, or ROB-MEN parity;
+- no clinical, regulatory, or HTA decision claim is made from this local artifact.
+
+## Benchmark 5: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
 
 Component-NMA manifest: `validation/component/sitagliptin_pioglitazone_component.toml`
 
@@ -240,7 +274,7 @@ Limitations:
 - same-trial arm covariance is not modeled;
 - the artifact is not broad `netmeta` CNMA parity and cannot support component hierarchy or clinical superiority claims.
 
-## Benchmark 5: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
+## Benchmark 6: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
 
 Cross-design manifest: `validation/cross_design/sglt2_rct_nrs_cross_design.toml`
 
@@ -284,6 +318,7 @@ Limitations:
 | CT.gov reported-HR network manifest | Static fixture | `validation/networks/t2d_mace_ctgov_hrs.toml` | Stores NCT IDs, class labels, drug terms, outcome-search terms, and HR/CI values that must be verified before use |
 | CT.gov reported-HR network snapshot | Dynamic public API check | `scripts/verify_ctgov_hr_network.py` against ClinicalTrials.gov API v2 | Verifies NCT identity, completed status, exact HR/CI analysis fields, outcome-title terms, and drug/placebo terms |
 | CT.gov reported-HR network benchmark | Dynamic computation | `scripts/write_ctgov_hr_network_benchmark.py` plus `bias_nma_adv.ctgov_hr_network` | Recomputes log-HR study effects and fixed/random contrast-GLS NMA from the verified CT.gov source snapshot |
+| CT.gov/PubMed closed-loop binary NMA benchmark | Dynamic computation | `scripts/verify_ctgov_binary_network_sources.py`, `scripts/write_ctgov_binary_network_benchmark.py`, `validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml`, and `tests/test_ctgov_binary_network.py` | Verifies two public CT.gov PASI 90 arm-count records plus PubMed article identities, recomputes all within-trial log-OR contrasts, and matches local `netmeta` multi-arm estimates; broad closed-loop inconsistency parity remains blocked |
 | CT.gov/PubMed component-NMA smoke benchmark | Dynamic computation | `scripts/verify_component_sources.py`, `scripts/write_component_benchmark.py`, `validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml`, and `tests/test_component_benchmark.py` | Verifies one factorial CT.gov/PubMed component benchmark and recomputes additive WLS contrasts; same-trial covariance and broad CNMA parity remain blocked |
 | PubMed cross-design routing benchmark | Dynamic computation | `scripts/verify_cross_design_sources.py`, `scripts/write_cross_design_benchmark.py`, `validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml`, and `tests/test_cross_design_benchmark.py` | Verifies four PubMed abstract reported-HR rows and recomputes separated RCT/NRS summaries; combined borrowing, sparse hierarchical shrinkage, and broad `crossnma` parity remain blocked |
 | Proof-carrying extracted effect | Static contract plus unit fixtures | `bias_nma_adv.ingestion.ProofCarryingEffectRecord` | Blocks model-ready extracted effects unless source provenance, source snippet, uncertainty, and effect-scale sanity checks pass |

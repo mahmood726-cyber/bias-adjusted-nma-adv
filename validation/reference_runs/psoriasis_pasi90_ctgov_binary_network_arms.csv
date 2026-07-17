@@ -1,0 +1,9 @@
+fixture_id,study,treatment,events,n
+psoriasis_pasi90_ctgov_binary_network,FIXTURE,secukinumab_150mg,137,327
+psoriasis_pasi90_ctgov_binary_network,FIXTURE,secukinumab_300mg,175,323
+psoriasis_pasi90_ctgov_binary_network,FIXTURE,etanercept,67,323
+psoriasis_pasi90_ctgov_binary_network,FIXTURE,placebo,5,324
+psoriasis_pasi90_ctgov_binary_network,UNCOVER-3,placebo,6,193
+psoriasis_pasi90_ctgov_binary_network,UNCOVER-3,etanercept,98,382
+psoriasis_pasi90_ctgov_binary_network,UNCOVER-3,ixekizumab_q4w,252,386
+psoriasis_pasi90_ctgov_binary_network,UNCOVER-3,ixekizumab_q2w,262,385

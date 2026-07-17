@@ -907,6 +907,108 @@ def validate_ctgov_hr_network_netmeta_output(
     }
 
 
+def validate_ctgov_binary_network_netmeta_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``netmeta`` output against the source-backed CT.gov binary network."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {"schema_version", "effect_scale", "package_versions", "fixtures"},
+        label="CT.gov binary netmeta output",
+    )
+    if output["schema_version"] != "multiarm_netmeta_fixture/v1":
+        raise RReferenceValidationError("CT.gov binary netmeta output schema_version mismatch.")
+    if output["effect_scale"] != "log_or":
+        raise RReferenceValidationError("CT.gov binary netmeta output must use log_or scale.")
+    _require_package_versions(output["package_versions"], {"R", "netmeta", "meta"})
+
+    artifact = _load_toml(
+        root / "validation" / "networks" / "psoriasis_pasi90_ctgov_binary_network_benchmark.toml"
+    )
+    fixture = _single_fixture(output["fixtures"], "psoriasis_pasi90_ctgov_binary_network")
+    if fixture["reference_treatment"] != artifact["reference_treatment"]:
+        raise RReferenceValidationError("CT.gov binary netmeta reference_treatment mismatch.")
+
+    _validate_ctgov_binary_reference_input_csv(
+        root / "validation" / "reference_runs" / "psoriasis_pasi90_ctgov_binary_network_arms.csv",
+        artifact,
+    )
+
+    max_abs_diff = 0.0
+    for r_model, local_model in (("common", "fixed_effect"), ("random", "random_effect")):
+        expected_effects = {
+            str(effect["treatment"]): effect
+            for effect in artifact["candidate"][local_model]["effects"]
+        }
+        observed_effects = fixture[r_model]
+        if set(expected_effects) != set(observed_effects):
+            raise RReferenceValidationError(
+                f"CT.gov binary netmeta {r_model} treatment effects mismatch."
+            )
+        for treatment, expected in expected_effects.items():
+            observed = observed_effects[treatment]
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{treatment} CT.gov binary netmeta {r_model} estimate",
+                    observed["estimate"],
+                    expected["estimate"],
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{treatment} CT.gov binary netmeta {r_model} se",
+                    observed["se"],
+                    expected["se"],
+                    tolerance,
+                ),
+            )
+
+    expected_random = artifact["candidate"]["random_effect"]
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_close("CT.gov binary netmeta tau2", fixture["tau2"], expected_random["tau2"], tolerance),
+        _assert_close("CT.gov binary netmeta Q", fixture["q"], expected_random["q"], tolerance),
+    )
+    if int(fixture["df"]) != int(expected_random["df"]):
+        raise RReferenceValidationError("CT.gov binary netmeta df mismatch.")
+
+    limitations = [str(item).lower() for item in artifact["limitations"]]
+    if not any("not broad inconsistency performance" in item for item in limitations):
+        raise RReferenceValidationError("CT.gov binary artifact must preserve broad-inconsistency limitation.")
+    if int(artifact["closed_loop_cycle_rank"]) <= 0:
+        raise RReferenceValidationError("CT.gov binary artifact is not a closed-loop network.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "ctgov_binary_network_netmeta_closed_loop",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "netmeta CT.gov arm-count closed-loop binary network",
+        "benchmark_id": artifact["benchmark_id"],
+        "validated_components": [
+            "source_backed_arm_count_rows",
+            "netmeta_common_effect_estimates",
+            "netmeta_common_effect_standard_errors",
+            "netmeta_random_tau2_q_df",
+            "closed_loop_source_backed_network",
+            "broad_inconsistency_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates one CT.gov arm-count closed-loop psoriasis network "
+            "against netmeta. It is not broad netmeta parity, node-splitting "
+            "parity, clinical guidance, or HTA certification."
+        ),
+    }
+
+
 def validate_component_netmeta_cnma_output(
     output_path: str | Path,
     *,
@@ -1069,6 +1171,40 @@ def _require_package_versions(raw: Any, required: set[str]) -> None:
     for package_name in required:
         if not str(raw[package_name]).strip():
             raise RReferenceValidationError(f"R package version for {package_name} must not be empty.")
+
+
+def _single_fixture(fixtures: Any, fixture_id: str) -> dict[str, Any]:
+    if not isinstance(fixtures, list):
+        raise RReferenceValidationError("R reference output fixtures must be a list.")
+    matches = [item for item in fixtures if str(item.get("fixture_id", "")) == fixture_id]
+    if len(matches) != 1:
+        raise RReferenceValidationError(f"expected exactly one fixture named {fixture_id}.")
+    return matches[0]
+
+
+def _validate_ctgov_binary_reference_input_csv(path: Path, artifact: dict[str, Any]) -> None:
+    with path.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    expected = {
+        (str(arm["study_id"]), str(arm["treatment"])): {
+            "events": int(arm["events"]),
+            "n": int(arm["n"]),
+        }
+        for arm in artifact["arm_counts"]
+    }
+    observed = {
+        (str(row["study"]), str(row["treatment"])): {
+            "events": int(row["events"]),
+            "n": int(row["n"]),
+        }
+        for row in rows
+    }
+    if set(observed) != set(expected):
+        raise RReferenceValidationError("CT.gov binary netmeta input CSV arm set mismatch.")
+    for key, expected_counts in expected.items():
+        observed_counts = observed[key]
+        if observed_counts != expected_counts:
+            raise RReferenceValidationError(f"CT.gov binary netmeta input CSV count mismatch for {key}.")
 
 
 def _assert_close(label: str, observed: Any, expected: Any, tolerance: float) -> float:

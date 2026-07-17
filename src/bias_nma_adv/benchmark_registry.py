@@ -15,6 +15,12 @@ from bias_nma_adv.ctgov_hr_network import (
     load_ctgov_hr_network_manifest,
     validate_ctgov_hr_network_source_bundle,
 )
+from bias_nma_adv.ctgov_binary_network import (
+    CTGOV_BINARY_NETWORK_VERIFICATION_SCHEMA_VERSION,
+    CTGovBinaryNetworkVerificationReport,
+    load_ctgov_binary_network_manifest,
+    validate_ctgov_binary_network_source_bundle,
+)
 from bias_nma_adv.component_benchmark import (
     COMPONENT_VERIFICATION_SCHEMA_VERSION,
     ComponentVerificationReport,
@@ -70,6 +76,7 @@ SUPPORTED_SOURCE_CHECK_SCHEMA_VERSIONS = {
     EVENT_COUNT_VERIFICATION_SCHEMA_VERSION,
     SURVIVAL_HR_VERIFICATION_SCHEMA_VERSION,
     CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION,
+    CTGOV_BINARY_NETWORK_VERIFICATION_SCHEMA_VERSION,
     DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION,
     DTA_VERIFICATION_SCHEMA_VERSION,
     COMPONENT_VERIFICATION_SCHEMA_VERSION,
@@ -359,6 +366,9 @@ def _validate_source_check_payload(
         elif schema_version == CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION:
             report = CTGovHRNetworkVerificationReport.from_mapping(source_check)
             _validate_ctgov_hr_network_reference(entry, report, repo_root=repo_root)
+        elif schema_version == CTGOV_BINARY_NETWORK_VERIFICATION_SCHEMA_VERSION:
+            report = CTGovBinaryNetworkVerificationReport.from_mapping(source_check)
+            _validate_ctgov_binary_network_reference(entry, report, repo_root=repo_root)
         elif schema_version == DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION:
             report = DoseResponseVerificationReport.from_mapping(source_check)
             _validate_dose_response_reference(entry, report, repo_root=repo_root)
@@ -447,6 +457,22 @@ def _validate_ctgov_hr_network_reference(
     )
     manifest = load_ctgov_hr_network_manifest(repo_root / report.manifest)
     validate_ctgov_hr_network_source_bundle(manifest, report)
+
+
+def _validate_ctgov_binary_network_reference(
+    entry: SourceBenchmarkEntry,
+    report: CTGovBinaryNetworkVerificationReport,
+    *,
+    repo_root: Path,
+) -> None:
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.manifest,
+        report.manifest_sha256,
+        label="CT.gov binary network verification manifest",
+    )
+    manifest = load_ctgov_binary_network_manifest(repo_root / report.manifest)
+    validate_ctgov_binary_network_source_bundle(manifest, report)
 
 
 def _validate_dose_response_reference(

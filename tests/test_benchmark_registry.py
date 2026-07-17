@@ -29,7 +29,7 @@ VALIDATE_SCRIPT = ROOT / "scripts" / "validate_benchmark_registry.py"
 def test_source_benchmark_registry_validates_all_registered_artifacts():
     registry = validate_source_benchmark_registry(REGISTRY, repo_root=ROOT)
 
-    assert registry.checked_at == "2026-07-16"
+    assert registry.checked_at == "2026-07-17"
     assert set(registry.allowed_evidence_sources) == {
         "aact_clinicaltrials_gov",
         "clinicaltrials_gov",
@@ -45,6 +45,7 @@ def test_source_benchmark_registry_validates_all_registered_artifacts():
         "sglt2_hf_reported_hr",
         "pcsk9_mace_reported_hr",
         "t2d_mace_ctgov_hr_network",
+        "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",
         "sitagliptin_pioglitazone_component",
         "sglt2_rct_nrs_cross_design",
@@ -64,6 +65,7 @@ def test_source_benchmark_registry_covers_every_source_backed_benchmark_artifact
         "validation/real_meta/sglt2_hf_primary_benchmark.toml",
         "validation/survival/pcsk9_mace_reported_hr_benchmark.toml",
         "validation/survival/sglt2_hf_reported_hr_benchmark.toml",
+        "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml",
         "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
         "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml",
         "validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml",
@@ -125,12 +127,13 @@ def test_validate_benchmark_registry_script_emits_machine_readable_summary():
     assert payload["status"] == "passed"
     assert payload["certification_effect"] == "none"
     assert payload["registry"] == "validation/benchmark_registry.toml"
-    assert payload["n_benchmarks"] == 8
+    assert payload["n_benchmarks"] == 9
     assert set(payload["benchmark_ids"]) == {
         "sglt2_hf_primary_log_or",
         "sglt2_hf_reported_hr",
         "pcsk9_mace_reported_hr",
         "t2d_mace_ctgov_hr_network",
+        "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",
         "sitagliptin_pioglitazone_component",
         "sglt2_rct_nrs_cross_design",

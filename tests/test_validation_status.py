@@ -48,13 +48,14 @@ def test_validation_status_composes_all_current_gates():
 
     source_registry = report["source_benchmark_registry"]
     assert source_registry["registry"] == "validation/benchmark_registry.toml"
-    assert source_registry["n_benchmarks"] == 8
+    assert source_registry["n_benchmarks"] == 9
     assert source_registry["certification_effect"] == "none"
     assert set(source_registry["benchmark_ids"]) == {
         "sglt2_hf_primary_log_or",
         "sglt2_hf_reported_hr",
         "pcsk9_mace_reported_hr",
         "t2d_mace_ctgov_hr_network",
+        "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",
         "sitagliptin_pioglitazone_component",
         "sglt2_rct_nrs_cross_design",
@@ -78,11 +79,13 @@ def test_validation_status_composes_all_current_gates():
     assert real_atlas["atlas"] == "validation/real_benchmark_atlas.json"
     assert real_atlas["schema_version"] == "real_benchmark_atlas/v1"
     assert real_atlas["status"] == "passed"
-    assert real_atlas["n_benchmarks"] == 8
-    assert real_atlas["n_benchmark_study_effects"] == 61
-    assert real_atlas["n_unique_nct_ids"] == 19
-    assert real_atlas["n_unique_pmids"] == 10
+    assert real_atlas["n_benchmarks"] == 9
+    assert real_atlas["n_benchmark_study_effects"] == 73
+    assert real_atlas["n_tau2_positive_benchmarks"] == 0
+    assert real_atlas["n_unique_nct_ids"] == 21
+    assert real_atlas["n_unique_pmids"] == 12
     assert real_atlas["domain_counts"] == {
+        "arm_count_binary_closed_loop_network": 1,
         "binary_pairwise_meta": 1,
         "component_nma": 1,
         "cross_design_nma": 1,
@@ -92,9 +95,9 @@ def test_validation_status_composes_all_current_gates():
         "reported_survival_hr_pairwise": 2,
     }
     assert real_atlas["source_type_counts"] == {
-        "clinicaltrials_gov": 22,
+        "clinicaltrials_gov": 24,
         "open_access_paper": 11,
-        "pubmed_abstract": 26,
+        "pubmed_abstract": 28,
     }
     assert real_atlas["certification_effect"] == "none"
 
@@ -159,6 +162,8 @@ def test_validation_status_composes_all_current_gates():
             "component_nma_additive_core_with_estimability_checks",
             "netmeta_discomb_component_reference_adapter",
             "source_backed_component_smoke_benchmark",
+            "source_backed_closed_loop_binary_network_benchmark",
+            "netmeta_source_backed_closed_loop_reference_candidate",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -174,6 +179,7 @@ def test_validation_status_composes_all_current_gates():
             "sponsor_bias_missing_attrition_conservative_policy",
             "ctgov_sparse_design_bias_guard",
             "source_backed_cross_design_routing_benchmark",
+            "source_backed_closed_loop_multiarm_netmeta_reference_candidate",
             "large_scale_validation_evidence_gate",
         ],
         "bayesian_ecosystem_integration": [
@@ -274,24 +280,28 @@ def test_validation_status_composes_all_current_gates():
     assert large_scale["schema_version"] == "large_scale_validation/v1"
     assert large_scale["status"] == "partial_not_large_scale"
     assert large_scale["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 8,
+        "observed": 9,
         "required": 20,
     }
     assert large_scale["dynamic_counts"]["benchmark_study_effects"] == {
-        "observed": 61,
+        "observed": 73,
         "required": 200,
     }
     assert large_scale["dynamic_counts"]["unique_nct_ids"] == {
-        "observed": 19,
+        "observed": 21,
         "required": 100,
     }
     assert large_scale["dynamic_counts"]["unique_pmids"] == {
-        "observed": 10,
+        "observed": 12,
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 10,
+        "observed": 11,
         "required": 10,
+    }
+    assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
+        "observed": 0,
+        "required": 1,
     }
     assert "diagnostic_test_accuracy" not in large_scale["missing_required_real_domains"]
     assert "component_nma" not in large_scale["missing_required_real_domains"]
@@ -397,10 +407,10 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 14
+    assert reference_runs["n_reports"] == 15
     assert reference_runs["status_counts"] == {
         "failed": 4,
-        "passed": 10,
+        "passed": 11,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
@@ -412,6 +422,7 @@ def test_validation_status_composes_all_current_gates():
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
+        "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
         "validation/reference_runs/component_netmeta_cnma_output.json",
     }
     assert {item["certification_effect"] for item in reference_runs["reports"]} == {
@@ -433,6 +444,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_metafor_sglt2_survival_hr_output_validation", "passed"),
         ("r_metafor_pcsk9_survival_hr_output_validation", "passed"),
         ("r_netmeta_t2d_ctgov_hr_network_output_validation", "passed"),
+        ("r_netmeta_psoriasis_ctgov_binary_network_output_validation", "passed"),
         ("r_netmeta_component_cnma_output_validation", "passed"),
         ("python_cmdstan_nuts_preflight", "failed"),
         ("python_cmdstan_nuts_output_validation", "passed"),
@@ -463,8 +475,8 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["status"] == "passed"
     assert payload["checked_at"] == "2026-07-15T00:00:00Z"
     assert payload["clinical_hta_reporting_enabled"] is False
-    assert payload["source_benchmark_registry"]["n_benchmarks"] == 8
-    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 61
+    assert payload["source_benchmark_registry"]["n_benchmarks"] == 9
+    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 73
     assert payload["tier1_gap_register"]["status_counts"] == {"blocking": 3}
     assert payload["html_delivery_contract"]["status_counts"] == {
         "allowed": 2,

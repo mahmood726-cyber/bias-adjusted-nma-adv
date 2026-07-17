@@ -150,6 +150,14 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "source_backed_closed_loop_binary_network_benchmark"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "netmeta_source_backed_closed_loop_reference_candidate"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "reference_matched_optimizer_stress_matrix"
         in by_id["numerical_stability"].missing_capabilities
     )
@@ -206,6 +214,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["numerical_stability"].implemented_capabilities
     )
     assert (
+        "source_backed_closed_loop_multiarm_netmeta_reference_candidate"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
         "large_scale_validation_evidence_gate"
         in by_id["numerical_stability"].implemented_capabilities
     )
@@ -257,7 +269,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
 
     assert summary == {
         "schema_version": TIER1_GAP_REGISTER_SCHEMA_VERSION,
-        "checked_at": "2026-07-16",
+        "checked_at": "2026-07-17",
         "n_gaps": 3,
         "gap_ids": [
             "feature_completeness",
@@ -297,6 +309,8 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "component_nma_additive_core_with_estimability_checks",
             "netmeta_discomb_component_reference_adapter",
             "source_backed_component_smoke_benchmark",
+            "source_backed_closed_loop_binary_network_benchmark",
+            "netmeta_source_backed_closed_loop_reference_candidate",
         ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",
@@ -312,6 +326,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "sponsor_bias_missing_attrition_conservative_policy",
                 "ctgov_sparse_design_bias_guard",
                 "source_backed_cross_design_routing_benchmark",
+                "source_backed_closed_loop_multiarm_netmeta_reference_candidate",
                 "large_scale_validation_evidence_gate",
             ],
             "bayesian_ecosystem_integration": [
