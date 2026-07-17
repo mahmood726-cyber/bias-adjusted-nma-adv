@@ -30,6 +30,17 @@ def test_dta_transform_applies_zero_cell_correction_only_when_needed():
     assert transformed[1].sensitivity == pytest.approx(0.8)
 
 
+def test_dta_transform_can_apply_all_cell_correction_for_mada_parity():
+    rows = [
+        {"study_id": "complete", "tp": 20, "fp": 4, "fn": 5, "tn": 40},
+    ]
+
+    transformed = transform_dta_studies(rows, correction_control="all")
+
+    assert transformed[0].continuity_correction == 0.5
+    assert transformed[0].sensitivity == pytest.approx(20.5 / 26.0)
+
+
 def test_dta_fit_matches_mada_algorithmic_fixture_reference():
     rows = _fixture_rows()
 
@@ -46,7 +57,7 @@ def test_dta_fit_matches_mada_algorithmic_fixture_reference():
     assert fit.tau2_fpr == pytest.approx(0.02350613376869652, abs=3e-3)
     assert fit.rho_sensitivity_fpr == pytest.approx(1.0, abs=6e-3)
     assert fit.auc_trapezoid == pytest.approx(0.8885038267508946, abs=2e-3)
-    assert any("not source-backed clinical evidence" in warning for warning in fit.warnings)
+    assert any("not clinical evidence or certification" in warning for warning in fit.warnings)
 
 
 def test_dta_fit_fails_closed_for_too_few_studies():

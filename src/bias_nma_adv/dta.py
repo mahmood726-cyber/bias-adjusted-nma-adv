@@ -136,11 +136,14 @@ def transform_dta_studies(
     studies: Iterable[DTAStudy | Mapping[str, Any]],
     *,
     continuity_correction: float = 0.5,
+    correction_control: str = "zero_cells",
 ) -> tuple[DTATransformedStudy, ...]:
     """Transform 2x2 DTA counts to logit sensitivity and logit FPR."""
 
     if continuity_correction <= 0 or not math.isfinite(continuity_correction):
         raise DTAError("continuity_correction must be positive and finite.")
+    if correction_control not in {"zero_cells", "all"}:
+        raise DTAError("correction_control must be 'zero_cells' or 'all'.")
 
     parsed = _parse_studies(studies)
     transformed: list[DTATransformedStudy] = []
@@ -151,7 +154,9 @@ def transform_dta_studies(
             float(study.fn),
             float(study.tn),
         )
-        apply_correction = any(value == 0.0 for value in (tp, fp, fn, tn))
+        apply_correction = correction_control == "all" or any(
+            value == 0.0 for value in (tp, fp, fn, tn)
+        )
         correction = continuity_correction if apply_correction else 0.0
         tp += correction
         fp += correction
@@ -179,6 +184,7 @@ def fit_bivariate_dta_reml(
     studies: Iterable[DTAStudy | Mapping[str, Any]],
     *,
     continuity_correction: float = 0.5,
+    correction_control: str = "zero_cells",
     min_studies: int = MIN_DTA_STUDIES,
 ) -> BivariateDTAFit:
     """Fit a bivariate logit-normal random-effects DTA prototype.
@@ -192,6 +198,7 @@ def fit_bivariate_dta_reml(
     transformed = transform_dta_studies(
         studies,
         continuity_correction=continuity_correction,
+        correction_control=correction_control,
     )
     if len(transformed) < min_studies:
         raise DTAError(
@@ -247,8 +254,8 @@ def fit_bivariate_dta_reml(
     spec_ci = (1.0 - fpr_ci[1], 1.0 - fpr_ci[0])
     log_dor = float(mu[0] - mu[1])
     warnings = [
-        "Experimental bivariate DTA prototype; not source-backed clinical evidence.",
-        "Reference matching and source-backed TP/FP/FN/TN manifests are required before DTA claims.",
+        "Experimental bivariate DTA prototype; not clinical evidence or certification.",
+        "Broader reference matching and source-backed TP/FP/FN/TN manifests are required before DTA claims.",
     ]
     if not bool(best.success):
         warnings.append("Optimizer did not report convergence.")

@@ -26,6 +26,7 @@ PAIRWISE_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_reference_adapters.py"
 MULTIARM_R_ADAPTER = ROOT / "external" / "r" / "multiarm_netmeta_fixture.R"
 MULTIARM_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_multiarm_netmeta_adapter.py"
 DTA_R_ADAPTER = ROOT / "external" / "r" / "dta_mada_reitsma_fixture.R"
+DTA_SOURCE_R_ADAPTER = ROOT / "external" / "r" / "dta_mada_reitsma_source_table.R"
 DTA_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_dta_mada_adapter.py"
 DOSE_RESPONSE_R_ADAPTER = ROOT / "external" / "r" / "dose_response_metafor_polynomial.R"
 SURVIVAL_HR_R_ADAPTER = ROOT / "external" / "r" / "survival_hr_metafor_pairwise.R"
@@ -48,6 +49,7 @@ def test_reference_targets_registry_is_valid():
         "component_nma_netmeta_cnma",
         "certainty_cinema_robmen",
         "dta_bivariate_hsroc_reference",
+        "dta_source_table_mada_reitsma_smoke",
         "pairwise_metafor_meta",
         "reported_hr_survival_metafor_pairwise",
         "ctgov_hr_network_netmeta_star",
@@ -103,7 +105,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 4, "passed": 8}
+    assert summary == {"failed": 4, "passed": 9}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -113,6 +115,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_netmeta_multiarm_output_validation",
         "r_mada_dta_reitsma_preflight",
         "r_mada_dta_reitsma_output_validation",
+        "r_mada_dta_midkine_source_output_validation",
         "r_metafor_dose_response_polynomial_output_validation",
         "r_metafor_sglt2_survival_hr_output_validation",
         "r_metafor_pcsk9_survival_hr_output_validation",
@@ -215,6 +218,20 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     assert "probability <=" in dta_reference.tolerance
     assert "validation/dta/dta_algorithmic_fixture.toml" in dta_reference.input_artifacts
 
+    dta_source_reference = by_adapter["r_mada_dta_midkine_source_output_validation"]
+    assert dta_source_reference.target_id == "dta_source_table_mada_reitsma_smoke"
+    assert dta_source_reference.status == "passed"
+    assert dta_source_reference.certification_effect == "evidence_candidate"
+    assert dta_source_reference.reference_method == "mada::reitsma source-backed DTA table"
+    assert dta_source_reference.output_artifacts == (
+        "validation/reference_runs/dta_mada_reitsma_midkine_source_output.json",
+    )
+    assert "validation/dta/midkine_elisa_cancer_dta_benchmark.toml" in (
+        dta_source_reference.input_artifacts
+    )
+    assert "AUC exported only" in dta_source_reference.tolerance
+    assert DTA_SOURCE_R_ADAPTER.is_file()
+
     dose_response_reference = by_adapter["r_metafor_dose_response_polynomial_output_validation"]
     assert dose_response_reference.target_id == "dose_response_metafor_polynomial_smoke"
     assert dose_response_reference.status == "passed"
@@ -280,6 +297,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/pairwise_metafor_meta_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",
+        "validation/reference_runs/dta_mada_reitsma_midkine_source_output.json",
         "validation/reference_runs/stan_nuts_cmdstan_output.json",
         "validation/reference_runs/dose_response_metafor_polynomial_output.json",
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",

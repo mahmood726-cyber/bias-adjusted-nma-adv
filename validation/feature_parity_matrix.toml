@@ -167,13 +167,16 @@ status = "reference_candidate"
 evidence_artifacts = [
   "validation/reference_runs/dta_mada_reitsma_reference.toml",
   "validation/reference_runs/dta_mada_reitsma_output.json",
+  "validation/reference_runs/dta_mada_reitsma_midkine_source_reference.toml",
+  "validation/reference_runs/dta_mada_reitsma_midkine_source_output.json",
+  "validation/dta/midkine_elisa_cancer_dta_benchmark.toml",
 ]
 required_next_artifacts = [
-  "source_backed_dta_2x2_tables",
+  "broader_source_backed_dta_2x2_tables",
   "hsroc_reference_outputs",
   "threshold_effect_diagnostics",
 ]
-claim_limit = "The DTA reference candidate is algorithmic only, not source-backed diagnostic accuracy parity."
+claim_limit = "The DTA reference candidate now includes one source-backed open-access table, but it is not broad HSROC or diagnostic accuracy parity."
 certification_effect = "none"
 
 [[features]]

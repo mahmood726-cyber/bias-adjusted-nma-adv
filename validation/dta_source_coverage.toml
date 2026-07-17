@@ -1,14 +1,14 @@
 schema_version = "dta_source_coverage/v1"
 checked_at = "2026-07-16"
-status = "missing_source_backed_dta_data"
-model_status = "prototype_not_source_backed"
+status = "active_source_backed_dta_data"
+model_status = "source_backed_not_reference_matched"
 certification_effect = "none"
 purpose = "Machine-readable gate for diagnostic test accuracy source data and model readiness."
 allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
 protocol_only_sources = ["other_trial_registry_protocol", "pactr_protocol", "who_ictrp_protocol"]
 protocol_registry_rule = "Protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready DTA 2x2 tables or accuracy estimates; downloaded registry result rows and public FDA/EMA regulatory review rows may supply DTA effects only when public numeric TP/FP/FN/TN or accuracy text is source-bound."
-registered_benchmark_ids = []
-registered_source_counts = {aact_clinicaltrials_gov = 0, clinicaltrials_gov = 0, ema_epar = 0, fda_review = 0, open_access_paper = 0, pactr_results = 0, pubmed_abstract = 0, who_ictrp_results = 0}
+registered_benchmark_ids = ["midkine_elisa_cancer_dta"]
+registered_source_counts = {aact_clinicaltrials_gov = 0, clinicaltrials_gov = 0, ema_epar = 0, fda_review = 0, open_access_paper = 11, pactr_results = 0, pubmed_abstract = 0, who_ictrp_results = 0}
 required_source_fields = [
   "tp",
   "fp",
@@ -25,9 +25,10 @@ required_model_families = [
   "hsroc",
 ]
 source_search_summary = [
-  "No source-backed DTA 2x2 benchmark artifact is currently registered.",
-  "AACT/ClinicalTrials.gov, ICTRP/PACTR result rows, PubMed abstracts, and open-access papers are allowed sources, but extracted TP/FP/FN/TN rows must be source-bound before modeling.",
-  "An experimental bivariate logit-normal REML prototype and mada::reitsma algorithmic fixture adapter are present, but they use a nonclinical algorithmic fixture only.",
+  "One source-backed DTA 2x2 benchmark artifact is registered: midkine_elisa_cancer_dta.",
+  "The registered rows come from the machine-readable open-access PLOS ONE JATS Table 1 for DOI 10.1371/journal.pone.0180511.",
+  "AACT/ClinicalTrials.gov, ICTRP/PACTR result rows, PubMed abstracts, and open-access papers remain allowed sources, but extracted TP/FP/FN/TN rows must be source-bound before modeling.",
+  "The bivariate logit-normal REML prototype has source-backed input data for this benchmark, but DTA parity remains blocked until mada/metafor/HSROC reference outputs and broader datasets pass.",
 ]
 required_next_artifacts = [
   "dta_source_manifest_with_nct_pmid_or_open_access_identifiers",
@@ -38,4 +39,4 @@ required_next_artifacts = [
   "bivariate_glmm_or_hsroc_model_artifact",
   "mada_or_metafor_or_reference_software_parity_before_certification",
 ]
-claim_limit = "No DTA real-data validation, source-backed DTA meta-analysis, HSROC clinical parity, or diagnostic-accuracy superiority claim is supported until source-backed 2x2 data and reference-matched bivariate models are added."
+claim_limit = "No DTA clinical validation, HSROC clinical parity, or diagnostic-accuracy superiority claim is supported until broader source-backed 2x2 data and reference-matched bivariate models are added."

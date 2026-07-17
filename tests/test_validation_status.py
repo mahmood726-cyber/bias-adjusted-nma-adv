@@ -48,7 +48,7 @@ def test_validation_status_composes_all_current_gates():
 
     source_registry = report["source_benchmark_registry"]
     assert source_registry["registry"] == "validation/benchmark_registry.toml"
-    assert source_registry["n_benchmarks"] == 5
+    assert source_registry["n_benchmarks"] == 6
     assert source_registry["certification_effect"] == "none"
     assert set(source_registry["benchmark_ids"]) == {
         "sglt2_hf_primary_log_or",
@@ -56,6 +56,7 @@ def test_validation_status_composes_all_current_gates():
         "pcsk9_mace_reported_hr",
         "t2d_mace_ctgov_hr_network",
         "semaglutide_obesity_dose_response",
+        "midkine_elisa_cancer_dta",
     }
 
     grand_plan = report["grand_benchmark_plan"]
@@ -75,18 +76,20 @@ def test_validation_status_composes_all_current_gates():
     assert real_atlas["atlas"] == "validation/real_benchmark_atlas.json"
     assert real_atlas["schema_version"] == "real_benchmark_atlas/v1"
     assert real_atlas["status"] == "passed"
-    assert real_atlas["n_benchmarks"] == 5
-    assert real_atlas["n_benchmark_study_effects"] == 25
+    assert real_atlas["n_benchmarks"] == 6
+    assert real_atlas["n_benchmark_study_effects"] == 36
     assert real_atlas["n_unique_nct_ids"] == 17
     assert real_atlas["n_unique_pmids"] == 7
     assert real_atlas["domain_counts"] == {
         "binary_pairwise_meta": 1,
+        "diagnostic_test_accuracy": 1,
         "dose_response_pairwise": 1,
         "reported_hr_star_network": 1,
         "reported_survival_hr_pairwise": 2,
     }
     assert real_atlas["source_type_counts"] == {
         "clinicaltrials_gov": 21,
+        "open_access_paper": 11,
         "pubmed_abstract": 21,
     }
     assert real_atlas["certification_effect"] == "none"
@@ -217,20 +220,20 @@ def test_validation_status_composes_all_current_gates():
     dta_coverage = report["dta_source_coverage"]
     assert dta_coverage["coverage"] == "validation/dta_source_coverage.toml"
     assert dta_coverage["schema_version"] == "dta_source_coverage/v1"
-    assert dta_coverage["status"] == "missing_source_backed_dta_data"
-    assert dta_coverage["model_status"] == "prototype_not_source_backed"
-    assert dta_coverage["registered_benchmark_ids"] == []
+    assert dta_coverage["status"] == "active_source_backed_dta_data"
+    assert dta_coverage["model_status"] == "source_backed_not_reference_matched"
+    assert dta_coverage["registered_benchmark_ids"] == ["midkine_elisa_cancer_dta"]
     assert dta_coverage["registered_source_counts"] == {
         "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 0,
         "ema_epar": 0,
         "fda_review": 0,
-        "open_access_paper": 0,
+        "open_access_paper": 11,
         "pactr_results": 0,
         "pubmed_abstract": 0,
         "who_ictrp_results": 0,
     }
-    assert dta_coverage["has_source_backed_dta_data"] is False
+    assert dta_coverage["has_source_backed_dta_data"] is True
     assert dta_coverage["required_model_families"] == [
         "bivariate_random_effects_glmm",
         "hsroc",
@@ -257,14 +260,15 @@ def test_validation_status_composes_all_current_gates():
     assert large_scale["schema_version"] == "large_scale_validation/v1"
     assert large_scale["status"] == "partial_not_large_scale"
     assert large_scale["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 5,
+        "observed": 6,
         "required": 20,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 8,
+        "observed": 9,
         "required": 10,
     }
-    assert "diagnostic_test_accuracy" in large_scale["missing_required_real_domains"]
+    assert "diagnostic_test_accuracy" not in large_scale["missing_required_real_domains"]
+    assert "component_nma" in large_scale["missing_required_real_domains"]
     assert large_scale["global_large_scale_validation_complete"] is False
     assert large_scale["certification_effect"] == "none"
 
@@ -365,15 +369,16 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 12
+    assert reference_runs["n_reports"] == 13
     assert reference_runs["status_counts"] == {
         "failed": 4,
-        "passed": 8,
+        "passed": 9,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",
+        "validation/reference_runs/dta_mada_reitsma_midkine_source_output.json",
         "validation/reference_runs/stan_nuts_cmdstan_output.json",
         "validation/reference_runs/dose_response_metafor_polynomial_output.json",
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
@@ -394,6 +399,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_netmeta_multiarm_output_validation", "passed"),
         ("r_mada_dta_reitsma_preflight", "failed"),
         ("r_mada_dta_reitsma_output_validation", "passed"),
+        ("r_mada_dta_midkine_source_output_validation", "passed"),
         ("r_metafor_dose_response_polynomial_output_validation", "passed"),
         ("r_metafor_sglt2_survival_hr_output_validation", "passed"),
         ("r_metafor_pcsk9_survival_hr_output_validation", "passed"),
@@ -427,8 +433,8 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["status"] == "passed"
     assert payload["checked_at"] == "2026-07-15T00:00:00Z"
     assert payload["clinical_hta_reporting_enabled"] is False
-    assert payload["source_benchmark_registry"]["n_benchmarks"] == 5
-    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 25
+    assert payload["source_benchmark_registry"]["n_benchmarks"] == 6
+    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 36
     assert payload["tier1_gap_register"]["status_counts"] == {"blocking": 3}
     assert payload["html_delivery_contract"]["status_counts"] == {
         "allowed": 2,
@@ -437,8 +443,8 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["dose_response_source_coverage"][
         "has_source_backed_dose_response_data"
     ] is True
-    assert payload["dta_source_coverage"]["has_source_backed_dta_data"] is False
-    assert payload["dta_source_coverage"]["model_status"] == "prototype_not_source_backed"
+    assert payload["dta_source_coverage"]["has_source_backed_dta_data"] is True
+    assert payload["dta_source_coverage"]["model_status"] == "source_backed_not_reference_matched"
     assert payload["feature_parity_matrix"]["global_feature_parity_complete"] is False
     assert payload["large_scale_validation"]["status"] == "partial_not_large_scale"
     assert payload["reversal_yardstick"]["headline_metric"] == "detected_taint"

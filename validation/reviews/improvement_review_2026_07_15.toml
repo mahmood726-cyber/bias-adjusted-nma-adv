@@ -1,5 +1,5 @@
 schema_version = "improvement_review/v1"
-checked_at = "2026-07-16"
+checked_at = "2026-07-17"
 certification_effect = "none"
 overall_status = "passed_current_milestone_with_global_goal_blockers"
 goal_statement = "Build toward a world-class evidence-synthesis platform that can beat tier-one workflows under the source limits of AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance, with protocol-only registry rows used for metadata only."
@@ -39,7 +39,7 @@ findings = [
   "The local prior/posterior predictive and ranking checks improve prototype reviewability, but they are not Stan/NUTS, SUCRA, or multinma reference parity.",
   "The native Python Guyot-style reconstruction check addresses the pass-through KM critique for local algorithmic validation, but OA figure provenance and event/median/p-value checks remain required.",
   "The CT.gov sparse design-bias guard blocks one-RCT/one-NRS style cross-design borrowing without hierarchical shrinkage, but it is not a crossnma replacement.",
-  "The DTA gate correctly records that source-backed diagnostic test accuracy data are absent; a new bivariate logit-normal REML prototype and mada::reitsma algorithmic fixture adapter close the previous no-model gap only at nonclinical fixture level.",
+  "The DTA gate now records one source-backed open-access diagnostic test accuracy 2x2 benchmark and a narrow mada::reitsma source-table smoke reference, but this is not broad HSROC or diagnostic-accuracy parity.",
   "Gemini's transportability panel feedback matches local code coverage: topological support, non-collapsibility guards, and local ported tests are present, but they remain exploratory diagnostics rather than clinical evidence.",
 ]
 actions = [
@@ -58,7 +58,7 @@ actions = [
   "Recorded local Bayesian MCMC diagnostic exports as partial Bayesian ecosystem progress while keeping Stan/NUTS and multinma matching blocked.",
   "Recorded the CmdStan preflight contract as a fail-closed environment gate while keeping CmdStan backend implementation blocked.",
   "Recorded local Bayesian prior predictive, posterior predictive, and joint-draw ranking checks as implemented prototype diagnostics while keeping Stan/multinma parity blocked.",
-  "Recorded native Python Guyot-style reconstruction, sparse CT.gov design-bias diagnostics, the source-backed dose-response smoke benchmark, the DTA coverage gate, and the nonclinical DTA/mada fixture adapter as partial capabilities without changing blocker status.",
+  "Recorded native Python Guyot-style reconstruction, sparse CT.gov design-bias diagnostics, the source-backed dose-response smoke benchmark, the source-backed DTA smoke benchmark, and the nonclinical DTA/mada fixture adapter as partial capabilities without changing blocker status.",
   "Recorded causal transportability and topological positivity as locally tested exploratory diagnostics, not as independent external reproduction.",
 ]
 remaining_blockers = [
@@ -82,7 +82,7 @@ findings = [
   "The source boundary now distinguishes effect-evidence sources from protocol-only registries.",
   "Protocol-only ICTRP, PACTR, and other registries are rejected as model-ready extracted-effect sources; public numeric ICTRP/PACTR result rows require source-bound row text.",
   "Dose-response real-data coverage was checked against the registered artifacts: one CT.gov/PubMed semaglutide dose-response smoke benchmark is now included, with open-access paper count still zero.",
-  "DTA coverage was checked separately: no source-backed TP/FP/FN/TN benchmark data are currently registered, although an algorithmic DTA fixture now validates the prototype against mada::reitsma.",
+  "DTA coverage was checked separately: one source-backed open-access TP/FP/FN/TN benchmark is now registered, with a narrow mada::reitsma source-table smoke reference and no broad HSROC parity.",
   "FDA/EMA regulatory review rows are now an explicit effect-source tier only when public numeric per-trial provenance is present.",
   "Protocol-only ICTRP/PACTR rows now have a non-effect metadata ledger path for registered primary outcomes and completeness denominators.",
 ]
@@ -91,7 +91,7 @@ actions = [
   "Added tests that reject protocol-only sources in the proof-carrying effect ingestion path.",
   "Added the real benchmark atlas to summarize current source-backed benchmark coverage and non-claims.",
   "Added a dose-response source-coverage artifact and validator that records the current source-backed semaglutide dose-response smoke benchmark.",
-  "Added a DTA source-coverage artifact and validator that records the current absence of registered source-backed DTA 2x2 data while allowing a nonclinical prototype/model-reference fixture to be tracked separately.",
+  "Updated the DTA source-coverage artifact and validator to record the Midkine ELISA open-access 2x2 benchmark while keeping the nonclinical prototype/model-reference fixture tracked separately.",
   "Added a config-backed source-type policy for FDA/EMA regulatory review sources and protocol-only registry sources.",
   "Added a protocol-only registry metadata ledger and a config-backed study-design policy.",
 ]
@@ -161,7 +161,7 @@ findings = [
   "The Bayesian predictive and ranking helpers validate draw shapes and preserve non-certifying warnings in returned objects.",
   "The dose-response benchmark is generated from a verified manifest and source-check report, and its artifact states single-trial and shared-placebo covariance limitations.",
   "The native KM reconstruction and sparse design-bias helpers are focused diagnostics with direct tests and non-certifying output.",
-  "The DTA prototype is isolated from source-backed evidence: tests validate the nonclinical fixture against mada::reitsma while the coverage gate still reports zero DTA real-data benchmarks.",
+  "The DTA prototype is isolated from certification claims: tests validate the nonclinical fixture and one source-backed Midkine table against mada::reitsma while the coverage gate still blocks broad DTA real-data validation.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
@@ -181,7 +181,7 @@ actions = [
   "Added focused tests for Bayesian prior predictive checks, posterior predictive checks, joint-draw ranking probabilities, and invalid helper inputs.",
   "Added focused tests for source-backed dose-response manifest validation, artifact regeneration, and overclaim rejection.",
   "Added focused tests for native Guyot-style reconstruction fidelity reporting and sparse design-bias underidentification.",
-  "Added focused tests for DTA coverage absence, bivariate prototype behavior, mada::reitsma fixture validation, and validation-status exposure.",
+  "Added focused tests for DTA source coverage, bivariate prototype behavior, mada::reitsma fixture/source-table validation, and validation-status exposure.",
 ]
 remaining_blockers = [
   "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit each capability milestone before treating the batch as reviewed.",

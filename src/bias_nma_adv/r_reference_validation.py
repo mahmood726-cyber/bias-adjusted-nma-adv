@@ -361,6 +361,184 @@ def validate_dta_mada_reitsma_output(
     }
 
 
+def validate_dta_mada_source_table_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-5,
+) -> dict[str, Any]:
+    """Validate ``mada::reitsma`` output against the source-backed DTA table."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "evidence_mode",
+            "effect_scale",
+            "certification_effect",
+            "package_versions",
+            "n_studies",
+            "continuity_correction",
+            "correction_control",
+            "method",
+            "converged",
+            "study_effects",
+            "summary",
+            "limitations",
+        },
+        label="source-backed DTA mada output",
+    )
+    if output["schema_version"] != "dta_mada_reitsma_source_table/v1":
+        raise RReferenceValidationError("source-backed DTA mada schema_version mismatch.")
+    if output["benchmark_id"] != "midkine_elisa_cancer_dta":
+        raise RReferenceValidationError("source-backed DTA mada benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("source-backed DTA mada source_policy mismatch.")
+    if output["evidence_mode"] != "open_access_jats_table_2x2":
+        raise RReferenceValidationError("source-backed DTA mada evidence_mode mismatch.")
+    if output["effect_scale"] != "logit_sensitivity_and_logit_false_positive_rate":
+        raise RReferenceValidationError("source-backed DTA mada effect_scale mismatch.")
+    if output["certification_effect"] != "none":
+        raise RReferenceValidationError("source-backed DTA mada output cannot certify a module.")
+    _require_package_versions(output["package_versions"], {"R", "mada", "jsonlite"})
+    if str(output["method"]) != "reml":
+        raise RReferenceValidationError("source-backed DTA mada output must use REML.")
+    if str(output["correction_control"]) != "all":
+        raise RReferenceValidationError("source-backed DTA mada output must use all-cell correction.")
+    if not bool(output["converged"]):
+        raise RReferenceValidationError("source-backed DTA mada output did not converge.")
+
+    benchmark = _load_toml(root / "validation" / "dta" / "midkine_elisa_cancer_dta_benchmark.toml")
+    expected_effects = {
+        str(effect["study_id"]): effect for effect in benchmark["study_effects"]
+    }
+    observed_effects = {
+        str(effect["study_id"]): effect for effect in output["study_effects"]
+    }
+    if set(expected_effects) != set(observed_effects):
+        raise RReferenceValidationError("source-backed DTA mada study rows do not match benchmark.")
+    if int(output["n_studies"]) != len(expected_effects):
+        raise RReferenceValidationError("source-backed DTA mada n_studies mismatch.")
+
+    for study_id, expected in expected_effects.items():
+        observed = observed_effects[study_id]
+        for field in (
+            "citation",
+            "country",
+            "cancer",
+            "index_test",
+            "reference_standard",
+            "threshold",
+            "source_type",
+            "source_doi",
+            "table_doi",
+            "table_id",
+            "row_label",
+        ):
+            if str(observed[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: source-backed DTA {field} mismatch.")
+        for field in ("tp", "fp", "fn", "tn"):
+            if int(observed[field]) != int(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: source-backed DTA {field} mismatch.")
+
+    summary = output["summary"]
+    expected_fit = benchmark["candidate"]["bivariate_logitnormal_reml"]
+    _require_keys(
+        summary,
+        {
+            "logit_sensitivity",
+            "logit_fpr",
+            "se_logit_sensitivity",
+            "se_logit_fpr",
+            "pooled_sensitivity",
+            "pooled_specificity",
+            "tau2_sensitivity",
+            "tau2_fpr",
+            "cov_sensitivity_fpr",
+            "rho_sensitivity_fpr",
+            "log_diagnostic_odds_ratio",
+            "diagnostic_odds_ratio",
+            "auc",
+        },
+        label="source-backed DTA mada summary",
+    )
+    max_abs_diff = _assert_many_close(
+        {
+            "pooled_sensitivity": (
+                summary["pooled_sensitivity"],
+                expected_fit["pooled_sensitivity"],
+            ),
+            "pooled_specificity": (
+                summary["pooled_specificity"],
+                expected_fit["pooled_specificity"],
+            ),
+            "logit_sensitivity": (
+                summary["logit_sensitivity"],
+                expected_fit["logit_sensitivity"],
+            ),
+            "logit_fpr": (summary["logit_fpr"], expected_fit["logit_fpr"]),
+            "tau2_sensitivity": (
+                summary["tau2_sensitivity"],
+                expected_fit["tau2_sensitivity"],
+            ),
+            "tau2_fpr": (summary["tau2_fpr"], expected_fit["tau2_fpr"]),
+            "cov_sensitivity_fpr": (
+                summary["cov_sensitivity_fpr"],
+                expected_fit["cov_sensitivity_fpr"],
+            ),
+            "rho_sensitivity_fpr": (
+                summary["rho_sensitivity_fpr"],
+                expected_fit["rho_sensitivity_fpr"],
+            ),
+            "log_diagnostic_odds_ratio": (
+                summary["log_diagnostic_odds_ratio"],
+                expected_fit["log_diagnostic_odds_ratio"],
+            ),
+            "diagnostic_odds_ratio": (
+                summary["diagnostic_odds_ratio"],
+                expected_fit["diagnostic_odds_ratio"],
+            ),
+        },
+        tolerance,
+    )
+    auc = float(summary["auc"])
+    if auc <= 0.0 or auc >= 1.0:
+        raise RReferenceValidationError("source-backed DTA mada AUC must be in (0, 1).")
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not clinical diagnostic accuracy guidance" in item for item in limitations):
+        raise RReferenceValidationError("source-backed DTA mada limitations must block clinical guidance.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "dta_source_table_mada_reitsma_smoke",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "mada::reitsma source-backed DTA table",
+        "benchmark_id": "midkine_elisa_cancer_dta",
+        "validated_components": [
+            "source_backed_tp_fp_fn_tn_rows",
+            "all_cell_correction_convention",
+            "pooled_sensitivity_specificity",
+            "between_study_covariance",
+            "clinical_guidance_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "auc_note": (
+            "mada AUC is exported but not treated as local parity because the "
+            "prototype uses a separate conditional SROC integration formula."
+        ),
+        "source_policy_note": (
+            "This validates one open-access source-backed DTA table only; it is "
+            "not broad HSROC parity or diagnostic-accuracy certification."
+        ),
+    }
+
+
 def validate_dose_response_metafor_polynomial_output(
     output_path: str | Path,
     *,

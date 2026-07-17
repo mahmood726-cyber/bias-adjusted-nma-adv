@@ -1,0 +1,28 @@
+schema_version = "reference_run/v1"
+target_id = "dta_source_table_mada_reitsma_smoke"
+adapter_id = "r_mada_dta_midkine_source_output_validation"
+reference_method = "mada::reitsma source-backed DTA table"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-17T09:50:00Z"
+command = ["Rscript", "--vanilla", "external/r/dta_mada_reitsma_source_table.R", "--input", "validation/dta/midkine_elisa_cancer_dta_2x2.csv", "--output", "validation/reference_runs/dta_mada_reitsma_midkine_source_output.json", "--benchmark-id", "midkine_elisa_cancer_dta"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", mada = "0.5.12", jsonlite = "2.0.0"}
+input_artifacts = ["validation/dta/midkine_elisa_cancer_dta_2x2.csv", "validation/dta/midkine_elisa_cancer_dta.toml", "validation/dta/midkine_elisa_cancer_dta_benchmark.toml", "validation/source_checks/midkine_elisa_cancer_dta_check.json", "external/r/dta_mada_reitsma_source_table.R"]
+output_artifacts = ["validation/reference_runs/dta_mada_reitsma_midkine_source_output.json"]
+tolerance = "absolute <= 1e-05 for main bivariate parameters; AUC exported only"
+skip_reason = ""
+validated_components = ["source_backed_tp_fp_fn_tn_rows", "all_cell_correction_convention", "pooled_sensitivity_specificity", "between_study_covariance", "clinical_guidance_limitation_preserved"]
+max_abs_difference = 3.6664720060031186e-06
+notes = ["This validates one open-access source-backed DTA table only; it is not broad HSROC parity or diagnostic-accuracy certification.", "mada AUC is exported but not treated as local parity because the prototype uses a separate conditional SROC integration formula."]
+
+[input_sha256]
+"validation/dta/midkine_elisa_cancer_dta_2x2.csv" = "e0f3f88c99b3bc4831c3b75cbca583b9161c6e6e9798cda3ec88d5afa3b79b05"
+"validation/dta/midkine_elisa_cancer_dta.toml" = "4100333cea4f331566b6063993caf94a23ec2728a12cfb3c777743ea8069f206"
+"validation/dta/midkine_elisa_cancer_dta_benchmark.toml" = "2762ed9c25af621c675b1da16ca53c52ed00958140601cce734764ad8c4df11c"
+"validation/source_checks/midkine_elisa_cancer_dta_check.json" = "7335e52968e545a50ee1784bb5bc412c8ab0ccee8b53bcc806cdcc256a6837f1"
+"external/r/dta_mada_reitsma_source_table.R" = "fd5e610526d251a202ef4e74a23dc36d71fd61a46555c25d2133e23695291dac"
+
+[output_sha256]
+"validation/reference_runs/dta_mada_reitsma_midkine_source_output.json" = "d63b058183934a74397728992c0ca392192c102eefef4e5710636e94bd8aa86a"

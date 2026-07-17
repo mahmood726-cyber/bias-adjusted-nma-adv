@@ -123,6 +123,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "dta_source_table_mada_reitsma_smoke"
+domain = "diagnostic_test_accuracy"
+module = "src/bias_nma_adv/dta.py"
+reference_method = "mada::reitsma source-backed DTA table"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed TP/FP/FN/TN rows from an open-access machine-readable table",
+  "match main bivariate logit-normal parameters under the all-cell correction convention",
+  "preserve the limitation that this smoke check is not broad HSROC parity or diagnostic-accuracy certification",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "pairwise_metafor_meta"
 domain = "pairwise_meta_analysis"
 module = "src/bias_nma_adv/pairwise.py"

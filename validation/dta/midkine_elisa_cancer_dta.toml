@@ -1,0 +1,214 @@
+schema_version = "dta_open_access_manifest/v1"
+benchmark_id = "midkine_elisa_cancer_dta"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "open_access_jats_table_2x2"
+status = "candidate_source_verified"
+certification_effect = "none"
+article_title = "Diagnostic accuracy of ELISA for detecting serum Midkine in cancer patients"
+article_doi = "10.1371/journal.pone.0180511"
+source_url = "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0180511"
+manuscript_xml_url = "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0180511&type=manuscript"
+table_id = "pone.0180511.t001"
+table_doi = "10.1371/journal.pone.0180511.t001"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold_rule = "per-study cut-off reported in Table 1"
+access_statement = "Open access PLOS ONE article distributed under a Creative Commons Attribution license."
+
+[[records]]
+study_id = "shimada_2003"
+citation = "Hideaki Shimada, 2003"
+country = "Japan"
+cancer = "ESCC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "300pg/ml"
+tp = 57
+fp = 6
+fn = 36
+tn = 145
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Hideaki Shimada, 2003"
+
+[[records]]
+study_id = "lucas_2009"
+citation = "Susanne Lucas, 2009"
+country = "Germany"
+cancer = "PET"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "0.176ng/ml"
+tp = 25
+fp = 52
+fn = 4
+tn = 100
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Susanne Lucas, 2009"
+
+[[records]]
+study_id = "krzystek_korpacka_2013"
+citation = "Malgorzata, 2013"
+country = "Poland"
+cancer = "CRC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "406ng/L"
+tp = 87
+fp = 50
+fn = 18
+tn = 106
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Malgorzata, 2013"
+
+[[records]]
+study_id = "zhu_2013"
+citation = "Wenwei Zhu, 2013"
+country = "China"
+cancer = "HCC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "0.654ng/ml"
+tp = 262
+fp = 81
+fn = 40
+tn = 424
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Wenwei Zhu, 2013"
+
+[[records]]
+study_id = "meng_2015"
+citation = "Zhaowei Meng, 2015"
+country = "China"
+cancer = "DTC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "323.48pg/ml"
+tp = 53
+fp = 15
+fn = 17
+tn = 60
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Zhaowei Meng, 2015"
+
+[[records]]
+study_id = "shaheen_2015"
+citation = "Karim Y.A. Shaheen, 2015"
+country = "Egypt"
+cancer = "HCC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "NA"
+tp = 40
+fp = 1
+fn = 0
+tn = 29
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Karim Y.A. Shaheen, 2015"
+
+[[records]]
+study_id = "sun_2015"
+citation = "Changming Sun, 2015"
+country = "China"
+cancer = "NSCLC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "NA"
+tp = 42
+fp = 3
+fn = 10
+tn = 49
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Changming Sun, 2015"
+
+[[records]]
+study_id = "vongsuvanh_2016"
+citation = "Roslyn Vongsuvanh, 2016"
+country = "Australia"
+cancer = "HCC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "0.44ng/ml"
+tp = 61
+fp = 65
+fn = 25
+tn = 107
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Roslyn Vongsuvanh, 2016"
+
+[[records]]
+study_id = "xia_2016"
+citation = "Xin Xia, 2016"
+country = "China"
+cancer = "NSCLC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "400pg/ml"
+tp = 109
+fp = 14
+fn = 44
+tn = 104
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Xin Xia, 2016"
+
+[[records]]
+study_id = "yamashita_2016"
+citation = "Taku Yamashita, 2016"
+country = "Japan"
+cancer = "HNSCC"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "482pg/ml"
+tp = 59
+fp = 17
+fn = 44
+tn = 99
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Taku Yamashita, 2016"
+
+[[records]]
+study_id = "ak_2017"
+citation = "Gunulu Ak, 2017"
+country = "Turkey"
+cancer = "Mesothelioma"
+index_test = "serum Midkine ELISA"
+reference_standard = "cancer diagnosis as classified in source study"
+threshold = "421pg/ml"
+tp = 58
+fp = 23
+fn = 37
+tn = 24
+source_type = "open_access_paper"
+source_doi = "10.1371/journal.pone.0180511"
+table_doi = "10.1371/journal.pone.0180511.t001"
+table_id = "pone.0180511.t001"
+row_label = "Gunulu Ak, 2017"

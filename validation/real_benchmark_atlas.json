@@ -141,6 +141,32 @@
         "validation/dose_response/semaglutide_obesity_dose_response.toml"
       ],
       "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+    },
+    {
+      "artifact": "validation/dta/midkine_elisa_cancer_dta_benchmark.toml",
+      "artifact_schema_version": "dta_benchmark/v1",
+      "artifact_sha256": "2762ed9c25af621c675b1da16ca53c52ed00958140601cce734764ad8c4df11c",
+      "artifact_status": "local_pass",
+      "certification_effect": "none",
+      "domain": "diagnostic_test_accuracy",
+      "effect_scale": "logit_sensitivity_and_logit_false_positive_rate",
+      "evidence_mode": "open_access_jats_table_2x2",
+      "id": "midkine_elisa_cancer_dta",
+      "n_studies": 11,
+      "n_study_effects": 11,
+      "required_limitations": [
+        "not HSROC reference matched",
+        "not clinical diagnostic accuracy guidance",
+        "does not certify model performance"
+      ],
+      "source_checks": [
+        "validation/source_checks/midkine_elisa_cancer_dta_check.json"
+      ],
+      "source_manifests": [
+        "validation/dta/midkine_elisa_cancer_dta.toml",
+        "validation/dta/midkine_elisa_cancer_dta_2x2.csv"
+      ],
+      "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
     }
   ],
   "certification_effect": "none",
@@ -156,6 +182,7 @@
   ],
   "domain_counts": {
     "binary_pairwise_meta": 1,
+    "diagnostic_test_accuracy": 1,
     "dose_response_pairwise": 1,
     "reported_hr_star_network": 1,
     "reported_survival_hr_pairwise": 2
@@ -163,19 +190,21 @@
   "effect_scale_counts": {
     "log_hr": 3,
     "log_or": 1,
+    "logit_sensitivity_and_logit_false_positive_rate": 1,
     "percentage_point_change_vs_placebo": 1
   },
   "evidence_mode_counts": {
     "ctgov_dose_response_lsmean": 1,
+    "open_access_jats_table_2x2": 1,
     "pubmed_abstract_event_counts": 1,
     "reported_hr_clinicaltrials_gov_results": 1,
     "reported_hr_pubmed_abstract": 2
   },
-  "n_benchmark_study_effects": 25,
-  "n_benchmarks": 5,
+  "n_benchmark_study_effects": 36,
+  "n_benchmarks": 6,
   "n_unique_nct_ids": 17,
   "n_unique_pmids": 7,
-  "n_unique_study_ids": 21,
+  "n_unique_study_ids": 32,
   "protocol_registry_rule": "Protocol-only registry sources may verify registration, planned outcomes, eligibility, and dates, but cannot supply model-ready effects; downloaded ICTRP or PACTR result rows and public FDA/EMA regulatory review rows may supply effects only when public numeric result text is source-bound.",
   "registry": "validation/benchmark_registry.toml",
   "required_next_gates": [
@@ -188,6 +217,7 @@
   "source_check_schema_counts": {
     "ctgov_hr_network_verification/v1": 1,
     "dose_response_source_verification/v1": 1,
+    "dta_source_verification/v1": 1,
     "event_count_verification/v1": 1,
     "source_verification/v1": 3,
     "survival_hr_verification/v1": 2
@@ -196,16 +226,18 @@
     "clinicaltrials_gov_dose_response_lsmean": 1,
     "clinicaltrials_gov_reported_hr_analysis": 10,
     "identity_and_reachability": 20,
+    "open_access_jats_table_2x2": 11,
     "pubmed_abstract_dose_response_identity": 1,
     "pubmed_abstract_event_count_tokens": 4,
     "pubmed_abstract_reported_hr_tokens": 6
   },
   "source_policy_counts": {
-    "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 4,
+    "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 5,
     "clinicaltrials_gov + pubmed_abstract only": 1
   },
   "source_type_counts": {
     "clinicaltrials_gov": 21,
+    "open_access_paper": 11,
     "pubmed_abstract": 21
   },
   "status": "passed"

@@ -22,6 +22,12 @@ from bias_nma_adv.dose_response_benchmark import (
     load_dose_response_manifest,
     validate_dose_response_source_bundle,
 )
+from bias_nma_adv.dta_benchmark import (
+    DTA_VERIFICATION_SCHEMA_VERSION,
+    DTAVerificationReport,
+    load_dta_manifest,
+    validate_dta_source_bundle,
+)
 from bias_nma_adv.evidence_sources import EFFECT_EVIDENCE_SOURCE_TYPES
 from bias_nma_adv.event_count_verification import (
     EVENT_COUNT_VERIFICATION_SCHEMA_VERSION,
@@ -53,6 +59,7 @@ SUPPORTED_SOURCE_CHECK_SCHEMA_VERSIONS = {
     SURVIVAL_HR_VERIFICATION_SCHEMA_VERSION,
     CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION,
     DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION,
+    DTA_VERIFICATION_SCHEMA_VERSION,
 }
 
 
@@ -263,6 +270,7 @@ def discover_source_backed_benchmark_artifacts(repo_root: str | Path) -> tuple[s
         *sorted((root / "validation" / "survival").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "networks").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "dose_response").glob("*_benchmark.toml")),
+        *sorted((root / "validation" / "dta").glob("*_benchmark.toml")),
     ]
     return tuple(path.relative_to(root).as_posix() for path in candidates)
 
@@ -338,6 +346,9 @@ def _validate_source_check_payload(
         elif schema_version == DOSE_RESPONSE_VERIFICATION_SCHEMA_VERSION:
             report = DoseResponseVerificationReport.from_mapping(source_check)
             _validate_dose_response_reference(entry, report, repo_root=repo_root)
+        elif schema_version == DTA_VERIFICATION_SCHEMA_VERSION:
+            report = DTAVerificationReport.from_mapping(source_check)
+            _validate_dta_reference(entry, report, repo_root=repo_root)
     except ValidationError as exc:
         raise BenchmarkRegistryError(f"{entry.id}: specialized source-check validation failed: {exc}") from exc
 
@@ -430,6 +441,22 @@ def _validate_dose_response_reference(
     )
     manifest = load_dose_response_manifest(repo_root / report.manifest)
     validate_dose_response_source_bundle(manifest, report)
+
+
+def _validate_dta_reference(
+    entry: SourceBenchmarkEntry,
+    report: DTAVerificationReport,
+    *,
+    repo_root: Path,
+) -> None:
+    _assert_registered_source_manifest_sha(
+        entry,
+        report.manifest,
+        report.manifest_sha256,
+        label="DTA verification manifest",
+    )
+    manifest = load_dta_manifest(repo_root / report.manifest)
+    validate_dta_source_bundle(manifest, report)
 
 
 def _assert_registered_source_manifest_sha(

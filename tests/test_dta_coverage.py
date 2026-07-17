@@ -15,11 +15,11 @@ ROOT = Path(__file__).resolve().parents[1]
 COVERAGE = ROOT / "validation" / "dta_source_coverage.toml"
 
 
-def test_dta_source_coverage_records_current_gap_without_overclaiming():
+def test_dta_source_coverage_records_current_source_backed_data_without_overclaiming():
     coverage = load_dta_source_coverage(COVERAGE)
 
-    assert coverage.status == "missing_source_backed_dta_data"
-    assert coverage.model_status == "prototype_not_source_backed"
+    assert coverage.status == "active_source_backed_dta_data"
+    assert coverage.model_status == "source_backed_not_reference_matched"
     assert coverage.certification_effect == "none"
     assert coverage.allowed_evidence_sources == (
         "aact_clinicaltrials_gov",
@@ -36,13 +36,13 @@ def test_dta_source_coverage_records_current_gap_without_overclaiming():
         "pactr_protocol",
         "who_ictrp_protocol",
     )
-    assert coverage.registered_benchmark_ids == ()
+    assert coverage.registered_benchmark_ids == ("midkine_elisa_cancer_dta",)
     assert coverage.registered_source_counts == {
         "aact_clinicaltrials_gov": 0,
         "clinicaltrials_gov": 0,
         "ema_epar": 0,
         "fda_review": 0,
-        "open_access_paper": 0,
+        "open_access_paper": 11,
         "pactr_results": 0,
         "pubmed_abstract": 0,
         "who_ictrp_results": 0,
@@ -59,20 +59,20 @@ def test_dta_source_coverage_summary_is_validation_status_ready():
     assert summary == {
         "schema_version": DTA_SOURCE_COVERAGE_SCHEMA_VERSION,
         "checked_at": "2026-07-16",
-        "status": "missing_source_backed_dta_data",
-        "model_status": "prototype_not_source_backed",
-        "registered_benchmark_ids": [],
+        "status": "active_source_backed_dta_data",
+        "model_status": "source_backed_not_reference_matched",
+        "registered_benchmark_ids": ["midkine_elisa_cancer_dta"],
         "registered_source_counts": {
             "aact_clinicaltrials_gov": 0,
             "clinicaltrials_gov": 0,
             "ema_epar": 0,
             "fda_review": 0,
-            "open_access_paper": 0,
+            "open_access_paper": 11,
             "pactr_results": 0,
             "pubmed_abstract": 0,
             "who_ictrp_results": 0,
         },
-        "has_source_backed_dta_data": False,
+        "has_source_backed_dta_data": True,
         "required_model_families": [
             "bivariate_random_effects_glmm",
             "hsroc",
@@ -92,6 +92,7 @@ def test_dta_source_coverage_summary_is_validation_status_ready():
 
 def test_dta_source_coverage_rejects_fake_data_and_model_shortcuts():
     raw = _coverage_to_mapping(load_dta_source_coverage(COVERAGE))
+    raw["status"] = "missing_source_backed_dta_data"
     raw["registered_benchmark_ids"] = ["fabricated_dta"]
     with pytest.raises(DTACoverageError, match="cannot list"):
         DTASourceCoverage.from_mapping(raw)
