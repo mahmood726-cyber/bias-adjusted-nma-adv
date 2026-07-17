@@ -48,7 +48,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/grand_benchmark_plan.py`: Validator for the prespecified grand-benchmark plan separating real source-backed lanes from simulation-only operating-characteristic scenarios.
 - `src/bias_nma_adv/tier1_gap_register.py`: Validator for known blockers that prevent tier-one parity or superiority claims, including feature completeness, numerical stability, and Bayesian ecosystem integration.
 - `src/bias_nma_adv/feature_parity_matrix.py`: Fine-grained parity ledger across netmeta, metafor/meta, multinma/Stan, MBNMAdose, crossnma, DTA, and evidence-certainty capabilities.
-- `src/bias_nma_adv/large_scale_validation.py`: Dynamic gate comparing current source-backed benchmarks, reference runs, and simulation jobs against prespecified large-scale validation thresholds.
+- `src/bias_nma_adv/large_scale_validation.py`: Dynamic gate comparing current source-backed benchmarks, reference runs, and active full simulation jobs against prespecified large-scale validation thresholds.
 - `src/bias_nma_adv/html_delivery_contract.py`: Validator for what can be delivered as HTML without replacing statistical engines, source verification, reference adapters, or CI gates.
 - `src/bias_nma_adv/improvement_review.py`: Validator for the current improvement/polish review milestone, keeping the strategic goal active while documenting what passed current review.
 - `src/bias_nma_adv/simulation_matrix.py`: Validator and runner for executable, non-certifying simulation smoke jobs tied to the grand-benchmark plan.
@@ -66,7 +66,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/grand_benchmark_plan.toml`: Prespecified source-bound validation plan for real-data lanes and simulation scenarios; it contains no benchmark results and has `certification_effect = "none"`.
 - `validation/tier1_gap_register.toml`: Machine-readable blocker register for tier-one shortcomings. Current blockers are feature completeness, numerical stability, and Bayesian ecosystem breadth/reference parity.
 - `validation/feature_parity_matrix.toml`: Fine-grained feature-parity matrix. It currently records reference candidates and local implementations, but no completed broad feature parity.
-- `validation/large_scale_validation.toml`: Large-scale validation gate. It records thresholds and dynamically reports the current corpus as partial, not large-scale validation.
+- `validation/large_scale_validation.toml`: Large-scale validation gate. It records thresholds and dynamically reports the current corpus as partial, not large-scale validation. Smoke simulation jobs are CI execution checks and do not count as full validation jobs.
 - `validation/html_delivery_contract.toml`: Machine-readable delivery contract for HTML dashboards versus backend-required engines and gates.
 - `validation/dose_response_source_coverage.toml`: Machine-readable check for dose-response real-data coverage. Current status records one source-backed CT.gov/PubMed semaglutide dose-response smoke benchmark plus a narrow `metafor` polynomial reference candidate, and still blocks dose-response NMA parity or superiority claims.
 - `validation/dta_source_coverage.toml`: Machine-readable DTA coverage gate. Current status records one source-backed open-access DTA 2x2 benchmark (`midkine_elisa_cancer_dta`) and one narrow `mada::reitsma` source-table smoke reference, while still blocking broad HSROC parity, clinical DTA validation, and superiority claims.

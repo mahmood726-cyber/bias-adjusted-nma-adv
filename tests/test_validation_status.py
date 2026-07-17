@@ -304,6 +304,15 @@ def test_validation_status_composes_all_current_gates():
         "observed": 1,
         "required": 1,
     }
+    assert large_scale["dynamic_counts"]["simulation_jobs"] == {
+        "observed": 0,
+        "required": 25,
+    }
+    assert large_scale["dynamic_counts"]["simulation_iterations"] == {
+        "observed": 0,
+        "required": 10000,
+    }
+    assert "Only active full simulation jobs count" in large_scale["simulation_counting_rule"]
     assert "diagnostic_test_accuracy" not in large_scale["missing_required_real_domains"]
     assert "component_nma" not in large_scale["missing_required_real_domains"]
     assert "cross_design_nma" not in large_scale["missing_required_real_domains"]

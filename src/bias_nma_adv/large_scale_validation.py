@@ -163,7 +163,12 @@ def summarize_large_scale_validation(
     """Summarize current dynamic evidence against large-scale thresholds."""
 
     thresholds = gate.thresholds
-    current_sim_iterations = sum(job.n_iterations for job in simulation_matrix.jobs)
+    validation_simulation_jobs = [
+        job
+        for job in simulation_matrix.jobs
+        if job.status == "active" and job.execution_mode == "full"
+    ]
+    current_sim_iterations = sum(job.n_iterations for job in validation_simulation_jobs)
     passed_reference_reports = [
         report for report in reference_reports if report.status == "passed"
     ]
@@ -194,7 +199,10 @@ def summarize_large_scale_validation(
             int(real_benchmark_atlas.get("n_tau2_positive_benchmarks", 0)),
             thresholds.minimum_tau2_positive_benchmarks,
         ),
-        "simulation_jobs": (len(simulation_matrix.jobs), thresholds.minimum_simulation_jobs),
+        "simulation_jobs": (
+            len(validation_simulation_jobs),
+            thresholds.minimum_simulation_jobs,
+        ),
         "simulation_iterations": (
             current_sim_iterations,
             thresholds.minimum_simulation_iterations,
@@ -217,6 +225,10 @@ def summarize_large_scale_validation(
         },
         "missing_required_real_domains": missing_domains,
         "failed_checks": failed_checks,
+        "simulation_counting_rule": (
+            "Only active full simulation jobs count toward large-scale validation; "
+            "smoke and planned jobs are CI checks or plans, not validation evidence."
+        ),
         "certification_effect": gate.certification_effect,
         "claim_limit": gate.claim_limit,
     }
