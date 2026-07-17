@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "osimertinib_nsclc_pfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/osimertinib_nsclc_pfs_reported_hrs.toml"
+source_manifest_sha256 = "2bd7e05a1ad39796f232d6bba6f0937f3dc5016d98e293dd315aaef57352b23c"
+source_verification_report = "validation/source_checks/osimertinib_nsclc_pfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "f9a48f8de846311d8855f0a5778a75a101a6c19a69b94732c8d4f1778febeef3"
+source_identity_report = "validation/source_checks/osimertinib_nsclc_pfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "423c463f026eaa40f371b7ffca97a5f8528e6b173c59ef45a1284b0c3f26c520"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "osimertinib_nsclc_pfs_reported_hr"
+manifest_sha256 = "2bd7e05a1ad39796f232d6bba6f0937f3dc5016d98e293dd315aaef57352b23c"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "osimertinib_nsclc_pfs_reported_hr"
+manifest_sha256 = "2bd7e05a1ad39796f232d6bba6f0937f3dc5016d98e293dd315aaef57352b23c"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "FLAURA"
+trial = "Osimertinib in untreated EGFR-mutated advanced non-small-cell lung cancer"
+nct_id = "NCT02296125"
+pmid = "29151359"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "osimertinib"
+control_treatment = "standard EGFR-TKIs"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.46
+ci_lower = 0.37
+ci_upper = 0.57
+estimate = -0.7765287894989963
+variance = 0.012152885491188578
+se = 0.11024012650205268
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "AURA3"
+trial = "Osimertinib or platinum-pemetrexed in EGFR T790M-positive lung cancer"
+nct_id = "NCT02151981"
+pmid = "27959700"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "osimertinib"
+control_treatment = "platinum therapy plus pemetrexed"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.3
+ci_lower = 0.23
+ci_upper = 0.41
+estimate = -1.2039728043259361
+variance = 0.02174785785523812
+se = 0.14747154930778383
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "FLAURA2"
+trial = "Osimertinib with or without chemotherapy in EGFR-mutated advanced non-small-cell lung cancer"
+nct_id = "NCT04035486"
+pmid = "37937763"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "osimertinib plus chemotherapy"
+control_treatment = "osimertinib"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.62
+ci_lower = 0.49
+ci_upper = 0.79
+estimate = -0.4780358009429998
+variance = 0.014846448402071494
+se = 0.12184600281532215
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "LAURA"
+trial = "Osimertinib after chemoradiotherapy in stage III EGFR-mutated non-small-cell lung cancer"
+nct_id = "NCT03521154"
+pmid = "38828946"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "osimertinib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.16
+ci_lower = 0.1
+ci_upper = 0.24
+estimate = -1.8325814637483102
+variance = 0.04987984681464969
+se = 0.22333796545739754
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.8726062887234883
+se = 0.06809327870379293
+ci_low = -1.0060666625721708
+ci_high = -0.739145914874806
+tau2 = 0.0
+q = 34.77035900039677
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [82.28498497126857, 45.98154018921653, 67.35617656950683, 20.048177046652444]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -1.051937689188209
+se = 0.28945770134727583
+ci_low = -1.9731212813767618
+ci_high = -0.13075409699965623
+tau2 = 0.3018141326174203
+q = 3.08590890620412
+df = 3
+hksj = true
+hksj_q_factor = 1.02863630206804
+weights = [3.185047926448362, 3.0905978744264826, 3.1579554259026823, 2.8433810599056644]
+warnings = []
+pi_low = -3.0281315124362567
+pi_high = 0.9242561340598385

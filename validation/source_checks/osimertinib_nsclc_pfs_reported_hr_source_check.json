@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "osimertinib_nsclc_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T22:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02296125",
+      "details": {
+        "brief_title": "AZD9291 Versus Gefitinib or Erlotinib in Patients With Locally Advanced or Metastatic Non-small Cell Lung Cancer",
+        "nct_id": "NCT02296125",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02296125",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02296125",
+      "response_sha256": "2a5f4cd06b9377c73c3c1142e98c644e10a308ed87691c5598e55b30c25dfd2c",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "FLAURA",
+      "title": "AZD9291 Versus Gefitinib or Erlotinib in Patients With Locally Advanced or Metastatic Non-small Cell Lung Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29151359&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "a933aeb6eed2cc41e4267645db93a38b0a48132990b141a2ece2f262c2f15aa7",
+        "article_title": "Osimertinib in Untreated EGFR-Mutated Advanced Non-Small-Cell Lung Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "29151359"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29151359",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29151359/",
+      "response_sha256": "780e1976ea9fc7d16ad238a859c6bd1ae0819cd17e6afbe48a2ceea5bfe8d2eb",
+      "source_type": "pubmed_abstract",
+      "study_id": "FLAURA",
+      "title": "Osimertinib in Untreated EGFR-Mutated Advanced Non-Small-Cell Lung Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02151981",
+      "details": {
+        "brief_title": "AZD9291 (Osimertinib) Versus Platinum-Based Doublet-Chemotherapy in Locally Advanced or Metastatic Non-Small Cell Lung Cancer",
+        "nct_id": "NCT02151981",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02151981",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02151981",
+      "response_sha256": "e89ac33f5bf9c8bd1b15165c6ea9b5c52963ebd322f317809ef41cebb9115cfa",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "AURA3",
+      "title": "AZD9291 (Osimertinib) Versus Platinum-Based Doublet-Chemotherapy in Locally Advanced or Metastatic Non-Small Cell Lung Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27959700&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "64fbb645dde6971a2aae97933a5884da000bb068c46991c5f22a89c400506d2c",
+        "article_title": "Osimertinib or Platinum-Pemetrexed in EGFR T790M-Positive Lung Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "27959700"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27959700",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27959700/",
+      "response_sha256": "ad533defd4ba2ddef3ebe66bad30f0f9e227912cee12d59bd17bb62682d9bed8",
+      "source_type": "pubmed_abstract",
+      "study_id": "AURA3",
+      "title": "Osimertinib or Platinum-Pemetrexed in EGFR T790M-Positive Lung Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT04035486",
+      "details": {
+        "brief_title": "A Study of Osimertinib With or Without Chemotherapy as 1st Line Treatment in Patients With Mutated Epidermal Growth Factor Receptor Non-Small Cell Lung Cancer (FLAURA2)",
+        "nct_id": "NCT04035486",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT04035486",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT04035486",
+      "response_sha256": "e5152593840673a1c5575dd76f6fb442024074b70411068b377e741403381eff",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "FLAURA2",
+      "title": "A Study of Osimertinib With or Without Chemotherapy as 1st Line Treatment in Patients With Mutated Epidermal Growth Factor Receptor Non-Small Cell Lung Cancer (FLAURA2)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=37937763&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "d714864b3fffb1cd0e388bc480882c9f55052ac7cee68e89c67d08bf8fa2bcbf",
+        "article_title": "Osimertinib with or without Chemotherapy in",
+        "journal": "N Engl J Med",
+        "pmid": "37937763"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "37937763",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/37937763/",
+      "response_sha256": "a389e8f4b8806544f864e8c1cfdf2f10ccb778d81153b0120a4774e95448e8cd",
+      "source_type": "pubmed_abstract",
+      "study_id": "FLAURA2",
+      "title": "Osimertinib with or without Chemotherapy in"
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03521154",
+      "details": {
+        "brief_title": "A Global Study to Assess the Effects of Osimertinib Following Chemoradiation in Patients With Stage III Unresectable Non-small Cell Lung Cancer (LAURA)",
+        "nct_id": "NCT03521154",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03521154",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03521154",
+      "response_sha256": "b56c43d9089db5491a9d1861d1b9825bcc2b2d896f7065727accd4098592c6cc",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "LAURA",
+      "title": "A Global Study to Assess the Effects of Osimertinib Following Chemoradiation in Patients With Stage III Unresectable Non-small Cell Lung Cancer (LAURA)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=38828946&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "bbb737195a7f372cfd1d8407d2c8a1a3db3e9678992c39fc3151a219e5d32c4e",
+        "article_title": "Osimertinib after Chemoradiotherapy in Stage III",
+        "journal": "N Engl J Med",
+        "pmid": "38828946"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "38828946",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/38828946/",
+      "response_sha256": "a39e65ed58617de4f2c032757e9cf4e9ea5cc4f0b69ebc8b6190842cec74a450",
+      "source_type": "pubmed_abstract",
+      "study_id": "LAURA",
+      "title": "Osimertinib after Chemoradiotherapy in Stage III"
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/osimertinib_nsclc_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "2bd7e05a1ad39796f232d6bba6f0937f3dc5016d98e293dd315aaef57352b23c",
+  "status": "verified"
+}

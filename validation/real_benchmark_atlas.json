@@ -381,6 +381,110 @@
       "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
     },
     {
+      "artifact": "validation/survival/osimertinib_nsclc_pfs_reported_hr_benchmark.toml",
+      "artifact_schema_version": "survival_hr_benchmark/v1",
+      "artifact_sha256": "bd3ac41299eddd128f0df2d44e25c41796421fd83dca87db12934092f80eb0ec",
+      "artifact_status": "local_pass",
+      "certification_effect": "none",
+      "domain": "reported_survival_hr_pairwise",
+      "effect_scale": "log_hr",
+      "evidence_mode": "reported_hr_pubmed_abstract",
+      "has_positive_tau2": true,
+      "id": "osimertinib_nsclc_pfs_reported_hr",
+      "n_studies": 4,
+      "n_study_effects": 4,
+      "required_limitations": [
+        "not a multi-treatment survival NMA",
+        "does not certify model performance"
+      ],
+      "source_checks": [
+        "validation/source_checks/osimertinib_nsclc_pfs_reported_hr_source_check.json",
+        "validation/source_checks/osimertinib_nsclc_pfs_reported_hr_tokens.json"
+      ],
+      "source_manifests": [
+        "validation/survival/osimertinib_nsclc_pfs_reported_hrs.toml"
+      ],
+      "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+    },
+    {
+      "artifact": "validation/survival/lipid_cv_outcomes_reported_hr_benchmark.toml",
+      "artifact_schema_version": "survival_hr_benchmark/v1",
+      "artifact_sha256": "2f5abae96768a878b2fd7472f8031b2e3fcbc8c85b7895df91f6f6022443b131",
+      "artifact_status": "local_pass",
+      "certification_effect": "none",
+      "domain": "reported_survival_hr_pairwise",
+      "effect_scale": "log_hr",
+      "evidence_mode": "reported_hr_pubmed_abstract",
+      "has_positive_tau2": true,
+      "id": "lipid_cv_outcomes_reported_hr",
+      "n_studies": 7,
+      "n_study_effects": 7,
+      "required_limitations": [
+        "not a multi-treatment survival NMA",
+        "does not certify model performance"
+      ],
+      "source_checks": [
+        "validation/source_checks/lipid_cv_outcomes_reported_hr_source_check.json",
+        "validation/source_checks/lipid_cv_outcomes_reported_hr_tokens.json"
+      ],
+      "source_manifests": [
+        "validation/survival/lipid_cv_outcomes_reported_hrs.toml"
+      ],
+      "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+    },
+    {
+      "artifact": "validation/survival/her2_breast_pfs_reported_hr_benchmark.toml",
+      "artifact_schema_version": "survival_hr_benchmark/v1",
+      "artifact_sha256": "399b172240505a48f20ea90752596c06952cf578f6463169516be283e61fb6e1",
+      "artifact_status": "local_pass",
+      "certification_effect": "none",
+      "domain": "reported_survival_hr_pairwise",
+      "effect_scale": "log_hr",
+      "evidence_mode": "reported_hr_pubmed_abstract",
+      "has_positive_tau2": true,
+      "id": "her2_breast_pfs_reported_hr",
+      "n_studies": 7,
+      "n_study_effects": 7,
+      "required_limitations": [
+        "not a multi-treatment survival NMA",
+        "does not certify model performance"
+      ],
+      "source_checks": [
+        "validation/source_checks/her2_breast_pfs_reported_hr_source_check.json",
+        "validation/source_checks/her2_breast_pfs_reported_hr_tokens.json"
+      ],
+      "source_manifests": [
+        "validation/survival/her2_breast_pfs_reported_hrs.toml"
+      ],
+      "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+    },
+    {
+      "artifact": "validation/survival/prostate_mhspc_os_reported_hr_benchmark.toml",
+      "artifact_schema_version": "survival_hr_benchmark/v1",
+      "artifact_sha256": "c6d93bcc360094c6c32ad140aa925a75242cca07aa31029bbcfc08555b01a81c",
+      "artifact_status": "local_pass",
+      "certification_effect": "none",
+      "domain": "reported_survival_hr_pairwise",
+      "effect_scale": "log_hr",
+      "evidence_mode": "reported_hr_pubmed_abstract",
+      "has_positive_tau2": false,
+      "id": "prostate_mhspc_os_reported_hr",
+      "n_studies": 5,
+      "n_study_effects": 5,
+      "required_limitations": [
+        "not a multi-treatment survival NMA",
+        "does not certify model performance"
+      ],
+      "source_checks": [
+        "validation/source_checks/prostate_mhspc_os_reported_hr_source_check.json",
+        "validation/source_checks/prostate_mhspc_os_reported_hr_tokens.json"
+      ],
+      "source_manifests": [
+        "validation/survival/prostate_mhspc_os_reported_hrs.toml"
+      ],
+      "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+    },
+    {
       "artifact": "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
       "artifact_schema_version": "ctgov_hr_network_benchmark/v1",
       "artifact_sha256": "f29606cdaca0b734c13e212af46ce4d86b0aa50a8446f326fc6f2a0077a6d6da",
@@ -543,7 +647,7 @@
     }
   ],
   "certification_effect": "none",
-  "checked_at": "2026-07-18T00:48:00Z",
+  "checked_at": "2026-07-17T22:40:00Z",
   "coverage_claim": "This atlas proves only that registered local real-data benchmark artifacts are source-governed and reproducible within their stated scope.",
   "does_not_prove": [
     "tier-one parity",
@@ -561,10 +665,10 @@
     "diagnostic_test_accuracy": 1,
     "dose_response_pairwise": 1,
     "reported_hr_star_network": 1,
-    "reported_survival_hr_pairwise": 13
+    "reported_survival_hr_pairwise": 17
   },
   "effect_scale_counts": {
-    "log_hr": 15,
+    "log_hr": 19,
     "log_or": 2,
     "logit_sensitivity_and_logit_false_positive_rate": 1,
     "percentage_point_change_a1c": 1,
@@ -577,15 +681,15 @@
     "open_access_jats_table_2x2": 1,
     "pubmed_abstract_event_counts": 1,
     "reported_hr_clinicaltrials_gov_results": 1,
-    "reported_hr_pubmed_abstract": 13,
+    "reported_hr_pubmed_abstract": 17,
     "reported_hr_pubmed_abstract_cross_design": 1
   },
-  "n_benchmark_study_effects": 121,
-  "n_benchmarks": 20,
-  "n_tau2_positive_benchmarks": 9,
-  "n_unique_nct_ids": 65,
-  "n_unique_pmids": 60,
-  "n_unique_study_ids": 100,
+  "n_benchmark_study_effects": 144,
+  "n_benchmarks": 24,
+  "n_tau2_positive_benchmarks": 12,
+  "n_unique_nct_ids": 88,
+  "n_unique_pmids": 83,
+  "n_unique_study_ids": 123,
   "protocol_registry_rule": "Protocol-only registry sources may verify registration, planned outcomes, eligibility, and dates, but cannot supply model-ready effects; downloaded ICTRP or PACTR result rows and public FDA/EMA regulatory review rows may supply effects only when public numeric result text is source-bound.",
   "registry": "validation/benchmark_registry.toml",
   "required_next_gates": [
@@ -604,31 +708,31 @@
     "dose_response_source_verification/v1": 1,
     "dta_source_verification/v1": 1,
     "event_count_verification/v1": 1,
-    "source_verification/v1": 14,
-    "survival_hr_verification/v1": 13
+    "source_verification/v1": 18,
+    "survival_hr_verification/v1": 17
   },
   "source_check_scope_counts": {
     "clinicaltrials_gov_arm_level_binary_counts": 2,
     "clinicaltrials_gov_component_lsmean": 1,
     "clinicaltrials_gov_dose_response_lsmean": 1,
     "clinicaltrials_gov_reported_hr_analysis": 10,
-    "identity_and_reachability": 116,
+    "identity_and_reachability": 162,
     "open_access_jats_table_2x2": 11,
     "pubmed_abstract_binary_network_identity": 2,
     "pubmed_abstract_component_identity": 1,
     "pubmed_abstract_cross_design_reported_hr_tokens": 4,
     "pubmed_abstract_dose_response_identity": 1,
     "pubmed_abstract_event_count_tokens": 4,
-    "pubmed_abstract_reported_hr_tokens": 54
+    "pubmed_abstract_reported_hr_tokens": 77
   },
   "source_policy_counts": {
-    "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 19,
+    "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 23,
     "clinicaltrials_gov + pubmed_abstract only": 1
   },
   "source_type_counts": {
-    "clinicaltrials_gov": 72,
+    "clinicaltrials_gov": 95,
     "open_access_paper": 11,
-    "pubmed_abstract": 124
+    "pubmed_abstract": 170
   },
   "status": "passed"
 }

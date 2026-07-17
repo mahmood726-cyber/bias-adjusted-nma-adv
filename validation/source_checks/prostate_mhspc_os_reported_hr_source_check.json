@@ -1,0 +1,191 @@
+{
+  "benchmark_id": "prostate_mhspc_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T22:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01715285",
+      "details": {
+        "brief_title": "A Study of Abiraterone Acetate Plus Low-Dose Prednisone Plus Androgen Deprivation Therapy (ADT) Versus ADT Alone in Newly Diagnosed Participants With High-Risk, Metastatic Hormone-Naive Prostate Cancer (mHNPC)",
+        "nct_id": "NCT01715285",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01715285",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01715285",
+      "response_sha256": "01e13a633e3604bd4277f6798f1352b5ae01994b5b4f8b1c8e76311d54cb54fb",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "LATITUDE",
+      "title": "A Study of Abiraterone Acetate Plus Low-Dose Prednisone Plus Androgen Deprivation Therapy (ADT) Versus ADT Alone in Newly Diagnosed Participants With High-Risk, Metastatic Hormone-Naive Prostate Cancer (mHNPC)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28578607&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "2452c4555d03b51eda80f1e67ffc988abd6ce6376ca76331c353eafca22c9822",
+        "article_title": "Abiraterone plus Prednisone in Metastatic, Castration-Sensitive Prostate Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "28578607"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28578607",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28578607/",
+      "response_sha256": "411a1c5aedde5320ad25c35ec557cdded83d7c47740dac94b1b2c596bf0ce772",
+      "source_type": "pubmed_abstract",
+      "study_id": "LATITUDE",
+      "title": "Abiraterone plus Prednisone in Metastatic, Castration-Sensitive Prostate Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02489318",
+      "details": {
+        "brief_title": "A Study of Apalutamide (JNJ-56021927, ARN-509) Plus Androgen Deprivation Therapy (ADT) Versus ADT in Participants With mHSPC",
+        "nct_id": "NCT02489318",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02489318",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02489318",
+      "response_sha256": "32bcb4974e9187aacac2a2fe89d9f618b2cf3976ce1f9ddd8f904e3ec33898c2",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "TITAN",
+      "title": "A Study of Apalutamide (JNJ-56021927, ARN-509) Plus Androgen Deprivation Therapy (ADT) Versus ADT in Participants With mHSPC"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31150574&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "35aeca97007ae6e3d34bf537f4ac9c57090c2975546c6d8ddac59e9361cee331",
+        "article_title": "Apalutamide for Metastatic, Castration-Sensitive Prostate Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "31150574"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31150574",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31150574/",
+      "response_sha256": "5b1d861e8515a128acbde62cb415f395a3cb0fcf33b7d7cb438e6b49ddd0a740",
+      "source_type": "pubmed_abstract",
+      "study_id": "TITAN",
+      "title": "Apalutamide for Metastatic, Castration-Sensitive Prostate Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02446405",
+      "details": {
+        "brief_title": "Enzalutamide in First Line Androgen Deprivation Therapy for Metastatic Prostate Cancer",
+        "nct_id": "NCT02446405",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02446405",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02446405",
+      "response_sha256": "030c00638ec23214b4118847604561ad586c4c6e595588e73dc29ff4f6583bd7",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ENZAMET",
+      "title": "Enzalutamide in First Line Androgen Deprivation Therapy for Metastatic Prostate Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31157964&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "74571ac7f4dd3639552dddd5b25bd73dec9acab5490c41db14bac034ce204df7",
+        "article_title": "Enzalutamide with Standard First-Line Therapy in Metastatic Prostate Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "31157964"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31157964",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31157964/",
+      "response_sha256": "0188cef010c836d45d501c3b051cf1b276bda9ff8548bc7cb00e904292ada290",
+      "source_type": "pubmed_abstract",
+      "study_id": "ENZAMET",
+      "title": "Enzalutamide with Standard First-Line Therapy in Metastatic Prostate Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00309985",
+      "details": {
+        "brief_title": "Androgen Ablation Therapy With or Without Chemotherapy in Treating Patients With Metastatic Prostate Cancer",
+        "nct_id": "NCT00309985",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00309985",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00309985",
+      "response_sha256": "a9b2904d3933c4aee980328181afdce1c5b40b258c0728e81edf2531b7e37e09",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CHAARTED",
+      "title": "Androgen Ablation Therapy With or Without Chemotherapy in Treating Patients With Metastatic Prostate Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26244877&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "454e010de60d8ab315b133d4e2170d000029ae973280de6e0ba5836bca57e679",
+        "article_title": "Chemohormonal Therapy in Metastatic Hormone-Sensitive Prostate Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "26244877"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26244877",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26244877/",
+      "response_sha256": "f3021d3a2b9932ac5cee8b9151d29dee51922355d265424a4a7d9597710b8b1f",
+      "source_type": "pubmed_abstract",
+      "study_id": "CHAARTED",
+      "title": "Chemohormonal Therapy in Metastatic Hormone-Sensitive Prostate Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00268476",
+      "details": {
+        "brief_title": "Systemic Therapy in Advancing or Metastatic Prostate Cancer: Evaluation of Drug Efficacy",
+        "nct_id": "NCT00268476",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00268476",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00268476",
+      "response_sha256": "49e8477f51eb3c922945c4402fd2d4b8869f07adef33ba58fb05295611e3b938",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "STAMPEDE-Abiraterone",
+      "title": "Systemic Therapy in Advancing or Metastatic Prostate Cancer: Evaluation of Drug Efficacy"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28578639&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "bed0815329ab32306402345e7e825dd8e9448104c23d2d770994cde2a78b0a8b",
+        "article_title": "Abiraterone for Prostate Cancer Not Previously Treated with Hormone Therapy.",
+        "journal": "N Engl J Med",
+        "pmid": "28578639"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28578639",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28578639/",
+      "response_sha256": "2ee564846a336934035918c2593860239fa48748ff0e267529d669a2d4d22c0c",
+      "source_type": "pubmed_abstract",
+      "study_id": "STAMPEDE-Abiraterone",
+      "title": "Abiraterone for Prostate Cancer Not Previously Treated with Hormone Therapy."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/prostate_mhspc_os_reported_hrs.toml",
+  "source_manifest_sha256": "747b42cc14fbcd00da50674b913e0c547d4fe787f67a3deb53d35896988ffead",
+  "status": "verified"
+}

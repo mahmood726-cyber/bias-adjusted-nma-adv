@@ -1,0 +1,201 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "her2_breast_pfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/her2_breast_pfs_reported_hrs.toml"
+source_manifest_sha256 = "7f0289e3c3239722469cd69c99241224b72fdb165c6a3811703e212d6172ef1f"
+source_verification_report = "validation/source_checks/her2_breast_pfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "eaa1a1d62a71d7f36eba0b9bc38514a1fffaef9d7b32d1388d879e0208cad814"
+source_identity_report = "validation/source_checks/her2_breast_pfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "4bc994bf970a46e15784a7a4016541f7096e142971a93416244ec71f31a0dd44"
+n_studies = 7
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "her2_breast_pfs_reported_hr"
+manifest_sha256 = "7f0289e3c3239722469cd69c99241224b72fdb165c6a3811703e212d6172ef1f"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 7
+
+[source_identity_bundle]
+benchmark_id = "her2_breast_pfs_reported_hr"
+manifest_sha256 = "7f0289e3c3239722469cd69c99241224b72fdb165c6a3811703e212d6172ef1f"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 7, pubmed_abstract = 7}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "CLEOPATRA"
+trial = "Pertuzumab plus trastuzumab plus docetaxel for metastatic breast cancer"
+nct_id = "NCT00567190"
+pmid = "22149875"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "pertuzumab plus trastuzumab plus docetaxel"
+control_treatment = "placebo plus trastuzumab plus docetaxel"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.62
+ci_lower = 0.51
+ci_upper = 0.75
+estimate = -0.4780358009429998
+variance = 0.009679626676251796
+se = 0.09838509377061037
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "EMILIA"
+trial = "Trastuzumab emtansine for HER2-positive advanced breast cancer"
+nct_id = "NCT00829166"
+pmid = "23020162"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "trastuzumab emtansine"
+control_treatment = "lapatinib plus capecitabine"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.65
+ci_lower = 0.55
+ci_upper = 0.77
+estimate = -0.4307829160924542
+variance = 0.007367875805865372
+se = 0.08583633150283959
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "TH3RESA"
+trial = "Trastuzumab emtansine versus treatment of physician's choice for pretreated HER2-positive advanced breast cancer"
+nct_id = "NCT01419197"
+pmid = "24793816"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "trastuzumab emtansine"
+control_treatment = "physician's choice"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.528
+ci_lower = 0.422
+ci_upper = 0.661
+estimate = -0.6386589952758756
+variance = 0.013105388396780604
+se = 0.11447876832312882
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "DESTINY-Breast03"
+trial = "Trastuzumab deruxtecan versus trastuzumab emtansine for breast cancer"
+nct_id = "NCT03529110"
+pmid = "35320644"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "trastuzumab deruxtecan"
+control_treatment = "trastuzumab emtansine"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.28
+ci_lower = 0.22
+ci_upper = 0.37
+estimate = -1.2729656758128873
+variance = 0.01758905312948912
+se = 0.1326237276262778
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "HER2CLIMB"
+trial = "Tucatinib, trastuzumab, and capecitabine for HER2-positive metastatic breast cancer"
+nct_id = "NCT02614794"
+pmid = "31825569"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "tucatinib plus trastuzumab plus capecitabine"
+control_treatment = "placebo plus trastuzumab plus capecitabine"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.54
+ci_lower = 0.42
+ci_upper = 0.71
+estimate = -0.616186139423817
+variance = 0.017938222473987173
+se = 0.13393364952089962
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "SOPHIA"
+trial = "Margetuximab versus trastuzumab in pretreated HER2-positive advanced breast cancer"
+nct_id = "NCT02492711"
+pmid = "33480963"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "margetuximab"
+control_treatment = "trastuzumab"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.76
+ci_lower = 0.59
+ci_upper = 0.98
+estimate = -0.2744368457017603
+variance = 0.016756995987720468
+se = 0.12944881609238637
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "NALA"
+trial = "Neratinib plus capecitabine versus lapatinib plus capecitabine in HER2-positive metastatic breast cancer"
+nct_id = "NCT01808573"
+pmid = "32678716"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "neratinib plus capecitabine"
+control_treatment = "lapatinib plus capecitabine"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.76
+ci_lower = 0.63
+ci_upper = 0.93
+estimate = -0.2744368457017603
+variance = 0.009871432418567192
+se = 0.09935508249992646
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.5221230631034007
+se = 0.04120715048981282
+ci_low = -0.6028875939689559
+ci_high = -0.44135853223784555
+tau2 = 0.0
+q = 44.790486602928056
+df = 6
+hksj = false
+hksj_q_factor = 1.0
+weights = [103.3097694204903, 135.72432901270219, 76.30449168875104, 56.85354365798344, 55.74688358615989, 59.67656737119233, 101.30242072255881]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.5637739186649106
+se = 0.12769303438845112
+ci_low = -0.8762275178186749
+ci_high = -0.25132031951114625
+tau2 = 0.098128684013697
+q = 6.160132200516797
+df = 6
+hksj = true
+hksj_q_factor = 1.0266887000861329
+weights = [9.275722749018385, 9.478982079703501, 8.990051144668923, 8.64171755072108, 8.615720279458898, 8.704305009881667, 9.259249277080018]
+warnings = []
+pi_low = -1.391518285555433
+pi_high = 0.2639704482256119

@@ -31,6 +31,10 @@ ARTIFACTS = [
     ROOT / "validation" / "survival" / "doac_af_primary_reported_hr_benchmark.toml",
     ROOT / "validation" / "survival" / "tavi_savr_primary_reported_hr_benchmark.toml",
     ROOT / "validation" / "survival" / "melanoma_pfs_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "osimertinib_nsclc_pfs_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "lipid_cv_outcomes_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "her2_breast_pfs_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "prostate_mhspc_os_reported_hr_benchmark.toml",
 ]
 EFFECTS_CSVS = {
     "sglt2_hf_reported_hr": ROOT
@@ -85,6 +89,22 @@ EFFECTS_CSVS = {
     / "validation"
     / "survival"
     / "melanoma_pfs_reported_hr_effects.csv",
+    "osimertinib_nsclc_pfs_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "osimertinib_nsclc_pfs_reported_hr_effects.csv",
+    "lipid_cv_outcomes_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "lipid_cv_outcomes_reported_hr_effects.csv",
+    "her2_breast_pfs_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "her2_breast_pfs_reported_hr_effects.csv",
+    "prostate_mhspc_os_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "prostate_mhspc_os_reported_hr_effects.csv",
 }
 
 
@@ -177,6 +197,12 @@ def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens(a
     if artifact["benchmark_id"] == "tavi_savr_primary_reported_hr":
         assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
     if artifact["benchmark_id"] == "melanoma_pfs_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "osimertinib_nsclc_pfs_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "lipid_cv_outcomes_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "her2_breast_pfs_reported_hr":
         assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
 
 

@@ -1,0 +1,263 @@
+{
+  "benchmark_id": "her2_breast_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T22:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00567190",
+      "details": {
+        "brief_title": "A Study to Evaluate Pertuzumab + Trastuzumab + Docetaxel vs. Placebo + Trastuzumab + Docetaxel in Previously Untreated HER2-Positive Metastatic Breast Cancer",
+        "nct_id": "NCT00567190",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00567190",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00567190",
+      "response_sha256": "a707ff7a9319daefbf5edc0d555dc7e2ce44afdac14652c0fff3e331f1121bff",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CLEOPATRA",
+      "title": "A Study to Evaluate Pertuzumab + Trastuzumab + Docetaxel vs. Placebo + Trastuzumab + Docetaxel in Previously Untreated HER2-Positive Metastatic Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=22149875&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "0dde204f0616d8d1ce0f2177e34ce4d48390e0f81fc56dca86170590daf4f438",
+        "article_title": "Pertuzumab plus trastuzumab plus docetaxel for metastatic breast cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "22149875"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "22149875",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/22149875/",
+      "response_sha256": "aad14fa3e4f9295760f94915829ae67c0bcc9185189e59ffc9c2603111025942",
+      "source_type": "pubmed_abstract",
+      "study_id": "CLEOPATRA",
+      "title": "Pertuzumab plus trastuzumab plus docetaxel for metastatic breast cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00829166",
+      "details": {
+        "brief_title": "A Study of Trastuzumab Emtansine Versus Capecitabine + Lapatinib in Participants With HER2-positive Locally Advanced or Metastatic Breast Cancer",
+        "nct_id": "NCT00829166",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00829166",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00829166",
+      "response_sha256": "760f79338464fd1d13d5e147c81099d3448de28995bb87d89707f20c90b07db2",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EMILIA",
+      "title": "A Study of Trastuzumab Emtansine Versus Capecitabine + Lapatinib in Participants With HER2-positive Locally Advanced or Metastatic Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23020162&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "ebe8fbfe2fd1fe4e8a6e85b3903eab5649f20bef3592cd38661168e42925ba7c",
+        "article_title": "Trastuzumab emtansine for HER2-positive advanced breast cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "23020162"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "23020162",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/23020162/",
+      "response_sha256": "b9b8f69823205ed9b959c3613625bed77ce129ad4eb9335f190e6db9caba9b5f",
+      "source_type": "pubmed_abstract",
+      "study_id": "EMILIA",
+      "title": "Trastuzumab emtansine for HER2-positive advanced breast cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01419197",
+      "details": {
+        "brief_title": "A Study of Trastuzumab Emtansine in Comparison With Treatment of Physician's Choice in Participants With HER2-positive Breast Cancer Who Have Received at Least Two Prior Regimens of HER2-directed Therapy",
+        "nct_id": "NCT01419197",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01419197",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01419197",
+      "response_sha256": "a944ee99bd2b1d1d058e6652465cf18181b57fb73b6e05b0460507ec022b0c53",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "TH3RESA",
+      "title": "A Study of Trastuzumab Emtansine in Comparison With Treatment of Physician's Choice in Participants With HER2-positive Breast Cancer Who Have Received at Least Two Prior Regimens of HER2-directed Therapy"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=24793816&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "f22a8d6f0eaf85a12496a030424dfef8377c8fe7f9089d06f20a3faf9a869706",
+        "article_title": "Trastuzumab emtansine versus treatment of physician's choice for pretreated HER2-positive advanced breast cancer (TH3RESA): a randomised, open-label, phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "24793816"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "24793816",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/24793816/",
+      "response_sha256": "50b1582a9dffc9236c0694875b706d1002f37c18e9691b017f2d8da884fffddf",
+      "source_type": "pubmed_abstract",
+      "study_id": "TH3RESA",
+      "title": "Trastuzumab emtansine versus treatment of physician's choice for pretreated HER2-positive advanced breast cancer (TH3RESA): a randomised, open-label, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03529110",
+      "details": {
+        "brief_title": "DS-8201a Versus T-DM1 for Human Epidermal Growth Factor Receptor 2 (HER2)-Positive, Unresectable and/or Metastatic Breast Cancer Previously Treated With Trastuzumab and Taxane [DESTINY-Breast03]",
+        "nct_id": "NCT03529110",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03529110",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03529110",
+      "response_sha256": "403197278b095558b8dd6fe8b8f18ab06b2b3f7a99ed05cee01b0c2f7b3f6b23",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "DESTINY-Breast03",
+      "title": "DS-8201a Versus T-DM1 for Human Epidermal Growth Factor Receptor 2 (HER2)-Positive, Unresectable and/or Metastatic Breast Cancer Previously Treated With Trastuzumab and Taxane [DESTINY-Breast03]"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=35320644&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "01c8714701c66f0f666e70864163865245f77fd3488045545616f02ea8c88c37",
+        "article_title": "Trastuzumab Deruxtecan versus Trastuzumab Emtansine for Breast Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "35320644"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "35320644",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/35320644/",
+      "response_sha256": "d53b8eede5e88e7874e8bcb9b65162c9ea81a6f650e35831e69d085e8ad0d0b7",
+      "source_type": "pubmed_abstract",
+      "study_id": "DESTINY-Breast03",
+      "title": "Trastuzumab Deruxtecan versus Trastuzumab Emtansine for Breast Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02614794",
+      "details": {
+        "brief_title": "A Study of Tucatinib vs. Placebo in Combination With Capecitabine & Trastuzumab in Patients With Advanced HER2+ Breast Cancer",
+        "nct_id": "NCT02614794",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02614794",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02614794",
+      "response_sha256": "74132f3db45a47e1eeac00be17906e31c3b3e601af12251a04beec0774ec11bd",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "HER2CLIMB",
+      "title": "A Study of Tucatinib vs. Placebo in Combination With Capecitabine & Trastuzumab in Patients With Advanced HER2+ Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31825569&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "c9bb5ac1d07c56dc67586f346993c852a6c0dea61a175c73cb5d43c0efc57f8a",
+        "article_title": "Tucatinib, Trastuzumab, and Capecitabine for HER2-Positive Metastatic Breast Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "31825569"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31825569",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31825569/",
+      "response_sha256": "7868735239453576fdbe515e46c9207dffaf6503bfad81c5ec259c41facac704",
+      "source_type": "pubmed_abstract",
+      "study_id": "HER2CLIMB",
+      "title": "Tucatinib, Trastuzumab, and Capecitabine for HER2-Positive Metastatic Breast Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02492711",
+      "details": {
+        "brief_title": "Margetuximab Plus Chemotherapy vs Trastuzumab Plus Chemotherapy in the Treatment of HER2+ Metastatic Breast Cancer",
+        "nct_id": "NCT02492711",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02492711",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02492711",
+      "response_sha256": "c4bd88bbea1595b1700da76bde6b194dd914d78510f8892e0d7509cf4da33395",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "SOPHIA",
+      "title": "Margetuximab Plus Chemotherapy vs Trastuzumab Plus Chemotherapy in the Treatment of HER2+ Metastatic Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33480963&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "f588d9140ee6e315df7d55e1b7d7c46c6416684e51f252fd7c941a7d5c4f2f81",
+        "article_title": "Efficacy of Margetuximab vs Trastuzumab in Patients With Pretreated ERBB2-Positive Advanced Breast Cancer: A Phase 3 Randomized Clinical Trial.",
+        "journal": "JAMA Oncol",
+        "pmid": "33480963"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33480963",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33480963/",
+      "response_sha256": "b0b55de2544a583038b0a092715a60e9d89e390c9c5373a93128229e9d97c1e0",
+      "source_type": "pubmed_abstract",
+      "study_id": "SOPHIA",
+      "title": "Efficacy of Margetuximab vs Trastuzumab in Patients With Pretreated ERBB2-Positive Advanced Breast Cancer: A Phase 3 Randomized Clinical Trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01808573",
+      "details": {
+        "brief_title": "A Study of Neratinib Plus Capecitabine Versus Lapatinib Plus Capecitabine in Patients With HER2+ Metastatic Breast Cancer Who Have Received Two or More Prior HER2 Directed Regimens in the Metastatic Setting",
+        "nct_id": "NCT01808573",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01808573",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01808573",
+      "response_sha256": "1ce34347e888b451d4d603693e82a1575abb3569dfbc3805c1994e50db11bbdd",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "NALA",
+      "title": "A Study of Neratinib Plus Capecitabine Versus Lapatinib Plus Capecitabine in Patients With HER2+ Metastatic Breast Cancer Who Have Received Two or More Prior HER2 Directed Regimens in the Metastatic Setting"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32678716&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "dd5dbe6b1ce5b4114219452988b8c4ee5101a483ff6f55406b1a461c918d82a9",
+        "article_title": "Neratinib Plus Capecitabine Versus Lapatinib Plus Capecitabine in HER2-Positive Metastatic Breast Cancer Previously Treated With \u2265 2 HER2-Directed Regimens: Phase III NALA Trial.",
+        "journal": "J Clin Oncol",
+        "pmid": "32678716"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32678716",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32678716/",
+      "response_sha256": "0980d752efac6adb1452621238e9d83144b57e062c0d7f1e573fbab1c13c3238",
+      "source_type": "pubmed_abstract",
+      "study_id": "NALA",
+      "title": "Neratinib Plus Capecitabine Versus Lapatinib Plus Capecitabine in HER2-Positive Metastatic Breast Cancer Previously Treated With \u2265 2 HER2-Directed Regimens: Phase III NALA Trial."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/her2_breast_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "7f0289e3c3239722469cd69c99241224b72fdb165c6a3811703e212d6172ef1f",
+  "status": "verified"
+}

@@ -1,0 +1,121 @@
+{
+  "benchmark_id": "prostate_mhspc_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T22:30:00Z",
+  "manifest": "validation/survival/prostate_mhspc_os_reported_hrs.toml",
+  "manifest_sha256": "747b42cc14fbcd00da50674b913e0c547d4fe787f67a3deb53d35896988ffead",
+  "records": [
+    {
+      "abstract_sha256": "2452c4555d03b51eda80f1e67ffc988abd6ce6376ca76331c353eafca22c9822",
+      "ci_lower": "0.51",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.76",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "28578607",
+      "reported_hr": "0.62",
+      "source_terms": [
+        "abiraterone",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "LATITUDE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "35aeca97007ae6e3d34bf537f4ac9c57090c2975546c6d8ddac59e9361cee331",
+      "ci_lower": "0.51",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.89",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "31150574",
+      "reported_hr": "0.67",
+      "source_terms": [
+        "apalutamide",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "TITAN",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "74571ac7f4dd3639552dddd5b25bd73dec9acab5490c41db14bac034ce204df7",
+      "ci_lower": "0.52",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.86",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "31157964",
+      "reported_hr": "0.67",
+      "source_terms": [
+        "enzalutamide",
+        "standard-care"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ENZAMET",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "454e010de60d8ab315b133d4e2170d000029ae973280de6e0ba5836bca57e679",
+      "ci_lower": "0.47",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.80",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "26244877",
+      "reported_hr": "0.61",
+      "source_terms": [
+        "ADT plus docetaxel",
+        "ADT alone"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CHAARTED",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "bed0815329ab32306402345e7e825dd8e9448104c23d2d770994cde2a78b0a8b",
+      "ci_lower": "0.52",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.76",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "28578639",
+      "reported_hr": "0.63",
+      "source_terms": [
+        "combination group",
+        "ADT-alone group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "STAMPEDE-Abiraterone",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

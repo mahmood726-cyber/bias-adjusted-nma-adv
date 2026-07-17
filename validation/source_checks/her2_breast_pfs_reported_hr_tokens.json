@@ -1,0 +1,167 @@
+{
+  "benchmark_id": "her2_breast_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T22:30:00Z",
+  "manifest": "validation/survival/her2_breast_pfs_reported_hrs.toml",
+  "manifest_sha256": "7f0289e3c3239722469cd69c99241224b72fdb165c6a3811703e212d6172ef1f",
+  "records": [
+    {
+      "abstract_sha256": "0dde204f0616d8d1ce0f2177e34ce4d48390e0f81fc56dca86170590daf4f438",
+      "ci_lower": "0.51",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.75",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "22149875",
+      "reported_hr": "0.62",
+      "source_terms": [
+        "pertuzumab",
+        "trastuzumab",
+        "docetaxel"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CLEOPATRA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "ebe8fbfe2fd1fe4e8a6e85b3903eab5649f20bef3592cd38661168e42925ba7c",
+      "ci_lower": "0.55",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.77",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "23020162",
+      "reported_hr": "0.65",
+      "source_terms": [
+        "T-DM1",
+        "lapatinib",
+        "capecitabine"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "EMILIA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "f22a8d6f0eaf85a12496a030424dfef8377c8fe7f9089d06f20a3faf9a869706",
+      "ci_lower": "0.422",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.661",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "24793816",
+      "reported_hr": "0.528",
+      "source_terms": [
+        "trastuzumab emtansine",
+        "physician's choice"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "TH3RESA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "01c8714701c66f0f666e70864163865245f77fd3488045545616f02ea8c88c37",
+      "ci_lower": "0.22",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.37",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "35320644",
+      "reported_hr": "0.28",
+      "source_terms": [
+        "trastuzumab deruxtecan",
+        "trastuzumab emtansine"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "DESTINY-Breast03",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "c9bb5ac1d07c56dc67586f346993c852a6c0dea61a175c73cb5d43c0efc57f8a",
+      "ci_lower": "0.42",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.71",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "31825569",
+      "reported_hr": "0.54",
+      "source_terms": [
+        "tucatinib",
+        "placebo-combination"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "HER2CLIMB",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "f588d9140ee6e315df7d55e1b7d7c46c6416684e51f252fd7c941a7d5c4f2f81",
+      "ci_lower": "0.59",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.98",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "33480963",
+      "reported_hr": "0.76",
+      "source_terms": [
+        "margetuximab",
+        "trastuzumab"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "SOPHIA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "dd5dbe6b1ce5b4114219452988b8c4ee5101a483ff6f55406b1a461c918d82a9",
+      "ci_lower": "0.63",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.93",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "32678716",
+      "reported_hr": "0.76",
+      "source_terms": [
+        "N+C",
+        "L+C"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "NALA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

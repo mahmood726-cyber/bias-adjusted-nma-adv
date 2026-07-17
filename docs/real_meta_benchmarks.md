@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 20 benchmark artifacts, 121 study-effect rows, 65 unique NCT IDs, and 60 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 24 benchmark artifacts, 144 study-effect rows, 88 unique NCT IDs, and 83 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -280,8 +280,12 @@ The following source-backed PubMed abstract reported-HR families were added to b
 | `doac_af_primary_reported_hr` | Atrial-fibrillation anticoagulant primary outcomes | 3 | Positive `tau2`; excludes source rows whose abstracts reported non-HR or non-95% uncertainty formats |
 | `tavi_savr_primary_reported_hr` | TAVI/SAVR primary outcomes | 2 | Positive `tau2`; two-row fixture for provenance and HKSJ behavior, not valve-therapy guidance |
 | `melanoma_pfs_reported_hr` | Melanoma progression-free survival | 3 | Positive `tau2`; excluded rows whose abstract tokens did not satisfy the fail-closed source-term verifier |
+| `osimertinib_nsclc_pfs_reported_hr` | EGFR-mutated NSCLC progression-free survival | 4 | Positive `tau2`; includes source-verified FLAURA, AURA3, FLAURA2, and LAURA reported-HR rows |
+| `lipid_cv_outcomes_reported_hr` | Lipid-modifying cardiovascular outcomes | 7 | Positive `tau2`; includes statin, ezetimibe, omega-3, bempedoic-acid, and CETP-inhibitor outcome trials |
+| `her2_breast_pfs_reported_hr` | HER2-positive breast cancer progression-free survival | 7 | Positive `tau2`; source-verified abstracts include antibody-drug conjugate, kinase-inhibitor, and antibody-combination rows |
+| `prostate_mhspc_os_reported_hr` | Metastatic hormone-sensitive prostate cancer overall survival | 5 | Source-verified OS HR rows; REML tau2 is zero in the generated artifact, so it broadens source coverage but not positive-heterogeneity count |
 
-These additions move the coverage atlas to 20 registered source-backed benchmarks and 60 unique PMIDs. They still leave the large-scale validation gate partial because the platform has not yet reached 200 study-effect rows, 100 unique NCT IDs, or an admissible real ML-NMR benchmark.
+These additions move the coverage atlas to 24 registered source-backed benchmarks, 144 study-effect rows, 88 unique NCT IDs, and 83 unique PMIDs. They still leave the large-scale validation gate partial because the platform has not yet reached 200 study-effect rows, 100 unique NCT IDs, or an admissible real ML-NMR benchmark.
 
 ## Benchmark 6: Recurrent PARP Inhibitors And Ovarian Cancer PFS
 

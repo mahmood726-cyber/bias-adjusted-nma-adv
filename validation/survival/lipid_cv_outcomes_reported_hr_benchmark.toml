@@ -1,0 +1,201 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "lipid_cv_outcomes_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/lipid_cv_outcomes_reported_hrs.toml"
+source_manifest_sha256 = "53760d5264a1af9539e8217b902e0bbbfbc919f7d8e0679e19a074b6d1423fb4"
+source_verification_report = "validation/source_checks/lipid_cv_outcomes_reported_hr_tokens.json"
+source_verification_report_sha256 = "2b56a3569582cdee5af567cba9547d9870e0defafb34ade41099607b0527002d"
+source_identity_report = "validation/source_checks/lipid_cv_outcomes_reported_hr_source_check.json"
+source_identity_report_sha256 = "bf264d47ad4c06c272c423490c34ab67dd00193232ae974dee3cdb0c97d2d79d"
+n_studies = 7
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "lipid_cv_outcomes_reported_hr"
+manifest_sha256 = "53760d5264a1af9539e8217b902e0bbbfbc919f7d8e0679e19a074b6d1423fb4"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 7
+
+[source_identity_bundle]
+benchmark_id = "lipid_cv_outcomes_reported_hr"
+manifest_sha256 = "53760d5264a1af9539e8217b902e0bbbfbc919f7d8e0679e19a074b6d1423fb4"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 7, pubmed_abstract = 7}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "JUPITER"
+trial = "Rosuvastatin to prevent vascular events in men and women with elevated C-reactive protein"
+nct_id = "NCT00239681"
+pmid = "18997196"
+outcome_id = "primary_cv_endpoint_reported"
+outcome_label = "trial-defined primary cardiovascular endpoint"
+active_treatment = "rosuvastatin"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.56
+ci_lower = 0.46
+ci_upper = 0.69
+estimate = -0.579818495252942
+variance = 0.010699187572148633
+se = 0.10343687723509751
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "IMPROVE-IT"
+trial = "Ezetimibe added to statin therapy after acute coronary syndromes"
+nct_id = "NCT00202878"
+pmid = "26039521"
+outcome_id = "primary_cv_endpoint_reported"
+outcome_label = "trial-defined primary cardiovascular endpoint"
+active_treatment = "ezetimibe plus simvastatin"
+control_treatment = "simvastatin monotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.936
+ci_lower = 0.89
+ci_upper = 0.99
+estimate = -0.06613980250454495
+variance = 0.0007379183357073015
+se = 0.027164652320751347
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "REDUCE-IT"
+trial = "Cardiovascular risk reduction with icosapent ethyl for hypertriglyceridemia"
+nct_id = "NCT01492361"
+pmid = "30415628"
+outcome_id = "primary_cv_endpoint_reported"
+outcome_label = "trial-defined primary cardiovascular endpoint"
+active_treatment = "icosapent ethyl"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.75
+ci_lower = 0.68
+ci_upper = 0.83
+estimate = -0.2876820724517809
+variance = 0.002585840947523851
+se = 0.0508511646624131
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "STRENGTH"
+trial = "High-dose omega-3 fatty acids versus corn oil on major adverse cardiovascular events"
+nct_id = "NCT02104817"
+pmid = "33190147"
+outcome_id = "primary_cv_endpoint_reported"
+outcome_label = "trial-defined major adverse cardiovascular event endpoint"
+active_treatment = "omega-3 carboxylic acids"
+control_treatment = "corn oil"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.99
+ci_lower = 0.9
+ci_upper = 1.09
+estimate = -0.01005033585350145
+variance = 0.0023875621430448322
+se = 0.04886268661304689
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "CLEAR-Outcomes"
+trial = "Bempedoic acid and cardiovascular outcomes in statin-intolerant patients"
+nct_id = "NCT02993406"
+pmid = "36876740"
+outcome_id = "primary_cv_endpoint_reported"
+outcome_label = "trial-defined primary cardiovascular endpoint"
+active_treatment = "bempedoic acid"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.87
+ci_lower = 0.79
+ci_upper = 0.96
+estimate = -0.13926206733350766
+variance = 0.0024721169688191945
+se = 0.0497203878586963
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ACCELERATE"
+trial = "Evacetrapib and cardiovascular outcomes in high-risk vascular disease"
+nct_id = "NCT01687998"
+pmid = "28514624"
+outcome_id = "primary_cv_endpoint_reported"
+outcome_label = "trial-defined primary cardiovascular endpoint"
+active_treatment = "evacetrapib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 1.01
+ci_lower = 0.91
+ci_upper = 1.11
+estimate = 0.009950330853168092
+variance = 0.0025686885381858947
+se = 0.05068223099061341
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "dal-OUTCOMES"
+trial = "Effects of dalcetrapib in patients with a recent acute coronary syndrome"
+nct_id = "NCT00658515"
+pmid = "23126252"
+outcome_id = "primary_cv_endpoint_reported"
+outcome_label = "trial-defined primary cardiovascular endpoint"
+active_treatment = "dalcetrapib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 1.04
+ci_lower = 0.93
+ci_upper = 1.16
+estimate = 0.03922071315328133
+variance = 0.0031782775022027696
+se = 0.0563762139754238
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.08903855212372828
+se = 0.017244869749216026
+ci_low = -0.12283787575027597
+ci_high = -0.055239228497180604
+tau2 = 0.0
+q = 51.106902302418945
+df = 6
+hksj = false
+hksj_q_factor = 1.0
+weights = [93.46504052355613, 1355.1635074110075, 386.72138785549816, 418.83726583330343, 404.51160386543097, 389.30371866191217, 314.63583633176455]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.13660688390217987
+se = 0.07923565715843282
+ci_low = -0.3304895524364096
+ci_high = 0.05727578463204985
+tau2 = 0.03663668283270996
+q = 6.599549652544067
+df = 6
+hksj = true
+hksj_q_factor = 1.0999249420906778
+weights = [21.12562822753882, 26.7561383596792, 25.495554686971722, 25.625095389322347, 25.569692884333925, 25.50670903075161, 25.116187272027126]
+warnings = []
+pi_low = -0.6435074101943826
+pi_high = 0.3702936423900228

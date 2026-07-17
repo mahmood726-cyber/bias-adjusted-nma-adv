@@ -1,0 +1,165 @@
+{
+  "benchmark_id": "lipid_cv_outcomes_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T22:30:00Z",
+  "manifest": "validation/survival/lipid_cv_outcomes_reported_hrs.toml",
+  "manifest_sha256": "53760d5264a1af9539e8217b902e0bbbfbc919f7d8e0679e19a074b6d1423fb4",
+  "records": [
+    {
+      "abstract_sha256": "4238ba252c5f5667e10a1f758b7a1ee9a1480819f751b257081d3f060eda70c3",
+      "ci_lower": "0.46",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.69",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_cv_endpoint_reported",
+      "pmid": "18997196",
+      "reported_hr": "0.56",
+      "source_terms": [
+        "rosuvastatin",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "JUPITER",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "4c6cfd9f0c84bdfdf14f38fd4d0d09041206588c287667c6c596f4d3a7d83df9",
+      "ci_lower": "0.89",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.99",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_cv_endpoint_reported",
+      "pmid": "26039521",
+      "reported_hr": "0.936",
+      "source_terms": [
+        "ezetimibe",
+        "simvastatin"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "IMPROVE-IT",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "7c4235ccf8088fe80228bbca6746d3891c76be4533e3bb569b23ec4e4022c025",
+      "ci_lower": "0.68",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.83",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_cv_endpoint_reported",
+      "pmid": "30415628",
+      "reported_hr": "0.75",
+      "source_terms": [
+        "icosapent ethyl",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "REDUCE-IT",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "d9f4289df3a6b0a22e6a772d4f7c4517ea4b0116849f85784e3623e0c404c273",
+      "ci_lower": "0.90",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.09",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_cv_endpoint_reported",
+      "pmid": "33190147",
+      "reported_hr": "0.99",
+      "source_terms": [
+        "omega-3 CA",
+        "corn oil"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "STRENGTH",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "182d7126e064cbf36aaf94bee414964e78da5af84f9b718b147d5e52e56217b5",
+      "ci_lower": "0.79",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.96",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_cv_endpoint_reported",
+      "pmid": "36876740",
+      "reported_hr": "0.87",
+      "source_terms": [
+        "bempedoic acid",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CLEAR-Outcomes",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "2b6a89774279de59c494f4ecceeeb63c357ddd6c0f86c561525d2bff31a983cc",
+      "ci_lower": "0.91",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.11",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_cv_endpoint_reported",
+      "pmid": "28514624",
+      "reported_hr": "1.01",
+      "source_terms": [
+        "evacetrapib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ACCELERATE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "c64be894743725800f9c6c2c96196442bf7a2da1de1d38f34eea422f8a41a5f6",
+      "ci_lower": "0.93",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.16",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_cv_endpoint_reported",
+      "pmid": "23126252",
+      "reported_hr": "1.04",
+      "source_terms": [
+        "dalcetrapib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "dal-OUTCOMES",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

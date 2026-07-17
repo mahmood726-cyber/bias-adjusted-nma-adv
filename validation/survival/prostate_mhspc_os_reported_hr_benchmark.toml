@@ -1,0 +1,163 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "prostate_mhspc_os_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/prostate_mhspc_os_reported_hrs.toml"
+source_manifest_sha256 = "747b42cc14fbcd00da50674b913e0c547d4fe787f67a3deb53d35896988ffead"
+source_verification_report = "validation/source_checks/prostate_mhspc_os_reported_hr_tokens.json"
+source_verification_report_sha256 = "eb404abe0ffbb02330fea104166e219b97ffe7533a3e1b49394dd942539f12ea"
+source_identity_report = "validation/source_checks/prostate_mhspc_os_reported_hr_source_check.json"
+source_identity_report_sha256 = "21eac413f71c712b6ff996e520e87f91cf27191caf7e20e52b09d703caa15050"
+n_studies = 5
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "prostate_mhspc_os_reported_hr"
+manifest_sha256 = "747b42cc14fbcd00da50674b913e0c547d4fe787f67a3deb53d35896988ffead"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 5
+
+[source_identity_bundle]
+benchmark_id = "prostate_mhspc_os_reported_hr"
+manifest_sha256 = "747b42cc14fbcd00da50674b913e0c547d4fe787f67a3deb53d35896988ffead"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 5, pubmed_abstract = 5}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "LATITUDE"
+trial = "Abiraterone plus prednisone in metastatic castration-sensitive prostate cancer"
+nct_id = "NCT01715285"
+pmid = "28578607"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "abiraterone plus prednisone"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.62
+ci_lower = 0.51
+ci_upper = 0.76
+estimate = -0.4780358009429998
+variance = 0.010355919884859078
+se = 0.10176404023454984
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "TITAN"
+trial = "Apalutamide for metastatic castration-sensitive prostate cancer"
+nct_id = "NCT02489318"
+pmid = "31150574"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "apalutamide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.67
+ci_lower = 0.51
+ci_upper = 0.89
+estimate = -0.40047756659712525
+variance = 0.020177113130628546
+se = 0.1420461654907606
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ENZAMET"
+trial = "Enzalutamide with standard first-line therapy in metastatic prostate cancer"
+nct_id = "NCT02446405"
+pmid = "31157964"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "enzalutamide plus standard care"
+control_treatment = "standard care"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.67
+ci_lower = 0.52
+ci_upper = 0.86
+estimate = -0.40047756659712525
+variance = 0.01647246669044802
+se = 0.1283451077776166
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "CHAARTED"
+trial = "Chemohormonal therapy in metastatic hormone-sensitive prostate cancer"
+nct_id = "NCT00309985"
+pmid = "26244877"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "ADT plus docetaxel"
+control_treatment = "ADT alone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.61
+ci_lower = 0.47
+ci_upper = 0.8
+estimate = -0.4942963218147801
+variance = 0.018410668896316217
+se = 0.13568592003710708
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "STAMPEDE-Abiraterone"
+trial = "Abiraterone for prostate cancer not previously treated with hormone therapy"
+nct_id = "NCT00268476"
+pmid = "28578639"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "ADT plus abiraterone and prednisolone"
+control_treatment = "ADT alone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.63
+ci_lower = 0.52
+ci_upper = 0.76
+estimate = -0.4620354595965587
+variance = 0.009372245005330347
+se = 0.09681035587854404
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.4525462704591419
+se = 0.05213951813240793
+ci_low = -0.5547378481699345
+ci_high = -0.3503546927483493
+tau2 = 0.0
+q = 0.4659775534198411
+df = 4
+hksj = false
+hksj_q_factor = 1.0
+weights = [96.56312631986027, 49.56110388666134, 60.70736209652654, 54.316331776521686, 106.69802159794826]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.4525462704591419
+se = 0.05213951813240793
+ci_low = -0.5973087803652375
+ci_high = -0.30778376055304635
+tau2 = 0.0
+q = 0.4659775534198411
+df = 4
+hksj = true
+hksj_q_factor = 1.0
+weights = [96.56312631986027, 49.56110388666134, 60.70736209652654, 54.316331776521686, 106.69802159794826]
+warnings = []
+pi_low = -0.5973087803652375
+pi_high = -0.30778376055304635

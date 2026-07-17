@@ -61,6 +61,18 @@ TAVI_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "tavi_savr_primar
 MELANOMA_MANIFEST = ROOT / "validation" / "survival" / "melanoma_pfs_reported_hrs.toml"
 MELANOMA_REPORT = ROOT / "validation" / "source_checks" / "melanoma_pfs_reported_hr_tokens.json"
 MELANOMA_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "melanoma_pfs_reported_hr_source_check.json"
+OSIMERTINIB_MANIFEST = ROOT / "validation" / "survival" / "osimertinib_nsclc_pfs_reported_hrs.toml"
+OSIMERTINIB_REPORT = ROOT / "validation" / "source_checks" / "osimertinib_nsclc_pfs_reported_hr_tokens.json"
+OSIMERTINIB_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "osimertinib_nsclc_pfs_reported_hr_source_check.json"
+LIPID_MANIFEST = ROOT / "validation" / "survival" / "lipid_cv_outcomes_reported_hrs.toml"
+LIPID_REPORT = ROOT / "validation" / "source_checks" / "lipid_cv_outcomes_reported_hr_tokens.json"
+LIPID_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "lipid_cv_outcomes_reported_hr_source_check.json"
+HER2_MANIFEST = ROOT / "validation" / "survival" / "her2_breast_pfs_reported_hrs.toml"
+HER2_REPORT = ROOT / "validation" / "source_checks" / "her2_breast_pfs_reported_hr_tokens.json"
+HER2_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "her2_breast_pfs_reported_hr_source_check.json"
+PROSTATE_MANIFEST = ROOT / "validation" / "survival" / "prostate_mhspc_os_reported_hrs.toml"
+PROSTATE_REPORT = ROOT / "validation" / "source_checks" / "prostate_mhspc_os_reported_hr_tokens.json"
+PROSTATE_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "prostate_mhspc_os_reported_hr_source_check.json"
 VERIFY_SCRIPT = ROOT / "scripts" / "verify_pubmed_survival_hrs.py"
 IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
 
@@ -198,6 +210,53 @@ IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
                 "KEYNOTE-006",
                 "CheckMate-066",
                 "COMBI-d",
+            },
+        ),
+        (
+            OSIMERTINIB_MANIFEST,
+            "osimertinib_nsclc_pfs_reported_hr",
+            {
+                "FLAURA",
+                "AURA3",
+                "FLAURA2",
+                "LAURA",
+            },
+        ),
+        (
+            LIPID_MANIFEST,
+            "lipid_cv_outcomes_reported_hr",
+            {
+                "JUPITER",
+                "IMPROVE-IT",
+                "REDUCE-IT",
+                "STRENGTH",
+                "CLEAR-Outcomes",
+                "ACCELERATE",
+                "dal-OUTCOMES",
+            },
+        ),
+        (
+            HER2_MANIFEST,
+            "her2_breast_pfs_reported_hr",
+            {
+                "CLEOPATRA",
+                "EMILIA",
+                "TH3RESA",
+                "DESTINY-Breast03",
+                "HER2CLIMB",
+                "SOPHIA",
+                "NALA",
+            },
+        ),
+        (
+            PROSTATE_MANIFEST,
+            "prostate_mhspc_os_reported_hr",
+            {
+                "LATITUDE",
+                "TITAN",
+                "ENZAMET",
+                "CHAARTED",
+                "STAMPEDE-Abiraterone",
             },
         ),
     ],
@@ -379,6 +438,26 @@ def test_survival_hr_manifest_rejects_scalar_source_terms():
             MELANOMA_REPORT,
             "validation/survival/melanoma_pfs_reported_hrs.toml",
         ),
+        (
+            OSIMERTINIB_MANIFEST,
+            OSIMERTINIB_REPORT,
+            "validation/survival/osimertinib_nsclc_pfs_reported_hrs.toml",
+        ),
+        (
+            LIPID_MANIFEST,
+            LIPID_REPORT,
+            "validation/survival/lipid_cv_outcomes_reported_hrs.toml",
+        ),
+        (
+            HER2_MANIFEST,
+            HER2_REPORT,
+            "validation/survival/her2_breast_pfs_reported_hrs.toml",
+        ),
+        (
+            PROSTATE_MANIFEST,
+            PROSTATE_REPORT,
+            "validation/survival/prostate_mhspc_os_reported_hrs.toml",
+        ),
     ],
 )
 def test_survival_hr_verification_snapshot_matches_manifest(
@@ -498,6 +577,30 @@ def test_survival_hr_verification_snapshot_matches_manifest(
             MELANOMA_IDENTITY_REPORT,
             "validation/survival/melanoma_pfs_reported_hrs.toml",
             {"clinicaltrials_gov": 3, "pubmed_abstract": 3},
+        ),
+        (
+            OSIMERTINIB_MANIFEST,
+            OSIMERTINIB_IDENTITY_REPORT,
+            "validation/survival/osimertinib_nsclc_pfs_reported_hrs.toml",
+            {"clinicaltrials_gov": 4, "pubmed_abstract": 4},
+        ),
+        (
+            LIPID_MANIFEST,
+            LIPID_IDENTITY_REPORT,
+            "validation/survival/lipid_cv_outcomes_reported_hrs.toml",
+            {"clinicaltrials_gov": 7, "pubmed_abstract": 7},
+        ),
+        (
+            HER2_MANIFEST,
+            HER2_IDENTITY_REPORT,
+            "validation/survival/her2_breast_pfs_reported_hrs.toml",
+            {"clinicaltrials_gov": 7, "pubmed_abstract": 7},
+        ),
+        (
+            PROSTATE_MANIFEST,
+            PROSTATE_IDENTITY_REPORT,
+            "validation/survival/prostate_mhspc_os_reported_hrs.toml",
+            {"clinicaltrials_gov": 5, "pubmed_abstract": 5},
         ),
     ],
 )

@@ -1,0 +1,263 @@
+{
+  "benchmark_id": "lipid_cv_outcomes_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T22:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00239681",
+      "details": {
+        "brief_title": "JUPITER - Crestor 20mg Versus Placebo in Prevention of Cardiovascular (CV) Events",
+        "nct_id": "NCT00239681",
+        "overall_status": "TERMINATED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00239681",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00239681",
+      "response_sha256": "ca4a5a113f354e0a13d9ba52e8605dd3db0ce143aefe19448a406fcab889b5a0",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "JUPITER",
+      "title": "JUPITER - Crestor 20mg Versus Placebo in Prevention of Cardiovascular (CV) Events"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=18997196&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "4238ba252c5f5667e10a1f758b7a1ee9a1480819f751b257081d3f060eda70c3",
+        "article_title": "Rosuvastatin to prevent vascular events in men and women with elevated C-reactive protein.",
+        "journal": "N Engl J Med",
+        "pmid": "18997196"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "18997196",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/18997196/",
+      "response_sha256": "e8806343ac2e736fb35db7338370f628d0c6d7b26117c4cd46f11dd10c9a7623",
+      "source_type": "pubmed_abstract",
+      "study_id": "JUPITER",
+      "title": "Rosuvastatin to prevent vascular events in men and women with elevated C-reactive protein."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00202878",
+      "details": {
+        "brief_title": "IMPROVE-IT: Examining Outcomes in Subjects With Acute Coronary Syndrome: Vytorin (Ezetimibe/Simvastatin) vs Simvastatin (P04103)",
+        "nct_id": "NCT00202878",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00202878",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00202878",
+      "response_sha256": "a43aa252491ad82efe603f29b99ffd790af6bee07e90458e40b542c6c07fef93",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "IMPROVE-IT",
+      "title": "IMPROVE-IT: Examining Outcomes in Subjects With Acute Coronary Syndrome: Vytorin (Ezetimibe/Simvastatin) vs Simvastatin (P04103)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26039521&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "4c6cfd9f0c84bdfdf14f38fd4d0d09041206588c287667c6c596f4d3a7d83df9",
+        "article_title": "Ezetimibe Added to Statin Therapy after Acute Coronary Syndromes.",
+        "journal": "N Engl J Med",
+        "pmid": "26039521"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26039521",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26039521/",
+      "response_sha256": "95ed7a7bcbbe090b707e2d1472e160f007bde63f724c65c03b53fb9cbcb93d57",
+      "source_type": "pubmed_abstract",
+      "study_id": "IMPROVE-IT",
+      "title": "Ezetimibe Added to Statin Therapy after Acute Coronary Syndromes."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01492361",
+      "details": {
+        "brief_title": "A Study of AMR101 to Evaluate Its Ability to Reduce Cardiovascular Events in High-Risk Patients With Hypertriglyceridemia and on Statin",
+        "nct_id": "NCT01492361",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01492361",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01492361",
+      "response_sha256": "9cedc34251023186840baa283ce5b96f26b0911e550516698e299772d61ef213",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "REDUCE-IT",
+      "title": "A Study of AMR101 to Evaluate Its Ability to Reduce Cardiovascular Events in High-Risk Patients With Hypertriglyceridemia and on Statin"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30415628&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "7c4235ccf8088fe80228bbca6746d3891c76be4533e3bb569b23ec4e4022c025",
+        "article_title": "Cardiovascular Risk Reduction with Icosapent Ethyl for Hypertriglyceridemia.",
+        "journal": "N Engl J Med",
+        "pmid": "30415628"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30415628",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30415628/",
+      "response_sha256": "4f47249ea7a5f5693d55c6374917a1ebe4e9f300ab485cdffcdd3de020bd12a6",
+      "source_type": "pubmed_abstract",
+      "study_id": "REDUCE-IT",
+      "title": "Cardiovascular Risk Reduction with Icosapent Ethyl for Hypertriglyceridemia."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02104817",
+      "details": {
+        "brief_title": "Outcomes Study to Assess STatin Residual Risk Reduction With EpaNova in HiGh CV Risk PatienTs With Hypertriglyceridemia",
+        "nct_id": "NCT02104817",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02104817",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02104817",
+      "response_sha256": "1be1690dfd4d4225c93d4ab449b92aea64619562c5be54b2c1e2cd688cd2c5e0",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "STRENGTH",
+      "title": "Outcomes Study to Assess STatin Residual Risk Reduction With EpaNova in HiGh CV Risk PatienTs With Hypertriglyceridemia"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33190147&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "d9f4289df3a6b0a22e6a772d4f7c4517ea4b0116849f85784e3623e0c404c273",
+        "article_title": "Effect of High-Dose Omega-3 Fatty Acids vs Corn Oil on Major Adverse Cardiovascular Events in Patients at High Cardiovascular Risk: The STRENGTH Randomized Clinical Trial.",
+        "journal": "JAMA",
+        "pmid": "33190147"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33190147",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33190147/",
+      "response_sha256": "f83affe3815e7fa7faf90162aa8988da76b3598d29ad622e354c8613ceb38ba7",
+      "source_type": "pubmed_abstract",
+      "study_id": "STRENGTH",
+      "title": "Effect of High-Dose Omega-3 Fatty Acids vs Corn Oil on Major Adverse Cardiovascular Events in Patients at High Cardiovascular Risk: The STRENGTH Randomized Clinical Trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02993406",
+      "details": {
+        "brief_title": "Evaluation of Major Cardiovascular Events in Participants With, or at High Risk for, Cardiovascular Disease Who Are Statin Intolerant Treated With Bempedoic Acid (ETC-1002) or Placebo",
+        "nct_id": "NCT02993406",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02993406",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02993406",
+      "response_sha256": "48f4b443525fb861bbf57f43bfac08ea18a7a5c74b5870a081599caadd68d1ff",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CLEAR-Outcomes",
+      "title": "Evaluation of Major Cardiovascular Events in Participants With, or at High Risk for, Cardiovascular Disease Who Are Statin Intolerant Treated With Bempedoic Acid (ETC-1002) or Placebo"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=36876740&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "182d7126e064cbf36aaf94bee414964e78da5af84f9b718b147d5e52e56217b5",
+        "article_title": "Bempedoic Acid and Cardiovascular Outcomes in Statin-Intolerant Patients.",
+        "journal": "N Engl J Med",
+        "pmid": "36876740"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "36876740",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/36876740/",
+      "response_sha256": "eb061946988abbdd8b8981c59570bfa5922d46a4046867ca220ccf6623009af5",
+      "source_type": "pubmed_abstract",
+      "study_id": "CLEAR-Outcomes",
+      "title": "Bempedoic Acid and Cardiovascular Outcomes in Statin-Intolerant Patients."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01687998",
+      "details": {
+        "brief_title": "A Study of Evacetrapib in High-Risk Vascular Disease",
+        "nct_id": "NCT01687998",
+        "overall_status": "TERMINATED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01687998",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01687998",
+      "response_sha256": "8f399873761bc448fbf0c690eef2cfd1edbf375e55af6479ada85aceb8863cc3",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ACCELERATE",
+      "title": "A Study of Evacetrapib in High-Risk Vascular Disease"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28514624&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "2b6a89774279de59c494f4ecceeeb63c357ddd6c0f86c561525d2bff31a983cc",
+        "article_title": "Evacetrapib and Cardiovascular Outcomes in High-Risk Vascular Disease.",
+        "journal": "N Engl J Med",
+        "pmid": "28514624"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28514624",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28514624/",
+      "response_sha256": "d025b8588275229ab12003f0c23a829b49f19f2247b8e6ccaa0c903191eb8e2f",
+      "source_type": "pubmed_abstract",
+      "study_id": "ACCELERATE",
+      "title": "Evacetrapib and Cardiovascular Outcomes in High-Risk Vascular Disease."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00658515",
+      "details": {
+        "brief_title": "A Study of RO4607381 in Stable Coronary Heart Disease Patients With Recent Acute Coronary Syndrome",
+        "nct_id": "NCT00658515",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00658515",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00658515",
+      "response_sha256": "dda9130c6e2cce344a4220fdabe872b9065e7b93ad7c8c632b24f82ca3b22294",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "dal-OUTCOMES",
+      "title": "A Study of RO4607381 in Stable Coronary Heart Disease Patients With Recent Acute Coronary Syndrome"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23126252&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "c64be894743725800f9c6c2c96196442bf7a2da1de1d38f34eea422f8a41a5f6",
+        "article_title": "Effects of dalcetrapib in patients with a recent acute coronary syndrome.",
+        "journal": "N Engl J Med",
+        "pmid": "23126252"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "23126252",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/23126252/",
+      "response_sha256": "7ff8820bb70ee6c5a0b6dea5a939a8f879f56085e17383bca707f316cff11116",
+      "source_type": "pubmed_abstract",
+      "study_id": "dal-OUTCOMES",
+      "title": "Effects of dalcetrapib in patients with a recent acute coronary syndrome."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/lipid_cv_outcomes_reported_hrs.toml",
+  "source_manifest_sha256": "53760d5264a1af9539e8217b902e0bbbfbc919f7d8e0679e19a074b6d1423fb4",
+  "status": "verified"
+}
