@@ -166,6 +166,26 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["numerical_stability"].implemented_capabilities
     )
     assert (
+        "pairwise_tau2_sign_and_null_crossing_warnings"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
+        "mixed_measure_outcome_fail_closed"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
+        "nma_dropped_study_warning_counts"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
+        "nma_tau_method_result_reporting"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
+        "sponsor_bias_missing_attrition_conservative_policy"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
         "pairwise_sparse_dominant_study_stress_report"
         in by_id["numerical_stability"].implemented_capabilities
     )
@@ -282,9 +302,14 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "positive_definite_covariance_fail_closed_policy",
                 "multiarm_deterministic_failure_reports",
                 "pairwise_alternative_tau2_cross_checks",
+                "pairwise_tau2_sign_and_null_crossing_warnings",
                 "pairwise_sparse_dominant_study_stress_report",
                 "pairwise_reml_local_minimum_profile_diagnostic",
                 "pairwise_optimizer_stress_matrix",
+                "mixed_measure_outcome_fail_closed",
+                "nma_dropped_study_warning_counts",
+                "nma_tau_method_result_reporting",
+                "sponsor_bias_missing_attrition_conservative_policy",
                 "ctgov_sparse_design_bias_guard",
                 "source_backed_cross_design_routing_benchmark",
                 "large_scale_validation_evidence_gate",

@@ -30,7 +30,8 @@ def test_bayesian_mcmc_sampler():
     pooler = AdvancedBiasAdjustedNMAPooler(random_effects=True)
     
     # Run the setup steps manually or extract them to get vectors
-    blocks = pooler._build_study_blocks(dataset, "O1", "binary")
+    blocks, n_studies_dropped = pooler._build_study_blocks(dataset, "O1", "binary")
+    assert n_studies_dropped == 0
     unique_designs = ["rct"]
     design_to_idx = {"rct": 0}
     param_names = pooler._build_parameter_names(("B",), (), [], False, ())

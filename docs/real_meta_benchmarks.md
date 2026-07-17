@@ -76,7 +76,9 @@ Current tests:
 - compute an independent inverse-variance fixed-effect log-odds-ratio reference;
 - compute source-backed study-level log-odds-ratio effects with NCT/PMID provenance;
 - run the experimental pairwise bridge as fixed effect and REML-HKSJ with prediction interval;
+- emit a pairwise FE/DL/PM/REML tau2 cross-check summary, including sign and null-crossing diagnostics;
 - run the frequentist candidate model on the same rows;
+- record the frequentist candidate's declared `tau_method` and dropped-study count;
 - run the Bayesian MCMC candidate model on the same rows;
 - require the pairwise fixed-effect result to match the independent fixed-effect reference exactly within numerical tolerance;
 - require the frequentist result to match the independent fixed-effect reference exactly within numerical tolerance;

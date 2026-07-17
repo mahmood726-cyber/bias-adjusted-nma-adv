@@ -20,6 +20,10 @@ class RegistrySponsorAuditor:
         lost_to_follow_up: int
     ) -> None:
         """Register trial collaborator class and participant flow denominators."""
+        if randomized <= 0:
+            raise ValueError("randomized must be positive.")
+        if lost_to_follow_up < 0 or lost_to_follow_up > randomized:
+            raise ValueError("lost_to_follow_up must satisfy 0 <= lost_to_follow_up <= randomized.")
         self.registry_db[nct_id] = {
             "sponsor_class": sponsor_class.strip().lower(),
             "randomized": randomized,
@@ -33,7 +37,7 @@ class RegistrySponsorAuditor:
         """
         meta = self.registry_db.get(nct_id)
         if not meta or meta["randomized"] == 0:
-            return 0.0
+            return 1.0
             
         return float(meta["lost_to_follow_up"] / meta["randomized"])
 

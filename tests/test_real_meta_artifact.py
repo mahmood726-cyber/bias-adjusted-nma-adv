@@ -80,6 +80,12 @@ def test_sglt2_benchmark_artifact_recomputes_from_source_rows():
             abs(result["pairwise"]["fixed_effect"][field] - artifact["candidate"]["pairwise_fixed_effect"][field])
             < tolerance
         )
+    assert result["frequentist"]["tau_method"] == artifact["candidate"]["frequentist"]["tau_method"]
+    assert (
+        result["frequentist"]["n_studies_dropped"]
+        == artifact["candidate"]["frequentist"]["n_studies_dropped"]
+    )
+    assert result["frequentist"]["warnings"] == artifact["candidate"]["frequentist"]["warnings"]
 
     pairwise_tol = artifact["tolerances"]["frequentist_abs"]
     for field in ("estimate", "se", "ci_low", "ci_high", "tau2", "q", "hksj_q_factor"):
@@ -100,6 +106,13 @@ def test_sglt2_benchmark_artifact_recomputes_from_source_rows():
     assert result["pairwise"]["reml_hksj"]["df"] == artifact["candidate"]["pairwise_reml_hksj"]["df"]
     assert result["pairwise"]["fixed_effect"]["hksj"] is artifact["candidate"]["pairwise_fixed_effect"]["hksj"]
     assert result["pairwise"]["reml_hksj"]["hksj"] is artifact["candidate"]["pairwise_reml_hksj"]["hksj"]
+    cross_check = artifact["candidate"]["pairwise_tau2_cross_check"]
+    assert result["pairwise"]["tau2_cross_check"]["primary_method"] == cross_check["primary_method"]
+    assert result["pairwise"]["tau2_cross_check"]["estimate_signs"] == cross_check["estimate_signs"]
+    assert result["pairwise"]["tau2_cross_check"]["methods_crossing_null"] == cross_check["methods_crossing_null"]
+    assert result["pairwise"]["tau2_cross_check"]["warnings"] == cross_check["warnings"]
+    for field in ("tau2_min", "tau2_max", "max_abs_estimate_delta", "max_abs_se_delta"):
+        assert abs(result["pairwise"]["tau2_cross_check"][field] - cross_check[field]) < pairwise_tol
     assert len(result["pairwise"]["fixed_effect"]["weights"]) == len(artifact["candidate"]["pairwise_fixed_effect"]["weights"])
     assert len(result["pairwise"]["reml_hksj"]["weights"]) == len(artifact["candidate"]["pairwise_reml_hksj"]["weights"])
     for observed, expected in zip(

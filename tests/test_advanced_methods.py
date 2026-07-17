@@ -136,7 +136,13 @@ def test_no_u_turn_sampler():
 
 def test_registry_sponsor_auditor():
     from bias_nma_adv.sponsor_bias import RegistrySponsorAuditor
+    import pytest
     auditor = RegistrySponsorAuditor()
+
+    with pytest.raises(ValueError, match="randomized"):
+        auditor.register_trial_flow("NCT_BAD_N", "other", randomized=0, lost_to_follow_up=0)
+    with pytest.raises(ValueError, match="lost_to_follow_up"):
+        auditor.register_trial_flow("NCT_BAD_LTFU", "other", randomized=100, lost_to_follow_up=101)
     
     # 1. Register trials
     # NIH funded, no attrition
@@ -147,8 +153,10 @@ def test_registry_sponsor_auditor():
     # 2. Check attrition ratio
     lar1 = auditor.calculate_attrition_ratio("NCT111")
     lar2 = auditor.calculate_attrition_ratio("NCT222")
+    lar_missing = auditor.calculate_attrition_ratio("NCT_MISSING")
     assert np.isclose(lar1, 0.01)
     assert np.isclose(lar2, 0.10)
+    assert np.isclose(lar_missing, 1.0)
     
     # 3. Check sponsor bias score
     sbs1 = auditor.calculate_sponsorship_bias_score("NCT111")
@@ -159,11 +167,13 @@ def test_registry_sponsor_auditor():
     # 4. Check quality weight adjustment
     q1 = auditor.adjust_doi_welton_quality("NCT111", 1.0)
     q2 = auditor.adjust_doi_welton_quality("NCT222", 1.0)
+    q_missing = auditor.adjust_doi_welton_quality("NCT_MISSING", 1.0)
     
     # NCT111 should remain close to 1.0 (no penalty)
     assert np.isclose(q1, 1.0)
     # NCT222 should be heavily penalized (industry + attrition)
     assert q2 < 0.80
-
+    # Missing metadata must not be treated as perfect follow-up.
+    assert np.isclose(q_missing, 0.56)
 
 

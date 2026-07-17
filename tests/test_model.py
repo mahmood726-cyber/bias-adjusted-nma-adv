@@ -28,6 +28,49 @@ def test_validation_errors():
         dataset.add_outcome_ad("S1", "A1", "O1", "continuous", 10.0, se=None)
 
 
+def test_mixed_measure_type_outcome_fails_closed_before_model_fit():
+    dataset = EvidenceDataset()
+    dataset.add_study("S_BINARY", "rct")
+    dataset.add_arm("S_BINARY", "control", "A", 100)
+    dataset.add_arm("S_BINARY", "active", "B", 100)
+    dataset.add_outcome_ad("S_BINARY", "control", "O1", "binary", 10)
+    dataset.add_outcome_ad("S_BINARY", "active", "O1", "binary", 20)
+
+    dataset.add_study("S_CONTINUOUS", "rct")
+    dataset.add_arm("S_CONTINUOUS", "control", "A", 80)
+    dataset.add_arm("S_CONTINUOUS", "active", "B", 80)
+    dataset.add_outcome_ad("S_CONTINUOUS", "control", "O1", "continuous", -0.2, se=0.10)
+    dataset.add_outcome_ad("S_CONTINUOUS", "active", "O1", "continuous", -0.4, se=0.12)
+
+    with pytest.raises(ValidationError, match="multiple measure_type"):
+        dataset.measure_type_for_outcome("O1")
+    with pytest.raises(ValidationError, match="multiple measure_type"):
+        AdvancedBiasAdjustedNMAPooler().fit(dataset, "O1", reference_treatment="A")
+
+
+def test_fit_reports_unusable_study_drops_instead_of_silent_loss():
+    dataset = EvidenceDataset()
+    dataset.add_study("S_GOOD", "rct")
+    dataset.add_arm("S_GOOD", "control", "A", 100)
+    dataset.add_arm("S_GOOD", "active", "B", 100)
+    dataset.add_outcome_ad("S_GOOD", "control", "O1", "binary", 10)
+    dataset.add_outcome_ad("S_GOOD", "active", "O1", "binary", 20)
+
+    dataset.add_study("S_INCOMPLETE", "rct")
+    dataset.add_arm("S_INCOMPLETE", "control", "A", 100)
+    dataset.add_outcome_ad("S_INCOMPLETE", "control", "O1", "binary", 10)
+
+    fit = AdvancedBiasAdjustedNMAPooler(
+        hksj=False,
+        random_effects=False,
+        exact_binomial=False,
+    ).fit(dataset, "O1", reference_treatment="A")
+
+    assert fit.n_studies == 1
+    assert fit.n_studies_dropped == 1
+    assert any("S_INCOMPLETE" in warning and "dropped" in warning for warning in fit.warnings)
+
+
 def test_study_design_policy_is_extensible_but_metadata_frames_cannot_enter_effect_pool():
     assert {"rct", "nrs", "other", "regulatory_review_backed", "csr_backed"} <= set(
         ALLOWED_STUDY_DESIGNS
@@ -176,6 +219,8 @@ def test_reml_gls_reproducible_pooling():
     # Verify parameter estimates
     assert "B" in fit1.treatment_effects
     assert "nrs" in fit1.design_biases
+    assert fit1.tau_method == "REML"
+    assert fit2.tau_method == "REML"
 
     # HKSJ should scale standard errors upwards compared to non-HKSJ
     # since we have residual discrepancies and very few studies
@@ -447,4 +492,3 @@ def test_exact_binomial_rare_events():
     assert "B" in fit.treatment_effects
     assert fit.treatment_effects["B"] > 0.0
     assert fit.treatment_ses["B"] > 0.0
-

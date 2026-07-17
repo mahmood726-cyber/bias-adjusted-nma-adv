@@ -205,10 +205,19 @@ class EvidenceDataset:
         return [o for o in self.outcomes_ad if o.study_id == study_id and o.outcome_id == outcome_id]
 
     def measure_type_for_outcome(self, outcome_id: str) -> str:
-        for o in self.outcomes_ad:
-            if o.outcome_id == outcome_id:
-                return o.measure_type
-        raise ValidationError(f"Outcome '{outcome_id}' not found in dataset.")
+        measure_types = {
+            outcome.measure_type
+            for outcome in self.outcomes_ad
+            if outcome.outcome_id == outcome_id
+        }
+        if not measure_types:
+            raise ValidationError(f"Outcome '{outcome_id}' not found in dataset.")
+        if len(measure_types) > 1:
+            raise ValidationError(
+                f"Outcome '{outcome_id}' has multiple measure_type values: "
+                f"{sorted(measure_types)}."
+            )
+        return next(iter(measure_types))
 
     def subset_by_input_source(self, mode: str) -> "EvidenceDataset":
         """Return a copy containing only rows for one declared input source lane.

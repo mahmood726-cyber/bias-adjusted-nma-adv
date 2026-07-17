@@ -162,7 +162,24 @@ def test_tau2_cross_check_report_compares_estimators_without_certifying_choice()
     assert report.tau2_max > 0.0
     assert report.max_abs_estimate_delta is not None
     assert report.max_abs_se_delta is not None
+    assert report.estimate_signs == {"FE": -1, "DL": 1, "PM": 1, "REML": 1}
+    assert set(report.methods_crossing_null) == {"FE", "DL", "PM", "REML"}
     assert any("Alternative tau2" in warning for warning in report.warnings)
+    assert any("change sign" in warning for warning in report.warnings)
+
+
+def test_tau2_cross_check_warns_when_estimators_change_sign_or_null_status():
+    y = np.array([-0.3, 1.0, 1.0])
+    v = np.array([0.0001, 1.0, 1.0])
+
+    report = tau2_cross_check_report(y, v)
+
+    assert report.estimate_signs["FE"] == -1
+    assert {report.estimate_signs[method] for method in ("DL", "PM", "REML")} == {1}
+    assert "FE" not in report.methods_crossing_null
+    assert {"DL", "PM", "REML"} <= set(report.methods_crossing_null)
+    assert any("change sign" in warning for warning in report.warnings)
+    assert any("Null-crossing status differs" in warning for warning in report.warnings)
 
 
 def test_numerical_stress_report_flags_dominant_study_and_boundary_tau2():

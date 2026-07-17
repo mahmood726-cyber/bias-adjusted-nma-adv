@@ -124,6 +124,8 @@ class PairwiseTau2CrossCheckReport:
     tau2_max: float | None
     max_abs_estimate_delta: float | None
     max_abs_se_delta: float | None
+    estimate_signs: dict[str, int]
+    methods_crossing_null: tuple[str, ...]
     warnings: tuple[str, ...]
 
 
@@ -508,6 +510,16 @@ def tau2_cross_check_report(
     tau2_values = [float(item.tau2) for item in passed if item.tau2 is not None]
     estimates = [float(item.estimate) for item in passed if item.estimate is not None]
     ses = [float(item.se) for item in passed if item.se is not None]
+    estimate_signs = {
+        item.method: _sign(float(item.estimate))
+        for item in passed
+        if item.estimate is not None
+    }
+    methods_crossing_null = tuple(
+        item.method
+        for item in passed
+        if item.ci_low is not None and item.ci_high is not None and item.ci_low <= 0.0 <= item.ci_high
+    )
     tau2_min = min(tau2_values) if tau2_values else None
     tau2_max = max(tau2_values) if tau2_values else None
     max_abs_estimate_delta = (
@@ -516,6 +528,11 @@ def tau2_cross_check_report(
     max_abs_se_delta = max(ses) - min(ses) if len(ses) >= 2 else None
     if tau2_min is not None and tau2_max is not None and tau2_max > tau2_min:
         warnings.append("Alternative tau2 estimators produce different heterogeneity estimates.")
+    nonzero_signs = {sign for sign in estimate_signs.values() if sign != 0}
+    if len(nonzero_signs) > 1:
+        warnings.append("Point estimates change sign across tau2 estimators.")
+    if methods_crossing_null and len(methods_crossing_null) < len(passed):
+        warnings.append("Null-crossing status differs across tau2 estimators.")
 
     return PairwiseTau2CrossCheckReport(
         k=int(y.size),
@@ -525,8 +542,18 @@ def tau2_cross_check_report(
         tau2_max=tau2_max,
         max_abs_estimate_delta=max_abs_estimate_delta,
         max_abs_se_delta=max_abs_se_delta,
+        estimate_signs=estimate_signs,
+        methods_crossing_null=methods_crossing_null,
         warnings=tuple(warnings),
     )
+
+
+def _sign(value: float) -> int:
+    if value > 0.0:
+        return 1
+    if value < 0.0:
+        return -1
+    return 0
 
 
 def numerical_stress_report(

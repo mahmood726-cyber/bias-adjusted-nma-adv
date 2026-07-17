@@ -18,7 +18,12 @@ from bias_nma_adv.evidence_sources import ALLOWED_SOURCE_TYPES
 from bias_nma_adv.evidence_sources import EvidenceSource, validate_sources
 from bias_nma_adv.ingestion import EvidenceIngestionRecord, validate_ingestion_records
 from bias_nma_adv.model import AdvancedBiasAdjustedNMAPooler
-from bias_nma_adv.pairwise import PairwiseMetaResult, fit_pairwise_meta
+from bias_nma_adv.pairwise import (
+    PairwiseMetaResult,
+    PairwiseTau2CrossCheckReport,
+    fit_pairwise_meta,
+    tau2_cross_check_report,
+)
 
 
 TEXT_HASH_EXTENSIONS = {
@@ -414,6 +419,21 @@ def _pairwise_result_payload(result: PairwiseMetaResult) -> dict[str, Any]:
     return payload
 
 
+def _pairwise_cross_check_payload(report: PairwiseTau2CrossCheckReport) -> dict[str, Any]:
+    return {
+        "k": report.k,
+        "primary_method": report.primary_method,
+        "tau2_min": report.tau2_min,
+        "tau2_max": report.tau2_max,
+        "max_abs_estimate_delta": report.max_abs_estimate_delta,
+        "max_abs_se_delta": report.max_abs_se_delta,
+        "estimate_signs": report.estimate_signs,
+        "methods_crossing_null": list(report.methods_crossing_null),
+        "warnings": list(report.warnings),
+        "diagnostics": [asdict(row) for row in report.diagnostics],
+    }
+
+
 def run_real_meta_benchmark(
     path: str | Path,
     *,
@@ -454,8 +474,9 @@ def run_real_meta_benchmark(
         hksj_floor=True,
         prediction_interval=True,
     )
+    pairwise_tau2_cross_check = tau2_cross_check_report(pairwise_effects, pairwise_variances)
 
-    blocks = pooler._build_study_blocks(dataset, outcome_id, "binary")
+    blocks, _ = pooler._build_study_blocks(dataset, outcome_id, "binary")
     param_names = pooler._build_parameter_names((candidate_treatment,), (), [], False, ())
     y, x, v = pooler._assemble_design(
         blocks,
@@ -513,11 +534,14 @@ def run_real_meta_benchmark(
             "se": float(frequentist[1]),
             "ci_low": float(frequentist[2]),
             "ci_high": float(frequentist[3]),
+            "tau_method": fit.tau_method,
+            "n_studies_dropped": fit.n_studies_dropped,
             "warnings": list(fit.warnings),
         },
         "pairwise": {
             "fixed_effect": _pairwise_result_payload(pairwise_fixed),
             "reml_hksj": _pairwise_result_payload(pairwise_reml_hksj),
+            "tau2_cross_check": _pairwise_cross_check_payload(pairwise_tau2_cross_check),
         },
         "bayesian": {
             "posterior_mean": float(bayes.posterior_means[f"trt_{candidate_treatment}"]),

@@ -244,6 +244,8 @@ def test_real_meta_benchmark_runs_frequentist_and_bayesian_models():
     assert abs(freq["estimate"] - ref["estimate"]) < 1e-10
     assert abs(freq["se"] - ref["se"]) < 1e-10
     assert freq["ci_low"] < freq["estimate"] < freq["ci_high"]
+    assert freq["tau_method"] == "common_effect"
+    assert freq["n_studies_dropped"] == 0
     assert freq["warnings"] == []
     assert abs(pairwise["fixed_effect"]["estimate"] - ref["estimate"]) < 1e-10
     assert abs(pairwise["fixed_effect"]["se"] - ref["se"]) < 1e-10
@@ -253,6 +255,14 @@ def test_real_meta_benchmark_runs_frequentist_and_bayesian_models():
     assert pairwise["reml_hksj"]["hksj"] is True
     assert pairwise["reml_hksj"]["hksj_q_factor"] >= 1.0
     assert pairwise["reml_hksj"]["pi_low"] < pairwise["reml_hksj"]["estimate"] < pairwise["reml_hksj"]["pi_high"]
+    assert pairwise["tau2_cross_check"]["primary_method"] == "REML"
+    assert pairwise["tau2_cross_check"]["estimate_signs"] == {
+        "FE": -1,
+        "DL": -1,
+        "PM": -1,
+        "REML": -1,
+    }
+    assert set(pairwise["tau2_cross_check"]["methods_crossing_null"]) == set()
 
     bayes = result["bayesian"]
     assert bayes["credible_interval"][0] < bayes["posterior_mean"] < bayes["credible_interval"][1]
@@ -279,6 +289,8 @@ def test_unadjusted_pooler_matches_metafor_fixed_effect_golden_reference():
     assert fit.treatment_effects["SGLT2i"] == pytest.approx(reference["estimate"], abs=1e-12)
     assert fit.treatment_ses["SGLT2i"] == pytest.approx(reference["se"], abs=1e-12)
     assert fit.taus == {"rct": 0.0}
+    assert fit.tau_method == "common_effect"
+    assert fit.n_studies_dropped == 0
     assert fit.warnings == ()
 
 
@@ -305,5 +317,7 @@ def test_default_pooler_stays_on_metafor_path_when_weights_are_identity_and_no_c
     assert fit.treatment_ses["SGLT2i"] >= reference["se"]
     assert fit.q_factor == pytest.approx(1.0)
     assert fit.taus["rct"] < 1e-4
+    assert fit.tau_method == "REML"
+    assert fit.n_studies_dropped == 0
     assert fit.target_population == "enriched_as_randomised"
     assert fit.warnings == ()

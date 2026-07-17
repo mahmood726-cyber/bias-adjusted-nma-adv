@@ -22,7 +22,7 @@ skip_reason = "Reference adapter prerequisites are available, but this preflight
 [input_sha256]
 "validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
 "validation/real_meta/sglt2_hf_primary_sources.toml" = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d"
-"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "ade990172f79c9e7358fba7f3d8cb15efb95d7597d052c77ca096ae6d98aaef2"
+"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "53144036e8d87aa82c58176828b768c11451f0e6a6061e2e96c86f5a957dd0ba"
 "external/r/pairwise_metafor_meta.R" = "23f443b5a046cc273fc75af5dd09bcfb95fa09828ee59385de987167522bb6ea"
 
 [output_sha256]

@@ -21,10 +21,12 @@ class AdvancedNMAFitResult:
     parameter_estimates: np.ndarray
     parameter_cov: np.ndarray
     taus: dict[str, float]  # Design stratum to heterogeneity tau
+    tau_method: str
     df: int
     hksj: bool
     q_factor: float
     n_studies: int
+    n_studies_dropped: int
     n_contrasts: int
     treatment_effects: dict[str, float]
     treatment_ses: dict[str, float]
@@ -186,10 +188,16 @@ class AdvancedBiasAdjustedNMAPooler:
         covariates: list[str] | None = None
     ) -> AdvancedNMAFitResult:
         cov_names = covariates or []
+        warnings_list: list[str] = []
         measure_type = dataset.measure_type_for_outcome(outcome_id)
 
         # 1. Assemble study blocks
-        blocks = self._build_study_blocks(dataset, outcome_id, measure_type)
+        blocks, n_studies_dropped = self._build_study_blocks(
+            dataset,
+            outcome_id,
+            measure_type,
+            warnings_list=warnings_list,
+        )
         if not blocks:
             raise ValidationError(f"No studies available for outcome_id '{outcome_id}'.")
 
@@ -241,7 +249,6 @@ class AdvancedBiasAdjustedNMAPooler:
         )
 
         n_contrasts = int(y.shape[0])
-        warnings_list: list[str] = []
         if self.apply_indirectness:
             warnings_list.append(
                 "Indirectness is enabled as a declared estimand sensitivity, but no "
@@ -363,22 +370,27 @@ class AdvancedBiasAdjustedNMAPooler:
             h_inv = np.linalg.pinv(h_total)
             cov = h_inv[n_studies:, n_studies:]
             taus_dict = {d: 0.0 for d in unique_designs}
+            tau_method = "exact_binomial_no_tau"
             df = max(1, n_studies - n_params)
             q_factor = 1.0
             weight_sensitivity_stds = {}
         else:
             # 6. Fit standard REML / GLS with Prior Shrinkage and Kenward-Roger Correction
             taus_dict = {d: 0.0 for d in unique_designs}
+            tau_method = "common_effect"
             if self.random_effects == "stratified" and y.shape[0] > x.shape[1]:
                 taus_vec = self._optimize_tau_reml_stratified(y, x, v, blocks, design_to_idx)
                 for d, idx in design_to_idx.items():
                     taus_dict[d] = float(taus_vec[idx])
+                tau_method = "REML_stratified"
             elif self.random_effects is True and y.shape[0] > x.shape[1]:
                 tau_val = self._optimize_tau_reml(y, x, v)
                 for d in unique_designs:
                     taus_dict[d] = tau_val
+                tau_method = "REML"
             elif self.random_effects:
                 warnings_list.append("Insufficient degrees of freedom for random effects; tau fixed at 0.0.")
+                tau_method = "fixed_zero_insufficient_df"
 
             # Build block-wise random-effects covariance matrix M
             m = v.copy()
@@ -546,10 +558,12 @@ class AdvancedBiasAdjustedNMAPooler:
             parameter_estimates=beta,
             parameter_cov=cov,
             taus=taus_dict,
+            tau_method=tau_method,
             df=df,
             hksj=self.hksj,
             q_factor=q_factor,
             n_studies=n_studies,
+            n_studies_dropped=n_studies_dropped,
             n_contrasts=n_contrasts,
             treatment_effects=treatment_effects,
             treatment_ses=treatment_ses,
@@ -569,18 +583,32 @@ class AdvancedBiasAdjustedNMAPooler:
         self,
         dataset: EvidenceDataset,
         outcome_id: str,
-        measure_type: str
-    ) -> list[_StudyBlock]:
+        measure_type: str,
+        *,
+        warnings_list: list[str] | None = None,
+    ) -> tuple[list[_StudyBlock], int]:
         arm_lookup = dataset.arm_lookup()
         studies_with_outcome = sorted(
             {o.study_id for o in dataset.outcomes_ad if o.outcome_id == outcome_id}
         )
 
         blocks: list[_StudyBlock] = []
+        n_studies_dropped = 0
         for study_id in studies_with_outcome:
             outcomes = dataset.outcomes_by_study_outcome(study_id, outcome_id)
             if len(outcomes) < 2:
+                n_studies_dropped += 1
+                _append_warning(
+                    warnings_list,
+                    f"Study '{study_id}' dropped for outcome '{outcome_id}': fewer than two outcome arms.",
+                )
                 continue
+            study_measure_types = {outcome.measure_type for outcome in outcomes}
+            if study_measure_types != {measure_type}:
+                raise ValidationError(
+                    f"Study '{study_id}' has measure_type values {sorted(study_measure_types)} "
+                    f"for outcome '{outcome_id}', expected {measure_type}."
+                )
 
             study = dataset.studies.get(study_id)
             design = study.design if study else "other"
@@ -626,10 +654,12 @@ class AdvancedBiasAdjustedNMAPooler:
 
             arm_effects = []
             for outcome in outcomes:
-                if outcome.measure_type != measure_type:
-                    continue
                 arm = arm_lookup.get((outcome.study_id, outcome.arm_id))
                 if not arm:
+                    _append_warning(
+                        warnings_list,
+                        f"Study '{study_id}' outcome arm '{outcome.arm_id}' missing from arm table.",
+                    )
                     continue
 
                 mean, variance = self._arm_measure_and_variance(
@@ -651,6 +681,11 @@ class AdvancedBiasAdjustedNMAPooler:
                 })
 
             if len(arm_effects) < 2:
+                n_studies_dropped += 1
+                _append_warning(
+                    warnings_list,
+                    f"Study '{study_id}' dropped for outcome '{outcome_id}': fewer than two usable arms.",
+                )
                 continue
 
             arm_effects.sort(key=lambda x: x["arm_id"])
@@ -677,7 +712,7 @@ class AdvancedBiasAdjustedNMAPooler:
                 active_events=tuple(arm["events"] for arm in nonbaseline),
                 active_n=tuple(arm["n"] for arm in nonbaseline)
             ))
-        return blocks
+        return blocks, n_studies_dropped
 
     @staticmethod
     def _arm_measure_and_variance(
@@ -1087,3 +1122,8 @@ class AdvancedBiasAdjustedNMAPooler:
             cov = cov_model
 
         return beta, cov
+
+
+def _append_warning(warnings_list: list[str] | None, message: str) -> None:
+    if warnings_list is not None:
+        warnings_list.append(message)
