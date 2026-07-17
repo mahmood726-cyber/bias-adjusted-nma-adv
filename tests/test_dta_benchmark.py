@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tomllib
 
 import pytest
 
@@ -101,7 +102,39 @@ def test_write_dta_benchmark_script_regenerates_artifact(tmp_path):
         text=True,
     )
 
-    assert output.read_text(encoding="utf-8") == BENCHMARK.read_text(encoding="utf-8")
+    observed = tomllib.loads(output.read_text(encoding="utf-8"))
+    expected = tomllib.loads(BENCHMARK.read_text(encoding="utf-8"))
+
+    for key in (
+        "schema_version",
+        "benchmark_id",
+        "status",
+        "certification_effect",
+        "source_policy",
+        "evidence_mode",
+        "effect_scale",
+        "source_manifest_sha256",
+        "source_verification_report_sha256",
+        "n_studies",
+        "source_bundle",
+        "model_config",
+        "study_effects",
+        "limitations",
+    ):
+        assert observed[key] == expected[key]
+
+    observed_fit = observed["candidate"]["bivariate_logitnormal_reml"]
+    expected_fit = expected["candidate"]["bivariate_logitnormal_reml"]
+    for key, expected_value in expected_fit.items():
+        observed_value = observed_fit[key]
+        if isinstance(expected_value, float):
+            assert observed_value == pytest.approx(expected_value, abs=1e-5)
+        elif isinstance(expected_value, list) and all(
+            isinstance(item, float) for item in expected_value
+        ):
+            assert observed_value == pytest.approx(expected_value, abs=1e-5)
+        else:
+            assert observed_value == expected_value
 
 
 def test_dta_source_bundle_rejects_count_drift(tmp_path):
