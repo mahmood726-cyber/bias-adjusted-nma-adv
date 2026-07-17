@@ -146,6 +146,7 @@ def test_validation_status_composes_all_current_gates():
             "protocol_only_registry_metadata_ledger",
             "config_driven_study_design_policy",
             "input_verified_reversal_yardstick_gate",
+            "reversal_aggregate_answer_key_runner",
             "dta_source_coverage_gate",
             "dta_bivariate_logitnormal_reml_prototype",
             "dta_mada_reitsma_algorithmic_reference_adapter",

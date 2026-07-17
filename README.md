@@ -102,6 +102,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/write_real_benchmark_atlas.py`: Regenerates the non-certifying real benchmark coverage atlas from the source-backed benchmark registry.
 - `scripts/write_validation_status.py`: Emits the combined validation status JSON for CI/Overmind-style gates and can optionally verify external source-artifact hash pins. Current reports keep clinical and HTA reporting disabled unless a module is Production Certified.
 - `scripts/verify_reversal_source_artifacts.py`: Dedicated external answer-key pin verifier. Provided artifacts fail closed on hash drift, and missing artifacts are reported as `unavailable` unless explicitly allowed by the caller.
+- `scripts/run_reversal_yardstick.py`: Verifies a pinned external reversal `arena.json` aggregate against `validation/reversal_yardstick.toml`. This is an aggregate answer-key runner only; it does not fit source-backed reversal cases or certify tier-one superiority.
 - `scripts/verify_real_meta_sources.py`: Regenerates live source-identity snapshots for real-meta manifests.
 - `scripts/verify_pubmed_event_counts.py`: Regenerates PubMed abstract event-count token snapshots for real-meta arm counts.
 - `scripts/verify_survival_sources.py`: Regenerates CT.gov/PubMed identity snapshots for survival reported-HR manifests.
