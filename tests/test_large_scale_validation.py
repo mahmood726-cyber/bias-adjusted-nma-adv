@@ -47,19 +47,19 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
     assert summary["status"] == "partial_not_large_scale"
     assert summary["global_large_scale_validation_complete"] is False
     assert summary["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 10,
+        "observed": 11,
         "required": 20,
     }
     assert summary["dynamic_counts"]["benchmark_study_effects"] == {
-        "observed": 76,
+        "observed": 84,
         "required": 200,
     }
     assert summary["dynamic_counts"]["unique_nct_ids"] == {
-        "observed": 23,
+        "observed": 28,
         "required": 100,
     }
     assert summary["dynamic_counts"]["unique_pmids"] == {
-        "observed": 15,
+        "observed": 23,
         "required": 50,
     }
     assert summary["dynamic_counts"]["passed_reference_reports"] == {
@@ -67,7 +67,7 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         "required": 10,
     }
     assert summary["dynamic_counts"]["tau2_positive_benchmarks"] == {
-        "observed": 1,
+        "observed": 2,
         "required": 1,
     }
     assert summary["dynamic_counts"]["simulation_jobs"] == {

@@ -1,4 +1,5 @@
 import copy
+import importlib.util
 from pathlib import Path
 
 import pytest
@@ -30,6 +31,9 @@ PCSK9_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "pcsk9_mace_repo
 CKD_MANIFEST = ROOT / "validation" / "survival" / "sglt2_ckd_reported_hrs.toml"
 CKD_REPORT = ROOT / "validation" / "source_checks" / "sglt2_ckd_reported_hr_tokens.json"
 CKD_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "sglt2_ckd_reported_hr_source_check.json"
+GLP1_MANIFEST = ROOT / "validation" / "survival" / "glp1_mace_reported_hrs.toml"
+GLP1_REPORT = ROOT / "validation" / "source_checks" / "glp1_mace_reported_hr_tokens.json"
+GLP1_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "glp1_mace_reported_hr_source_check.json"
 VERIFY_SCRIPT = ROOT / "scripts" / "verify_pubmed_survival_hrs.py"
 IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
 
@@ -62,6 +66,20 @@ IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
                 "CREDENCE",
                 "DAPA-CKD",
                 "EMPA-KIDNEY",
+            },
+        ),
+        (
+            GLP1_MANIFEST,
+            "glp1_mace_reported_hr",
+            {
+                "ELIXA",
+                "LEADER",
+                "SUSTAIN-6",
+                "EXSCEL",
+                "HARMONY-Outcomes",
+                "REWIND",
+                "PIONEER-6",
+                "AMPLITUDE-O",
             },
         ),
     ],
@@ -98,6 +116,43 @@ def test_survival_hr_manifest_rejects_uncertified_km_import(tmp_path):
 
     with pytest.raises(ValidationError, match="KM reconstruction cannot be marked complete"):
         load_survival_hr_manifest(bad)
+
+
+def test_pubmed_survival_hr_verifier_normalizes_lancet_decimal_typography():
+    spec = importlib.util.spec_from_file_location(
+        "verify_pubmed_survival_hrs", VERIFY_SCRIPT
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    text = "hazard ratio [HR] 0·88, 95% CI 0·79-0·99"
+    normalised = module.normalise_text(text)
+    assert "0.88" in normalised
+    assert "0.79-0.99" in normalised
+
+    abstract = (
+        "The margin used the upper boundary of the confidence interval for "
+        "the hazard ratio. Results favored treatment (hazard ratio [HR] "
+        "0·88, 95% CI 0·79-0·99)."
+    )
+    anchor_found, tokens_near = module.tokens_near_anchor(
+        abstract,
+        "hazard ratio",
+        ["0.88", "0.79", "0.99"],
+        window=80,
+    )
+    assert anchor_found is True
+    assert tokens_near is True
+
+    ci_found, ci_tokens_near = module.tokens_near_anchor(
+        abstract,
+        "95% ci",
+        ["0.79", "0.99"],
+        window=80,
+    )
+    assert ci_found is True
+    assert ci_tokens_near is True
 
 
 def test_survival_hr_manifest_rejects_ci_that_excludes_hr():
@@ -152,6 +207,11 @@ def test_survival_hr_manifest_rejects_scalar_source_terms():
             CKD_MANIFEST,
             CKD_REPORT,
             "validation/survival/sglt2_ckd_reported_hrs.toml",
+        ),
+        (
+            GLP1_MANIFEST,
+            GLP1_REPORT,
+            "validation/survival/glp1_mace_reported_hrs.toml",
         ),
     ],
 )
@@ -213,6 +273,12 @@ def test_survival_hr_verification_snapshot_matches_manifest(
             "validation/survival/sglt2_ckd_reported_hrs.toml",
             {"clinicaltrials_gov": 3, "pubmed_abstract": 3},
         ),
+        (
+            GLP1_MANIFEST,
+            GLP1_IDENTITY_REPORT,
+            "validation/survival/glp1_mace_reported_hrs.toml",
+            {"clinicaltrials_gov": 8, "pubmed_abstract": 8},
+        ),
     ],
 )
 def test_survival_hr_identity_snapshot_matches_manifest(
@@ -249,7 +315,7 @@ def test_survival_hr_identity_snapshot_matches_manifest(
         assert len(record.response_sha256) == 64
         if record.source_type == "clinicaltrials_gov":
             assert record.details["nct_id"] == record.identifier
-            assert record.details["overall_status"] == "COMPLETED"
+            assert record.details["overall_status"] in {"COMPLETED", "TERMINATED"}
         if record.source_type == "pubmed_abstract":
             assert record.details["pmid"] == record.identifier
             assert record.details["abstract_present"] is True

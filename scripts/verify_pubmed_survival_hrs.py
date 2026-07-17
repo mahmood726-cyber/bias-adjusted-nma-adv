@@ -56,20 +56,27 @@ def abstract_from_pubmed_xml(payload: bytes) -> tuple[str, str]:
 
 def normalise_text(text: str) -> str:
     text = text.lower()
+    text = text.replace("·", ".")
+    text = text.replace("−", "-")
     text = text.replace(",", "")
+    text = text.replace("\u2009", " ")
+    text = text.replace("\u2008", " ")
     return re.sub(r"\s+", " ", text)
 
 
 def tokens_near_anchor(text: str, anchor: str, tokens: list[str], *, window: int = 420) -> tuple[bool, bool]:
     normalised = normalise_text(text)
     anchor = normalise_text(anchor)
-    anchor_index = normalised.find(anchor)
-    if anchor_index < 0:
+    anchor_indices = [match.start() for match in re.finditer(re.escape(anchor), normalised)]
+    if not anchor_indices:
         return False, False
-    start = max(0, anchor_index - window)
-    end = min(len(normalised), anchor_index + len(anchor) + window)
-    nearby = normalised[start:end]
-    return True, all(normalise_text(token) in nearby for token in tokens)
+    token_matches = []
+    for anchor_index in anchor_indices:
+        start = max(0, anchor_index - window)
+        end = min(len(normalised), anchor_index + len(anchor) + window)
+        nearby = normalised[start:end]
+        token_matches.append(all(normalise_text(token) in nearby for token in tokens))
+    return True, any(token_matches)
 
 
 def verify_study(study: dict[str, object], timeout: int) -> dict[str, object]:
@@ -87,7 +94,19 @@ def verify_study(study: dict[str, object], timeout: int) -> dict[str, object]:
     source_terms = [str(term) for term in study["source_terms"]]
     effect_tokens = [hr, ci_lower, ci_upper]
     anchor_found, effect_tokens_near = tokens_near_anchor(abstract, "hazard ratio", effect_tokens)
-    confidence_interval_found, _ = tokens_near_anchor(abstract, "confidence interval", [ci_lower, ci_upper], window=260)
+    confidence_interval_found, _ = tokens_near_anchor(
+        abstract,
+        "confidence interval",
+        [ci_lower, ci_upper],
+        window=260,
+    )
+    ci_abbreviation_found, _ = tokens_near_anchor(
+        abstract,
+        "95% ci",
+        [ci_lower, ci_upper],
+        window=260,
+    )
+    confidence_interval_found = confidence_interval_found or ci_abbreviation_found
     _, source_terms_near = tokens_near_anchor(abstract, "hazard ratio", source_terms)
     hr_found = normalise_text(hr) in normalised
     ci_lower_found = normalise_text(ci_lower) in normalised

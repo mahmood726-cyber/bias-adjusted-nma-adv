@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 10 benchmark artifacts, 76 study-effect rows, 23 unique NCT IDs, and 15 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 11 benchmark artifacts, 84 study-effect rows, 28 unique NCT IDs, and 23 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -185,7 +185,51 @@ Limitations:
 - the outcome definitions are related but not identical across trials;
 - the `metafor` reference report validates fixed-effect reported-HR pooling only; it does not certify REML superiority, KM reconstruction, or clinical/HTA use.
 
-## Benchmark 4: Type 2 Diabetes MACE-Class Star Network
+## Benchmark 4: GLP-1 Receptor Agonists And Major Cardiovascular Events
+
+Reported survival HR manifest: `validation/survival/glp1_mace_reported_hrs.toml`
+
+Reported survival HR source-identity snapshot: `validation/source_checks/glp1_mace_reported_hr_source_check.json`
+
+Reported survival HR token snapshot: `validation/source_checks/glp1_mace_reported_hr_tokens.json`
+
+Reported survival HR benchmark: `validation/survival/glp1_mace_reported_hr_benchmark.toml`
+
+Trials: ELIXA (`NCT01147250`, PMID 26630143), LEADER (`NCT01179048`, PMID 27295427), SUSTAIN-6 (`NCT01720446`, PMID 27633186), EXSCEL (`NCT01144338`, PMID 28910237), HARMONY-Outcomes (`NCT02465515`, PMID 30291013), REWIND (`NCT01394952`, PMID 31189511), PIONEER-6 (`NCT02692716`, PMID 31185157), and AMPLITUDE-O (`NCT03496298`, PMID 34215025).
+
+Outcome: trial-defined major adverse cardiovascular event composite, as reported in the PubMed abstract for each cardiovascular outcomes trial.
+
+Scale currently tested: log hazard ratio, derived from reported PubMed abstract HR and 95% CI tokens.
+
+| Trial | NCT | PMID | Active treatment | Control | Reported HR | 95% CI |
+| --- | --- | --- | --- | --- | ---: | --- |
+| ELIXA | NCT01147250 | 26630143 | lixisenatide | placebo | 1.02 | 0.89 to 1.17 |
+| LEADER | NCT01179048 | 27295427 | liraglutide | placebo | 0.87 | 0.78 to 0.97 |
+| SUSTAIN-6 | NCT01720446 | 27633186 | semaglutide | placebo | 0.74 | 0.58 to 0.95 |
+| EXSCEL | NCT01144338 | 28910237 | exenatide | placebo | 0.91 | 0.83 to 1.00 |
+| HARMONY-Outcomes | NCT02465515 | 30291013 | albiglutide | placebo | 0.78 | 0.68 to 0.90 |
+| REWIND | NCT01394952 | 31189511 | dulaglutide | placebo | 0.88 | 0.79 to 0.99 |
+| PIONEER-6 | NCT02692716 | 31185157 | oral semaglutide | placebo | 0.79 | 0.57 to 1.11 |
+| AMPLITUDE-O | NCT03496298 | 34215025 | efpeglenatide | placebo | 0.73 | 0.58 to 0.92 |
+
+Reported HR benchmark on the log-HR scale:
+
+| Engine | Estimate | SE | 95% interval |
+| --- | ---: | ---: | ---: |
+| Experimental pairwise fixed effect | -0.134114 | 0.024705 | -0.182534 to -0.085693 |
+| Experimental pairwise REML-HKSJ | -0.148438 | 0.037666 | -0.237504 to -0.059372 |
+
+The REML-HKSJ artifact estimates `tau2 = 0.004648299466660716`, so this benchmark adds a second source-backed positive-heterogeneity coverage signal. This is a heterogeneity-stress signal only, not evidence of survival NMA parity or clinical superiority.
+
+Limitations:
+
+- this is an eight-study pairwise class benchmark, not a multi-treatment survival NMA;
+- the public PubMed abstracts provide the reported HR/CI tokens used here, but Kaplan-Meier curves are not digitized;
+- the MACE composite definitions differ across trials, especially ELIXA's inclusion of hospitalization for unstable angina;
+- no external `metafor`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference report is attached to this GLP-1 artifact in this checkpoint;
+- no clinical, regulatory, or HTA decision claim is made from this local artifact.
+
+## Benchmark 5: Type 2 Diabetes MACE-Class Star Network
 
 CT.gov reported-HR network manifest: `validation/networks/t2d_mace_ctgov_hrs.toml`
 
@@ -235,7 +279,7 @@ Limitations:
 - CT.gov results records are verified and fixed-effect class estimates have a narrow local `netmeta` reference check, but this is not broad `netmeta`, `multinma`, or CmdStan parity;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
-## Benchmark 5: Psoriasis PASI 90 Closed-Loop Binary Network
+## Benchmark 6: Psoriasis PASI 90 Closed-Loop Binary Network
 
 CT.gov arm-count network manifest: `validation/networks/psoriasis_pasi90_ctgov_binary_network.toml`
 
@@ -269,7 +313,7 @@ Limitations:
 - the `netmeta` reference report is a narrow evidence candidate, not full `netmeta`, `multinma`, CINeMA, or ROB-MEN parity;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
-## Benchmark 6: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
+## Benchmark 7: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
 
 Component-NMA manifest: `validation/component/sitagliptin_pioglitazone_component.toml`
 
@@ -301,7 +345,7 @@ Limitations:
 - same-trial arm covariance is not modeled;
 - the artifact is not broad `netmeta` CNMA parity and cannot support component hierarchy or clinical superiority claims.
 
-## Benchmark 7: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
+## Benchmark 8: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
 
 Cross-design manifest: `validation/cross_design/sglt2_rct_nrs_cross_design.toml`
 

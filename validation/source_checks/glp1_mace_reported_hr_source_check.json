@@ -1,0 +1,299 @@
+{
+  "benchmark_id": "glp1_mace_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T22:35:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01147250",
+      "details": {
+        "brief_title": "Evaluation of Cardiovascular Outcomes in Patients With Type 2 Diabetes After Acute Coronary Syndrome During Treatment With AVE0010 (Lixisenatide)",
+        "nct_id": "NCT01147250",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01147250",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01147250",
+      "response_sha256": "fb482e62388556fdf1f5921647375c493c5269cb68010ac227560fea19ff8412",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ELIXA",
+      "title": "Evaluation of Cardiovascular Outcomes in Patients With Type 2 Diabetes After Acute Coronary Syndrome During Treatment With AVE0010 (Lixisenatide)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26630143&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "7e11b7737d63ea8b4e230153906b030d18f0bab140c917c397a44495782ce7e9",
+        "article_title": "Lixisenatide in Patients with Type 2 Diabetes and Acute Coronary Syndrome.",
+        "journal": "N Engl J Med",
+        "pmid": "26630143"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26630143",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26630143/",
+      "response_sha256": "115be31c54d4952d6d390218d4c3015c727c520d819e34874e529579c32c2176",
+      "source_type": "pubmed_abstract",
+      "study_id": "ELIXA",
+      "title": "Lixisenatide in Patients with Type 2 Diabetes and Acute Coronary Syndrome."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01179048",
+      "details": {
+        "brief_title": "Liraglutide Effect and Action in Diabetes: Evaluation of Cardiovascular Outcome Results",
+        "nct_id": "NCT01179048",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01179048",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01179048",
+      "response_sha256": "9b28458f0b4e06d5b9d0c50bf695661d93f94faf57c530d858ffbb67cc842c2a",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "LEADER",
+      "title": "Liraglutide Effect and Action in Diabetes: Evaluation of Cardiovascular Outcome Results"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27295427&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "68e2758dffe08ddde93bf0125341ed7f94a372c65b3aacfbbdbf3a08d51969de",
+        "article_title": "Liraglutide and Cardiovascular Outcomes in Type 2 Diabetes.",
+        "journal": "N Engl J Med",
+        "pmid": "27295427"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27295427",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27295427/",
+      "response_sha256": "d86dca944a90d406ed7a98e6e46eb8d9774504c7746b167351df04f923325e26",
+      "source_type": "pubmed_abstract",
+      "study_id": "LEADER",
+      "title": "Liraglutide and Cardiovascular Outcomes in Type 2 Diabetes."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01720446",
+      "details": {
+        "brief_title": "Trial to Evaluate Cardiovascular and Other Long-term Outcomes With Semaglutide in Subjects With Type 2 Diabetes",
+        "nct_id": "NCT01720446",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01720446",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01720446",
+      "response_sha256": "c01bb0c52e816141d4290e7c41ddcb2d2db7bbc53a0bd90fba726fce1e635783",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "SUSTAIN-6",
+      "title": "Trial to Evaluate Cardiovascular and Other Long-term Outcomes With Semaglutide in Subjects With Type 2 Diabetes"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27633186&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "2cb27e2399089a79775578c28c36d16f02878a821a09fc718e7ba6c5c5ddf4dc",
+        "article_title": "Semaglutide and Cardiovascular Outcomes in Patients with Type 2 Diabetes.",
+        "journal": "N Engl J Med",
+        "pmid": "27633186"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27633186",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27633186/",
+      "response_sha256": "f736e5b2dce4dc42e61e257f760434dd5f4343043f1839a731d6bcf31602772b",
+      "source_type": "pubmed_abstract",
+      "study_id": "SUSTAIN-6",
+      "title": "Semaglutide and Cardiovascular Outcomes in Patients with Type 2 Diabetes."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01144338",
+      "details": {
+        "brief_title": "Exenatide Study of Cardiovascular Event Lowering Trial (EXSCEL): A Trial To Evaluate Cardiovascular Outcomes After Treatment With Exenatide Once Weekly In Patients With Type 2 Diabetes Mellitus",
+        "nct_id": "NCT01144338",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01144338",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01144338",
+      "response_sha256": "bdb9969fa4241038507e4a2861e75ec7ba613e4b4886a281f743e45087356f81",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EXSCEL",
+      "title": "Exenatide Study of Cardiovascular Event Lowering Trial (EXSCEL): A Trial To Evaluate Cardiovascular Outcomes After Treatment With Exenatide Once Weekly In Patients With Type 2 Diabetes Mellitus"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28910237&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "d28a501f5aa2103445416ff02c86604c64140fb45a126d8964a2a302985f1270",
+        "article_title": "Effects of Once-Weekly Exenatide on Cardiovascular Outcomes in Type 2 Diabetes.",
+        "journal": "N Engl J Med",
+        "pmid": "28910237"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28910237",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28910237/",
+      "response_sha256": "63ec335a3a836425cbeda76243629bf58816c0c94abb17e82892e75e64dd09ce",
+      "source_type": "pubmed_abstract",
+      "study_id": "EXSCEL",
+      "title": "Effects of Once-Weekly Exenatide on Cardiovascular Outcomes in Type 2 Diabetes."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02465515",
+      "details": {
+        "brief_title": "Effect of Albiglutide, When Added to Standard Blood Glucose Lowering Therapies, on Major Cardiovascular Events in Subjects With Type 2 Diabetes Mellitus",
+        "nct_id": "NCT02465515",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02465515",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02465515",
+      "response_sha256": "742d2261bc37a637f079bdc399713f0febac117d3686692c07f95ccd8a07d1ea",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "HARMONY-Outcomes",
+      "title": "Effect of Albiglutide, When Added to Standard Blood Glucose Lowering Therapies, on Major Cardiovascular Events in Subjects With Type 2 Diabetes Mellitus"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30291013&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "b9382009016a2d9f7ea717a892af27c8bd4b53b441e0ed2ffe7eb9fc16121086",
+        "article_title": "Albiglutide and cardiovascular outcomes in patients with type 2 diabetes and cardiovascular disease (Harmony Outcomes): a double-blind, randomised placebo-controlled trial.",
+        "journal": "Lancet",
+        "pmid": "30291013"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30291013",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30291013/",
+      "response_sha256": "26dec5e3f1513cad142a2af9941f6ca6cab39e51b704d1310a819ecb7f12d8d3",
+      "source_type": "pubmed_abstract",
+      "study_id": "HARMONY-Outcomes",
+      "title": "Albiglutide and cardiovascular outcomes in patients with type 2 diabetes and cardiovascular disease (Harmony Outcomes): a double-blind, randomised placebo-controlled trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01394952",
+      "details": {
+        "brief_title": "Researching Cardiovascular Events With a Weekly Incretin in Diabetes (REWIND)",
+        "nct_id": "NCT01394952",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01394952",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01394952",
+      "response_sha256": "8d22e75023bae0b2f83364f06841006a213c8ebc67a7b3e0adcf3eddaabe9bda",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "REWIND",
+      "title": "Researching Cardiovascular Events With a Weekly Incretin in Diabetes (REWIND)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31189511&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "79c6c4f0049b04b3d24b74fa6ddaf24535d808f0924a6b0fd9da1cc6371efe9f",
+        "article_title": "Dulaglutide and cardiovascular outcomes in type 2 diabetes (REWIND): a double-blind, randomised placebo-controlled trial.",
+        "journal": "Lancet",
+        "pmid": "31189511"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31189511",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31189511/",
+      "response_sha256": "935add390b4c371ea1cc07cd33e4e8ced2482ff54ebdbca13b79c8f5e499402a",
+      "source_type": "pubmed_abstract",
+      "study_id": "REWIND",
+      "title": "Dulaglutide and cardiovascular outcomes in type 2 diabetes (REWIND): a double-blind, randomised placebo-controlled trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02692716",
+      "details": {
+        "brief_title": "A Trial Investigating the Cardiovascular Safety of Oral Semaglutide in Subjects With Type 2 Diabetes",
+        "nct_id": "NCT02692716",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02692716",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02692716",
+      "response_sha256": "81f9da73b5127007733ff49acc3d8f674dedbaaea026166eba1a9a3d7999ed9b",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PIONEER-6",
+      "title": "A Trial Investigating the Cardiovascular Safety of Oral Semaglutide in Subjects With Type 2 Diabetes"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31185157&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "32fbc62d6690b6167537a8070239e0d82a85ae6c52f9b02de3eb95ef643d0579",
+        "article_title": "Oral Semaglutide and Cardiovascular Outcomes in Patients with Type 2 Diabetes.",
+        "journal": "N Engl J Med",
+        "pmid": "31185157"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31185157",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31185157/",
+      "response_sha256": "133f6072252b660f1b2f80f3d0806fab14fd1a1ac29623e3cbfd115655a88e52",
+      "source_type": "pubmed_abstract",
+      "study_id": "PIONEER-6",
+      "title": "Oral Semaglutide and Cardiovascular Outcomes in Patients with Type 2 Diabetes."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03496298",
+      "details": {
+        "brief_title": "Effect of Efpeglenatide on Cardiovascular Outcomes",
+        "nct_id": "NCT03496298",
+        "overall_status": "TERMINATED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03496298",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03496298",
+      "response_sha256": "32246eba06eba5030c4b23831ca5a78b99144326dc9f496a871cbb054b3385f9",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "AMPLITUDE-O",
+      "title": "Effect of Efpeglenatide on Cardiovascular Outcomes"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=34215025&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "8d73353d258ac25604bb6f5b0d33ec4ad560951bd35228bc8e20a0fdd7bc30b8",
+        "article_title": "Cardiovascular and Renal Outcomes with Efpeglenatide in Type 2 Diabetes.",
+        "journal": "N Engl J Med",
+        "pmid": "34215025"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "34215025",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/34215025/",
+      "response_sha256": "ea1d144ea6140302d5b7b08d174f66b4404fccb2c1e9d22d766f139580127d96",
+      "source_type": "pubmed_abstract",
+      "study_id": "AMPLITUDE-O",
+      "title": "Cardiovascular and Renal Outcomes with Efpeglenatide in Type 2 Diabetes."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/glp1_mace_reported_hrs.toml",
+  "source_manifest_sha256": "245708066956be01b7a8459479a1b607a89f8ce45606deb58a774e8f2c5a02b4",
+  "status": "verified"
+}

@@ -1,0 +1,220 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "glp1_mace_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/glp1_mace_reported_hrs.toml"
+source_manifest_sha256 = "245708066956be01b7a8459479a1b607a89f8ce45606deb58a774e8f2c5a02b4"
+source_verification_report = "validation/source_checks/glp1_mace_reported_hr_tokens.json"
+source_verification_report_sha256 = "ed57a4c3321ba1664206633743cb63d874fee4a6c1947c5949df48b80c91cb97"
+source_identity_report = "validation/source_checks/glp1_mace_reported_hr_source_check.json"
+source_identity_report_sha256 = "9c98e601499859d98f02dfe0413eb829fa6b605ae94fc0a7156055bfa4cab95c"
+n_studies = 8
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "glp1_mace_reported_hr"
+manifest_sha256 = "245708066956be01b7a8459479a1b607a89f8ce45606deb58a774e8f2c5a02b4"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 8
+
+[source_identity_bundle]
+benchmark_id = "glp1_mace_reported_hr"
+manifest_sha256 = "245708066956be01b7a8459479a1b607a89f8ce45606deb58a774e8f2c5a02b4"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 8, pubmed_abstract = 8}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "ELIXA"
+trial = "Lixisenatide in patients with type 2 diabetes and acute coronary syndrome"
+nct_id = "NCT01147250"
+pmid = "26630143"
+outcome_id = "mace_primary"
+outcome_label = "cardiovascular death, myocardial infarction, stroke, or hospitalization for unstable angina"
+active_treatment = "lixisenatide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 1.02
+ci_lower = 0.89
+ci_upper = 1.17
+estimate = 0.01980262729617973
+variance = 0.004869426108315425
+se = 0.06978127333544025
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "LEADER"
+trial = "Liraglutide and cardiovascular outcomes in type 2 diabetes"
+nct_id = "NCT01179048"
+pmid = "27295427"
+outcome_id = "mace_primary"
+outcome_label = "first occurrence of death from cardiovascular causes, nonfatal myocardial infarction, or nonfatal stroke"
+active_treatment = "liraglutide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.87
+ci_lower = 0.78
+ci_upper = 0.97
+estimate = -0.13926206733350766
+variance = 0.0030928965019372356
+se = 0.05561381574696377
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "SUSTAIN-6"
+trial = "Semaglutide and cardiovascular outcomes in patients with type 2 diabetes"
+nct_id = "NCT01720446"
+pmid = "27633186"
+outcome_id = "mace_primary"
+outcome_label = "first occurrence of cardiovascular death, nonfatal myocardial infarction, or nonfatal stroke"
+active_treatment = "semaglutide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.74
+ci_lower = 0.58
+ci_upper = 0.95
+estimate = -0.3011050927839216
+variance = 0.015845347193396333
+se = 0.12587830310818593
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "EXSCEL"
+trial = "Once-weekly exenatide and cardiovascular outcomes in type 2 diabetes"
+nct_id = "NCT01144338"
+pmid = "28910237"
+outcome_id = "mace_primary"
+outcome_label = "first occurrence of death from cardiovascular causes, nonfatal myocardial infarction, or nonfatal stroke"
+active_treatment = "exenatide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.91
+ci_lower = 0.83
+ci_upper = 1.0
+estimate = -0.09431067947124129
+variance = 0.002259474416463122
+se = 0.04753392910819725
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "HARMONY-Outcomes"
+trial = "Albiglutide and cardiovascular outcomes in type 2 diabetes"
+nct_id = "NCT02465515"
+pmid = "30291013"
+outcome_id = "mace_primary"
+outcome_label = "first occurrence of cardiovascular death, myocardial infarction, or stroke"
+active_treatment = "albiglutide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.78
+ci_lower = 0.68
+ci_upper = 0.9
+estimate = -0.2484613592984996
+variance = 0.005113239223470713
+se = 0.07150691731203851
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "REWIND"
+trial = "Dulaglutide and cardiovascular outcomes in type 2 diabetes"
+nct_id = "NCT01394952"
+pmid = "31189511"
+outcome_id = "mace_primary"
+outcome_label = "first occurrence of nonfatal myocardial infarction, nonfatal stroke, or death from cardiovascular or unknown causes"
+active_treatment = "dulaglutide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.88
+ci_lower = 0.79
+ci_upper = 0.99
+estimate = -0.12783337150988489
+variance = 0.003314356141013421
+se = 0.057570445030531256
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "PIONEER-6"
+trial = "Oral semaglutide and cardiovascular outcomes in type 2 diabetes"
+nct_id = "NCT02692716"
+pmid = "31185157"
+outcome_id = "mace_primary"
+outcome_label = "first occurrence of death from cardiovascular causes, nonfatal myocardial infarction, or nonfatal stroke"
+active_treatment = "oral semaglutide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.79
+ci_lower = 0.57
+ci_upper = 1.11
+estimate = -0.23572233352106983
+variance = 0.0289079090459586
+se = 0.17002326030857837
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "AMPLITUDE-O"
+trial = "Efpeglenatide and cardiovascular outcomes in type 2 diabetes"
+nct_id = "NCT03496298"
+pmid = "34215025"
+outcome_id = "mace_primary"
+outcome_label = "first major adverse cardiovascular event"
+active_treatment = "efpeglenatide"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.73
+ci_lower = 0.58
+ci_upper = 0.92
+estimate = -0.31471074483970024
+variance = 0.013851491169516544
+se = 0.11769235816108259
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.134113581277383
+se = 0.024704911117161787
+ci_low = -0.1825343173082833
+ci_high = -0.08569284524648269
+tau2 = 0.0
+q = 12.615583642252844
+df = 7
+hksj = false
+hksj_q_factor = 1.0
+weights = [205.36300947093525, 323.32152057905915, 63.11000874860965, 442.5808022935504, 195.57074415955648, 301.71772659718846, 34.592609185609795, 72.19439320733457]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.1484378034602489
+se = 0.03766590944328418
+ci_low = -0.23750352638813632
+ci_high = -0.05937208053236148
+tau2 = 0.004648299466660716
+q = 7.34590164545818
+df = 7
+hksj = true
+hksj_q_factor = 1.04941452077974
+weights = [105.06711841211148, 129.17900593867995, 48.79561049274069, 144.7644374178298, 102.44286600133694, 125.58624273995147, 29.800744611058633, 54.054665788727924]
+warnings = []
+pi_low = -0.3326209380447101
+pi_high = 0.0357453311242123

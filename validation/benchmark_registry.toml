@@ -104,6 +104,30 @@ required_limitations = [
 ]
 
 [[benchmarks]]
+id = "glp1_mace_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/glp1_mace_reported_hr_benchmark.toml"
+artifact_sha256 = "b9a5fb37e0e7483cf9ec58b6396ca10efbe90ca43c8ce30b7a59a728cc357288"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 8
+source_manifests = ["validation/survival/glp1_mace_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/glp1_mace_reported_hrs.toml" = "245708066956be01b7a8459479a1b607a89f8ce45606deb58a774e8f2c5a02b4" }
+source_checks = [
+  "validation/source_checks/glp1_mace_reported_hr_source_check.json",
+  "validation/source_checks/glp1_mace_reported_hr_tokens.json",
+]
+source_check_sha256 = { "validation/source_checks/glp1_mace_reported_hr_source_check.json" = "9c98e601499859d98f02dfe0413eb829fa6b605ae94fc0a7156055bfa4cab95c", "validation/source_checks/glp1_mace_reported_hr_tokens.json" = "ed57a4c3321ba1664206633743cb63d874fee4a6c1947c5949df48b80c91cb97" }
+required_limitations = [
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
 id = "t2d_mace_ctgov_hr_network"
 domain = "reported_hr_star_network"
 artifact_path = "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml"

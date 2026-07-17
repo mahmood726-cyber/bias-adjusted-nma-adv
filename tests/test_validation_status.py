@@ -48,13 +48,14 @@ def test_validation_status_composes_all_current_gates():
 
     source_registry = report["source_benchmark_registry"]
     assert source_registry["registry"] == "validation/benchmark_registry.toml"
-    assert source_registry["n_benchmarks"] == 10
+    assert source_registry["n_benchmarks"] == 11
     assert source_registry["certification_effect"] == "none"
     assert set(source_registry["benchmark_ids"]) == {
         "sglt2_hf_primary_log_or",
-            "sglt2_hf_reported_hr",
+        "sglt2_hf_reported_hr",
             "pcsk9_mace_reported_hr",
             "sglt2_ckd_reported_hr",
+            "glp1_mace_reported_hr",
             "t2d_mace_ctgov_hr_network",
         "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",
@@ -80,11 +81,11 @@ def test_validation_status_composes_all_current_gates():
     assert real_atlas["atlas"] == "validation/real_benchmark_atlas.json"
     assert real_atlas["schema_version"] == "real_benchmark_atlas/v1"
     assert real_atlas["status"] == "passed"
-    assert real_atlas["n_benchmarks"] == 10
-    assert real_atlas["n_benchmark_study_effects"] == 76
-    assert real_atlas["n_tau2_positive_benchmarks"] == 1
-    assert real_atlas["n_unique_nct_ids"] == 23
-    assert real_atlas["n_unique_pmids"] == 15
+    assert real_atlas["n_benchmarks"] == 11
+    assert real_atlas["n_benchmark_study_effects"] == 84
+    assert real_atlas["n_tau2_positive_benchmarks"] == 2
+    assert real_atlas["n_unique_nct_ids"] == 28
+    assert real_atlas["n_unique_pmids"] == 23
     assert real_atlas["domain_counts"] == {
         "arm_count_binary_closed_loop_network": 1,
         "binary_pairwise_meta": 1,
@@ -93,12 +94,12 @@ def test_validation_status_composes_all_current_gates():
         "diagnostic_test_accuracy": 1,
         "dose_response_pairwise": 1,
         "reported_hr_star_network": 1,
-        "reported_survival_hr_pairwise": 3,
+        "reported_survival_hr_pairwise": 4,
     }
     assert real_atlas["source_type_counts"] == {
-        "clinicaltrials_gov": 27,
+        "clinicaltrials_gov": 35,
         "open_access_paper": 11,
-        "pubmed_abstract": 34,
+        "pubmed_abstract": 50,
     }
     assert real_atlas["certification_effect"] == "none"
 
@@ -319,19 +320,19 @@ def test_validation_status_composes_all_current_gates():
     assert large_scale["schema_version"] == "large_scale_validation/v1"
     assert large_scale["status"] == "partial_not_large_scale"
     assert large_scale["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 10,
+        "observed": 11,
         "required": 20,
     }
     assert large_scale["dynamic_counts"]["benchmark_study_effects"] == {
-        "observed": 76,
+        "observed": 84,
         "required": 200,
     }
     assert large_scale["dynamic_counts"]["unique_nct_ids"] == {
-        "observed": 23,
+        "observed": 28,
         "required": 100,
     }
     assert large_scale["dynamic_counts"]["unique_pmids"] == {
-        "observed": 15,
+        "observed": 23,
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
@@ -339,7 +340,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
-        "observed": 1,
+        "observed": 2,
         "required": 1,
     }
     assert large_scale["dynamic_counts"]["simulation_jobs"] == {
@@ -528,8 +529,8 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["status"] == "passed"
     assert payload["checked_at"] == "2026-07-15T00:00:00Z"
     assert payload["clinical_hta_reporting_enabled"] is False
-    assert payload["source_benchmark_registry"]["n_benchmarks"] == 10
-    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 76
+    assert payload["source_benchmark_registry"]["n_benchmarks"] == 11
+    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 84
     assert payload["tier1_gap_register"]["status_counts"] == {"blocking": 3}
     assert payload["html_delivery_contract"]["status_counts"] == {
         "allowed": 2,

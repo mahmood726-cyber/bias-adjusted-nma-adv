@@ -121,6 +121,32 @@
       "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
     },
     {
+      "artifact": "validation/survival/glp1_mace_reported_hr_benchmark.toml",
+      "artifact_schema_version": "survival_hr_benchmark/v1",
+      "artifact_sha256": "b9a5fb37e0e7483cf9ec58b6396ca10efbe90ca43c8ce30b7a59a728cc357288",
+      "artifact_status": "local_pass",
+      "certification_effect": "none",
+      "domain": "reported_survival_hr_pairwise",
+      "effect_scale": "log_hr",
+      "evidence_mode": "reported_hr_pubmed_abstract",
+      "has_positive_tau2": true,
+      "id": "glp1_mace_reported_hr",
+      "n_studies": 8,
+      "n_study_effects": 8,
+      "required_limitations": [
+        "not a multi-treatment survival NMA",
+        "does not certify model performance"
+      ],
+      "source_checks": [
+        "validation/source_checks/glp1_mace_reported_hr_source_check.json",
+        "validation/source_checks/glp1_mace_reported_hr_tokens.json"
+      ],
+      "source_manifests": [
+        "validation/survival/glp1_mace_reported_hrs.toml"
+      ],
+      "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+    },
+    {
       "artifact": "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
       "artifact_schema_version": "ctgov_hr_network_benchmark/v1",
       "artifact_sha256": "f29606cdaca0b734c13e212af46ce4d86b0aa50a8446f326fc6f2a0077a6d6da",
@@ -301,10 +327,10 @@
     "diagnostic_test_accuracy": 1,
     "dose_response_pairwise": 1,
     "reported_hr_star_network": 1,
-    "reported_survival_hr_pairwise": 3
+    "reported_survival_hr_pairwise": 4
   },
   "effect_scale_counts": {
-    "log_hr": 5,
+    "log_hr": 6,
     "log_or": 2,
     "logit_sensitivity_and_logit_false_positive_rate": 1,
     "percentage_point_change_a1c": 1,
@@ -317,15 +343,15 @@
     "open_access_jats_table_2x2": 1,
     "pubmed_abstract_event_counts": 1,
     "reported_hr_clinicaltrials_gov_results": 1,
-    "reported_hr_pubmed_abstract": 3,
+    "reported_hr_pubmed_abstract": 4,
     "reported_hr_pubmed_abstract_cross_design": 1
   },
-  "n_benchmark_study_effects": 76,
-  "n_benchmarks": 10,
-  "n_tau2_positive_benchmarks": 1,
-  "n_unique_nct_ids": 23,
-  "n_unique_pmids": 15,
-  "n_unique_study_ids": 59,
+  "n_benchmark_study_effects": 84,
+  "n_benchmarks": 11,
+  "n_tau2_positive_benchmarks": 2,
+  "n_unique_nct_ids": 28,
+  "n_unique_pmids": 23,
+  "n_unique_study_ids": 63,
   "protocol_registry_rule": "Protocol-only registry sources may verify registration, planned outcomes, eligibility, and dates, but cannot supply model-ready effects; downloaded ICTRP or PACTR result rows and public FDA/EMA regulatory review rows may supply effects only when public numeric result text is source-bound.",
   "registry": "validation/benchmark_registry.toml",
   "required_next_gates": [
@@ -344,31 +370,31 @@
     "dose_response_source_verification/v1": 1,
     "dta_source_verification/v1": 1,
     "event_count_verification/v1": 1,
-    "source_verification/v1": 4,
-    "survival_hr_verification/v1": 3
+    "source_verification/v1": 5,
+    "survival_hr_verification/v1": 4
   },
   "source_check_scope_counts": {
     "clinicaltrials_gov_arm_level_binary_counts": 2,
     "clinicaltrials_gov_component_lsmean": 1,
     "clinicaltrials_gov_dose_response_lsmean": 1,
     "clinicaltrials_gov_reported_hr_analysis": 10,
-    "identity_and_reachability": 26,
+    "identity_and_reachability": 42,
     "open_access_jats_table_2x2": 11,
     "pubmed_abstract_binary_network_identity": 2,
     "pubmed_abstract_component_identity": 1,
     "pubmed_abstract_cross_design_reported_hr_tokens": 4,
     "pubmed_abstract_dose_response_identity": 1,
     "pubmed_abstract_event_count_tokens": 4,
-    "pubmed_abstract_reported_hr_tokens": 9
+    "pubmed_abstract_reported_hr_tokens": 17
   },
   "source_policy_counts": {
-    "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 9,
+    "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 10,
     "clinicaltrials_gov + pubmed_abstract only": 1
   },
   "source_type_counts": {
-    "clinicaltrials_gov": 27,
+    "clinicaltrials_gov": 35,
     "open_access_paper": 11,
-    "pubmed_abstract": 34
+    "pubmed_abstract": 50
   },
   "status": "passed"
 }
