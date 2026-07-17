@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "gastric_gastroesophageal_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00917384",
+      "details": {
+        "brief_title": "Study of IMC-1121B (Ramucirumab) With Best Supportive Care in Participants With Gastric Cancer and Adenocarcinoma",
+        "nct_id": "NCT00917384",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00917384",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00917384",
+      "response_sha256": "6ea00c97a400a115de8ea5e3af1daebd80b15b3ab8b63d213320547ba82be016",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "REGARD",
+      "title": "Study of IMC-1121B (Ramucirumab) With Best Supportive Care in Participants With Gastric Cancer and Adenocarcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=24094768&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "5456da2bf60066ece532a6e432aacb4b30b7b084eb23671e6a7f1c2537848b11",
+        "article_title": "Ramucirumab monotherapy for previously treated advanced gastric or gastro-oesophageal junction adenocarcinoma (REGARD): an international, randomised, multicentre, placebo-controlled, phase 3 trial.",
+        "journal": "Lancet",
+        "pmid": "24094768"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "24094768",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/24094768/",
+      "response_sha256": "3da34f4371ebf75919157df87f477cf1c05539e88175794d2d7c48fa8d4590df",
+      "source_type": "pubmed_abstract",
+      "study_id": "REGARD",
+      "title": "Ramucirumab monotherapy for previously treated advanced gastric or gastro-oesophageal junction adenocarcinoma (REGARD): an international, randomised, multicentre, placebo-controlled, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01170663",
+      "details": {
+        "brief_title": "A Study of Paclitaxel With or Without Ramucirumab (IMC-1211B) in Metastatic Gastric Adenocarcinoma",
+        "nct_id": "NCT01170663",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01170663",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01170663",
+      "response_sha256": "c2e7859a2e2bf80f1a3a3b431bbf4d8ba7ecd0d1f2da03d800d0c23258b71a84",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "RAINBOW",
+      "title": "A Study of Paclitaxel With or Without Ramucirumab (IMC-1211B) in Metastatic Gastric Adenocarcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25240821&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "4559432580d5a4d0bf64ec7dcd56eaa959d915047ee2ee71cd20bce476678e3c",
+        "article_title": "Ramucirumab plus paclitaxel versus placebo plus paclitaxel in patients with previously treated advanced gastric or gastro-oesophageal junction adenocarcinoma (RAINBOW): a double-blind, randomised phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "25240821"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "25240821",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/25240821/",
+      "response_sha256": "5051ef8f7261889bcb267cc95d1a8f8864518949e22e44059621f1ded8cc17ec",
+      "source_type": "pubmed_abstract",
+      "study_id": "RAINBOW",
+      "title": "Ramucirumab plus paclitaxel versus placebo plus paclitaxel in patients with previously treated advanced gastric or gastro-oesophageal junction adenocarcinoma (RAINBOW): a double-blind, randomised phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01041404",
+      "details": {
+        "brief_title": "ToGA Study - A Study of Herceptin (Trastuzumab) in Combination With Chemotherapy Compared With Chemotherapy Alone in Patients With HER2-Positive Advanced Gastric Cancer",
+        "nct_id": "NCT01041404",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01041404",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01041404",
+      "response_sha256": "32b87378d3f24c1551029aa8523a27dcf691d82024b7fab6d84afbe47c767e59",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ToGA",
+      "title": "ToGA Study - A Study of Herceptin (Trastuzumab) in Combination With Chemotherapy Compared With Chemotherapy Alone in Patients With HER2-Positive Advanced Gastric Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=20728210&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "340171f220a1f81831c99779de5e6dc989c3911210fcf38634d326d220904a6d",
+        "article_title": "Trastuzumab in combination with chemotherapy versus chemotherapy alone for treatment of HER2-positive advanced gastric or gastro-oesophageal junction cancer (ToGA): a phase 3, open-label, randomised controlled trial.",
+        "journal": "Lancet",
+        "pmid": "20728210"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "20728210",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/20728210/",
+      "response_sha256": "2265e3c8ad2adae4da57e064ac91995134072c05088398d2b331b406efa7de9a",
+      "source_type": "pubmed_abstract",
+      "study_id": "ToGA",
+      "title": "Trastuzumab in combination with chemotherapy versus chemotherapy alone for treatment of HER2-positive advanced gastric or gastro-oesophageal junction cancer (ToGA): a phase 3, open-label, randomised controlled trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03675737",
+      "details": {
+        "brief_title": "Pembrolizumab (MK-3475) Plus Chemotherapy Versus Placebo Plus Chemotherapy in Participants Gastric or Gastroesophageal Junction (GEJ) Adenocarcinoma (MK-3475-859/KEYNOTE-859)",
+        "nct_id": "NCT03675737",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03675737",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03675737",
+      "response_sha256": "5edb426cc18ff5fc5c6da5cc02a90a843307bc8a4c50c95bfbbad45cfc1dd7c9",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-859",
+      "title": "Pembrolizumab (MK-3475) Plus Chemotherapy Versus Placebo Plus Chemotherapy in Participants Gastric or Gastroesophageal Junction (GEJ) Adenocarcinoma (MK-3475-859/KEYNOTE-859)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=37875143&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "c83e72805f0402ec3e2b69b1131c40dd928db2e823cb663ba3ef9495c0534b94",
+        "article_title": "Pembrolizumab plus chemotherapy versus placebo plus chemotherapy for HER2-negative advanced gastric cancer (KEYNOTE-859): a multicentre, randomised, double-blind, phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "37875143"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "37875143",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/37875143/",
+      "response_sha256": "fd7f9d990bccb631f62a8502f4368d81d9f3d4380e585eed75807a320341cf26",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-859",
+      "title": "Pembrolizumab plus chemotherapy versus placebo plus chemotherapy for HER2-negative advanced gastric cancer (KEYNOTE-859): a multicentre, randomised, double-blind, phase 3 trial."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/gastric_gastroesophageal_os_reported_hrs.toml",
+  "source_manifest_sha256": "10ad58f528bb22dc098a0a45fb7bf69a163a65b0f3943d53507a16ffa9b8d016",
+  "status": "verified"
+}

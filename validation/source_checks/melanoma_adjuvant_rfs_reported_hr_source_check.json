@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "melanoma_adjuvant_rfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02388906",
+      "details": {
+        "brief_title": "Efficacy Study of Nivolumab Compared to Ipilimumab in Prevention of Recurrence of Melanoma After Complete Resection of Stage IIIb/c or Stage IV Melanoma",
+        "nct_id": "NCT02388906",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02388906",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02388906",
+      "response_sha256": "e24815da1311663b6819dc72d0e77d38d9492e8c640fb86b94fe82d982328b34",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CheckMate-238",
+      "title": "Efficacy Study of Nivolumab Compared to Ipilimumab in Prevention of Recurrence of Melanoma After Complete Resection of Stage IIIb/c or Stage IV Melanoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28891423&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "20f9af0e0ab64275641cc11696cfb33739f3ff08b5a49ec62ba46de57612e967",
+        "article_title": "Adjuvant Nivolumab versus Ipilimumab in Resected Stage III or IV Melanoma.",
+        "journal": "N Engl J Med",
+        "pmid": "28891423"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28891423",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28891423/",
+      "response_sha256": "b69250a26cddead94c9fb609b0589d5a5dca4060f77ffca3cccc2abea6ee32ba",
+      "source_type": "pubmed_abstract",
+      "study_id": "CheckMate-238",
+      "title": "Adjuvant Nivolumab versus Ipilimumab in Resected Stage III or IV Melanoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02362594",
+      "details": {
+        "brief_title": "Study of Pembrolizumab (MK-3475) Versus Placebo After Complete Resection of High-Risk Stage III Melanoma (MK-3475-054/1325-MG/KEYNOTE-054)",
+        "nct_id": "NCT02362594",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02362594",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02362594",
+      "response_sha256": "670afb5e3331ff3e37bc8ec3130377f6ca9746ecb62544020aa448c4711a0f38",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-054",
+      "title": "Study of Pembrolizumab (MK-3475) Versus Placebo After Complete Resection of High-Risk Stage III Melanoma (MK-3475-054/1325-MG/KEYNOTE-054)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29658430&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "a82591bd1103aa56366f734de5fa1f7804e6f14b2c743f9f341cfd55587fa284",
+        "article_title": "Adjuvant Pembrolizumab versus Placebo in Resected Stage III Melanoma.",
+        "journal": "N Engl J Med",
+        "pmid": "29658430"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29658430",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29658430/",
+      "response_sha256": "6f00ec5610245f9c09c6be62206670bd9a13202a66c0b5c6e2f505c2d4520cfe",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-054",
+      "title": "Adjuvant Pembrolizumab versus Placebo in Resected Stage III Melanoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01682083",
+      "details": {
+        "brief_title": "Dabrafenib With Trametinib in the Adjuvant Treatment of High-risk BRAF V600 Mutation-positive Melanoma (COMBI-AD).",
+        "nct_id": "NCT01682083",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01682083",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01682083",
+      "response_sha256": "f3b1cb1163f7472cff579abaee2fb696a29df69859c8ede3e88efde6c0c541af",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "COMBI-AD",
+      "title": "Dabrafenib With Trametinib in the Adjuvant Treatment of High-risk BRAF V600 Mutation-positive Melanoma (COMBI-AD)."
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28891408&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "a62a51c13dc37fc28ab4a6cf2ccd76806def9f3e6fc408ec8108fe4dd0a33d50",
+        "article_title": "Adjuvant Dabrafenib plus Trametinib in Stage III BRAF-Mutated Melanoma.",
+        "journal": "N Engl J Med",
+        "pmid": "28891408"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28891408",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28891408/",
+      "response_sha256": "43fa049963e2d6933f226ab8831ad9be6daf4021a1c76a1076b256b545f91e04",
+      "source_type": "pubmed_abstract",
+      "study_id": "COMBI-AD",
+      "title": "Adjuvant Dabrafenib plus Trametinib in Stage III BRAF-Mutated Melanoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03553836",
+      "details": {
+        "brief_title": "Safety and Efficacy of Pembrolizumab Compared to Placebo in Resected High-risk Stage II Melanoma (MK-3475-716/KEYNOTE-716)",
+        "nct_id": "NCT03553836",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03553836",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03553836",
+      "response_sha256": "b8b27c54707135a5c824ddea1d7676dc5a048a9c38240659ced32a29f5a32138",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-716",
+      "title": "Safety and Efficacy of Pembrolizumab Compared to Placebo in Resected High-risk Stage II Melanoma (MK-3475-716/KEYNOTE-716)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=35367007&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "9b176930d90273d2adcf47f048236f4703a82daeed87d9051a414ef4c5410f25",
+        "article_title": "Pembrolizumab versus placebo as adjuvant therapy in completely resected stage IIB or IIC melanoma (KEYNOTE-716): a randomised, double-blind, phase 3 trial.",
+        "journal": "Lancet",
+        "pmid": "35367007"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "35367007",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/35367007/",
+      "response_sha256": "d2b09b19745ca52dac56d2e5bbe59f860057932fd0e030a6c93a7223eed08559",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-716",
+      "title": "Pembrolizumab versus placebo as adjuvant therapy in completely resected stage IIB or IIC melanoma (KEYNOTE-716): a randomised, double-blind, phase 3 trial."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/melanoma_adjuvant_rfs_reported_hrs.toml",
+  "source_manifest_sha256": "54ecc7d4afd754ae75f6ba0ce132fd0f71723f8a1c5a65db8163c639e5565b26",
+  "status": "verified"
+}

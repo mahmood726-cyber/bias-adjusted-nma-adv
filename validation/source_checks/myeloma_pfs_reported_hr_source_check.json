@@ -1,0 +1,227 @@
+{
+  "benchmark_id": "myeloma_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02252172",
+      "details": {
+        "brief_title": "Study Comparing Daratumumab, Lenalidomide, and Dexamethasone With Lenalidomide and Dexamethasone in Participants With Previously Untreated Multiple Myeloma",
+        "nct_id": "NCT02252172",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02252172",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02252172",
+      "response_sha256": "e3cd7b9c264f05d678a6078d8b2a0f65c024ce7d64648ddc819f0c6bcd977542",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "MAIA",
+      "title": "Study Comparing Daratumumab, Lenalidomide, and Dexamethasone With Lenalidomide and Dexamethasone in Participants With Previously Untreated Multiple Myeloma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31141632&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "8ac15c0f3ff2d513d8e3c71777d22148973b83bb18903f52fd4e018361395266",
+        "article_title": "Daratumumab plus Lenalidomide and Dexamethasone for Untreated Myeloma.",
+        "journal": "N Engl J Med",
+        "pmid": "31141632"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31141632",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31141632/",
+      "response_sha256": "f4e876082861e00edb6eef1fa690615ceb5b3a7eff2718f233e7bdcac42cf2c0",
+      "source_type": "pubmed_abstract",
+      "study_id": "MAIA",
+      "title": "Daratumumab plus Lenalidomide and Dexamethasone for Untreated Myeloma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02195479",
+      "details": {
+        "brief_title": "A Study of Combination of Daratumumab and Velcade (Bortezomib) Melphalan-Prednisone (DVMP) Compared to Velcade Melphalan-Prednisone (VMP) in Participants With Previously Untreated Multiple Myeloma",
+        "nct_id": "NCT02195479",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02195479",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02195479",
+      "response_sha256": "1c1c2dc2272f24b281bbd1523096ef5ce1f25d48eb4ac01884af250fbdb867b4",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ALCYONE",
+      "title": "A Study of Combination of Daratumumab and Velcade (Bortezomib) Melphalan-Prednisone (DVMP) Compared to Velcade Melphalan-Prednisone (VMP) in Participants With Previously Untreated Multiple Myeloma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29231133&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "0d20eddecf15c396dd7b99d4810b12ccd015b2bde6b873bd42f2c6580cdd1fe5",
+        "article_title": "Daratumumab plus Bortezomib, Melphalan, and Prednisone for Untreated Myeloma.",
+        "journal": "N Engl J Med",
+        "pmid": "29231133"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29231133",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29231133/",
+      "response_sha256": "e643bf9474553c56f814a5acdb9e89752eb1dff7634a14dc2b459be97e6dffc9",
+      "source_type": "pubmed_abstract",
+      "study_id": "ALCYONE",
+      "title": "Daratumumab plus Bortezomib, Melphalan, and Prednisone for Untreated Myeloma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01568866",
+      "details": {
+        "brief_title": "Phase 3 Study With Carfilzomib and Dexamethasone Versus Bortezomib and Dexamethasone for Relapsed Multiple Myeloma Patients",
+        "nct_id": "NCT01568866",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01568866",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01568866",
+      "response_sha256": "27110200d57f3ffed7a928597c3c39209b16b5fc80c3ad7171736f5bfe7c5bee",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ENDEAVOR",
+      "title": "Phase 3 Study With Carfilzomib and Dexamethasone Versus Bortezomib and Dexamethasone for Relapsed Multiple Myeloma Patients"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26671818&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "406f7580c837a7683167171876c76b502b5e1164f882ed012334112d539e38a2",
+        "article_title": "Carfilzomib and dexamethasone versus bortezomib and dexamethasone for patients with relapsed or refractory multiple myeloma (ENDEAVOR): a randomised, phase 3, open-label, multicentre study.",
+        "journal": "Lancet Oncol",
+        "pmid": "26671818"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26671818",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26671818/",
+      "response_sha256": "6bbb055d6dea006599c2d6c141d4fffde382e7ca4b7a528e86fd060734beae6d",
+      "source_type": "pubmed_abstract",
+      "study_id": "ENDEAVOR",
+      "title": "Carfilzomib and dexamethasone versus bortezomib and dexamethasone for patients with relapsed or refractory multiple myeloma (ENDEAVOR): a randomised, phase 3, open-label, multicentre study."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01080391",
+      "details": {
+        "brief_title": "Study Comparing Carfilzomib, Lenalidomide, and Dexamethasone (CRd) vs Lenalidomide and Dexamethasone (Rd) in Subjects With Relapsed Multiple Myeloma",
+        "nct_id": "NCT01080391",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01080391",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01080391",
+      "response_sha256": "de3d896c5757cba693fa47cec58e453a09c9361d76d22ee065e73cfd04ea9e34",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ASPIRE",
+      "title": "Study Comparing Carfilzomib, Lenalidomide, and Dexamethasone (CRd) vs Lenalidomide and Dexamethasone (Rd) in Subjects With Relapsed Multiple Myeloma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25482145&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "3ca6596c9fd530a40fd305e266084519dcf5f9973aebfb5338d71ca6c5e8d540",
+        "article_title": "Carfilzomib, lenalidomide, and dexamethasone for relapsed multiple myeloma.",
+        "journal": "N Engl J Med",
+        "pmid": "25482145"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "25482145",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/25482145/",
+      "response_sha256": "baa86716372ebfde1c87f274cf1f3bc024f6d0d7de9f9a19720e310db88f0d3f",
+      "source_type": "pubmed_abstract",
+      "study_id": "ASPIRE",
+      "title": "Carfilzomib, lenalidomide, and dexamethasone for relapsed multiple myeloma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01239797",
+      "details": {
+        "brief_title": "Phase III Study of Lenalidomide and Dexamethasone With or Without Elotuzumab to Treat Relapsed or Refractory Multiple Myeloma",
+        "nct_id": "NCT01239797",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01239797",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01239797",
+      "response_sha256": "d3d8c278dda32730c0530a4a150441175bfe927a14001942cd87470d20bbb173",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ELOQUENT-2",
+      "title": "Phase III Study of Lenalidomide and Dexamethasone With or Without Elotuzumab to Treat Relapsed or Refractory Multiple Myeloma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26035255&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "d77387eeb363f25e49655e8714f515e4011d3be81c63a933c17f74d4797e4a11",
+        "article_title": "Elotuzumab Therapy for Relapsed or Refractory Multiple Myeloma.",
+        "journal": "N Engl J Med",
+        "pmid": "26035255"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26035255",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26035255/",
+      "response_sha256": "ea0f324b17ce509349acbd83147ffca3cc8807ef5c9fcc6be4954263182587d9",
+      "source_type": "pubmed_abstract",
+      "study_id": "ELOQUENT-2",
+      "title": "Elotuzumab Therapy for Relapsed or Refractory Multiple Myeloma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00689936",
+      "details": {
+        "brief_title": "Study to Determine Efficacy and Safety of Lenalidomide Plus Low-dose Dexamethasone Versus Melphalan, Prednisone, Thalidomide in Patients With Previously Untreated Multiple Myeloma",
+        "nct_id": "NCT00689936",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00689936",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00689936",
+      "response_sha256": "45cbf45b0a0c9ae688aed176f7be104c025955e6ca69705c08d84b16dc0753d2",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "FIRST-final",
+      "title": "Study to Determine Efficacy and Safety of Lenalidomide Plus Low-dose Dexamethasone Versus Melphalan, Prednisone, Thalidomide in Patients With Previously Untreated Multiple Myeloma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29150421&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "8e1882479455973573ae51624f5ac19dc0278d69ff7ca0e44d2bdd9f8c424cdd",
+        "article_title": "Final analysis of survival outcomes in the phase 3 FIRST trial of up-front treatment for multiple myeloma.",
+        "journal": "Blood",
+        "pmid": "29150421"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29150421",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29150421/",
+      "response_sha256": "6a352687dd3eba0d1897659e4e5b02bc4710355a9b0caa4ff9435f6e68da345a",
+      "source_type": "pubmed_abstract",
+      "study_id": "FIRST-final",
+      "title": "Final analysis of survival outcomes in the phase 3 FIRST trial of up-front treatment for multiple myeloma."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/myeloma_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "0c2d9a85ec05ee5f7205927d386bf10bc6ecd1ffec2aaa4d59779bb0279ba035",
+  "status": "verified"
+}

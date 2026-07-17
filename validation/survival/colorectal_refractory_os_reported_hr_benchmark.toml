@@ -1,0 +1,125 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "colorectal_refractory_os_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/colorectal_refractory_os_reported_hrs.toml"
+source_manifest_sha256 = "59b38698fe4c43c4eb1e9443ea004ee6abd2a7188d41c4ea5ab3840d8c7d097d"
+source_verification_report = "validation/source_checks/colorectal_refractory_os_reported_hr_tokens.json"
+source_verification_report_sha256 = "a70ebe9eed5f7eb7ac4ea0e67490f03f6e5bf639fbcfac943ab3078a46f5345d"
+source_identity_report = "validation/source_checks/colorectal_refractory_os_reported_hr_source_check.json"
+source_identity_report_sha256 = "f490f8c66dd637ce6597ed819daf7e70064543b00932bdaec233d9c48e7eba16"
+n_studies = 3
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "colorectal_refractory_os_reported_hr"
+manifest_sha256 = "59b38698fe4c43c4eb1e9443ea004ee6abd2a7188d41c4ea5ab3840d8c7d097d"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 3
+
+[source_identity_bundle]
+benchmark_id = "colorectal_refractory_os_reported_hr"
+manifest_sha256 = "59b38698fe4c43c4eb1e9443ea004ee6abd2a7188d41c4ea5ab3840d8c7d097d"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 3, pubmed_abstract = 3}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "CORRECT"
+trial = "Regorafenib for metastatic colorectal cancer after standard therapy"
+nct_id = "NCT01103323"
+pmid = "23177514"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "regorafenib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.77
+ci_lower = 0.64
+ci_upper = 0.94
+estimate = -0.2613647641344075
+variance = 0.00961694249220315
+se = 0.09806601089165985
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "SUNLIGHT"
+trial = "Trifluridine-tipiracil plus bevacizumab in refractory metastatic colorectal cancer"
+nct_id = "NCT04737187"
+pmid = "37133585"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "trifluridine-tipiracil plus bevacizumab"
+control_treatment = "trifluridine-tipiracil alone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.61
+ci_lower = 0.49
+ci_upper = 0.77
+estimate = -0.4942963218147801
+variance = 0.013295115320806232
+se = 0.11530444623173138
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "VELOUR"
+trial = "Aflibercept plus FOLFIRI for metastatic colorectal cancer after oxaliplatin"
+nct_id = "NCT00561470"
+pmid = "22949147"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "aflibercept plus FOLFIRI"
+control_treatment = "placebo plus FOLFIRI"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.817
+ci_lower = 0.713
+ci_upper = 0.937
+estimate = -0.20211618412213422
+variance = 0.004857481284328996
+se = 0.06969563317976957
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.27518755788286614
+se = 0.050960301284493706
+ci_low = -0.37506791304178405
+ci_high = -0.17530720272394823
+tau2 = 0.0
+q = 4.73008412513234
+df = 2
+hksj = false
+hksj_q_factor = 1.0
+weights = [103.98315273391113, 75.2155942893588, 205.86800884362813]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.30075448623502865
+se = 0.08569856445399995
+ci_low = -0.6694856485186418
+ci_high = 0.06797667604858443
+tau2 = 0.012174541314706105
+q = 2.1131567459222724
+df = 2
+hksj = true
+hksj_q_factor = 1.0565783729611362
+weights = [45.88948640949993, 39.26240601947104, 58.71293289950496]
+warnings = []
+pi_low = -0.9018765771816982
+pi_high = 0.3003676047116409

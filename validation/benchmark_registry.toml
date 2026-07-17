@@ -577,3 +577,267 @@ required_limitations = [
   "not clinical diagnostic accuracy guidance",
   "does not certify model performance",
 ]
+
+[[benchmarks]]
+id = "myeloma_pfs_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/myeloma_pfs_reported_hr_benchmark.toml"
+artifact_sha256 = "561fcf09996b13f6d3211ac28c3a456b3e8a1632ff1f4c554eba1576b40cc6ad"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 6
+source_manifests = ["validation/survival/myeloma_pfs_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/myeloma_pfs_reported_hrs.toml" = "0c2d9a85ec05ee5f7205927d386bf10bc6ecd1ffec2aaa4d59779bb0279ba035" }
+source_checks = ["validation/source_checks/myeloma_pfs_reported_hr_tokens.json", "validation/source_checks/myeloma_pfs_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/myeloma_pfs_reported_hr_tokens.json" = "1abb336905e46d761f75d9d27fb2426f0cb05e13d37a536e8aceea25f6f40cc0", "validation/source_checks/myeloma_pfs_reported_hr_source_check.json" = "adc7c540ed0b9e79589dc81964e65c458b264ce2f6582488034cf7811985594d" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "cll_pfs_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/cll_pfs_reported_hr_benchmark.toml"
+artifact_sha256 = "1863fac9cdeef26ce38ee3ca268faa522d85c9d906b73e404572d35592e2e0be"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 6
+source_manifests = ["validation/survival/cll_pfs_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/cll_pfs_reported_hrs.toml" = "009713eceaf5050701c47dbd73a33d777e6bf73b107b5bebbcd9d89d93883c32" }
+source_checks = ["validation/source_checks/cll_pfs_reported_hr_tokens.json", "validation/source_checks/cll_pfs_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/cll_pfs_reported_hr_tokens.json" = "6e07796b377c0301665068cbb72943d73576feb18b382f3ef6f0030e5d819260", "validation/source_checks/cll_pfs_reported_hr_source_check.json" = "da6a31ea264a4645a1f659359253efbbaae5c12639a7087e301bfb5dbf084db4" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "hcc_os_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/hcc_os_reported_hr_benchmark.toml"
+artifact_sha256 = "09d03c72c5f368e0ca4e889d7a96708b1a482bd21cee3fedce92a8be532d3b34"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 7
+source_manifests = ["validation/survival/hcc_os_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/hcc_os_reported_hrs.toml" = "947e0583ef2503e5fe1166aa0abde867e948287246c3cdb85fbea25c42d276a3" }
+source_checks = ["validation/source_checks/hcc_os_reported_hr_tokens.json", "validation/source_checks/hcc_os_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/hcc_os_reported_hr_tokens.json" = "2e1224ee6cd73c5894504b6c19bc7f94c162aad6c838f67afb35e64b7bb46e4f", "validation/source_checks/hcc_os_reported_hr_source_check.json" = "1bb09b4e1eb611bbff6bcd8d3383b081ac29b034008deb892fbabf9dbf8a1160" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "urothelial_os_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/urothelial_os_reported_hr_benchmark.toml"
+artifact_sha256 = "b52d4004eea4aa29c61ae7014445b449de66ed063eb34ba03cda2aa10176ea3a"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 6
+source_manifests = ["validation/survival/urothelial_os_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/urothelial_os_reported_hrs.toml" = "03184297a75d3a7f02b157949dbb02f3e72f06cb3504d599d1cfde02997e5de7" }
+source_checks = ["validation/source_checks/urothelial_os_reported_hr_tokens.json", "validation/source_checks/urothelial_os_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/urothelial_os_reported_hr_tokens.json" = "fb87546567ecdbe14443afb34a2698149b0f52cb403700c191d2bc499d9fda94", "validation/source_checks/urothelial_os_reported_hr_source_check.json" = "de0628d4199220274de6a5638962d0320329b4233aa81fb06a1b331772032034" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "gastric_gastroesophageal_os_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/gastric_gastroesophageal_os_reported_hr_benchmark.toml"
+artifact_sha256 = "a2d7e238664cb098e4dcb00d5b74e898bd91de52dd490fce3b1fe9f431d25e3a"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/gastric_gastroesophageal_os_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/gastric_gastroesophageal_os_reported_hrs.toml" = "10ad58f528bb22dc098a0a45fb7bf69a163a65b0f3943d53507a16ffa9b8d016" }
+source_checks = ["validation/source_checks/gastric_gastroesophageal_os_reported_hr_tokens.json", "validation/source_checks/gastric_gastroesophageal_os_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/gastric_gastroesophageal_os_reported_hr_tokens.json" = "a4ec442f1441b00270ebad19a2370cc5d92a7ce6382e301be12db3d007688bd8", "validation/source_checks/gastric_gastroesophageal_os_reported_hr_source_check.json" = "136ca15e93de0e22c6126de5c20613419f4930edd8032d638ce4cbf6a56d05a5" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "nsclc_firstline_os_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/nsclc_firstline_os_reported_hr_benchmark.toml"
+artifact_sha256 = "6e5d61e435d73046de481bad315095719560e9d8e20a7f3c1c8a698f8ca00703"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/nsclc_firstline_os_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/nsclc_firstline_os_reported_hrs.toml" = "dc072cc2b1c8cb167058aa43d354310414191daf534988cad2682f32e03f6d00" }
+source_checks = ["validation/source_checks/nsclc_firstline_os_reported_hr_tokens.json", "validation/source_checks/nsclc_firstline_os_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/nsclc_firstline_os_reported_hr_tokens.json" = "b338ef04e48dce57393b0f2af84c26448cb915674850fce0bee070690d06450b", "validation/source_checks/nsclc_firstline_os_reported_hr_source_check.json" = "7026c1b5c5a544d92045bdb20880559a26f05d26cbf1b6ef6bf317f73a54d874" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "melanoma_adjuvant_rfs_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/melanoma_adjuvant_rfs_reported_hr_benchmark.toml"
+artifact_sha256 = "ffa4394ce50e7de847e25fe8ffa5e47f694406958870e2263fec94eb1bcd3c34"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/melanoma_adjuvant_rfs_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/melanoma_adjuvant_rfs_reported_hrs.toml" = "54ecc7d4afd754ae75f6ba0ce132fd0f71723f8a1c5a65db8163c639e5565b26" }
+source_checks = ["validation/source_checks/melanoma_adjuvant_rfs_reported_hr_tokens.json", "validation/source_checks/melanoma_adjuvant_rfs_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/melanoma_adjuvant_rfs_reported_hr_tokens.json" = "19f44a39bf00ecfbc98c7119df32ded79147a9f42f4b29d5f756bba4be3d1ab2", "validation/source_checks/melanoma_adjuvant_rfs_reported_hr_source_check.json" = "3aaf81b78ab545290f4c0fead298a62d4dc54560305c09e44a6316aa3b20cc6a" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "breast_adjuvant_idfs_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/breast_adjuvant_idfs_reported_hr_benchmark.toml"
+artifact_sha256 = "f468cc434cb7bfdd44cf6c716bd5244828baeb064b1f39325b60c1b3f10049fe"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 5
+source_manifests = ["validation/survival/breast_adjuvant_idfs_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/breast_adjuvant_idfs_reported_hrs.toml" = "f9d7deac4cfca59ef55ce169f1020375068c41ea27e2af878e0b1be10dae353a" }
+source_checks = ["validation/source_checks/breast_adjuvant_idfs_reported_hr_tokens.json", "validation/source_checks/breast_adjuvant_idfs_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/breast_adjuvant_idfs_reported_hr_tokens.json" = "1206cd5069175fbb8c8c9e20a7573547730abc1181cb1011c8e2c19546174092", "validation/source_checks/breast_adjuvant_idfs_reported_hr_source_check.json" = "a891564086ada89653f7671251a8023a53d8922a16ca66d5021c0f60f1151f35" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "hfpef_primary_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/hfpef_primary_reported_hr_benchmark.toml"
+artifact_sha256 = "00b6e694f7204a8cf11217526ac4b85fea96e60446e9e77576f737ec55e82205"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/hfpef_primary_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/hfpef_primary_reported_hrs.toml" = "482b445808b1c14ec520eb39214d0cc1b9fcd5f99bb8ebac3951ee8fc8ce6464" }
+source_checks = ["validation/source_checks/hfpef_primary_reported_hr_tokens.json", "validation/source_checks/hfpef_primary_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/hfpef_primary_reported_hr_tokens.json" = "07bfa4d8005fdeefb043023ec0a2b0c57a0e218dc6c5de55441f5cc47ce4ecef", "validation/source_checks/hfpef_primary_reported_hr_source_check.json" = "86b4821dcc6f452f7477ab69dfe0fa0cc0d544c6d63c3265853b6e95ba5a33ab" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "secondary_cv_prevention_mace_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/secondary_cv_prevention_mace_reported_hr_benchmark.toml"
+artifact_sha256 = "1be2391172b8a4649435331d8bb8b1fdde63a4472b1ff5d33f22beef0e9094c8"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/secondary_cv_prevention_mace_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/secondary_cv_prevention_mace_reported_hrs.toml" = "1905ae662cb55530b073f4722b5f702bff73cfad92b6148af098b3314731a260" }
+source_checks = ["validation/source_checks/secondary_cv_prevention_mace_reported_hr_tokens.json", "validation/source_checks/secondary_cv_prevention_mace_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/secondary_cv_prevention_mace_reported_hr_tokens.json" = "55cafe5c749ea470890269f8c2f822403dc6bb5c5a35c7f184ed236c0ff2ca82", "validation/source_checks/secondary_cv_prevention_mace_reported_hr_source_check.json" = "7954c6fce41ab73f06fff7cb7ee4deeaa8dab1bc2fe891e3a4e1f59abccfab26" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "pah_clinical_worsening_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/pah_clinical_worsening_reported_hr_benchmark.toml"
+artifact_sha256 = "dc1bafdea50cb009213fa5d1891e036542e6f174948816fa1765b36c44c044bf"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/pah_clinical_worsening_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/pah_clinical_worsening_reported_hrs.toml" = "11f76858542147fa392eadcf390c6ff8e9497fb75627c718398f30b169b3f10e" }
+source_checks = ["validation/source_checks/pah_clinical_worsening_reported_hr_tokens.json", "validation/source_checks/pah_clinical_worsening_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/pah_clinical_worsening_reported_hr_tokens.json" = "807beefd2b23f965908e03ee86dae84ba3deaa58026b74cd84ee25591b2a29d2", "validation/source_checks/pah_clinical_worsening_reported_hr_source_check.json" = "3f2ca01c02af43f0212cbcf12c33cad0a748ab92f3e113df9fb346cd94316c1b" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "colorectal_refractory_os_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/colorectal_refractory_os_reported_hr_benchmark.toml"
+artifact_sha256 = "0c9400753420467c3db2ad25061b800e52f48234381ef2c31d315f511552f50d"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 3
+source_manifests = ["validation/survival/colorectal_refractory_os_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/colorectal_refractory_os_reported_hrs.toml" = "59b38698fe4c43c4eb1e9443ea004ee6abd2a7188d41c4ea5ab3840d8c7d097d" }
+source_checks = ["validation/source_checks/colorectal_refractory_os_reported_hr_tokens.json", "validation/source_checks/colorectal_refractory_os_reported_hr_source_check.json"]
+source_check_sha256 = { "validation/source_checks/colorectal_refractory_os_reported_hr_tokens.json" = "a70ebe9eed5f7eb7ac4ea0e67490f03f6e5bf639fbcfac943ab3078a46f5345d", "validation/source_checks/colorectal_refractory_os_reported_hr_source_check.json" = "f490f8c66dd637ce6597ed819daf7e70064543b00932bdaec233d9c48e7eba16" }
+required_limitations = [
+  "reported PubMed abstract HR tokens are verified",
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]

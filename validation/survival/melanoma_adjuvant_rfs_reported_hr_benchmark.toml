@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "melanoma_adjuvant_rfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/melanoma_adjuvant_rfs_reported_hrs.toml"
+source_manifest_sha256 = "54ecc7d4afd754ae75f6ba0ce132fd0f71723f8a1c5a65db8163c639e5565b26"
+source_verification_report = "validation/source_checks/melanoma_adjuvant_rfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "19f44a39bf00ecfbc98c7119df32ded79147a9f42f4b29d5f756bba4be3d1ab2"
+source_identity_report = "validation/source_checks/melanoma_adjuvant_rfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "3aaf81b78ab545290f4c0fead298a62d4dc54560305c09e44a6316aa3b20cc6a"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "melanoma_adjuvant_rfs_reported_hr"
+manifest_sha256 = "54ecc7d4afd754ae75f6ba0ce132fd0f71723f8a1c5a65db8163c639e5565b26"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "melanoma_adjuvant_rfs_reported_hr"
+manifest_sha256 = "54ecc7d4afd754ae75f6ba0ce132fd0f71723f8a1c5a65db8163c639e5565b26"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "CheckMate-238"
+trial = "Adjuvant nivolumab versus ipilimumab in resected melanoma"
+nct_id = "NCT02388906"
+pmid = "28891423"
+outcome_id = "recurrence_free_survival_reported"
+outcome_label = "recurrence-free survival"
+active_treatment = "nivolumab"
+control_treatment = "ipilimumab"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.65
+ci_lower = 0.51
+ci_upper = 0.83
+estimate = -0.4307829160924542
+variance = 0.01543577563990315
+se = 0.12424079700284907
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "KEYNOTE-054"
+trial = "Adjuvant pembrolizumab versus placebo in resected high-risk stage III melanoma"
+nct_id = "NCT02362594"
+pmid = "29658430"
+outcome_id = "recurrence_free_survival_reported"
+outcome_label = "recurrence-free survival"
+active_treatment = "pembrolizumab"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.57
+ci_lower = 0.43
+ci_upper = 0.74
+estimate = -0.5621189181535413
+variance = 0.019179066961489744
+se = 0.13848850840950575
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "COMBI-AD"
+trial = "Adjuvant dabrafenib plus trametinib in BRAF V600-mutated melanoma"
+nct_id = "NCT01682083"
+pmid = "28891408"
+outcome_id = "relapse_free_survival_reported"
+outcome_label = "relapse-free survival"
+active_treatment = "dabrafenib plus trametinib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.47
+ci_lower = 0.39
+ci_upper = 0.58
+estimate = -0.7550225842780328
+variance = 0.01025097656733812
+se = 0.1012471064640275
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "KEYNOTE-716"
+trial = "Adjuvant pembrolizumab versus placebo in resected stage IIB or IIC melanoma"
+nct_id = "NCT03553836"
+pmid = "35367007"
+outcome_id = "distant_metastasis_free_survival_reported"
+outcome_label = "distant metastasis-free survival"
+active_treatment = "pembrolizumab"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.65
+ci_lower = 0.46
+ci_upper = 0.92
+estimate = -0.4307829160924542
+variance = 0.03126761448866624
+se = 0.1768265095755335
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.5869066587108109
+se = 0.06369835090796726
+ci_low = -0.711753132365021
+ci_high = -0.46206018505660085
+tau2 = 0.0
+q = 5.147784165892622
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [64.7845643347453, 52.1401798120801, 97.55168138674918, 31.981972924812542]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.567421113639259
+se = 0.08726716543058466
+ci_low = -0.8451441818364052
+ci_high = -0.2896980454421127
+tau2 = 0.013117040892542463
+q = 2.581476034715244
+df = 3
+hksj = true
+hksj_q_factor = 1.0
+weights = [35.022814609678285, 30.963483417867913, 42.79353187393203, 22.530308986546142]
+warnings = []
+pi_low = -1.025655799068133
+pi_high = -0.10918642821038482

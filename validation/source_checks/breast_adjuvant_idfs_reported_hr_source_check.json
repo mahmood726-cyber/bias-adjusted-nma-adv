@@ -1,0 +1,191 @@
+{
+  "benchmark_id": "breast_adjuvant_idfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01772472",
+      "details": {
+        "brief_title": "A Study of Trastuzumab Emtansine Versus Trastuzumab as Adjuvant Therapy in Patients With HER2-Positive Breast Cancer Who Have Residual Tumor in the Breast or Axillary Lymph Nodes Following Preoperative Therapy (KATHERINE)",
+        "nct_id": "NCT01772472",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01772472",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01772472",
+      "response_sha256": "be2d733f63f26ab04b6ae3fce0aff683b379a17ab40d89bda026cbfb8b8fd97d",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KATHERINE",
+      "title": "A Study of Trastuzumab Emtansine Versus Trastuzumab as Adjuvant Therapy in Patients With HER2-Positive Breast Cancer Who Have Residual Tumor in the Breast or Axillary Lymph Nodes Following Preoperative Therapy (KATHERINE)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30516102&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "43495ed7bb6947fb7185414ba164299b29a64e4fddcae10fca38ced390bf78cd",
+        "article_title": "Trastuzumab Emtansine for Residual Invasive HER2-Positive Breast Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "30516102"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30516102",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30516102/",
+      "response_sha256": "8cc7dd156357d4315ba0daa95bfc39bd71605bd0e89158fd75f26081bb83270e",
+      "source_type": "pubmed_abstract",
+      "study_id": "KATHERINE",
+      "title": "Trastuzumab Emtansine for Residual Invasive HER2-Positive Breast Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03155997",
+      "details": {
+        "brief_title": "Endocrine Therapy With or Without Abemaciclib (LY2835219) Following Surgery in Participants With Breast Cancer",
+        "nct_id": "NCT03155997",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03155997",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03155997",
+      "response_sha256": "18708c9268eb7f1f053d078b3f5ef3d22c17b2b345a851009a5b0749ecf1fc2c",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "monarchE",
+      "title": "Endocrine Therapy With or Without Abemaciclib (LY2835219) Following Surgery in Participants With Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32954927&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "0f435b39a4f07d0c090f9ed93189e52abd2d102beb5305f88a625cff39ee50bf",
+        "article_title": "Abemaciclib Combined With Endocrine Therapy for the Adjuvant Treatment of HR+, HER2-, Node-Positive, High-Risk, Early Breast Cancer (monarchE).",
+        "journal": "J Clin Oncol",
+        "pmid": "32954927"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32954927",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32954927/",
+      "response_sha256": "08f0e81a191d8eb6a29ab58b0a648510457d5ce07bfb48103f2b60f3ac51014c",
+      "source_type": "pubmed_abstract",
+      "study_id": "monarchE",
+      "title": "Abemaciclib Combined With Endocrine Therapy for the Adjuvant Treatment of HR+, HER2-, Node-Positive, High-Risk, Early Breast Cancer (monarchE)."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02032823",
+      "details": {
+        "brief_title": "Olaparib as Adjuvant Treatment in Patients With Germline BRCA Mutated High Risk HER2 Negative Primary Breast Cancer",
+        "nct_id": "NCT02032823",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02032823",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02032823",
+      "response_sha256": "9c6cff293d3a771ac32a267a6b09ef764e127ce7807d148e0d6eefe127f70adf",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "OlympiA",
+      "title": "Olaparib as Adjuvant Treatment in Patients With Germline BRCA Mutated High Risk HER2 Negative Primary Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=34081848&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "8d68ae7b432dc18183e96a17cdd48cab55bf7ae8b1fc1f24533dfcf73390a181",
+        "article_title": "Adjuvant Olaparib for Patients with",
+        "journal": "N Engl J Med",
+        "pmid": "34081848"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "34081848",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/34081848/",
+      "response_sha256": "a0b9087423ff0739320295ac80695af66a0eda5ac2e105dddf1963973494b400",
+      "source_type": "pubmed_abstract",
+      "study_id": "OlympiA",
+      "title": "Adjuvant Olaparib for Patients with"
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01358877",
+      "details": {
+        "brief_title": "A Study of Pertuzumab in Addition to Chemotherapy and Trastuzumab as Adjuvant Therapy in Participants With Human Epidermal Growth Receptor 2 (HER2)-Positive Primary Breast Cancer",
+        "nct_id": "NCT01358877",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01358877",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01358877",
+      "response_sha256": "8d521bd93cf401446e704f37b1d33b2a99c08b2c66249d66cb4863f1c4d6542b",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "APHINITY",
+      "title": "A Study of Pertuzumab in Addition to Chemotherapy and Trastuzumab as Adjuvant Therapy in Participants With Human Epidermal Growth Receptor 2 (HER2)-Positive Primary Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28581356&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "3711476c3dc4e833004482d0a65ac5dc49eb921c18f36f2e3c713e7d523869ee",
+        "article_title": "Adjuvant Pertuzumab and Trastuzumab in Early HER2-Positive Breast Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "28581356"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28581356",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28581356/",
+      "response_sha256": "ae2d1be13b20202c8ad19914ef032bc304bb738532ffaaa34a2b9f602cf6a638",
+      "source_type": "pubmed_abstract",
+      "study_id": "APHINITY",
+      "title": "Adjuvant Pertuzumab and Trastuzumab in Early HER2-Positive Breast Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00878709",
+      "details": {
+        "brief_title": "Study Evaluating The Effects Of Neratinib After Adjuvant Trastuzumab In Women With Early Stage Breast Cancer",
+        "nct_id": "NCT00878709",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00878709",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00878709",
+      "response_sha256": "613748c1ee239f09691b502add4ff4f7dd6a887158172a49772e57db62fd9499",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ExteNET",
+      "title": "Study Evaluating The Effects Of Neratinib After Adjuvant Trastuzumab In Women With Early Stage Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26874901&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "79a5ef2e164f114a0e62cd35f536e195f84fc7d5dfff6ed201df9e55b2eaba9e",
+        "article_title": "Neratinib after trastuzumab-based adjuvant therapy in patients with HER2-positive breast cancer (ExteNET): a multicentre, randomised, double-blind, placebo-controlled, phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "26874901"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26874901",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26874901/",
+      "response_sha256": "06e3a7ef54bfb5a56ef935f31a630fbc5e153a56c2fc4ea363289dac3f1f03b4",
+      "source_type": "pubmed_abstract",
+      "study_id": "ExteNET",
+      "title": "Neratinib after trastuzumab-based adjuvant therapy in patients with HER2-positive breast cancer (ExteNET): a multicentre, randomised, double-blind, placebo-controlled, phase 3 trial."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/breast_adjuvant_idfs_reported_hrs.toml",
+  "source_manifest_sha256": "f9d7deac4cfca59ef55ce169f1020375068c41ea27e2af878e0b1be10dae353a",
+  "status": "verified"
+}

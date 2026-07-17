@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "pah_clinical_worsening_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/pah_clinical_worsening_reported_hrs.toml"
+source_manifest_sha256 = "11f76858542147fa392eadcf390c6ff8e9497fb75627c718398f30b169b3f10e"
+source_verification_report = "validation/source_checks/pah_clinical_worsening_reported_hr_tokens.json"
+source_verification_report_sha256 = "807beefd2b23f965908e03ee86dae84ba3deaa58026b74cd84ee25591b2a29d2"
+source_identity_report = "validation/source_checks/pah_clinical_worsening_reported_hr_source_check.json"
+source_identity_report_sha256 = "3f2ca01c02af43f0212cbcf12c33cad0a748ab92f3e113df9fb346cd94316c1b"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "pah_clinical_worsening_reported_hr"
+manifest_sha256 = "11f76858542147fa392eadcf390c6ff8e9497fb75627c718398f30b169b3f10e"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "pah_clinical_worsening_reported_hr"
+manifest_sha256 = "11f76858542147fa392eadcf390c6ff8e9497fb75627c718398f30b169b3f10e"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "SERAPHIN"
+trial = "Macitentan and morbidity and mortality in pulmonary arterial hypertension"
+nct_id = "NCT00660179"
+pmid = "23984728"
+outcome_id = "morbidity_mortality_reported"
+outcome_label = "morbidity and mortality composite"
+active_treatment = "macitentan"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.55
+ci_lower = 0.39
+ci_upper = 0.76
+estimate = -0.5978370007556204
+variance = 0.028968035989740938
+se = 0.17019998821898003
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "GRIPHON"
+trial = "Selexipag for pulmonary arterial hypertension"
+nct_id = "NCT01106014"
+pmid = "26699168"
+outcome_id = "morbidity_mortality_reported"
+outcome_label = "morbidity and mortality composite"
+active_treatment = "selexipag"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.6
+ci_lower = 0.46
+ci_upper = 0.78
+estimate = -0.5108256237659907
+variance = 0.018147741773017964
+se = 0.1347135545259569
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "AMBITION"
+trial = "Initial combination therapy with ambrisentan and tadalafil in pulmonary arterial hypertension"
+nct_id = "NCT01178073"
+pmid = "26308684"
+outcome_id = "clinical_failure_reported"
+outcome_label = "clinical failure"
+active_treatment = "ambrisentan plus tadalafil"
+control_treatment = "pooled monotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.5
+ci_lower = 0.35
+ci_upper = 0.72
+estimate = -0.6931471805599453
+variance = 0.03386081723114718
+se = 0.18401308983642217
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "INCREASE"
+trial = "Inhaled treprostinil in pulmonary hypertension due to interstitial lung disease"
+nct_id = "NCT02630316"
+pmid = "33440084"
+outcome_id = "clinical_worsening_reported"
+outcome_label = "clinical worsening"
+active_treatment = "inhaled treprostinil"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.61
+ci_lower = 0.4
+ci_upper = 0.92
+estimate = -0.4942963218147801
+variance = 0.045148056991482374
+se = 0.2124807214584005
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.5675962152468916
+se = 0.08412393141955403
+ci_low = -0.732476091067135
+ci_high = -0.4027163394266483
+tau2 = 0.0
+q = 0.793692107526559
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [34.520807705229004, 55.10327469430927, 29.532659922931245, 22.149347427922752]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.5675962152468916
+se = 0.08412393141955403
+ci_low = -0.8353161099789914
+ci_high = -0.2998763205147919
+tau2 = 0.0
+q = 0.793692107526559
+df = 3
+hksj = true
+hksj_q_factor = 1.0
+weights = [34.520807705229004, 55.10327469430927, 29.532659922931245, 22.149347427922752]
+warnings = []
+pi_low = -0.8353161099789914
+pi_high = -0.2998763205147919

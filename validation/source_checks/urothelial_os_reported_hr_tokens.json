@@ -1,0 +1,143 @@
+{
+  "benchmark_id": "urothelial_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "manifest": "validation/survival/urothelial_os_reported_hrs.toml",
+  "manifest_sha256": "03184297a75d3a7f02b157949dbb02f3e72f06cb3504d599d1cfde02997e5de7",
+  "records": [
+    {
+      "abstract_sha256": "87cd844c5b559a0971d27821fea9593cd7206f3ae856ab1bc3cbfe2935fa1d23",
+      "ci_lower": "0.59",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.91",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "28212060",
+      "reported_hr": "0.73",
+      "source_terms": [
+        "pembrolizumab group",
+        "chemotherapy group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "KEYNOTE-045",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "664614784483867aee126e0723e1bc3982f6b3191fae2aa7021649f4488d8327",
+      "ci_lower": "0.56",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.86",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "32945632",
+      "reported_hr": "0.69",
+      "source_terms": [
+        "avelumab group",
+        "control group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "JAVELIN-Bladder-100",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "8a068bb8e97c4511303b9e636208683886e303b5442bd1972acd110678778b18",
+      "ci_lower": "0.56",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.89",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "33577729",
+      "reported_hr": "0.70",
+      "source_terms": [
+        "enfortumab vedotin group",
+        "chemotherapy group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "EV-301",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "f5a552614cfd091b4864ffd878dc4b29ef9f8b91efaebe1ca85bdf840d82a226",
+      "ci_lower": "0.38",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.58",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "38446675",
+      "reported_hr": "0.47",
+      "source_terms": [
+        "enfortumab vedotin-pembrolizumab group",
+        "chemotherapy group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "EV-302",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "e408ebc9a09cc3c27ed65f87e2dd11ea9139288746bf916b2f93bd718c9fd41e",
+      "ci_lower": "0.63",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.96",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "37870949",
+      "reported_hr": "0.78",
+      "source_terms": [
+        "nivolumab-combination therapy",
+        "gemcitabine-cisplatin alone"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CheckMate-901",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "13bbb728aedfdf90e2448884702e088843203419865d6caa0f6a22781084186f",
+      "ci_lower": "0.63",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.21",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported_ic2_3",
+      "pmid": "29268948",
+      "reported_hr": "0.87",
+      "source_terms": [
+        "atezolizumab group",
+        "chemotherapy group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "IMvigor211",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

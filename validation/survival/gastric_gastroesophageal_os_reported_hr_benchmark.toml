@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "gastric_gastroesophageal_os_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/gastric_gastroesophageal_os_reported_hrs.toml"
+source_manifest_sha256 = "10ad58f528bb22dc098a0a45fb7bf69a163a65b0f3943d53507a16ffa9b8d016"
+source_verification_report = "validation/source_checks/gastric_gastroesophageal_os_reported_hr_tokens.json"
+source_verification_report_sha256 = "a4ec442f1441b00270ebad19a2370cc5d92a7ce6382e301be12db3d007688bd8"
+source_identity_report = "validation/source_checks/gastric_gastroesophageal_os_reported_hr_source_check.json"
+source_identity_report_sha256 = "136ca15e93de0e22c6126de5c20613419f4930edd8032d638ce4cbf6a56d05a5"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "gastric_gastroesophageal_os_reported_hr"
+manifest_sha256 = "10ad58f528bb22dc098a0a45fb7bf69a163a65b0f3943d53507a16ffa9b8d016"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "gastric_gastroesophageal_os_reported_hr"
+manifest_sha256 = "10ad58f528bb22dc098a0a45fb7bf69a163a65b0f3943d53507a16ffa9b8d016"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "REGARD"
+trial = "Ramucirumab monotherapy for previously treated advanced gastric or gastro-oesophageal junction cancer"
+nct_id = "NCT00917384"
+pmid = "24094768"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "ramucirumab"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.776
+ci_lower = 0.603
+ci_upper = 0.998
+estimate = -0.25360275879891825
+variance = 0.016520468325948782
+se = 0.1285319739440299
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "RAINBOW"
+trial = "Ramucirumab plus paclitaxel for previously treated advanced gastric or gastro-oesophageal junction cancer"
+nct_id = "NCT01170663"
+pmid = "25240821"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "ramucirumab plus paclitaxel"
+control_treatment = "placebo plus paclitaxel"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.807
+ci_lower = 0.678
+ci_upper = 0.962
+estimate = -0.2144316107121882
+variance = 0.007966181421368264
+se = 0.08925346727925064
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ToGA"
+trial = "Trastuzumab plus chemotherapy for HER2-positive advanced gastric or gastro-oesophageal junction cancer"
+nct_id = "NCT01041404"
+pmid = "20728210"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "trastuzumab plus chemotherapy"
+control_treatment = "chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.74
+ci_lower = 0.6
+ci_upper = 0.91
+estimate = -0.3011050927839216
+variance = 0.011290287552107009
+se = 0.10625576479470189
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "KEYNOTE-859"
+trial = "Pembrolizumab plus chemotherapy for HER2-negative advanced gastric or gastro-oesophageal junction cancer"
+nct_id = "NCT03675737"
+pmid = "37875143"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "pembrolizumab plus chemotherapy"
+control_treatment = "placebo plus chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.78
+ci_lower = 0.7
+ci_upper = 0.87
+estimate = -0.2484613592984996
+variance = 0.0030761984652237944
+se = 0.05546348767634248
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.24963222927504583
+se = 0.04083470241317649
+ci_low = -0.32966677532428257
+ci_high = -0.1695976832258091
+tau2 = 0.0
+q = 0.3916097124878679
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [60.53097165709855, 125.53065855588322, 88.5717033675886, 325.07655513938033]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.24963222927504583
+se = 0.04083470241317649
+ci_low = -0.37958647709721904
+ci_high = -0.11967798145287262
+tau2 = 0.0
+q = 0.3916097124878679
+df = 3
+hksj = true
+hksj_q_factor = 1.0
+weights = [60.53097165709855, 125.53065855588322, 88.5717033675886, 325.07655513938033]
+warnings = []
+pi_low = -0.37958647709721904
+pi_high = -0.11967798145287262

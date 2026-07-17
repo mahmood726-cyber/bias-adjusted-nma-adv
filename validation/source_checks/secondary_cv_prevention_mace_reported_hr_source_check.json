@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "secondary_cv_prevention_mace_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01776424",
+      "details": {
+        "brief_title": "Rivaroxaban for the Prevention of Major Cardiovascular Events in Coronary or Peripheral Artery Disease",
+        "nct_id": "NCT01776424",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01776424",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01776424",
+      "response_sha256": "8ab62ef824dae390d376335b691ead4c5249b59564ad709a2a9ed7d87a4ca00f",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "COMPASS",
+      "title": "Rivaroxaban for the Prevention of Major Cardiovascular Events in Coronary or Peripheral Artery Disease"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28844192&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "ebdf91efbe0da7d016ef0150807244cfab8fb8c0b466e911cd90ab5ac5906ad3",
+        "article_title": "Rivaroxaban with or without Aspirin in Stable Cardiovascular Disease.",
+        "journal": "N Engl J Med",
+        "pmid": "28844192"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28844192",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28844192/",
+      "response_sha256": "2b61cbb234dafb15e723d49cc48a50eac9ad940bcfa481e6968d3ef089638601",
+      "source_type": "pubmed_abstract",
+      "study_id": "COMPASS",
+      "title": "Rivaroxaban with or without Aspirin in Stable Cardiovascular Disease."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01225562",
+      "details": {
+        "brief_title": "Prevention of Cardiovascular Events (eg, Death From Heart or Vascular Disease, Heart Attack, or Stroke) in Patients With Prior Heart Attack Using Ticagrelor Compared to Placebo on a Background of Aspirin",
+        "nct_id": "NCT01225562",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01225562",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01225562",
+      "response_sha256": "12bc25f8fd1a320b27ff121d4336204587df79e3a4a6dfe8b05b4a4792d8fdfa",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PEGASUS-TIMI-54",
+      "title": "Prevention of Cardiovascular Events (eg, Death From Heart or Vascular Disease, Heart Attack, or Stroke) in Patients With Prior Heart Attack Using Ticagrelor Compared to Placebo on a Background of Aspirin"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25773268&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "a5a2991f163bbdc6f7c807497588775fceb13cd34dbe3e0e6a871692fbedc9a4",
+        "article_title": "Long-term use of ticagrelor in patients with prior myocardial infarction.",
+        "journal": "N Engl J Med",
+        "pmid": "25773268"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "25773268",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/25773268/",
+      "response_sha256": "eb40fecd325470a408b351d2b4a78904d467a96daf5580dbf4eb126a7646e42c",
+      "source_type": "pubmed_abstract",
+      "study_id": "PEGASUS-TIMI-54",
+      "title": "Long-term use of ticagrelor in patients with prior myocardial infarction."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01991795",
+      "details": {
+        "brief_title": "A Study Comparing Cardiovascular Effects of Ticagrelor Versus Placebo in Patients With Type 2 Diabetes Mellitus",
+        "nct_id": "NCT01991795",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01991795",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01991795",
+      "response_sha256": "7c34a104fcdc2ff43177dcf61bffa27c694950bb93d8a89b5c5aeb17f4dca79a",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "THEMIS",
+      "title": "A Study Comparing Cardiovascular Effects of Ticagrelor Versus Placebo in Patients With Type 2 Diabetes Mellitus"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31475798&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "ab021a445423919c6249740895b8cf5b6550a6b0ce64e1193e6b89b2b3dc10e0",
+        "article_title": "Ticagrelor in Patients with Stable Coronary Disease and Diabetes.",
+        "journal": "N Engl J Med",
+        "pmid": "31475798"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31475798",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31475798/",
+      "response_sha256": "6681205e26501ab19da21d9564a736fb3ca054997b8230dcc5998582abd3baac",
+      "source_type": "pubmed_abstract",
+      "study_id": "THEMIS",
+      "title": "Ticagrelor in Patients with Stable Coronary Disease and Diabetes."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00526474",
+      "details": {
+        "brief_title": "Trial to Assess the Effects of Vorapaxar (SCH 530348; MK-5348) in Preventing Heart Attack and Stroke in Patients With Atherosclerosis (TRA 2\u00b0P - TIMI 50) (P04737)",
+        "nct_id": "NCT00526474",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00526474",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00526474",
+      "response_sha256": "30c805a5fd46c9d0dad564fccb8351bca8719a5b29d51d7dd05ea48200eedbae",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "TRA-2P-TIMI-50",
+      "title": "Trial to Assess the Effects of Vorapaxar (SCH 530348; MK-5348) in Preventing Heart Attack and Stroke in Patients With Atherosclerosis (TRA 2\u00b0P - TIMI 50) (P04737)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=22443427&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "cc9b76d688f0ffc98f02a165b036f68024f9cd619e8c92902fbaebcfb2e5661a",
+        "article_title": "Vorapaxar in the secondary prevention of atherothrombotic events.",
+        "journal": "N Engl J Med",
+        "pmid": "22443427"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "22443427",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/22443427/",
+      "response_sha256": "dcf723c5f6f3569bd738ed8e8b044656fe922e95f62216df86ebaf9d83701db3",
+      "source_type": "pubmed_abstract",
+      "study_id": "TRA-2P-TIMI-50",
+      "title": "Vorapaxar in the secondary prevention of atherothrombotic events."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/secondary_cv_prevention_mace_reported_hrs.toml",
+  "source_manifest_sha256": "1905ae662cb55530b073f4722b5f702bff73cfad92b6148af098b3314731a260",
+  "status": "verified"
+}

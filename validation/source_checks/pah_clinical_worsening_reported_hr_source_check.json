@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "pah_clinical_worsening_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00660179",
+      "details": {
+        "brief_title": "Study of Macitentan (ACT-064992) on Morbidity and Mortality in Patients With Symptomatic Pulmonary Arterial Hypertension",
+        "nct_id": "NCT00660179",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00660179",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00660179",
+      "response_sha256": "046a6cf68883a54d69d18890ceb8c77c7a9fedc355a2203c2c3db7b5559f596f",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "SERAPHIN",
+      "title": "Study of Macitentan (ACT-064992) on Morbidity and Mortality in Patients With Symptomatic Pulmonary Arterial Hypertension"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23984728&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "3948f599edc0951a9d57c174dfc6f632ed4f66e35894f612f5276444fc09a288",
+        "article_title": "Macitentan and morbidity and mortality in pulmonary arterial hypertension.",
+        "journal": "N Engl J Med",
+        "pmid": "23984728"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "23984728",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/23984728/",
+      "response_sha256": "017dfbde44f99c1610d56894de7b520dc21505bbbe90dc8108a342c6f7b61b16",
+      "source_type": "pubmed_abstract",
+      "study_id": "SERAPHIN",
+      "title": "Macitentan and morbidity and mortality in pulmonary arterial hypertension."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01106014",
+      "details": {
+        "brief_title": "Selexipag (ACT-293987) in Pulmonary Arterial Hypertension",
+        "nct_id": "NCT01106014",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01106014",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01106014",
+      "response_sha256": "e20a051ae6bf75de69a3110fce89f5889ba9d283b963041eec1a1c1ac4f68b2b",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "GRIPHON",
+      "title": "Selexipag (ACT-293987) in Pulmonary Arterial Hypertension"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26699168&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "fbb26062338684420d13cc970994d11688f0e3b7eb2c917f8430c92b8df1c223",
+        "article_title": "Selexipag for the Treatment of Pulmonary Arterial Hypertension.",
+        "journal": "N Engl J Med",
+        "pmid": "26699168"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26699168",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26699168/",
+      "response_sha256": "c05beb23955c8f5577af49544cd05b9ed2102ecf2f05b56a09a461e41036b7ee",
+      "source_type": "pubmed_abstract",
+      "study_id": "GRIPHON",
+      "title": "Selexipag for the Treatment of Pulmonary Arterial Hypertension."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01178073",
+      "details": {
+        "brief_title": "A Study of First-Line Ambrisentan and Tadalafil Combination Therapy in Subjects With Pulmonary Arterial Hypertension (PAH)",
+        "nct_id": "NCT01178073",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01178073",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01178073",
+      "response_sha256": "350b65cfd10e93315b14a55e77eff919ef86562cfce4f81142382aa0bcae8040",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "AMBITION",
+      "title": "A Study of First-Line Ambrisentan and Tadalafil Combination Therapy in Subjects With Pulmonary Arterial Hypertension (PAH)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26308684&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "57e249b541b4a0d1e2d6df5175db482e9b602acb259799aa44e86e9940e700fe",
+        "article_title": "Initial Use of Ambrisentan plus Tadalafil in Pulmonary Arterial Hypertension.",
+        "journal": "N Engl J Med",
+        "pmid": "26308684"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26308684",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26308684/",
+      "response_sha256": "75e78949f35d021edd6a20100c490398641b08d7a1584675654c25150225234b",
+      "source_type": "pubmed_abstract",
+      "study_id": "AMBITION",
+      "title": "Initial Use of Ambrisentan plus Tadalafil in Pulmonary Arterial Hypertension."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02630316",
+      "details": {
+        "brief_title": "Safety and Efficacy of Inhaled Treprostinil in Adult PH With ILD Including CPFE",
+        "nct_id": "NCT02630316",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02630316",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02630316",
+      "response_sha256": "0c2005ac39b704b94356781167e352890a247f5cbc70e9d2f6bf9bb694692eef",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "INCREASE",
+      "title": "Safety and Efficacy of Inhaled Treprostinil in Adult PH With ILD Including CPFE"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33440084&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "20e5897b649b47c417663f31f72fac5d96ac9af6dd0fe980e8df2f5f491e73d9",
+        "article_title": "Inhaled Treprostinil in Pulmonary Hypertension Due to Interstitial Lung Disease.",
+        "journal": "N Engl J Med",
+        "pmid": "33440084"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33440084",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33440084/",
+      "response_sha256": "23eb8e7aeeb397f3992b2f9b9ac4ebfa667f21175818b5628744c1c7f83ed0ef",
+      "source_type": "pubmed_abstract",
+      "study_id": "INCREASE",
+      "title": "Inhaled Treprostinil in Pulmonary Hypertension Due to Interstitial Lung Disease."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/pah_clinical_worsening_reported_hrs.toml",
+  "source_manifest_sha256": "11f76858542147fa392eadcf390c6ff8e9497fb75627c718398f30b169b3f10e",
+  "status": "verified"
+}

@@ -1,0 +1,77 @@
+{
+  "benchmark_id": "colorectal_refractory_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "manifest": "validation/survival/colorectal_refractory_os_reported_hrs.toml",
+  "manifest_sha256": "59b38698fe4c43c4eb1e9443ea004ee6abd2a7188d41c4ea5ab3840d8c7d097d",
+  "records": [
+    {
+      "abstract_sha256": "05601cf0c916a664d1046439a2745386387c8c43ce6c41ca0d8a6f4d06497a7f",
+      "ci_lower": "0.64",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.94",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "23177514",
+      "reported_hr": "0.77",
+      "source_terms": [
+        "regorafenib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CORRECT",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "261185dbd95b99bb84667e286376e8482c2b851ffc8e530714f6d6277d0104ac",
+      "ci_lower": "0.49",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.77",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "37133585",
+      "reported_hr": "0.61",
+      "source_terms": [
+        "combination group",
+        "FTD-TPI group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "SUNLIGHT",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "fefde291a1fee0465581e95a1ecd63965e177aaf7d1442311e47afecb830c41d",
+      "ci_lower": "0.713",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.937",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "22949147",
+      "reported_hr": "0.817",
+      "source_terms": [
+        "aflibercept",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "VELOUR",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "secondary_cv_prevention_mace_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/secondary_cv_prevention_mace_reported_hrs.toml"
+source_manifest_sha256 = "1905ae662cb55530b073f4722b5f702bff73cfad92b6148af098b3314731a260"
+source_verification_report = "validation/source_checks/secondary_cv_prevention_mace_reported_hr_tokens.json"
+source_verification_report_sha256 = "55cafe5c749ea470890269f8c2f822403dc6bb5c5a35c7f184ed236c0ff2ca82"
+source_identity_report = "validation/source_checks/secondary_cv_prevention_mace_reported_hr_source_check.json"
+source_identity_report_sha256 = "7954c6fce41ab73f06fff7cb7ee4deeaa8dab1bc2fe891e3a4e1f59abccfab26"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "secondary_cv_prevention_mace_reported_hr"
+manifest_sha256 = "1905ae662cb55530b073f4722b5f702bff73cfad92b6148af098b3314731a260"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "secondary_cv_prevention_mace_reported_hr"
+manifest_sha256 = "1905ae662cb55530b073f4722b5f702bff73cfad92b6148af098b3314731a260"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "COMPASS"
+trial = "Rivaroxaban with or without aspirin in stable cardiovascular disease"
+nct_id = "NCT01776424"
+pmid = "28844192"
+outcome_id = "primary_mace_reported"
+outcome_label = "cardiovascular death, stroke, or myocardial infarction"
+active_treatment = "rivaroxaban plus aspirin"
+control_treatment = "aspirin alone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.76
+ci_lower = 0.66
+ci_upper = 0.86
+estimate = -0.2744368457017603
+variance = 0.004559605577822977
+se = 0.06752485155720801
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "PEGASUS-TIMI-54"
+trial = "Ticagrelor in patients with prior myocardial infarction"
+nct_id = "NCT01225562"
+pmid = "25773268"
+outcome_id = "primary_mace_reported"
+outcome_label = "cardiovascular death, myocardial infarction, or stroke"
+active_treatment = "ticagrelor"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.85
+ci_lower = 0.75
+ci_upper = 0.96
+estimate = -0.16251892949777494
+variance = 0.003965934617603654
+se = 0.06297566686906661
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "THEMIS"
+trial = "Ticagrelor in patients with stable coronary disease and diabetes"
+nct_id = "NCT01991795"
+pmid = "31475798"
+outcome_id = "primary_mace_reported"
+outcome_label = "cardiovascular death, myocardial infarction, or stroke"
+active_treatment = "ticagrelor"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.9
+ci_lower = 0.81
+ci_upper = 0.99
+estimate = -0.10536051565782628
+variance = 0.002620666385926994
+se = 0.05119244461760929
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "TRA-2P-TIMI-50"
+trial = "Vorapaxar in the secondary prevention of atherothrombotic events"
+nct_id = "NCT00526474"
+pmid = "22443427"
+outcome_id = "primary_mace_reported"
+outcome_label = "cardiovascular death, myocardial infarction, or stroke"
+active_treatment = "vorapaxar"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.87
+ci_lower = 0.8
+ci_upper = 0.94
+estimate = -0.13926206733350766
+variance = 0.0016925481075692808
+se = 0.04114058953842641
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.1548964713609387
+se = 0.02631695515912063
+ci_low = -0.20647675565557072
+ci_high = -0.1033161870663067
+tau2 = 0.0
+q = 4.229420555970247
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [219.317215695981, 252.14737418042267, 381.58233545864914, 590.8251561819002]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.15715326069017777
+se = 0.03236146861341731
+ci_low = -0.26014189691250234
+ci_high = -0.05416462446785318
+tau2 = 0.0005944404561972481
+q = 3.649477758814947
+df = 3
+hksj = true
+hksj_q_factor = 1.216492586271649
+weights = [194.02232603265796, 219.2802091531777, 311.03165434443025, 437.256231116898]
+warnings = []
+pi_low = -0.2860994937501239
+pi_high = -0.028207027630231613

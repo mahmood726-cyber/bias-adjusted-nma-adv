@@ -1,0 +1,143 @@
+{
+  "benchmark_id": "cll_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "manifest": "validation/survival/cll_pfs_reported_hrs.toml",
+  "manifest_sha256": "009713eceaf5050701c47dbd73a33d777e6bf73b107b5bebbcd9d89d93883c32",
+  "records": [
+    {
+      "abstract_sha256": "95cb4efa467377cc4b9774c6074ee56a5bcf8a9840b731ca219d5d6429bd9c1a",
+      "ci_lower": "0.108",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.220",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "35377947",
+      "reported_hr": "0.154",
+      "source_terms": [
+        "ibrutinib",
+        "chlorambucil"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "RESONATE-2",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "27894e29a5fb44e1da2673d114ffd5df344d4bd846371fda9297f3311a22add5",
+      "ci_lower": "0.113",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.196",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "31512258",
+      "reported_hr": "0.148",
+      "source_terms": [
+        "ibrutinib",
+        "ofatumumab"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "RESONATE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "cdd4a8301aec9bd4bee9fe8fad99491000f377fbef225cee87f9bdcc7bcc0d93",
+      "ci_lower": "0.31",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.52",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "39082668",
+      "reported_hr": "0.40",
+      "source_terms": [
+        "Ven-Obi",
+        "Clb-Obi"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CLL14",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "cd279e403d3a734828f46cb42e6561ade56f6655f18861fab44c31a9ef71121e",
+      "ci_lower": "0.06",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.17",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "32305093",
+      "reported_hr": "0.1",
+      "source_terms": [
+        "acalabrutinib and obinutuzumab",
+        "obinutuzumab-chlorambucil"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ELEVATE-TN",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "a6d83f3cf14614c5c03391aa08ac3e2ea2ede23bfce08c3fb7fe99bbd45009f8",
+      "ci_lower": "0.20",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.49",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "32459600",
+      "reported_hr": "0.31",
+      "source_terms": [
+        "acalabrutinib monotherapy",
+        "investigator's choice"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ASCEND",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "bfe4af4e40c353db8ce4dfa7f31d1747dc492a9887f00f8da30a947021a31d4b",
+      "ci_lower": "0.14",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.25",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "32986498",
+      "reported_hr": "0.19",
+      "source_terms": [
+        "VenR",
+        "BR"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "MURANO",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

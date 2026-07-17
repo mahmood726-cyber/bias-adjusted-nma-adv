@@ -1,0 +1,121 @@
+{
+  "benchmark_id": "breast_adjuvant_idfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "manifest": "validation/survival/breast_adjuvant_idfs_reported_hrs.toml",
+  "manifest_sha256": "f9d7deac4cfca59ef55ce169f1020375068c41ea27e2af878e0b1be10dae353a",
+  "records": [
+    {
+      "abstract_sha256": "43495ed7bb6947fb7185414ba164299b29a64e4fddcae10fca38ced390bf78cd",
+      "ci_lower": "0.39",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.64",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "invasive_disease_free_survival_reported",
+      "pmid": "30516102",
+      "reported_hr": "0.50",
+      "source_terms": [
+        "T-DM1",
+        "trastuzumab"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "KATHERINE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "0f435b39a4f07d0c090f9ed93189e52abd2d102beb5305f88a625cff39ee50bf",
+      "ci_lower": "0.60",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.93",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "invasive_disease_free_survival_reported",
+      "pmid": "32954927",
+      "reported_hr": "0.75",
+      "source_terms": [
+        "abemaciclib plus ET",
+        "ET alone"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "monarchE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "8d68ae7b432dc18183e96a17cdd48cab55bf7ae8b1fc1f24533dfcf73390a181",
+      "ci_lower": "0.41",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.82",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "invasive_disease_free_survival_reported",
+      "pmid": "34081848",
+      "reported_hr": "0.58",
+      "source_terms": [
+        "olaparib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "OlympiA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "3711476c3dc4e833004482d0a65ac5dc49eb921c18f36f2e3c713e7d523869ee",
+      "ci_lower": "0.66",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.00",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "invasive_disease_free_survival_reported",
+      "pmid": "28581356",
+      "reported_hr": "0.81",
+      "source_terms": [
+        "pertuzumab",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "APHINITY",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "79a5ef2e164f114a0e62cd35f536e195f84fc7d5dfff6ed201df9e55b2eaba9e",
+      "ci_lower": "0.50",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.91",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "invasive_disease_free_survival_reported",
+      "pmid": "26874901",
+      "reported_hr": "0.67",
+      "source_terms": [
+        "neratinib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ExteNET",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

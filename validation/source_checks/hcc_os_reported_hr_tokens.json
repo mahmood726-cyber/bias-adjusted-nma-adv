@@ -1,0 +1,165 @@
+{
+  "benchmark_id": "hcc_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "manifest": "validation/survival/hcc_os_reported_hrs.toml",
+  "manifest_sha256": "947e0583ef2503e5fe1166aa0abde867e948287246c3cdb85fbea25c42d276a3",
+  "records": [
+    {
+      "abstract_sha256": "c91cdfe24601fe90e51e8e3315760f09d225f59906cecc02c0158f971c552c65",
+      "ci_lower": "0.55",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.87",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "18650514",
+      "reported_hr": "0.69",
+      "source_terms": [
+        "sorafenib group",
+        "placebo group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "SHARP",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "baa49f9b9919e303a39818e69af8c3ebdc1a150ae2d3526fcc9bd54306dd263b",
+      "ci_lower": "0.79",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.06",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "29433850",
+      "reported_hr": "0.92",
+      "source_terms": [
+        "lenvatinib",
+        "sorafenib"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "REFLECT",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "bd215d8c6105c57b858ad7efd87457c219bf9edd42791439a055a209b6b48e57",
+      "ci_lower": "0.42",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.79",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "32402160",
+      "reported_hr": "0.58",
+      "source_terms": [
+        "atezolizumab-bevacizumab",
+        "sorafenib"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "IMbrave150",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "0a8e33dc23e9fe42628311432d1b9562a279ab290ab912b55f2549f929554058",
+      "ci_lower": "0.67",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.92",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "38382875",
+      "reported_hr": "0.78",
+      "source_terms": [
+        "STRIDE",
+        "sorafenib"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "HIMALAYA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "5dcf466497f559083754c24c9a801c0dae8e99f7ee73b8a1c18d12ac1d15a299",
+      "ci_lower": "0.72",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.02",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "34914889",
+      "reported_hr": "0.85",
+      "source_terms": [
+        "nivolumab",
+        "sorafenib"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CheckMate-459",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "45212de7239a18dcabf17f8ccb3424dc51df697f658811a67e8e520ab6c751cf",
+      "ci_lower": "0.50",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.79",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "27932229",
+      "reported_hr": "0.63",
+      "source_terms": [
+        "regorafenib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "RESORCE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "b13f49128bf21187c77bf815790f53ff8430018ab5e22d7378504ebefa5e41d1",
+      "ci_lower": "0.63",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.92",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "overall_survival_reported",
+      "pmid": "29972759",
+      "reported_hr": "0.76",
+      "source_terms": [
+        "cabozantinib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CELESTIAL",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

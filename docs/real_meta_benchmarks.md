@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 24 benchmark artifacts, 144 study-effect rows, 88 unique NCT IDs, and 83 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 36 benchmark artifacts, 201 study-effect rows, 143 unique NCT IDs, and 138 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -257,7 +257,7 @@ Reported HR benchmark on the log-HR scale:
 | Experimental pairwise fixed effect | -0.762967 | 0.069614 | -0.899409 to -0.626526 |
 | Experimental pairwise REML-HKSJ | -0.838248 | 0.153934 | -1.328135 to -0.348360 |
 
-The REML-HKSJ artifact estimates `tau2 = 0.0695959994688312`, so this benchmark is one of nine registered source-backed positive-heterogeneity coverage signals. This is a heterogeneity-stress signal only, not evidence of survival NMA parity or clinical superiority.
+The REML-HKSJ artifact estimates `tau2 = 0.0695959994688312`, so this benchmark is one registered source-backed positive-heterogeneity coverage signal. This is a heterogeneity-stress signal only, not evidence of survival NMA parity or clinical superiority.
 
 Limitations:
 
@@ -284,8 +284,20 @@ The following source-backed PubMed abstract reported-HR families were added to b
 | `lipid_cv_outcomes_reported_hr` | Lipid-modifying cardiovascular outcomes | 7 | Positive `tau2`; includes statin, ezetimibe, omega-3, bempedoic-acid, and CETP-inhibitor outcome trials |
 | `her2_breast_pfs_reported_hr` | HER2-positive breast cancer progression-free survival | 7 | Positive `tau2`; source-verified abstracts include antibody-drug conjugate, kinase-inhibitor, and antibody-combination rows |
 | `prostate_mhspc_os_reported_hr` | Metastatic hormone-sensitive prostate cancer overall survival | 5 | Source-verified OS HR rows; REML tau2 is zero in the generated artifact, so it broadens source coverage but not positive-heterogeneity count |
+| `myeloma_pfs_reported_hr` | Multiple myeloma progression-free survival | 6 | Positive `tau2`; source-verified abstracts include MAIA, ALCYONE, ENDEAVOR, ASPIRE, ELOQUENT-2, and FIRST-final |
+| `cll_pfs_reported_hr` | Chronic lymphocytic leukemia progression-free survival | 6 | Positive `tau2`; includes BTK-inhibitor and venetoclax-obinutuzumab source-verified abstract rows |
+| `hcc_os_reported_hr` | Advanced hepatocellular carcinoma overall survival | 7 | Positive `tau2`; includes first-line and post-sorafenib systemic therapy rows, not a harmonized clinical NMA |
+| `urothelial_os_reported_hr` | Advanced urothelial carcinoma overall survival | 6 | Positive `tau2`; includes one prespecified IC2/3 population row that is labelled separately in the manifest |
+| `gastric_gastroesophageal_os_reported_hr` | Gastric/gastroesophageal cancer overall survival | 4 | Source-verified OS rows; excludes non-95% CI abstract rows from the current log-HR variance conversion |
+| `nsclc_firstline_os_reported_hr` | First-line NSCLC overall survival | 4 | Positive `tau2`; separate from the existing NSCLC PFS family and not a multi-treatment immunotherapy NMA |
+| `melanoma_adjuvant_rfs_reported_hr` | Adjuvant melanoma recurrence/relapse/distant-metastasis-free survival | 4 | Positive `tau2`; related time-to-event endpoints are source-labelled rather than pooled as a clinical estimand |
+| `breast_adjuvant_idfs_reported_hr` | Early breast cancer invasive disease-free survival | 5 | Positive `tau2`; source-verified adjuvant HER2, CDK4/6, and PARP rows are used for benchmark breadth only |
+| `hfpef_primary_reported_hr` | HFpEF primary composite outcomes | 4 | Positive `tau2`; composites differ across TOPCAT, PARAGON-HF, FINEARTS-HF, and I-PRESERVE |
+| `secondary_cv_prevention_mace_reported_hr` | Secondary cardiovascular prevention MACE | 4 | Positive `tau2`; includes antithrombotic outcome trials with source-labelled comparator definitions |
+| `pah_clinical_worsening_reported_hr` | Pulmonary hypertension clinical worsening or morbidity/mortality | 4 | Source-verified HR rows; endpoint wording differs across trials and is not a clinical class-effect claim |
+| `colorectal_refractory_os_reported_hr` | Refractory metastatic colorectal cancer overall survival | 3 | Positive `tau2`; source-verified OS HR rows from public PubMed abstracts |
 
-These additions move the coverage atlas to 24 registered source-backed benchmarks, 144 study-effect rows, 88 unique NCT IDs, and 83 unique PMIDs. They still leave the large-scale validation gate partial because the platform has not yet reached 200 study-effect rows, 100 unique NCT IDs, or an admissible real ML-NMR benchmark.
+These additions move the coverage atlas to 36 registered source-backed benchmarks, 201 study-effect rows, 143 unique NCT IDs, and 138 unique PMIDs. They clear the current benchmark-count, study-effect-row, NCT, PMID, tau-positive, reference-report, and full-simulation thresholds in `validation/large_scale_validation.toml`, but the large-scale validation gate remains partial because no admissible real ML-NMR benchmark has been registered.
 
 ## Benchmark 6: Recurrent PARP Inhibitors And Ovarian Cancer PFS
 

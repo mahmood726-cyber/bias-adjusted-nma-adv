@@ -1,0 +1,182 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "myeloma_pfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/myeloma_pfs_reported_hrs.toml"
+source_manifest_sha256 = "0c2d9a85ec05ee5f7205927d386bf10bc6ecd1ffec2aaa4d59779bb0279ba035"
+source_verification_report = "validation/source_checks/myeloma_pfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "1abb336905e46d761f75d9d27fb2426f0cb05e13d37a536e8aceea25f6f40cc0"
+source_identity_report = "validation/source_checks/myeloma_pfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "adc7c540ed0b9e79589dc81964e65c458b264ce2f6582488034cf7811985594d"
+n_studies = 6
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "myeloma_pfs_reported_hr"
+manifest_sha256 = "0c2d9a85ec05ee5f7205927d386bf10bc6ecd1ffec2aaa4d59779bb0279ba035"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 6
+
+[source_identity_bundle]
+benchmark_id = "myeloma_pfs_reported_hr"
+manifest_sha256 = "0c2d9a85ec05ee5f7205927d386bf10bc6ecd1ffec2aaa4d59779bb0279ba035"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 6, pubmed_abstract = 6}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "MAIA"
+trial = "Daratumumab plus lenalidomide and dexamethasone for untreated myeloma"
+nct_id = "NCT02252172"
+pmid = "31141632"
+outcome_id = "progression_free_survival_reported"
+outcome_label = "progression-free survival"
+active_treatment = "daratumumab plus lenalidomide and dexamethasone"
+control_treatment = "lenalidomide and dexamethasone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.56
+ci_lower = 0.43
+ci_upper = 0.73
+estimate = -0.579818495252942
+variance = 0.01822975636702813
+se = 0.13501761502495935
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ALCYONE"
+trial = "Daratumumab plus bortezomib, melphalan, and prednisone for untreated myeloma"
+nct_id = "NCT02195479"
+pmid = "29231133"
+outcome_id = "progression_free_survival_reported"
+outcome_label = "progression-free survival"
+active_treatment = "daratumumab plus bortezomib, melphalan, and prednisone"
+control_treatment = "bortezomib, melphalan, and prednisone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.5
+ci_lower = 0.38
+ci_upper = 0.65
+estimate = -0.6931471805599453
+variance = 0.018752994977235822
+se = 0.13694157505022286
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ENDEAVOR"
+trial = "Carfilzomib and dexamethasone versus bortezomib and dexamethasone in relapsed myeloma"
+nct_id = "NCT01568866"
+pmid = "26671818"
+outcome_id = "progression_free_survival_reported"
+outcome_label = "progression-free survival"
+active_treatment = "carfilzomib and dexamethasone"
+control_treatment = "bortezomib and dexamethasone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.53
+ci_lower = 0.44
+ci_upper = 0.65
+estimate = -0.6348782724359695
+variance = 0.009908618198777253
+se = 0.09954204236792237
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ASPIRE"
+trial = "Carfilzomib, lenalidomide, and dexamethasone for relapsed myeloma"
+nct_id = "NCT01080391"
+pmid = "25482145"
+outcome_id = "progression_free_survival_reported"
+outcome_label = "progression-free survival"
+active_treatment = "carfilzomib plus lenalidomide and dexamethasone"
+control_treatment = "lenalidomide and dexamethasone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.69
+ci_lower = 0.57
+ci_upper = 0.83
+estimate = -0.37106368139083207
+variance = 0.009190364560747425
+se = 0.09586638910873521
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ELOQUENT-2"
+trial = "Elotuzumab therapy for relapsed or refractory multiple myeloma"
+nct_id = "NCT01239797"
+pmid = "26035255"
+outcome_id = "progression_free_survival_reported"
+outcome_label = "progression-free survival"
+active_treatment = "elotuzumab plus lenalidomide and dexamethasone"
+control_treatment = "lenalidomide and dexamethasone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.7
+ci_lower = 0.57
+ci_upper = 0.85
+estimate = -0.35667494393873245
+variance = 0.01039189526603044
+se = 0.10194064579955554
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "FIRST-final"
+trial = "Continuous lenalidomide and dexamethasone for transplant-ineligible myeloma"
+nct_id = "NCT00689936"
+pmid = "29150421"
+outcome_id = "progression_free_survival_reported"
+outcome_label = "progression-free survival"
+active_treatment = "continuous lenalidomide and dexamethasone"
+control_treatment = "melphalan, prednisone, and thalidomide"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.69
+ci_lower = 0.59
+ci_upper = 0.79
+estimate = -0.37106368139083207
+variance = 0.005545529094792508
+se = 0.07446830933217503
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.46167691342619716
+se = 0.04101440084233516
+ci_low = -0.5420636619246633
+ci_high = -0.381290164927731
+tau2 = 0.0
+q = 10.085220875177262
+df = 5
+hksj = false
+hksj_q_factor = 1.0
+weights = [54.8553683256395, 53.32481564752167, 100.92224565917803, 108.80961178309046, 96.22883741610168, 180.32544467921795]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.480790604864403
+se = 0.06077054622521047
+ci_low = -0.6370062671326261
+ci_high = -0.3245749425961799
+tau2 = 0.010887928766367655
+q = 5.0560714695173905
+df = 5
+hksj = true
+hksj_q_factor = 1.011214293903478
+weights = [34.34338943562088, 33.737140200153185, 48.08490571420361, 49.80502992500526, 46.992869794295316, 60.851465859991706]
+warnings = []
+pi_low = -0.7911928911889492
+pi_high = -0.17038831853985675

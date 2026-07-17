@@ -1,0 +1,99 @@
+{
+  "benchmark_id": "hfpef_primary_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "manifest": "validation/survival/hfpef_primary_reported_hrs.toml",
+  "manifest_sha256": "482b445808b1c14ec520eb39214d0cc1b9fcd5f99bb8ebac3951ee8fc8ce6464",
+  "records": [
+    {
+      "abstract_sha256": "4b0192f4f7a6e358668322ce12f1ad052c100dd1919800f0124ce24f975eb1c0",
+      "ci_lower": "0.77",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.04",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "24716680",
+      "reported_hr": "0.89",
+      "source_terms": [
+        "spironolactone",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "TOPCAT",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "acd94b6f44638e35b5300dfcf74639fbe0985dae814849452c53512ebbb9c7d1",
+      "ci_lower": "0.75",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.01",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "31475794",
+      "reported_hr": "0.87",
+      "source_terms": [
+        "sacubitril-valsartan",
+        "valsartan"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "PARAGON-HF",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "5a97a9ee7f6514b1d9ff0bbb556fe40e03c63518e91996a7aee9065cc947904f",
+      "ci_lower": "0.74",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.95",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "39225278",
+      "reported_hr": "0.84",
+      "source_terms": [
+        "finerenone",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "FINEARTS-HF",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "a0350d12c9497a43c86289a4e36a8a7ba2358a883e500ebcb879a1f8471334f0",
+      "ci_lower": "0.86",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.05",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "19001508",
+      "reported_hr": "0.95",
+      "source_terms": [
+        "irbesartan",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "I-PRESERVE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

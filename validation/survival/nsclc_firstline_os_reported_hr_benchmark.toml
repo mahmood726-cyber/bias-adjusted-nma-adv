@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "nsclc_firstline_os_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/nsclc_firstline_os_reported_hrs.toml"
+source_manifest_sha256 = "dc072cc2b1c8cb167058aa43d354310414191daf534988cad2682f32e03f6d00"
+source_verification_report = "validation/source_checks/nsclc_firstline_os_reported_hr_tokens.json"
+source_verification_report_sha256 = "b338ef04e48dce57393b0f2af84c26448cb915674850fce0bee070690d06450b"
+source_identity_report = "validation/source_checks/nsclc_firstline_os_reported_hr_source_check.json"
+source_identity_report_sha256 = "7026c1b5c5a544d92045bdb20880559a26f05d26cbf1b6ef6bf317f73a54d874"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "nsclc_firstline_os_reported_hr"
+manifest_sha256 = "dc072cc2b1c8cb167058aa43d354310414191daf534988cad2682f32e03f6d00"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "nsclc_firstline_os_reported_hr"
+manifest_sha256 = "dc072cc2b1c8cb167058aa43d354310414191daf534988cad2682f32e03f6d00"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "KEYNOTE-189"
+trial = "Pembrolizumab plus chemotherapy in metastatic nonsquamous NSCLC"
+nct_id = "NCT02578680"
+pmid = "29658856"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "pembrolizumab plus chemotherapy"
+control_treatment = "placebo plus chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.49
+ci_lower = 0.38
+ci_upper = 0.64
+estimate = -0.7133498878774648
+variance = 0.01768537001656734
+se = 0.1329863527455631
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "KEYNOTE-407"
+trial = "Pembrolizumab plus chemotherapy in metastatic squamous NSCLC"
+nct_id = "NCT02775435"
+pmid = "30280635"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "pembrolizumab plus chemotherapy"
+control_treatment = "placebo plus chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.64
+ci_lower = 0.49
+ci_upper = 0.85
+estimate = -0.4462871026284195
+variance = 0.01974606255538766
+se = 0.14052068372801088
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "CheckMate-9LA"
+trial = "Nivolumab plus ipilimumab with chemotherapy for metastatic NSCLC"
+nct_id = "NCT03215706"
+pmid = "33476593"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "nivolumab plus ipilimumab with chemotherapy"
+control_treatment = "chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.66
+ci_lower = 0.55
+ci_upper = 0.8
+estimate = -0.4155154439616658
+variance = 0.009136840169806542
+se = 0.0955868200632626
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "EMPOWER-Lung1"
+trial = "Cemiplimab monotherapy for first-line advanced NSCLC with PD-L1 of at least 50 percent"
+nct_id = "NCT03088540"
+pmid = "33581821"
+outcome_id = "overall_survival_reported"
+outcome_label = "overall survival"
+active_treatment = "cemiplimab"
+control_treatment = "chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.57
+ci_lower = 0.42
+ci_upper = 0.77
+estimate = -0.5621189181535413
+variance = 0.023910227176628
+se = 0.15462932185270684
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.5104267889755384
+se = 0.062202208482652406
+ci_low = -0.6323408773603889
+ci_high = -0.3885127005906878
+tau2 = 0.0
+q = 3.6343644646885576
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [56.543911666152184, 50.64300779940316, 109.44702779245107, 41.823107434859075]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.5178266891133549
+se = 0.07236690407573863
+ci_low = -0.7481304756140099
+ci_high = -0.2875229026127
+tau2 = 0.004885015757158672
+q = 2.716214084325259
+df = 3
+hksj = true
+hksj_q_factor = 1.0
+weights = [44.30584439385574, 40.59911577198916, 71.31723540796875, 34.72795844436714]
+warnings = []
+pi_low = -0.8380064826335905
+pi_high = -0.19764689559311943

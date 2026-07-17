@@ -1,0 +1,99 @@
+{
+  "benchmark_id": "secondary_cv_prevention_mace_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "manifest": "validation/survival/secondary_cv_prevention_mace_reported_hrs.toml",
+  "manifest_sha256": "1905ae662cb55530b073f4722b5f702bff73cfad92b6148af098b3314731a260",
+  "records": [
+    {
+      "abstract_sha256": "ebdf91efbe0da7d016ef0150807244cfab8fb8c0b466e911cd90ab5ac5906ad3",
+      "ci_lower": "0.66",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.86",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_mace_reported",
+      "pmid": "28844192",
+      "reported_hr": "0.76",
+      "source_terms": [
+        "rivaroxaban-plus-aspirin group",
+        "aspirin-alone group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "COMPASS",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "a5a2991f163bbdc6f7c807497588775fceb13cd34dbe3e0e6a871692fbedc9a4",
+      "ci_lower": "0.75",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.96",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_mace_reported",
+      "pmid": "25773268",
+      "reported_hr": "0.85",
+      "source_terms": [
+        "ticagrelor",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "PEGASUS-TIMI-54",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "ab021a445423919c6249740895b8cf5b6550a6b0ce64e1193e6b89b2b3dc10e0",
+      "ci_lower": "0.81",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.99",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_mace_reported",
+      "pmid": "31475798",
+      "reported_hr": "0.90",
+      "source_terms": [
+        "ticagrelor",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "THEMIS",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "cc9b76d688f0ffc98f02a165b036f68024f9cd619e8c92902fbaebcfb2e5661a",
+      "ci_lower": "0.80",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.94",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_mace_reported",
+      "pmid": "22443427",
+      "reported_hr": "0.87",
+      "source_terms": [
+        "vorapaxar",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "TRA-2P-TIMI-50",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

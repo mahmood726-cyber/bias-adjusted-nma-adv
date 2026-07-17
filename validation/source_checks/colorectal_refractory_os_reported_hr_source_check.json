@@ -1,0 +1,119 @@
+{
+  "benchmark_id": "colorectal_refractory_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01103323",
+      "details": {
+        "brief_title": "Patients With Metastatic Colorectal Cancer Treated With Regorafenib or Placebo After Failure of Standard Therapy",
+        "nct_id": "NCT01103323",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01103323",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01103323",
+      "response_sha256": "b2e1be55e0980f5802dc231b268ecbc02f6e4102a4bb2d3f52eadec90eb110cb",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CORRECT",
+      "title": "Patients With Metastatic Colorectal Cancer Treated With Regorafenib or Placebo After Failure of Standard Therapy"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23177514&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "05601cf0c916a664d1046439a2745386387c8c43ce6c41ca0d8a6f4d06497a7f",
+        "article_title": "Regorafenib monotherapy for previously treated metastatic colorectal cancer (CORRECT): an international, multicentre, randomised, placebo-controlled, phase 3 trial.",
+        "journal": "Lancet",
+        "pmid": "23177514"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "23177514",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/23177514/",
+      "response_sha256": "7c301a8877774c5ff787c02ca60f5f2c06d97d27fec7622aae9fccd2e95eeae3",
+      "source_type": "pubmed_abstract",
+      "study_id": "CORRECT",
+      "title": "Regorafenib monotherapy for previously treated metastatic colorectal cancer (CORRECT): an international, multicentre, randomised, placebo-controlled, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT04737187",
+      "details": {
+        "brief_title": "Phase III Study of Trifluridine/Tipiracil With and Without Bevacizumab in Refractory Metastatic Colorectal Cancer Patients",
+        "nct_id": "NCT04737187",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT04737187",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT04737187",
+      "response_sha256": "1ab96780dcec36f67b1c076c18921bcd559203417b08792b0ea152ed53eba76e",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "SUNLIGHT",
+      "title": "Phase III Study of Trifluridine/Tipiracil With and Without Bevacizumab in Refractory Metastatic Colorectal Cancer Patients"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=37133585&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "261185dbd95b99bb84667e286376e8482c2b851ffc8e530714f6d6277d0104ac",
+        "article_title": "Trifluridine-Tipiracil and Bevacizumab in Refractory Metastatic Colorectal Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "37133585"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "37133585",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/37133585/",
+      "response_sha256": "6110b0243f8985bcff18c5d3ef1119b4f329d959f6185aa225285cf84dc2c912",
+      "source_type": "pubmed_abstract",
+      "study_id": "SUNLIGHT",
+      "title": "Trifluridine-Tipiracil and Bevacizumab in Refractory Metastatic Colorectal Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00561470",
+      "details": {
+        "brief_title": "Aflibercept Versus Placebo in Combination With Irinotecan and 5-FU in the Treatment of Patients With Metastatic Colorectal Cancer After Failure of an Oxaliplatin Based Regimen",
+        "nct_id": "NCT00561470",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00561470",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00561470",
+      "response_sha256": "2110b3df1698a11aef63750eec866643fe416647407bf855bbaf96a2d2162e96",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "VELOUR",
+      "title": "Aflibercept Versus Placebo in Combination With Irinotecan and 5-FU in the Treatment of Patients With Metastatic Colorectal Cancer After Failure of an Oxaliplatin Based Regimen"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=22949147&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "fefde291a1fee0465581e95a1ecd63965e177aaf7d1442311e47afecb830c41d",
+        "article_title": "Addition of aflibercept to fluorouracil, leucovorin, and irinotecan improves survival in a phase III randomized trial in patients with metastatic colorectal cancer previously treated with an oxaliplatin-based regimen.",
+        "journal": "J Clin Oncol",
+        "pmid": "22949147"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "22949147",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/22949147/",
+      "response_sha256": "4fb04b1cfdeef089242d5737b8a82e4f8de38e00293977264dcf961633af2b5f",
+      "source_type": "pubmed_abstract",
+      "study_id": "VELOUR",
+      "title": "Addition of aflibercept to fluorouracil, leucovorin, and irinotecan improves survival in a phase III randomized trial in patients with metastatic colorectal cancer previously treated with an oxaliplatin-based regimen."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/colorectal_refractory_os_reported_hrs.toml",
+  "source_manifest_sha256": "59b38698fe4c43c4eb1e9443ea004ee6abd2a7188d41c4ea5ab3840d8c7d097d",
+  "status": "verified"
+}

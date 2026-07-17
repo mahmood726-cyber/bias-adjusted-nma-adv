@@ -1,7 +1,7 @@
 <!-- sentinel:skip-file -->
 # Tier-One Methods Benchmark
 
-Checked: 2026-07-16
+Checked: 2026-07-17
 
 This note benchmarks the platform specification against mature specialist network meta-analysis methods. It is not evidence that the current Python implementation is superior to those methods.
 
@@ -24,6 +24,8 @@ The dose-response coverage check is `validation/dose_response_source_coverage.to
 The DTA coverage check is `validation/dta_source_coverage.toml`. It now records one source-backed open-access diagnostic test accuracy 2x2 benchmark (`midkine_elisa_cancer_dta`) from a PLOS JATS table, plus a narrow `mada::reitsma` source-table smoke reference. This closes the previous "no DTA source data" gap, but it is still not broad DTA validation: HSROC parity, threshold-effect diagnostics, multiple clinical domains, and wider reference matching remain blocked.
 
 The ML-NMR coverage check is `validation/mlnmr_source_coverage.toml`. It currently records `missing_source_backed_mlnmr_data`: local portfolio searches found simulated IPD demos, survey-style public IPD registries, and pseudo-IPD/KM-reconstruction assets, but no admissible public trial-IPD plus source-bound aggregate covariate network. Those materials may guide implementation or simulated reference tests, but they do not clear the real ML-NMR domain or `multinma` parity gate.
+
+The real benchmark coverage atlas is `validation/real_benchmark_atlas.json`. It currently records 36 registered source-backed benchmark artifacts, 201 study-effect rows, 143 unique NCT IDs, and 138 unique PMIDs. That clears the current breadth thresholds in the large-scale validation gate, but the gate remains `partial_not_large_scale` because the real ML-NMR domain is still missing and no broad feature family is promoted to reference-matched status.
 
 ## Specialist Reference Targets
 
@@ -149,7 +151,7 @@ Current estimator disclosure guard: `AdvancedNMAFitResult.tau_method` records wh
 
 Current feature-parity gate: `validation/feature_parity_matrix.toml` records 12 feature families across pairwise meta-analysis, frequentist NMA, inconsistency, publication bias, Bayesian NMA, ML-NMR, dose-response, cross-design, component NMA, DTA, and large-scale validation. It currently contains reference candidates and local implementations, but no `reference_matched` feature-family status.
 
-Current large-scale validation gate: `validation/large_scale_validation.toml` dynamically compares the current benchmark atlas, simulation matrix, executed full simulation report, and reference reports against prespecified thresholds. The current status is `partial_not_large_scale`: 24 source-backed benchmarks, 144 study-effect rows, 88 unique NCT IDs, 83 unique PMIDs, 12 passed reference reports, 12 source-backed benchmarks with positive `tau2`, 25 passed full simulation jobs, and 10,588 successful full simulation iterations exist. The simulation report is operating-characteristic evidence only; it is not real clinical validation or tier-one superiority evidence. Remaining large-scale blockers are the real-data thresholds for 200 study-effect rows, 100 unique NCT IDs, and the remaining ML-NMR real-data domain.
+Current large-scale validation gate: `validation/large_scale_validation.toml` dynamically compares the current benchmark atlas, simulation matrix, executed full simulation report, and reference reports against prespecified thresholds. The current status is `partial_not_large_scale`: 36 source-backed benchmarks, 201 study-effect rows, 143 unique NCT IDs, 138 unique PMIDs, 12 passed reference reports, 22 source-backed benchmarks with positive `tau2`, 25 passed full simulation jobs, and 10,588 successful full simulation iterations exist. The simulation report is operating-characteristic evidence only; it is not real clinical validation or tier-one superiority evidence. The benchmark-count, row-count, NCT, PMID, tau-positive, reference-report, simulation-job, and simulation-iteration thresholds are now met; the remaining large-scale blocker is the real ML-NMR domain.
 
 ### Phase 1: Match Tier One
 

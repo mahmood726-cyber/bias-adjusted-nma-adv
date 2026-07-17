@@ -1,0 +1,263 @@
+{
+  "benchmark_id": "hcc_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00105443",
+      "details": {
+        "brief_title": "A Phase III Study of Sorafenib in Patients With Advanced Hepatocellular Carcinoma",
+        "nct_id": "NCT00105443",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00105443",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00105443",
+      "response_sha256": "2ffd51fd606ad2fca732477aecc13c90adbe53c0dfcb82e480c982f1798e5305",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "SHARP",
+      "title": "A Phase III Study of Sorafenib in Patients With Advanced Hepatocellular Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=18650514&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "c91cdfe24601fe90e51e8e3315760f09d225f59906cecc02c0158f971c552c65",
+        "article_title": "Sorafenib in advanced hepatocellular carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "18650514"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "18650514",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/18650514/",
+      "response_sha256": "d93959ec8b91d0590a96d58eec4c513c584dc93e2e91492edbd086fadfb083aa",
+      "source_type": "pubmed_abstract",
+      "study_id": "SHARP",
+      "title": "Sorafenib in advanced hepatocellular carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01761266",
+      "details": {
+        "brief_title": "A Multicenter, Open-Label, Phase 3 Trial to Compare the Efficacy and Safety of Lenvatinib (E7080) Versus Sorafenib in First-line Treatment of Participants With Unresectable Hepatocellular Carcinoma",
+        "nct_id": "NCT01761266",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01761266",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01761266",
+      "response_sha256": "dd54cd9b75ea2b49e98bff2a3f1e214ad7aa336997c8559d2809315438394907",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "REFLECT",
+      "title": "A Multicenter, Open-Label, Phase 3 Trial to Compare the Efficacy and Safety of Lenvatinib (E7080) Versus Sorafenib in First-line Treatment of Participants With Unresectable Hepatocellular Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29433850&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "baa49f9b9919e303a39818e69af8c3ebdc1a150ae2d3526fcc9bd54306dd263b",
+        "article_title": "Lenvatinib versus sorafenib in first-line treatment of patients with unresectable hepatocellular carcinoma: a randomised phase 3 non-inferiority trial.",
+        "journal": "Lancet",
+        "pmid": "29433850"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29433850",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29433850/",
+      "response_sha256": "98e413bcd367eecc063d2181a83c69e6acdf087cfa7d42b29fbb35866d3d546f",
+      "source_type": "pubmed_abstract",
+      "study_id": "REFLECT",
+      "title": "Lenvatinib versus sorafenib in first-line treatment of patients with unresectable hepatocellular carcinoma: a randomised phase 3 non-inferiority trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03434379",
+      "details": {
+        "brief_title": "A Study of Atezolizumab in Combination With Bevacizumab Compared With Sorafenib in Patients With Untreated Locally Advanced or Metastatic Hepatocellular Carcinoma",
+        "nct_id": "NCT03434379",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03434379",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03434379",
+      "response_sha256": "12e7a67bcb15523d3f3d4d33a821607630f88edf6feca3a112e9c06cfffff9d3",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "IMbrave150",
+      "title": "A Study of Atezolizumab in Combination With Bevacizumab Compared With Sorafenib in Patients With Untreated Locally Advanced or Metastatic Hepatocellular Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32402160&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "bd215d8c6105c57b858ad7efd87457c219bf9edd42791439a055a209b6b48e57",
+        "article_title": "Atezolizumab plus Bevacizumab in Unresectable Hepatocellular Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "32402160"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32402160",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32402160/",
+      "response_sha256": "3f17ed44305a5cf9ba230cf431820f85c07729fe25eda9e152da6a85f8088e5e",
+      "source_type": "pubmed_abstract",
+      "study_id": "IMbrave150",
+      "title": "Atezolizumab plus Bevacizumab in Unresectable Hepatocellular Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03298451",
+      "details": {
+        "brief_title": "Study of Durvalumab and Tremelimumab as First-line Treatment in Patients With Advanced Hepatocellular Carcinoma",
+        "nct_id": "NCT03298451",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03298451",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03298451",
+      "response_sha256": "7c887247fba4e94b9628f368591709b71954b0b23826e905fa739187c4767ae4",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "HIMALAYA",
+      "title": "Study of Durvalumab and Tremelimumab as First-line Treatment in Patients With Advanced Hepatocellular Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=38382875&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "0a8e33dc23e9fe42628311432d1b9562a279ab290ab912b55f2549f929554058",
+        "article_title": "Four-year overall survival update from the phase III HIMALAYA study of tremelimumab plus durvalumab in unresectable hepatocellular carcinoma.",
+        "journal": "Ann Oncol",
+        "pmid": "38382875"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "38382875",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/38382875/",
+      "response_sha256": "c0a49d1306a80e6ab38b03c25855b8815bb3a5e46770df1e3ee0371030014282",
+      "source_type": "pubmed_abstract",
+      "study_id": "HIMALAYA",
+      "title": "Four-year overall survival update from the phase III HIMALAYA study of tremelimumab plus durvalumab in unresectable hepatocellular carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02576509",
+      "details": {
+        "brief_title": "An Investigational Immuno-therapy Study of Nivolumab Compared to Sorafenib as a First Treatment in Patients With Advanced Hepatocellular Carcinoma",
+        "nct_id": "NCT02576509",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02576509",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02576509",
+      "response_sha256": "ee7d2f3451b7312e03e6192c54820c4ea682d140fe250c191b7a5b7ee694d5a3",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CheckMate-459",
+      "title": "An Investigational Immuno-therapy Study of Nivolumab Compared to Sorafenib as a First Treatment in Patients With Advanced Hepatocellular Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=34914889&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "5dcf466497f559083754c24c9a801c0dae8e99f7ee73b8a1c18d12ac1d15a299",
+        "article_title": "Nivolumab versus sorafenib in advanced hepatocellular carcinoma (CheckMate 459): a randomised, multicentre, open-label, phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "34914889"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "34914889",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/34914889/",
+      "response_sha256": "2603c02b08376b356285248bde451db7f5ee94f818c6bccc7ff05617ea300e38",
+      "source_type": "pubmed_abstract",
+      "study_id": "CheckMate-459",
+      "title": "Nivolumab versus sorafenib in advanced hepatocellular carcinoma (CheckMate 459): a randomised, multicentre, open-label, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01774344",
+      "details": {
+        "brief_title": "Study of Regorafenib After Sorafenib in Patients With Hepatocellular Carcinoma",
+        "nct_id": "NCT01774344",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01774344",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01774344",
+      "response_sha256": "3cd2b9a5752d9c1a5b1647bb0b9f0eb6b3cccc2e55ad01d76a189e1cf92259af",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "RESORCE",
+      "title": "Study of Regorafenib After Sorafenib in Patients With Hepatocellular Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27932229&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "45212de7239a18dcabf17f8ccb3424dc51df697f658811a67e8e520ab6c751cf",
+        "article_title": "Regorafenib for patients with hepatocellular carcinoma who progressed on sorafenib treatment (RESORCE): a randomised, double-blind, placebo-controlled, phase 3 trial.",
+        "journal": "Lancet",
+        "pmid": "27932229"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27932229",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27932229/",
+      "response_sha256": "cffb18dc96325031a97196876b4d02dab4d489a30e2d292e9f94d871fcdc780b",
+      "source_type": "pubmed_abstract",
+      "study_id": "RESORCE",
+      "title": "Regorafenib for patients with hepatocellular carcinoma who progressed on sorafenib treatment (RESORCE): a randomised, double-blind, placebo-controlled, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01908426",
+      "details": {
+        "brief_title": "Study of Cabozantinib (XL184) vs Placebo in Subjects With Hepatocellular Carcinoma Who Have Received Prior Sorafenib",
+        "nct_id": "NCT01908426",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01908426",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01908426",
+      "response_sha256": "c4a7f3566ae84493ef7e9f7d5471f0c64a9bf699e2dd8da104ede36f27d06843",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CELESTIAL",
+      "title": "Study of Cabozantinib (XL184) vs Placebo in Subjects With Hepatocellular Carcinoma Who Have Received Prior Sorafenib"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29972759&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "b13f49128bf21187c77bf815790f53ff8430018ab5e22d7378504ebefa5e41d1",
+        "article_title": "Cabozantinib in Patients with Advanced and Progressing Hepatocellular Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "29972759"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29972759",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29972759/",
+      "response_sha256": "9826215375c34e51e27b975a1c170e0ca3c127d1487071eb76e02b0f712c70cc",
+      "source_type": "pubmed_abstract",
+      "study_id": "CELESTIAL",
+      "title": "Cabozantinib in Patients with Advanced and Progressing Hepatocellular Carcinoma."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/hcc_os_reported_hrs.toml",
+  "source_manifest_sha256": "947e0583ef2503e5fe1166aa0abde867e948287246c3cdb85fbea25c42d276a3",
+  "status": "verified"
+}

@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "hfpef_primary_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00094302",
+      "details": {
+        "brief_title": "Aldosterone Antagonist Therapy for Adults With Heart Failure and Preserved Systolic Function",
+        "nct_id": "NCT00094302",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00094302",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00094302",
+      "response_sha256": "3a2347af56555ef0d930e5f5219192f76c77de67831f1510301ff3c217f09017",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "TOPCAT",
+      "title": "Aldosterone Antagonist Therapy for Adults With Heart Failure and Preserved Systolic Function"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=24716680&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "4b0192f4f7a6e358668322ce12f1ad052c100dd1919800f0124ce24f975eb1c0",
+        "article_title": "Spironolactone for heart failure with preserved ejection fraction.",
+        "journal": "N Engl J Med",
+        "pmid": "24716680"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "24716680",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/24716680/",
+      "response_sha256": "23e5d08b05881a905a1a0d187e6f25f0334181809de952598ee1cd255e30b56a",
+      "source_type": "pubmed_abstract",
+      "study_id": "TOPCAT",
+      "title": "Spironolactone for heart failure with preserved ejection fraction."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01920711",
+      "details": {
+        "brief_title": "Efficacy and Safety of LCZ696 Compared to Valsartan, on Morbidity and Mortality in Heart Failure Patients With Preserved Ejection Fraction",
+        "nct_id": "NCT01920711",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01920711",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01920711",
+      "response_sha256": "cfbe7a789cc7ee2c7de0138dc1d18ffa9befd68d750df8708a9b318c95f7541c",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PARAGON-HF",
+      "title": "Efficacy and Safety of LCZ696 Compared to Valsartan, on Morbidity and Mortality in Heart Failure Patients With Preserved Ejection Fraction"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31475794&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "acd94b6f44638e35b5300dfcf74639fbe0985dae814849452c53512ebbb9c7d1",
+        "article_title": "Angiotensin-Neprilysin Inhibition in Heart Failure with Preserved Ejection Fraction.",
+        "journal": "N Engl J Med",
+        "pmid": "31475794"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31475794",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31475794/",
+      "response_sha256": "4490fbb5fd5178b83f4f553d8cdc9e1ca9fd30a1f4cda6fbe7e9495085a5c09c",
+      "source_type": "pubmed_abstract",
+      "study_id": "PARAGON-HF",
+      "title": "Angiotensin-Neprilysin Inhibition in Heart Failure with Preserved Ejection Fraction."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT04435626",
+      "details": {
+        "brief_title": "Study to Evaluate the Efficacy (Effect on Disease) and Safety of Finerenone in Participants With Heart Failure and Left Ventricular Ejection Fraction (Proportion of Blood Expelled Per Heart Stroke) Greater or Equal to 40%",
+        "nct_id": "NCT04435626",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT04435626",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT04435626",
+      "response_sha256": "1d711cdda275bedbdc88c1cb69e838b6d2876f18db0eaf640546ce01379f278e",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "FINEARTS-HF",
+      "title": "Study to Evaluate the Efficacy (Effect on Disease) and Safety of Finerenone in Participants With Heart Failure and Left Ventricular Ejection Fraction (Proportion of Blood Expelled Per Heart Stroke) Greater or Equal to 40%"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=39225278&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "5a97a9ee7f6514b1d9ff0bbb556fe40e03c63518e91996a7aee9065cc947904f",
+        "article_title": "Finerenone in Heart Failure with Mildly Reduced or Preserved Ejection Fraction.",
+        "journal": "N Engl J Med",
+        "pmid": "39225278"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "39225278",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/39225278/",
+      "response_sha256": "a5952811b7ff90f593b834a08399a1df3ec77ced0ca460a95a593c31d9a9922b",
+      "source_type": "pubmed_abstract",
+      "study_id": "FINEARTS-HF",
+      "title": "Finerenone in Heart Failure with Mildly Reduced or Preserved Ejection Fraction."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00095238",
+      "details": {
+        "brief_title": "Irbesartan in Heart Failure With Preserved Systolic Function (I-Preserve)",
+        "nct_id": "NCT00095238",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00095238",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00095238",
+      "response_sha256": "c908b3988b3aee70d4e741ed1639a02c2199febf1e96a5692e9932ef5ae1ae81",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "I-PRESERVE",
+      "title": "Irbesartan in Heart Failure With Preserved Systolic Function (I-Preserve)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=19001508&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "a0350d12c9497a43c86289a4e36a8a7ba2358a883e500ebcb879a1f8471334f0",
+        "article_title": "Irbesartan in patients with heart failure and preserved ejection fraction.",
+        "journal": "N Engl J Med",
+        "pmid": "19001508"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "19001508",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/19001508/",
+      "response_sha256": "a61315dfb035a1ff3e96bf3c4bbe5efd340643447aac76544608861ebc1de1f2",
+      "source_type": "pubmed_abstract",
+      "study_id": "I-PRESERVE",
+      "title": "Irbesartan in patients with heart failure and preserved ejection fraction."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/hfpef_primary_reported_hrs.toml",
+  "source_manifest_sha256": "482b445808b1c14ec520eb39214d0cc1b9fcd5f99bb8ebac3951ee8fc8ce6464",
+  "status": "verified"
+}

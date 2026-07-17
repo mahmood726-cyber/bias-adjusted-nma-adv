@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "hfpef_primary_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/hfpef_primary_reported_hrs.toml"
+source_manifest_sha256 = "482b445808b1c14ec520eb39214d0cc1b9fcd5f99bb8ebac3951ee8fc8ce6464"
+source_verification_report = "validation/source_checks/hfpef_primary_reported_hr_tokens.json"
+source_verification_report_sha256 = "07bfa4d8005fdeefb043023ec0a2b0c57a0e218dc6c5de55441f5cc47ce4ecef"
+source_identity_report = "validation/source_checks/hfpef_primary_reported_hr_source_check.json"
+source_identity_report_sha256 = "86b4821dcc6f452f7477ab69dfe0fa0cc0d544c6d63c3265853b6e95ba5a33ab"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "hfpef_primary_reported_hr"
+manifest_sha256 = "482b445808b1c14ec520eb39214d0cc1b9fcd5f99bb8ebac3951ee8fc8ce6464"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "hfpef_primary_reported_hr"
+manifest_sha256 = "482b445808b1c14ec520eb39214d0cc1b9fcd5f99bb8ebac3951ee8fc8ce6464"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "TOPCAT"
+trial = "Spironolactone for heart failure with preserved ejection fraction"
+nct_id = "NCT00094302"
+pmid = "24716680"
+outcome_id = "primary_composite_reported"
+outcome_label = "primary cardiovascular composite"
+active_treatment = "spironolactone"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.89
+ci_lower = 0.77
+ci_upper = 1.04
+estimate = -0.11653381625595151
+variance = 0.005880033691207302
+se = 0.07668137773414939
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "PARAGON-HF"
+trial = "Sacubitril-valsartan in heart failure with preserved ejection fraction"
+nct_id = "NCT01920711"
+pmid = "31475794"
+outcome_id = "primary_composite_reported"
+outcome_label = "total hospitalizations for heart failure and cardiovascular death"
+active_treatment = "sacubitril-valsartan"
+control_treatment = "valsartan"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.87
+ci_lower = 0.75
+ci_upper = 1.01
+estimate = -0.13926206733350766
+variance = 0.005765065540978069
+se = 0.07592802869150542
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "FINEARTS-HF"
+trial = "Finerenone in heart failure with mildly reduced or preserved ejection fraction"
+nct_id = "NCT04435626"
+pmid = "39225278"
+outcome_id = "primary_composite_reported"
+outcome_label = "worsening heart failure and cardiovascular death"
+active_treatment = "finerenone"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.84
+ci_lower = 0.74
+ci_upper = 0.95
+estimate = -0.1743533871447778
+variance = 0.004061343459016489
+se = 0.0637286706201886
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "I-PRESERVE"
+trial = "Irbesartan in heart failure with preserved ejection fraction"
+nct_id = "NCT00095238"
+pmid = "19001508"
+outcome_id = "primary_composite_reported"
+outcome_label = "primary cardiovascular composite"
+active_treatment = "irbesartan"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.95
+ci_lower = 0.86
+ci_upper = 1.05
+estimate = -0.05129329438755058
+variance = 0.0025931145658934654
+se = 0.050922633139827575
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.10937750899856545
+se = 0.03201928983073337
+ci_low = -0.17213416387735248
+ci_high = -0.04662085411977844
+tau2 = 0.0
+q = 2.504198992569666
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [170.06705276116838, 173.45856571655654, 246.2239429122707, 385.63664450183944]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.11044148937690229
+se = 0.033383192131270396
+ci_low = -0.2166817058336399
+ci_high = -0.004201272920164673
+tau2 = 0.00031922986317083746
+q = 2.276240677058224
+df = 3
+hksj = true
+hksj_q_factor = 1.0
+weights = [161.30948317139453, 164.35756871996972, 228.28062138238008, 343.3659803491328]
+warnings = []
+pi_low = -0.23094100103501558
+pi_high = 0.010058022281211013

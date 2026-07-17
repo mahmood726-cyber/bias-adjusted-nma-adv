@@ -1,0 +1,227 @@
+{
+  "benchmark_id": "urothelial_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02256436",
+      "details": {
+        "brief_title": "A Study of Pembrolizumab (MK-3475) Versus Paclitaxel, Docetaxel, or Vinflunine for Participants With Advanced Urothelial Cancer (MK-3475-045/KEYNOTE-045)",
+        "nct_id": "NCT02256436",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02256436",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02256436",
+      "response_sha256": "3b246728022c6e8043ba9ad56189fef45702345baea60baedfef70a3cd65e731",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-045",
+      "title": "A Study of Pembrolizumab (MK-3475) Versus Paclitaxel, Docetaxel, or Vinflunine for Participants With Advanced Urothelial Cancer (MK-3475-045/KEYNOTE-045)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28212060&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "87cd844c5b559a0971d27821fea9593cd7206f3ae856ab1bc3cbfe2935fa1d23",
+        "article_title": "Pembrolizumab as Second-Line Therapy for Advanced Urothelial Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "28212060"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28212060",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28212060/",
+      "response_sha256": "e2594c997c65f6da9f10fb6ab22bb108c8b68692f8cfcfba81bf1ff0124e4d91",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-045",
+      "title": "Pembrolizumab as Second-Line Therapy for Advanced Urothelial Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02603432",
+      "details": {
+        "brief_title": "A Study Of Avelumab In Patients With Locally Advanced Or Metastatic Urothelial Cancer (JAVELIN Bladder 100)",
+        "nct_id": "NCT02603432",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02603432",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02603432",
+      "response_sha256": "5bd6f7f0196bd55664a5c858267437c93f1604ab63ea398f2503e82de5f5d064",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "JAVELIN-Bladder-100",
+      "title": "A Study Of Avelumab In Patients With Locally Advanced Or Metastatic Urothelial Cancer (JAVELIN Bladder 100)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32945632&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "664614784483867aee126e0723e1bc3982f6b3191fae2aa7021649f4488d8327",
+        "article_title": "Avelumab Maintenance Therapy for Advanced or Metastatic Urothelial Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "32945632"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32945632",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32945632/",
+      "response_sha256": "6c3cc4ef0ae9b7ea582fae51b8b7cb6cdf9c9fb6b111a76f1edb94335d05cb7f",
+      "source_type": "pubmed_abstract",
+      "study_id": "JAVELIN-Bladder-100",
+      "title": "Avelumab Maintenance Therapy for Advanced or Metastatic Urothelial Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03474107",
+      "details": {
+        "brief_title": "A Study to Evaluate Enfortumab Vedotin Versus (vs) Chemotherapy in Subjects With Previously Treated Locally Advanced or Metastatic Urothelial Cancer (EV-301)",
+        "nct_id": "NCT03474107",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03474107",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03474107",
+      "response_sha256": "4fe6b2eff3c8a07ed08680d38104a4ac1b2647d53a044639c2a160c332ca6c24",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EV-301",
+      "title": "A Study to Evaluate Enfortumab Vedotin Versus (vs) Chemotherapy in Subjects With Previously Treated Locally Advanced or Metastatic Urothelial Cancer (EV-301)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33577729&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "8a068bb8e97c4511303b9e636208683886e303b5442bd1972acd110678778b18",
+        "article_title": "Enfortumab Vedotin in Previously Treated Advanced Urothelial Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "33577729"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33577729",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33577729/",
+      "response_sha256": "220855a5a27e2e5ddb2a1a02587f996981e80ed22497a3366a47e32108197b53",
+      "source_type": "pubmed_abstract",
+      "study_id": "EV-301",
+      "title": "Enfortumab Vedotin in Previously Treated Advanced Urothelial Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT04223856",
+      "details": {
+        "brief_title": "Enfortumab Vedotin and Pembrolizumab vs. Chemotherapy Alone in Untreated Locally Advanced or Metastatic Urothelial Cancer",
+        "nct_id": "NCT04223856",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT04223856",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT04223856",
+      "response_sha256": "a6422e9709c64992bcfea9a7b887618518b4ce2745c762c961e90c53ceebc3a5",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EV-302",
+      "title": "Enfortumab Vedotin and Pembrolizumab vs. Chemotherapy Alone in Untreated Locally Advanced or Metastatic Urothelial Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=38446675&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "f5a552614cfd091b4864ffd878dc4b29ef9f8b91efaebe1ca85bdf840d82a226",
+        "article_title": "Enfortumab Vedotin and Pembrolizumab in Untreated Advanced Urothelial Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "38446675"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "38446675",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/38446675/",
+      "response_sha256": "bbabcf817d7fc91ce48113c81dfa9b1e1539276db4ce1f3dbb9da9089b374ef5",
+      "source_type": "pubmed_abstract",
+      "study_id": "EV-302",
+      "title": "Enfortumab Vedotin and Pembrolizumab in Untreated Advanced Urothelial Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03036098",
+      "details": {
+        "brief_title": "Study of Nivolumab in Combination With Ipilimumab or Standard of Care Chemotherapy Compared to the Standard of Care Chemotherapy Alone in Treatment of Participants With Untreated Inoperable or Metastatic Urothelial Cancer",
+        "nct_id": "NCT03036098",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03036098",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03036098",
+      "response_sha256": "099dfd0ec68e306bf060850493b922ad7591882e58242871b4b39965b6f41ace",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CheckMate-901",
+      "title": "Study of Nivolumab in Combination With Ipilimumab or Standard of Care Chemotherapy Compared to the Standard of Care Chemotherapy Alone in Treatment of Participants With Untreated Inoperable or Metastatic Urothelial Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=37870949&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "e408ebc9a09cc3c27ed65f87e2dd11ea9139288746bf916b2f93bd718c9fd41e",
+        "article_title": "Nivolumab plus Gemcitabine-Cisplatin in Advanced Urothelial Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "37870949"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "37870949",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/37870949/",
+      "response_sha256": "920bd9ac4ab7a6b81bde29a243e826017bf9b52027ed7c73a0f76a3935eb8982",
+      "source_type": "pubmed_abstract",
+      "study_id": "CheckMate-901",
+      "title": "Nivolumab plus Gemcitabine-Cisplatin in Advanced Urothelial Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02302807",
+      "details": {
+        "brief_title": "A Study of Atezolizumab Compared With Chemotherapy in Participants With Locally Advanced or Metastatic Urothelial Bladder Cancer [IMvigor211]",
+        "nct_id": "NCT02302807",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02302807",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02302807",
+      "response_sha256": "cfc8c7c3a06c95e9dfc2ccaff1e8ebdec03a4ed376468d676a49e023c39e4622",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "IMvigor211",
+      "title": "A Study of Atezolizumab Compared With Chemotherapy in Participants With Locally Advanced or Metastatic Urothelial Bladder Cancer [IMvigor211]"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29268948&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "13bbb728aedfdf90e2448884702e088843203419865d6caa0f6a22781084186f",
+        "article_title": "Atezolizumab versus chemotherapy in patients with platinum-treated locally advanced or metastatic urothelial carcinoma (IMvigor211): a multicentre, open-label, phase 3 randomised controlled trial.",
+        "journal": "Lancet",
+        "pmid": "29268948"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29268948",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29268948/",
+      "response_sha256": "3fdaa1d992a34958dae58f9eb29e615164184ebd11e2f610e41263ae42e94ec4",
+      "source_type": "pubmed_abstract",
+      "study_id": "IMvigor211",
+      "title": "Atezolizumab versus chemotherapy in patients with platinum-treated locally advanced or metastatic urothelial carcinoma (IMvigor211): a multicentre, open-label, phase 3 randomised controlled trial."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/urothelial_os_reported_hrs.toml",
+  "source_manifest_sha256": "03184297a75d3a7f02b157949dbb02f3e72f06cb3504d599d1cfde02997e5de7",
+  "status": "verified"
+}

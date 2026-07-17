@@ -1,0 +1,143 @@
+{
+  "benchmark_id": "myeloma_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "manifest": "validation/survival/myeloma_pfs_reported_hrs.toml",
+  "manifest_sha256": "0c2d9a85ec05ee5f7205927d386bf10bc6ecd1ffec2aaa4d59779bb0279ba035",
+  "records": [
+    {
+      "abstract_sha256": "8ac15c0f3ff2d513d8e3c71777d22148973b83bb18903f52fd4e018361395266",
+      "ci_lower": "0.43",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.73",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "31141632",
+      "reported_hr": "0.56",
+      "source_terms": [
+        "daratumumab group",
+        "control group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "MAIA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "0d20eddecf15c396dd7b99d4810b12ccd015b2bde6b873bd42f2c6580cdd1fe5",
+      "ci_lower": "0.38",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.65",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "29231133",
+      "reported_hr": "0.50",
+      "source_terms": [
+        "daratumumab group",
+        "control group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ALCYONE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "406f7580c837a7683167171876c76b502b5e1164f882ed012334112d539e38a2",
+      "ci_lower": "0.44",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.65",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "26671818",
+      "reported_hr": "0.53",
+      "source_terms": [
+        "carfilzomib group",
+        "bortezomib group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ENDEAVOR",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "3ca6596c9fd530a40fd305e266084519dcf5f9973aebfb5338d71ca6c5e8d540",
+      "ci_lower": "0.57",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.83",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "25482145",
+      "reported_hr": "0.69",
+      "source_terms": [
+        "carfilzomib",
+        "control group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ASPIRE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "d77387eeb363f25e49655e8714f515e4011d3be81c63a933c17f74d4797e4a11",
+      "ci_lower": "0.57",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.85",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "26035255",
+      "reported_hr": "0.70",
+      "source_terms": [
+        "elotuzumab group",
+        "control group"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ELOQUENT-2",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "8e1882479455973573ae51624f5ac19dc0278d69ff7ca0e44d2bdd9f8c424cdd",
+      "ci_lower": "0.59",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.79",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "progression_free_survival_reported",
+      "pmid": "29150421",
+      "reported_hr": "0.69",
+      "source_terms": [
+        "Rd continuous",
+        "MPT"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "FIRST-final",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "nsclc_firstline_os_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02578680",
+      "details": {
+        "brief_title": "Study of Pemetrexed+Platinum Chemotherapy With or Without Pembrolizumab (MK-3475) in Participants With First Line Metastatic Nonsquamous Non-small Cell Lung Cancer (MK-3475-189/KEYNOTE-189)",
+        "nct_id": "NCT02578680",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02578680",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02578680",
+      "response_sha256": "8a1e9e8fb5e5715f86d8e8ee5f92eee579d3c8c46cdda4de80b6c422fb968e23",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-189",
+      "title": "Study of Pemetrexed+Platinum Chemotherapy With or Without Pembrolizumab (MK-3475) in Participants With First Line Metastatic Nonsquamous Non-small Cell Lung Cancer (MK-3475-189/KEYNOTE-189)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29658856&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "5d68c11917ae47755f8b78f28a11af46eac86c3f61f0074d40405f6ff9825a3f",
+        "article_title": "Pembrolizumab plus Chemotherapy in Metastatic Non-Small-Cell Lung Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "29658856"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29658856",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29658856/",
+      "response_sha256": "f4c9ee97ce07ff9e6bbd38a1710f7f1939c2bafe8cb1c3f647805acfa5a9a3b3",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-189",
+      "title": "Pembrolizumab plus Chemotherapy in Metastatic Non-Small-Cell Lung Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02775435",
+      "details": {
+        "brief_title": "A Study of Carboplatin-Paclitaxel/Nab-Paclitaxel Chemotherapy With or Without Pembrolizumab (MK-3475) in Adults With First Line Metastatic Squamous Non-small Cell Lung Cancer (MK-3475-407/KEYNOTE-407)",
+        "nct_id": "NCT02775435",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02775435",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02775435",
+      "response_sha256": "0b71f580c3c1ca515401ad6a2b095f8c7e082ded193b82313a8be23950332abb",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-407",
+      "title": "A Study of Carboplatin-Paclitaxel/Nab-Paclitaxel Chemotherapy With or Without Pembrolizumab (MK-3475) in Adults With First Line Metastatic Squamous Non-small Cell Lung Cancer (MK-3475-407/KEYNOTE-407)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30280635&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "8864e9efe7d0b0e5db78b5d3e62511e97b9d1189b5f1160d86cace2ce9785de2",
+        "article_title": "Pembrolizumab plus Chemotherapy for Squamous Non-Small-Cell Lung Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "30280635"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30280635",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30280635/",
+      "response_sha256": "0cece8bf728e019bffe9fa8e6813854e0ecf3a06233c6f2de6736683f8a0bc78",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-407",
+      "title": "Pembrolizumab plus Chemotherapy for Squamous Non-Small-Cell Lung Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03215706",
+      "details": {
+        "brief_title": "A Study of Nivolumab and Ipilimumab Combined With Chemotherapy Compared to Chemotherapy Alone in First Line NSCLC",
+        "nct_id": "NCT03215706",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03215706",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03215706",
+      "response_sha256": "b741f69a5c582a3dda69a1400d2481de610cd6535e9d5e6605a557bf4bf4a590",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CheckMate-9LA",
+      "title": "A Study of Nivolumab and Ipilimumab Combined With Chemotherapy Compared to Chemotherapy Alone in First Line NSCLC"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33476593&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "a7b0842ca29ed86f13f3fe003aeef138c92d80deb1d70a9d493b65ace06f9707",
+        "article_title": "First-line nivolumab plus ipilimumab combined with two cycles of chemotherapy in patients with non-small-cell lung cancer (CheckMate 9LA): an international, randomised, open-label, phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "33476593"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33476593",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33476593/",
+      "response_sha256": "d94cf7bd6d8027ec99828a598b7217d0ecf308ce964d4a28e58897c5ea85a7a4",
+      "source_type": "pubmed_abstract",
+      "study_id": "CheckMate-9LA",
+      "title": "First-line nivolumab plus ipilimumab combined with two cycles of chemotherapy in patients with non-small-cell lung cancer (CheckMate 9LA): an international, randomised, open-label, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03088540",
+      "details": {
+        "brief_title": "Study of REGN 2810 Compared to Platinum-Based Chemotherapies in Participants With Metastatic Non-Small Cell Lung Cancer (NSCLC)",
+        "nct_id": "NCT03088540",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03088540",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03088540",
+      "response_sha256": "4f3af204da877b1cafe52aefc53e7ac4560d3ec180d1e3cd61ef1e406c97290c",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EMPOWER-Lung1",
+      "title": "Study of REGN 2810 Compared to Platinum-Based Chemotherapies in Participants With Metastatic Non-Small Cell Lung Cancer (NSCLC)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33581821&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "96f7cd1dd5b46421a7f60790b7d32c68ff44003ba685c1e2cd038b830a53990f",
+        "article_title": "Cemiplimab monotherapy for first-line treatment of advanced non-small-cell lung cancer with PD-L1 of at least 50%: a multicentre, open-label, global, phase 3, randomised, controlled trial.",
+        "journal": "Lancet",
+        "pmid": "33581821"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33581821",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33581821/",
+      "response_sha256": "53bc838ddf2382c1e98e148f81687a893327dc758499227c1614ae149a0ea50b",
+      "source_type": "pubmed_abstract",
+      "study_id": "EMPOWER-Lung1",
+      "title": "Cemiplimab monotherapy for first-line treatment of advanced non-small-cell lung cancer with PD-L1 of at least 50%: a multicentre, open-label, global, phase 3, randomised, controlled trial."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/nsclc_firstline_os_reported_hrs.toml",
+  "source_manifest_sha256": "dc072cc2b1c8cb167058aa43d354310414191daf534988cad2682f32e03f6d00",
+  "status": "verified"
+}

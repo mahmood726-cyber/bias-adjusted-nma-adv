@@ -17,95 +17,9 @@ from bias_nma_adv.source_verification import load_source_verification_report
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACTS = [
-    ROOT / "validation" / "survival" / "sglt2_hf_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "pcsk9_mace_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "sglt2_ckd_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "glp1_mace_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "parp_firstline_ovarian_pfs_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "parp_recurrent_ovarian_pfs_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "cdk46_breast_pfs_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "rcc_firstline_pfs_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "nsclc_firstline_pfs_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "hfref_therapies_primary_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "doac_af_primary_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "tavi_savr_primary_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "melanoma_pfs_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "osimertinib_nsclc_pfs_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "lipid_cv_outcomes_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "her2_breast_pfs_reported_hr_benchmark.toml",
-    ROOT / "validation" / "survival" / "prostate_mhspc_os_reported_hr_benchmark.toml",
-]
-EFFECTS_CSVS = {
-    "sglt2_hf_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "sglt2_hf_reported_hr_effects.csv",
-    "pcsk9_mace_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "pcsk9_mace_reported_hr_effects.csv",
-    "sglt2_ckd_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "sglt2_ckd_reported_hr_effects.csv",
-    "glp1_mace_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "glp1_mace_reported_hr_effects.csv",
-    "parp_firstline_ovarian_pfs_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "parp_firstline_ovarian_pfs_reported_hr_effects.csv",
-    "parp_recurrent_ovarian_pfs_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "parp_recurrent_ovarian_pfs_reported_hr_effects.csv",
-    "cdk46_breast_pfs_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "cdk46_breast_pfs_reported_hr_effects.csv",
-    "rcc_firstline_pfs_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "rcc_firstline_pfs_reported_hr_effects.csv",
-    "nsclc_firstline_pfs_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "nsclc_firstline_pfs_reported_hr_effects.csv",
-    "hfref_therapies_primary_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "hfref_therapies_primary_reported_hr_effects.csv",
-    "doac_af_primary_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "doac_af_primary_reported_hr_effects.csv",
-    "tavi_savr_primary_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "tavi_savr_primary_reported_hr_effects.csv",
-    "melanoma_pfs_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "melanoma_pfs_reported_hr_effects.csv",
-    "osimertinib_nsclc_pfs_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "osimertinib_nsclc_pfs_reported_hr_effects.csv",
-    "lipid_cv_outcomes_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "lipid_cv_outcomes_reported_hr_effects.csv",
-    "her2_breast_pfs_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "her2_breast_pfs_reported_hr_effects.csv",
-    "prostate_mhspc_os_reported_hr": ROOT
-    / "validation"
-    / "survival"
-    / "prostate_mhspc_os_reported_hr_effects.csv",
-}
+ARTIFACTS = tuple(
+    sorted((ROOT / "validation" / "survival").glob("*_reported_hr_benchmark.toml"))
+)
 
 
 @pytest.mark.parametrize("artifact_path", ARTIFACTS)
@@ -210,7 +124,7 @@ def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens(a
 def test_survival_hr_effects_csv_matches_source_backed_artifact(artifact_path):
     with artifact_path.open("rb") as handle:
         artifact = tomllib.load(handle)
-    csv_path = EFFECTS_CSVS[artifact["benchmark_id"]]
+    csv_path = ROOT / "validation" / "survival" / f"{artifact['benchmark_id']}_effects.csv"
     with csv_path.open("r", encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
 

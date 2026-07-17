@@ -1,0 +1,227 @@
+{
+  "benchmark_id": "cll_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01722487",
+      "details": {
+        "brief_title": "Open-label Phase 3 BTK Inhibitor Ibrutinib vs Chlorambucil Patients 65 Years or Older With Treatment-naive CLL or SLL",
+        "nct_id": "NCT01722487",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01722487",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01722487",
+      "response_sha256": "c14fca3285b3379c66f99b29745a9ff4fc83f68c880262b9b5ff808cac5413a4",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "RESONATE-2",
+      "title": "Open-label Phase 3 BTK Inhibitor Ibrutinib vs Chlorambucil Patients 65 Years or Older With Treatment-naive CLL or SLL"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=35377947&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "95cb4efa467377cc4b9774c6074ee56a5bcf8a9840b731ca219d5d6429bd9c1a",
+        "article_title": "Up to 8-year follow-up from RESONATE-2: first-line ibrutinib treatment for patients with chronic lymphocytic leukemia.",
+        "journal": "Blood Adv",
+        "pmid": "35377947"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "35377947",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/35377947/",
+      "response_sha256": "3e0730eab76ede869337a8660b3ee19e6f7e251b7b6341d03927c07ae4e0b217",
+      "source_type": "pubmed_abstract",
+      "study_id": "RESONATE-2",
+      "title": "Up to 8-year follow-up from RESONATE-2: first-line ibrutinib treatment for patients with chronic lymphocytic leukemia."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01578707",
+      "details": {
+        "brief_title": "A Phase 3 Study of Ibrutinib (PCI-32765) Versus Ofatumumab in Patients With Relapsed or Refractory Chronic Lymphocytic Leukemia",
+        "nct_id": "NCT01578707",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01578707",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01578707",
+      "response_sha256": "7167c0b3e4300a0bc7111607a703e98afa9372ae7304f32c4e42ac9e7785e52f",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "RESONATE",
+      "title": "A Phase 3 Study of Ibrutinib (PCI-32765) Versus Ofatumumab in Patients With Relapsed or Refractory Chronic Lymphocytic Leukemia"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31512258&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "27894e29a5fb44e1da2673d114ffd5df344d4bd846371fda9297f3311a22add5",
+        "article_title": "Final analysis from RESONATE: Up to six years of follow-up on ibrutinib in patients with previously treated chronic lymphocytic leukemia or small lymphocytic lymphoma.",
+        "journal": "Am J Hematol",
+        "pmid": "31512258"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31512258",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31512258/",
+      "response_sha256": "0a7e8f276f0af4c090771432467392044346f73e952031bdbbb6d90a87fe1b85",
+      "source_type": "pubmed_abstract",
+      "study_id": "RESONATE",
+      "title": "Final analysis from RESONATE: Up to six years of follow-up on ibrutinib in patients with previously treated chronic lymphocytic leukemia or small lymphocytic lymphoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02242942",
+      "details": {
+        "brief_title": "Comparison of the Treatments of Obinutuzumab + Venetoclax Versus Obinutuzumab + Chlorambucil in Patients With Chronic Lymphocytic Leukemia",
+        "nct_id": "NCT02242942",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02242942",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02242942",
+      "response_sha256": "f4505e638513e6552101d323b37a6452047931454dc4bdcfcc40956e96f9b5e8",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CLL14",
+      "title": "Comparison of the Treatments of Obinutuzumab + Venetoclax Versus Obinutuzumab + Chlorambucil in Patients With Chronic Lymphocytic Leukemia"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=39082668&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "cdd4a8301aec9bd4bee9fe8fad99491000f377fbef225cee87f9bdcc7bcc0d93",
+        "article_title": "Venetoclax-obinutuzumab for previously untreated chronic lymphocytic leukemia: 6-year results of the randomized phase 3 CLL14 study.",
+        "journal": "Blood",
+        "pmid": "39082668"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "39082668",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/39082668/",
+      "response_sha256": "fb378869a697459d0820a271b1e43e448023d09f2e0780108f5f22e3f0f9e372",
+      "source_type": "pubmed_abstract",
+      "study_id": "CLL14",
+      "title": "Venetoclax-obinutuzumab for previously untreated chronic lymphocytic leukemia: 6-year results of the randomized phase 3 CLL14 study."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02475681",
+      "details": {
+        "brief_title": "Acalabrutinib, Obinutuzumab and Chlorambucil in Treatment na\u00efve CLL",
+        "nct_id": "NCT02475681",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02475681",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02475681",
+      "response_sha256": "9bf0a28664d66dc2f6ab1dcaf5bec33f9639b59f92cb1f8a751049a020ff9ad5",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ELEVATE-TN",
+      "title": "Acalabrutinib, Obinutuzumab and Chlorambucil in Treatment na\u00efve CLL"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32305093&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "cd279e403d3a734828f46cb42e6561ade56f6655f18861fab44c31a9ef71121e",
+        "article_title": "Acalabrutinib with or without obinutuzumab versus chlorambucil and obinutuzmab for treatment-naive chronic lymphocytic leukaemia (ELEVATE TN): a randomised, controlled, phase 3 trial.",
+        "journal": "Lancet",
+        "pmid": "32305093"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32305093",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32305093/",
+      "response_sha256": "9ee9ce2e3f1a21e64b9ad6dc0bba89b3e6335bdd5cffa19ced9ed47f4832789d",
+      "source_type": "pubmed_abstract",
+      "study_id": "ELEVATE-TN",
+      "title": "Acalabrutinib with or without obinutuzumab versus chlorambucil and obinutuzmab for treatment-naive chronic lymphocytic leukaemia (ELEVATE TN): a randomised, controlled, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02970318",
+      "details": {
+        "brief_title": "A Study of Acalabrutinib vs Investigator's Choice of Idelalisib Plus Rituximab or Bendamustine Plus Rituximab in R/R CLL",
+        "nct_id": "NCT02970318",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02970318",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02970318",
+      "response_sha256": "766b21cca9b4cc559aa6fe1a9eaa7a7dfb6a487c48c7633f6abcf60f2b97296f",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ASCEND",
+      "title": "A Study of Acalabrutinib vs Investigator's Choice of Idelalisib Plus Rituximab or Bendamustine Plus Rituximab in R/R CLL"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32459600&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "a6d83f3cf14614c5c03391aa08ac3e2ea2ede23bfce08c3fb7fe99bbd45009f8",
+        "article_title": "ASCEND: Phase III, Randomized Trial of Acalabrutinib Versus Idelalisib Plus Rituximab or Bendamustine Plus Rituximab in Relapsed or Refractory Chronic Lymphocytic Leukemia.",
+        "journal": "J Clin Oncol",
+        "pmid": "32459600"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32459600",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32459600/",
+      "response_sha256": "ae4c90d0cc37cd1c53df524ae32eb1e9d225912e3757724d23b3ed11d431948f",
+      "source_type": "pubmed_abstract",
+      "study_id": "ASCEND",
+      "title": "ASCEND: Phase III, Randomized Trial of Acalabrutinib Versus Idelalisib Plus Rituximab or Bendamustine Plus Rituximab in Relapsed or Refractory Chronic Lymphocytic Leukemia."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02005471",
+      "details": {
+        "brief_title": "A Study to Evaluate the Benefit of Venetoclax Plus Rituximab Compared With Bendamustine Plus Rituximab in Participants With Relapsed or Refractory Chronic Lymphocytic Leukemia (CLL)",
+        "nct_id": "NCT02005471",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02005471",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02005471",
+      "response_sha256": "c3560dbe5445f4104068f2a174eacd82d7e3d4dec5287a5cfd278df2314bc6bd",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "MURANO",
+      "title": "A Study to Evaluate the Benefit of Venetoclax Plus Rituximab Compared With Bendamustine Plus Rituximab in Participants With Relapsed or Refractory Chronic Lymphocytic Leukemia (CLL)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32986498&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "bfe4af4e40c353db8ce4dfa7f31d1747dc492a9887f00f8da30a947021a31d4b",
+        "article_title": "Venetoclax Plus Rituximab in Relapsed Chronic Lymphocytic Leukemia: 4-Year Results and Evaluation of Impact of Genomic Complexity and Gene Mutations From the MURANO Phase III Study.",
+        "journal": "J Clin Oncol",
+        "pmid": "32986498"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32986498",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32986498/",
+      "response_sha256": "56942c9065db0cb128d582e65cb26af940538811fee4b8b87b06d295b24b8424",
+      "source_type": "pubmed_abstract",
+      "study_id": "MURANO",
+      "title": "Venetoclax Plus Rituximab in Relapsed Chronic Lymphocytic Leukemia: 4-Year Results and Evaluation of Impact of Genomic Complexity and Gene Mutations From the MURANO Phase III Study."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/cll_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "009713eceaf5050701c47dbd73a33d777e6bf73b107b5bebbcd9d89d93883c32",
+  "status": "verified"
+}

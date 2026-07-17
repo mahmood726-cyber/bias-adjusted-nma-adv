@@ -1,0 +1,163 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "breast_adjuvant_idfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/breast_adjuvant_idfs_reported_hrs.toml"
+source_manifest_sha256 = "f9d7deac4cfca59ef55ce169f1020375068c41ea27e2af878e0b1be10dae353a"
+source_verification_report = "validation/source_checks/breast_adjuvant_idfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "1206cd5069175fbb8c8c9e20a7573547730abc1181cb1011c8e2c19546174092"
+source_identity_report = "validation/source_checks/breast_adjuvant_idfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "a891564086ada89653f7671251a8023a53d8922a16ca66d5021c0f60f1151f35"
+n_studies = 5
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "breast_adjuvant_idfs_reported_hr"
+manifest_sha256 = "f9d7deac4cfca59ef55ce169f1020375068c41ea27e2af878e0b1be10dae353a"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 5
+
+[source_identity_bundle]
+benchmark_id = "breast_adjuvant_idfs_reported_hr"
+manifest_sha256 = "f9d7deac4cfca59ef55ce169f1020375068c41ea27e2af878e0b1be10dae353a"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 5, pubmed_abstract = 5}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "KATHERINE"
+trial = "Adjuvant trastuzumab emtansine for residual invasive HER2-positive breast cancer"
+nct_id = "NCT01772472"
+pmid = "30516102"
+outcome_id = "invasive_disease_free_survival_reported"
+outcome_label = "invasive disease-free survival"
+active_treatment = "trastuzumab emtansine"
+control_treatment = "trastuzumab"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.5
+ci_lower = 0.39
+ci_upper = 0.64
+estimate = -0.6931471805599453
+variance = 0.015966806988658946
+se = 0.12635983138900964
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "monarchE"
+trial = "Abemaciclib plus endocrine therapy for high-risk early breast cancer"
+nct_id = "NCT03155997"
+pmid = "32954927"
+outcome_id = "invasive_disease_free_survival_reported"
+outcome_label = "invasive disease-free survival"
+active_treatment = "abemaciclib plus endocrine therapy"
+control_treatment = "endocrine therapy alone"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.75
+ci_lower = 0.6
+ci_upper = 0.93
+estimate = -0.2876820724517809
+variance = 0.012499638382871334
+se = 0.11180178166233011
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "OlympiA"
+trial = "Adjuvant olaparib for germline BRCA-mutated HER2-negative breast cancer"
+nct_id = "NCT02032823"
+pmid = "34081848"
+outcome_id = "invasive_disease_free_survival_reported"
+outcome_label = "invasive disease-free survival"
+active_treatment = "olaparib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.58
+ci_lower = 0.41
+ci_upper = 0.82
+estimate = -0.5447271754416722
+variance = 0.03126761448866624
+se = 0.1768265095755335
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "APHINITY"
+trial = "Adjuvant pertuzumab and trastuzumab in early HER2-positive breast cancer"
+nct_id = "NCT01358877"
+pmid = "28581356"
+outcome_id = "invasive_disease_free_survival_reported"
+outcome_label = "invasive disease-free survival"
+active_treatment = "pertuzumab plus trastuzumab and chemotherapy"
+control_treatment = "placebo plus trastuzumab and chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.81
+ci_lower = 0.66
+ci_upper = 1.0
+estimate = -0.21072103131565253
+variance = 0.011236166533959032
+se = 0.10600078553463192
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ExteNET"
+trial = "Adjuvant neratinib after trastuzumab-based therapy in HER2-positive breast cancer"
+nct_id = "NCT00878709"
+pmid = "26874901"
+outcome_id = "invasive_disease_free_survival_reported"
+outcome_label = "invasive disease-free survival"
+active_treatment = "neratinib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.67
+ci_lower = 0.5
+ci_upper = 0.91
+estimate = -0.40047756659712525
+variance = 0.023337823713242608
+se = 0.15276722067656598
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.3907907037589952
+se = 0.05712314128131535
+ci_low = -0.5027500033541665
+ci_high = -0.2788314041638239
+tau2 = 0.0
+q = 10.223786818168398
+df = 4
+hksj = false
+hksj_q_factor = 1.0
+weights = [62.62992974802597, 80.00231441657807, 31.981972924812542, 88.99832491603814, 42.84889680748462]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.4131736213609366
+se = 0.09307161570585137
+ci_low = -0.6715818532202977
+ci_high = -0.15476538950157548
+tau2 = 0.02561033164112189
+q = 3.718461723095335
+df = 4
+hksj = true
+hksj_q_factor = 1.0
+weights = [24.051679190922506, 26.239852704434597, 17.58150685888216, 27.139621118087536, 20.429779074623173]
+warnings = []
+pi_low = -0.9271734572355292
+pi_high = 0.10082621451365603

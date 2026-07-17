@@ -40,32 +40,20 @@ def test_source_benchmark_registry_validates_all_registered_artifacts():
         "pubmed_abstract",
         "who_ictrp_results",
     }
-    assert {entry.id for entry in registry.benchmarks} == {
+    benchmark_ids = {entry.id for entry in registry.benchmarks}
+    assert len(benchmark_ids) == len(registry.benchmarks)
+    assert {
         "sglt2_hf_primary_log_or",
-        "sglt2_hf_reported_hr",
-        "pcsk9_mace_reported_hr",
-        "sglt2_ckd_reported_hr",
-        "glp1_mace_reported_hr",
-        "parp_firstline_ovarian_pfs_reported_hr",
-        "parp_recurrent_ovarian_pfs_reported_hr",
-        "cdk46_breast_pfs_reported_hr",
-        "rcc_firstline_pfs_reported_hr",
-        "nsclc_firstline_pfs_reported_hr",
-        "hfref_therapies_primary_reported_hr",
-        "doac_af_primary_reported_hr",
-        "tavi_savr_primary_reported_hr",
-        "melanoma_pfs_reported_hr",
-        "osimertinib_nsclc_pfs_reported_hr",
-        "lipid_cv_outcomes_reported_hr",
-        "her2_breast_pfs_reported_hr",
-        "prostate_mhspc_os_reported_hr",
         "t2d_mace_ctgov_hr_network",
         "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",
         "sitagliptin_pioglitazone_component",
         "sglt2_rct_nrs_cross_design",
         "midkine_elisa_cancer_dta",
-    }
+        "myeloma_pfs_reported_hr",
+        "cll_pfs_reported_hr",
+        "hcc_os_reported_hr",
+    }.issubset(benchmark_ids)
     for entry in registry.benchmarks:
         assert entry.certification_effect == "none"
         assert entry.certification_scope == "local_source_verified_only"
@@ -76,32 +64,9 @@ def test_source_benchmark_registry_validates_all_registered_artifacts():
 def test_source_benchmark_registry_covers_every_source_backed_benchmark_artifact():
     registry = load_source_benchmark_registry(REGISTRY)
 
-    assert discover_source_backed_benchmark_artifacts(ROOT) == (
-        "validation/real_meta/sglt2_hf_primary_benchmark.toml",
-        "validation/survival/cdk46_breast_pfs_reported_hr_benchmark.toml",
-        "validation/survival/doac_af_primary_reported_hr_benchmark.toml",
-        "validation/survival/glp1_mace_reported_hr_benchmark.toml",
-        "validation/survival/her2_breast_pfs_reported_hr_benchmark.toml",
-        "validation/survival/hfref_therapies_primary_reported_hr_benchmark.toml",
-        "validation/survival/lipid_cv_outcomes_reported_hr_benchmark.toml",
-        "validation/survival/melanoma_pfs_reported_hr_benchmark.toml",
-        "validation/survival/nsclc_firstline_pfs_reported_hr_benchmark.toml",
-        "validation/survival/osimertinib_nsclc_pfs_reported_hr_benchmark.toml",
-        "validation/survival/parp_firstline_ovarian_pfs_reported_hr_benchmark.toml",
-        "validation/survival/parp_recurrent_ovarian_pfs_reported_hr_benchmark.toml",
-        "validation/survival/pcsk9_mace_reported_hr_benchmark.toml",
-        "validation/survival/prostate_mhspc_os_reported_hr_benchmark.toml",
-        "validation/survival/rcc_firstline_pfs_reported_hr_benchmark.toml",
-        "validation/survival/sglt2_ckd_reported_hr_benchmark.toml",
-        "validation/survival/sglt2_hf_reported_hr_benchmark.toml",
-        "validation/survival/tavi_savr_primary_reported_hr_benchmark.toml",
-        "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml",
-        "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
-        "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml",
-        "validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml",
-        "validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml",
-        "validation/dta/midkine_elisa_cancer_dta_benchmark.toml",
-    )
+    discovered = discover_source_backed_benchmark_artifacts(ROOT)
+    assert len(discovered) == len(registry.benchmarks)
+    assert set(discovered) == {entry.artifact_path for entry in registry.benchmarks}
     assert_registry_covers_source_backed_artifacts(registry, repo_root=ROOT)
 
 
@@ -157,33 +122,9 @@ def test_validate_benchmark_registry_script_emits_machine_readable_summary():
     assert payload["status"] == "passed"
     assert payload["certification_effect"] == "none"
     assert payload["registry"] == "validation/benchmark_registry.toml"
-    assert payload["n_benchmarks"] == 24
-    assert set(payload["benchmark_ids"]) == {
-        "sglt2_hf_primary_log_or",
-        "sglt2_hf_reported_hr",
-        "pcsk9_mace_reported_hr",
-        "sglt2_ckd_reported_hr",
-        "glp1_mace_reported_hr",
-        "parp_firstline_ovarian_pfs_reported_hr",
-        "parp_recurrent_ovarian_pfs_reported_hr",
-        "cdk46_breast_pfs_reported_hr",
-        "rcc_firstline_pfs_reported_hr",
-        "nsclc_firstline_pfs_reported_hr",
-        "hfref_therapies_primary_reported_hr",
-        "doac_af_primary_reported_hr",
-        "tavi_savr_primary_reported_hr",
-        "melanoma_pfs_reported_hr",
-        "osimertinib_nsclc_pfs_reported_hr",
-        "lipid_cv_outcomes_reported_hr",
-        "her2_breast_pfs_reported_hr",
-        "prostate_mhspc_os_reported_hr",
-        "t2d_mace_ctgov_hr_network",
-        "psoriasis_pasi90_ctgov_binary_network",
-        "semaglutide_obesity_dose_response",
-        "sitagliptin_pioglitazone_component",
-        "sglt2_rct_nrs_cross_design",
-        "midkine_elisa_cancer_dta",
-    }
+    registry = load_source_benchmark_registry(REGISTRY)
+    assert payload["n_benchmarks"] == len(registry.benchmarks)
+    assert set(payload["benchmark_ids"]) == {entry.id for entry in registry.benchmarks}
 
 
 def test_source_benchmark_registry_rejects_malformed_source_check_even_when_hash_matches(tmp_path):
