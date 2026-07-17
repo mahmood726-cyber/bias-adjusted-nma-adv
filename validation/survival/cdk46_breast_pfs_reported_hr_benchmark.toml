@@ -1,0 +1,182 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "cdk46_breast_pfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/cdk46_breast_pfs_reported_hrs.toml"
+source_manifest_sha256 = "cd9cb00f732c7b92dcfaefd1b4a3f18637fc4752e012135cf363e3ab58598ac3"
+source_verification_report = "validation/source_checks/cdk46_breast_pfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "ad41b55ca4914aa7d139c454c3b55de034149c62e6b30d798c913845fc689cf2"
+source_identity_report = "validation/source_checks/cdk46_breast_pfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "e4effcdaace31364ac2cfad652923fc501c7fc0adead18548e61bc09edae801e"
+n_studies = 6
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "cdk46_breast_pfs_reported_hr"
+manifest_sha256 = "cd9cb00f732c7b92dcfaefd1b4a3f18637fc4752e012135cf363e3ab58598ac3"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 6
+
+[source_identity_bundle]
+benchmark_id = "cdk46_breast_pfs_reported_hr"
+manifest_sha256 = "cd9cb00f732c7b92dcfaefd1b4a3f18637fc4752e012135cf363e3ab58598ac3"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 6, pubmed_abstract = 6}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "PALOMA-2"
+trial = "Palbociclib and letrozole in advanced breast cancer"
+nct_id = "NCT01740427"
+pmid = "27959613"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in hormone-receptor-positive HER2-negative advanced breast cancer"
+active_treatment = "palbociclib plus letrozole"
+control_treatment = "placebo plus letrozole"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.58
+ci_lower = 0.46
+ci_upper = 0.72
+estimate = -0.5447271754416722
+variance = 0.013063146148673918
+se = 0.11429412123409462
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "PALOMA-3"
+trial = "Fulvestrant plus palbociclib versus fulvestrant plus placebo"
+nct_id = "NCT01942135"
+pmid = "26947331"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival after progression on endocrine therapy"
+active_treatment = "palbociclib plus fulvestrant"
+control_treatment = "placebo plus fulvestrant"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.46
+ci_lower = 0.36
+ci_upper = 0.59
+estimate = -0.7765287894989963
+variance = 0.015882916823937658
+se = 0.1260274447250981
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "MONALEESA-2"
+trial = "Ribociclib as first-line therapy for HR-positive advanced breast cancer"
+nct_id = "NCT01958021"
+pmid = "27717303"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in hormone-receptor-positive advanced breast cancer"
+active_treatment = "ribociclib plus letrozole"
+control_treatment = "placebo plus letrozole"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.56
+ci_lower = 0.43
+ci_upper = 0.72
+estimate = -0.579818495252942
+variance = 0.017291946431255326
+se = 0.13149884574115214
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "MONARCH-3"
+trial = "Abemaciclib as initial therapy for advanced breast cancer"
+nct_id = "NCT02246621"
+pmid = "28968163"
+outcome_id = "pfs_primary_reported"
+outcome_label = "investigator-assessed progression-free survival"
+active_treatment = "abemaciclib plus nonsteroidal aromatase inhibitor"
+control_treatment = "placebo plus nonsteroidal aromatase inhibitor"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.54
+ci_lower = 0.41
+ci_upper = 0.72
+estimate = -0.616186139423817
+variance = 0.020635058616323514
+se = 0.14364908150184433
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "MONALEESA-7"
+trial = "Ribociclib plus endocrine therapy for premenopausal advanced breast cancer"
+nct_id = "NCT02278120"
+pmid = "29804902"
+outcome_id = "pfs_primary_reported"
+outcome_label = "investigator-assessed progression-free survival"
+active_treatment = "ribociclib plus endocrine therapy"
+control_treatment = "placebo plus endocrine therapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.55
+ci_lower = 0.44
+ci_upper = 0.69
+estimate = -0.5978370007556204
+variance = 0.013173718629437598
+se = 0.11477682095892706
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "MONALEESA-3"
+trial = "Ribociclib and fulvestrant in HR-positive HER2-negative advanced breast cancer"
+nct_id = "NCT02422615"
+pmid = "29860922"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "ribociclib plus fulvestrant"
+control_treatment = "placebo plus fulvestrant"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.593
+ci_lower = 0.48
+ci_upper = 0.732
+estimate = -0.5225608799844117
+variance = 0.011589300473692322
+se = 0.10765361337963683
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.5991527760495351
+se = 0.04950745209033607
+ci_low = -0.696185599112936
+ci_high = -0.5021199529861342
+tau2 = 0.0
+q = 2.7496356778222433
+df = 5
+hksj = false
+hksj_q_factor = 1.0
+weights = [76.55123724551709, 62.960727622326125, 57.83038965425502, 48.46121441152305, 75.90871098198726, 86.28648487197282]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.5991527760495351
+se = 0.04950745209033607
+ci_low = -0.7264157331215881
+ci_high = -0.47188981897748206
+tau2 = 0.0
+q = 2.7496356778222433
+df = 5
+hksj = true
+hksj_q_factor = 1.0
+weights = [76.55123724551709, 62.960727622326125, 57.83038965425502, 48.46121441152305, 75.90871098198726, 86.28648487197282]
+warnings = []
+pi_low = -0.7264157331215881
+pi_high = -0.47188981897748206

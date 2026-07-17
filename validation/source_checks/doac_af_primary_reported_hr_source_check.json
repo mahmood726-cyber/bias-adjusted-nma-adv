@@ -1,0 +1,119 @@
+{
+  "benchmark_id": "doac_af_primary_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:20:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00412984",
+      "details": {
+        "brief_title": "Apixaban for the Prevention of Stroke in Subjects With Atrial Fibrillation",
+        "nct_id": "NCT00412984",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00412984",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00412984",
+      "response_sha256": "01b0c992208740720906313f88946ed0d04c4e78488326915b8909b0e17893c8",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ARISTOTLE",
+      "title": "Apixaban for the Prevention of Stroke in Subjects With Atrial Fibrillation"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=21870978&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "ec6e2459f3e23191550b6e87de73a1d488105fb6ead159a98c6cb647a5c35098",
+        "article_title": "Apixaban versus warfarin in patients with atrial fibrillation.",
+        "journal": "N Engl J Med",
+        "pmid": "21870978"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "21870978",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/21870978/",
+      "response_sha256": "070808b131231dc9141645fc51ed733ed3f8db0ad34099cce02d8c66b19843ba",
+      "source_type": "pubmed_abstract",
+      "study_id": "ARISTOTLE",
+      "title": "Apixaban versus warfarin in patients with atrial fibrillation."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00403767",
+      "details": {
+        "brief_title": "An Efficacy and Safety Study of Rivaroxaban With Warfarin for the Prevention of Stroke and Non-Central Nervous System Systemic Embolism in Patients With Non-Valvular Atrial Fibrillation",
+        "nct_id": "NCT00403767",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00403767",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00403767",
+      "response_sha256": "2b1fe8fb5e2725e69d4458a288ba61877bebef0729b1b18058a18e72f6b72d90",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ROCKET-AF",
+      "title": "An Efficacy and Safety Study of Rivaroxaban With Warfarin for the Prevention of Stroke and Non-Central Nervous System Systemic Embolism in Patients With Non-Valvular Atrial Fibrillation"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=21830957&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "09235ea51b06704208776dc66a7f0d31d848cb4920aab2f31b619418e4190ca4",
+        "article_title": "Rivaroxaban versus warfarin in nonvalvular atrial fibrillation.",
+        "journal": "N Engl J Med",
+        "pmid": "21830957"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "21830957",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/21830957/",
+      "response_sha256": "67420596767ccfe0e2b559096cbec5bb7a9e3b95598e37e2d8b9d86950188c14",
+      "source_type": "pubmed_abstract",
+      "study_id": "ROCKET-AF",
+      "title": "Rivaroxaban versus warfarin in nonvalvular atrial fibrillation."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00496769",
+      "details": {
+        "brief_title": "A Phase III Study of Apixaban in Patients With Atrial Fibrillation",
+        "nct_id": "NCT00496769",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00496769",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00496769",
+      "response_sha256": "06c3fb28054339980350d3d256d7f47d4a916249850f823f88ca82c52a83554a",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "AVERROES",
+      "title": "A Phase III Study of Apixaban in Patients With Atrial Fibrillation"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=21309657&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "c99e93b7fd35733281d78766ff71c81b0d742bc4de3475756c57728897dd09e3",
+        "article_title": "Apixaban in patients with atrial fibrillation.",
+        "journal": "N Engl J Med",
+        "pmid": "21309657"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "21309657",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/21309657/",
+      "response_sha256": "0196b0ffdfa3a64e339bae9e230056670be5a49eadda1ce53d7469a18508d620",
+      "source_type": "pubmed_abstract",
+      "study_id": "AVERROES",
+      "title": "Apixaban in patients with atrial fibrillation."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/doac_af_primary_reported_hrs.toml",
+  "source_manifest_sha256": "cb46f42cce91e699b5d6d3da8291ddf19d1bce6b5c25a4bbaf343616120a5df4",
+  "status": "verified"
+}

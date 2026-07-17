@@ -47,19 +47,19 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
     assert summary["status"] == "partial_not_large_scale"
     assert summary["global_large_scale_validation_complete"] is False
     assert summary["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 13,
+        "observed": 20,
         "required": 20,
     }
     assert summary["dynamic_counts"]["benchmark_study_effects"] == {
-        "observed": 92,
+        "observed": 121,
         "required": 200,
     }
     assert summary["dynamic_counts"]["unique_nct_ids"] == {
-        "observed": 36,
+        "observed": 65,
         "required": 100,
     }
     assert summary["dynamic_counts"]["unique_pmids"] == {
-        "observed": 31,
+        "observed": 60,
         "required": 50,
     }
     assert summary["dynamic_counts"]["passed_reference_reports"] == {
@@ -67,7 +67,7 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         "required": 10,
     }
     assert summary["dynamic_counts"]["tau2_positive_benchmarks"] == {
-        "observed": 3,
+        "observed": 9,
         "required": 1,
     }
     assert summary["dynamic_counts"]["simulation_jobs"] == {
@@ -86,7 +86,9 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
     assert "component_nma" not in summary["missing_required_real_domains"]
     assert "cross_design_nma" not in summary["missing_required_real_domains"]
     assert summary["missing_required_real_domains"] == ["mlnmr"]
-    assert "source_backed_benchmarks" in summary["failed_checks"]
+    assert "source_backed_benchmarks" not in summary["failed_checks"]
+    assert "benchmark_study_effects" in summary["failed_checks"]
+    assert "unique_nct_ids" in summary["failed_checks"]
     assert summary["certification_effect"] == "none"
 
 

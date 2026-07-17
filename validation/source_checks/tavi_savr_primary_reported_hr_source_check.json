@@ -1,0 +1,83 @@
+{
+  "benchmark_id": "tavi_savr_primary_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:27:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02675114",
+      "details": {
+        "brief_title": "PARTNER 3 Trial: Safety and Effectiveness of the SAPIEN 3 Transcatheter Heart Valve in Low Risk Patients With Aortic Stenosis",
+        "nct_id": "NCT02675114",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02675114",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02675114",
+      "response_sha256": "d56fe3aa83e381f2eb1053937b5bdf667a0872586ce5687e22bbde2b419bb758",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PARTNER-3",
+      "title": "PARTNER 3 Trial: Safety and Effectiveness of the SAPIEN 3 Transcatheter Heart Valve in Low Risk Patients With Aortic Stenosis"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30883058&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "ca6fd51384bec341de391efb2217f8c4af445b4140db14193f9d66d2a8881073",
+        "article_title": "Transcatheter Aortic-Valve Replacement with a Balloon-Expandable Valve in Low-Risk Patients.",
+        "journal": "N Engl J Med",
+        "pmid": "30883058"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30883058",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30883058/",
+      "response_sha256": "d669c4f31ded96722318d6086b5dc4dcf13685a17842763b4131db74624475e8",
+      "source_type": "pubmed_abstract",
+      "study_id": "PARTNER-3",
+      "title": "Transcatheter Aortic-Valve Replacement with a Balloon-Expandable Valve in Low-Risk Patients."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01314313",
+      "details": {
+        "brief_title": "PARTNER II Trial: Placement of AoRTic TraNscathetER Valves II - XT Intermediate and High Risk",
+        "nct_id": "NCT01314313",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01314313",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01314313",
+      "response_sha256": "468db1f639a383b37fcab1460fcfd505b79df21b329074439afa0ec1b62fe4c3",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PARTNER-2A",
+      "title": "PARTNER II Trial: Placement of AoRTic TraNscathetER Valves II - XT Intermediate and High Risk"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27040324&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "07d033dbe15ce5bd2f7e448d18cd671a873e27200ae0d9a4c9ab2e179d1b7ac7",
+        "article_title": "Transcatheter or Surgical Aortic-Valve Replacement in Intermediate-Risk Patients.",
+        "journal": "N Engl J Med",
+        "pmid": "27040324"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27040324",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27040324/",
+      "response_sha256": "9800068490c816da02300aa250a8fe41e1b5d3443be8f7587ddf8392c32d301b",
+      "source_type": "pubmed_abstract",
+      "study_id": "PARTNER-2A",
+      "title": "Transcatheter or Surgical Aortic-Valve Replacement in Intermediate-Risk Patients."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/tavi_savr_primary_reported_hrs.toml",
+  "source_manifest_sha256": "ca3d7d0244f91439a4d63ee6742a96e137f34454aabff085be92a2e6867c516b",
+  "status": "verified"
+}

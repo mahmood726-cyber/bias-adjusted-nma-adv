@@ -1,0 +1,143 @@
+{
+  "benchmark_id": "cdk46_breast_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:59:00Z",
+  "manifest": "validation/survival/cdk46_breast_pfs_reported_hrs.toml",
+  "manifest_sha256": "cd9cb00f732c7b92dcfaefd1b4a3f18637fc4752e012135cf363e3ab58598ac3",
+  "records": [
+    {
+      "abstract_sha256": "c583b3c29487c109d8e3e57106438f4e9cee3eda0af4005996011e555fcfc26c",
+      "ci_lower": "0.46",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.72",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "27959613",
+      "reported_hr": "0.58",
+      "source_terms": [
+        "palbociclib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "PALOMA-2",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "2947deafc3d2e2a620ffd87d906291b8578404ddfa8a192dd2ef940e6ee2980f",
+      "ci_lower": "0.36",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.59",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "26947331",
+      "reported_hr": "0.46",
+      "source_terms": [
+        "palbociclib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "PALOMA-3",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "b7061f1e94bfa887186184338b27ab7f8f10f4c3508a8595ce5a4c6b92fbe63f",
+      "ci_lower": "0.43",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.72",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "27717303",
+      "reported_hr": "0.56",
+      "source_terms": [
+        "ribociclib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "MONALEESA-2",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "1af73d06b8a33148879f15b3d33d40dcf3697c44fa4e938805f9cec7da4eed3e",
+      "ci_lower": "0.41",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.72",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "28968163",
+      "reported_hr": "0.54",
+      "source_terms": [
+        "abemaciclib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "MONARCH-3",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "a4cbb65b21f23ffe5d3f1a50f38174f1dd572958690290e0c4a748bb447f36e1",
+      "ci_lower": "0.44",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.69",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "29804902",
+      "reported_hr": "0.55",
+      "source_terms": [
+        "ribociclib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "MONALEESA-7",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "42c78e535bfd6e6a21544982ffff6f325f8220eab51f6bb5de2e76b2478c1140",
+      "ci_lower": "0.480",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.732",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "29860922",
+      "reported_hr": "0.593",
+      "source_terms": [
+        "ribociclib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "MONALEESA-3",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

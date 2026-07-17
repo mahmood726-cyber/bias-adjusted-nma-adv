@@ -1,0 +1,55 @@
+{
+  "benchmark_id": "tavi_savr_primary_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:28:00Z",
+  "manifest": "validation/survival/tavi_savr_primary_reported_hrs.toml",
+  "manifest_sha256": "ca3d7d0244f91439a4d63ee6742a96e137f34454aabff085be92a2e6867c516b",
+  "records": [
+    {
+      "abstract_sha256": "ca6fd51384bec341de391efb2217f8c4af445b4140db14193f9d66d2a8881073",
+      "ci_lower": "0.37",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.79",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "30883058",
+      "reported_hr": "0.54",
+      "source_terms": [
+        "TAVR",
+        "surgery"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "PARTNER-3",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "07d033dbe15ce5bd2f7e448d18cd671a873e27200ae0d9a4c9ab2e179d1b7ac7",
+      "ci_lower": "0.73",
+      "ci_lower_token_found": true,
+      "ci_upper": "1.09",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "27040324",
+      "reported_hr": "0.89",
+      "source_terms": [
+        "TAVR",
+        "surgery"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "PARTNER-2A",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

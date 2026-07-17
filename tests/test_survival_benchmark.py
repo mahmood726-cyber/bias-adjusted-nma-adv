@@ -40,6 +40,27 @@ PARP_FIRSTLINE_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "parp_f
 PARP_RECURRENT_MANIFEST = ROOT / "validation" / "survival" / "parp_recurrent_ovarian_pfs_reported_hrs.toml"
 PARP_RECURRENT_REPORT = ROOT / "validation" / "source_checks" / "parp_recurrent_ovarian_pfs_reported_hr_tokens.json"
 PARP_RECURRENT_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "parp_recurrent_ovarian_pfs_reported_hr_source_check.json"
+CDK46_MANIFEST = ROOT / "validation" / "survival" / "cdk46_breast_pfs_reported_hrs.toml"
+CDK46_REPORT = ROOT / "validation" / "source_checks" / "cdk46_breast_pfs_reported_hr_tokens.json"
+CDK46_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "cdk46_breast_pfs_reported_hr_source_check.json"
+RCC_MANIFEST = ROOT / "validation" / "survival" / "rcc_firstline_pfs_reported_hrs.toml"
+RCC_REPORT = ROOT / "validation" / "source_checks" / "rcc_firstline_pfs_reported_hr_tokens.json"
+RCC_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "rcc_firstline_pfs_reported_hr_source_check.json"
+NSCLC_MANIFEST = ROOT / "validation" / "survival" / "nsclc_firstline_pfs_reported_hrs.toml"
+NSCLC_REPORT = ROOT / "validation" / "source_checks" / "nsclc_firstline_pfs_reported_hr_tokens.json"
+NSCLC_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "nsclc_firstline_pfs_reported_hr_source_check.json"
+HFREF_MANIFEST = ROOT / "validation" / "survival" / "hfref_therapies_primary_reported_hrs.toml"
+HFREF_REPORT = ROOT / "validation" / "source_checks" / "hfref_therapies_primary_reported_hr_tokens.json"
+HFREF_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "hfref_therapies_primary_reported_hr_source_check.json"
+DOAC_MANIFEST = ROOT / "validation" / "survival" / "doac_af_primary_reported_hrs.toml"
+DOAC_REPORT = ROOT / "validation" / "source_checks" / "doac_af_primary_reported_hr_tokens.json"
+DOAC_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "doac_af_primary_reported_hr_source_check.json"
+TAVI_MANIFEST = ROOT / "validation" / "survival" / "tavi_savr_primary_reported_hrs.toml"
+TAVI_REPORT = ROOT / "validation" / "source_checks" / "tavi_savr_primary_reported_hr_tokens.json"
+TAVI_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "tavi_savr_primary_reported_hr_source_check.json"
+MELANOMA_MANIFEST = ROOT / "validation" / "survival" / "melanoma_pfs_reported_hrs.toml"
+MELANOMA_REPORT = ROOT / "validation" / "source_checks" / "melanoma_pfs_reported_hr_tokens.json"
+MELANOMA_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "melanoma_pfs_reported_hr_source_check.json"
 VERIFY_SCRIPT = ROOT / "scripts" / "verify_pubmed_survival_hrs.py"
 IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
 
@@ -108,6 +129,77 @@ IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
                 "Study19",
             },
         ),
+        (
+            CDK46_MANIFEST,
+            "cdk46_breast_pfs_reported_hr",
+            {
+                "PALOMA-2",
+                "PALOMA-3",
+                "MONALEESA-2",
+                "MONARCH-3",
+                "MONALEESA-7",
+                "MONALEESA-3",
+            },
+        ),
+        (
+            RCC_MANIFEST,
+            "rcc_firstline_pfs_reported_hr",
+            {
+                "KEYNOTE-426",
+                "JAVELIN-Renal-101",
+                "CLEAR",
+                "CheckMate-9ER",
+                "CABOSUN",
+                "COMPARZ",
+            },
+        ),
+        (
+            NSCLC_MANIFEST,
+            "nsclc_firstline_pfs_reported_hr",
+            {
+                "KEYNOTE-024",
+                "KEYNOTE-189",
+                "KEYNOTE-407",
+                "IMpower150",
+                "IMpower130",
+            },
+        ),
+        (
+            HFREF_MANIFEST,
+            "hfref_therapies_primary_reported_hr",
+            {
+                "PARADIGM-HF",
+                "EMPHASIS-HF",
+                "VICTORIA",
+                "GALACTIC-HF",
+            },
+        ),
+        (
+            DOAC_MANIFEST,
+            "doac_af_primary_reported_hr",
+            {
+                "ARISTOTLE",
+                "ROCKET-AF",
+                "AVERROES",
+            },
+        ),
+        (
+            TAVI_MANIFEST,
+            "tavi_savr_primary_reported_hr",
+            {
+                "PARTNER-3",
+                "PARTNER-2A",
+            },
+        ),
+        (
+            MELANOMA_MANIFEST,
+            "melanoma_pfs_reported_hr",
+            {
+                "KEYNOTE-006",
+                "CheckMate-066",
+                "COMBI-d",
+            },
+        ),
     ],
 )
 def test_survival_hr_manifest_is_source_bounded_and_pubmed_only(
@@ -156,6 +248,9 @@ def test_pubmed_survival_hr_verifier_normalizes_lancet_decimal_typography():
     normalised = module.normalise_text(text)
     assert "0.88" in normalised
     assert "0.79-0.99" in normalised
+    actual_middle_dot = module.normalise_text("hazard ratio 0\u00b755, 95% CI 0\u00b744-0\u00b769")
+    assert "0.55" in actual_middle_dot
+    assert "0.44-0.69" in actual_middle_dot
 
     abstract = (
         "The margin used the upper boundary of the confidence interval for "
@@ -249,6 +344,41 @@ def test_survival_hr_manifest_rejects_scalar_source_terms():
             PARP_RECURRENT_REPORT,
             "validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml",
         ),
+        (
+            CDK46_MANIFEST,
+            CDK46_REPORT,
+            "validation/survival/cdk46_breast_pfs_reported_hrs.toml",
+        ),
+        (
+            RCC_MANIFEST,
+            RCC_REPORT,
+            "validation/survival/rcc_firstline_pfs_reported_hrs.toml",
+        ),
+        (
+            NSCLC_MANIFEST,
+            NSCLC_REPORT,
+            "validation/survival/nsclc_firstline_pfs_reported_hrs.toml",
+        ),
+        (
+            HFREF_MANIFEST,
+            HFREF_REPORT,
+            "validation/survival/hfref_therapies_primary_reported_hrs.toml",
+        ),
+        (
+            DOAC_MANIFEST,
+            DOAC_REPORT,
+            "validation/survival/doac_af_primary_reported_hrs.toml",
+        ),
+        (
+            TAVI_MANIFEST,
+            TAVI_REPORT,
+            "validation/survival/tavi_savr_primary_reported_hrs.toml",
+        ),
+        (
+            MELANOMA_MANIFEST,
+            MELANOMA_REPORT,
+            "validation/survival/melanoma_pfs_reported_hrs.toml",
+        ),
     ],
 )
 def test_survival_hr_verification_snapshot_matches_manifest(
@@ -326,6 +456,48 @@ def test_survival_hr_verification_snapshot_matches_manifest(
             PARP_RECURRENT_IDENTITY_REPORT,
             "validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml",
             {"clinicaltrials_gov": 4, "pubmed_abstract": 4},
+        ),
+        (
+            CDK46_MANIFEST,
+            CDK46_IDENTITY_REPORT,
+            "validation/survival/cdk46_breast_pfs_reported_hrs.toml",
+            {"clinicaltrials_gov": 6, "pubmed_abstract": 6},
+        ),
+        (
+            RCC_MANIFEST,
+            RCC_IDENTITY_REPORT,
+            "validation/survival/rcc_firstline_pfs_reported_hrs.toml",
+            {"clinicaltrials_gov": 6, "pubmed_abstract": 6},
+        ),
+        (
+            NSCLC_MANIFEST,
+            NSCLC_IDENTITY_REPORT,
+            "validation/survival/nsclc_firstline_pfs_reported_hrs.toml",
+            {"clinicaltrials_gov": 5, "pubmed_abstract": 5},
+        ),
+        (
+            HFREF_MANIFEST,
+            HFREF_IDENTITY_REPORT,
+            "validation/survival/hfref_therapies_primary_reported_hrs.toml",
+            {"clinicaltrials_gov": 4, "pubmed_abstract": 4},
+        ),
+        (
+            DOAC_MANIFEST,
+            DOAC_IDENTITY_REPORT,
+            "validation/survival/doac_af_primary_reported_hrs.toml",
+            {"clinicaltrials_gov": 3, "pubmed_abstract": 3},
+        ),
+        (
+            TAVI_MANIFEST,
+            TAVI_IDENTITY_REPORT,
+            "validation/survival/tavi_savr_primary_reported_hrs.toml",
+            {"clinicaltrials_gov": 2, "pubmed_abstract": 2},
+        ),
+        (
+            MELANOMA_MANIFEST,
+            MELANOMA_IDENTITY_REPORT,
+            "validation/survival/melanoma_pfs_reported_hrs.toml",
+            {"clinicaltrials_gov": 3, "pubmed_abstract": 3},
         ),
     ],
 )

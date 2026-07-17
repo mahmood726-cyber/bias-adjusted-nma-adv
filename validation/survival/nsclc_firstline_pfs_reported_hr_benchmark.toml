@@ -1,0 +1,163 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "nsclc_firstline_pfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/nsclc_firstline_pfs_reported_hrs.toml"
+source_manifest_sha256 = "8ad27b7646c2f19105c8045e383e0b6bffbba7943c64dc2c43efb089e5cb00a0"
+source_verification_report = "validation/source_checks/nsclc_firstline_pfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "3f05cc0397e3b2807683c404a74cbf41b5f7f662fcfd9113143e3d7a44627f5d"
+source_identity_report = "validation/source_checks/nsclc_firstline_pfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "9ca8dbe611a77addd599b6f62cdf122f8fd64272f72d445be3f67848adb330c8"
+n_studies = 5
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "nsclc_firstline_pfs_reported_hr"
+manifest_sha256 = "8ad27b7646c2f19105c8045e383e0b6bffbba7943c64dc2c43efb089e5cb00a0"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 5
+
+[source_identity_bundle]
+benchmark_id = "nsclc_firstline_pfs_reported_hr"
+manifest_sha256 = "8ad27b7646c2f19105c8045e383e0b6bffbba7943c64dc2c43efb089e5cb00a0"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 5, pubmed_abstract = 5}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "KEYNOTE-024"
+trial = "Pembrolizumab versus chemotherapy for PD-L1-positive non-small-cell lung cancer"
+nct_id = "NCT02142738"
+pmid = "27718847"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "pembrolizumab"
+control_treatment = "chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.5
+ci_lower = 0.37
+ci_upper = 0.68
+estimate = -0.6931471805599453
+variance = 0.02410422399810303
+se = 0.1552553509483748
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "KEYNOTE-189"
+trial = "Pembrolizumab plus chemotherapy in metastatic non-small-cell lung cancer"
+nct_id = "NCT02578680"
+pmid = "29658856"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "pembrolizumab plus chemotherapy"
+control_treatment = "placebo plus chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.52
+ci_lower = 0.43
+ci_upper = 0.64
+estimate = -0.6539264674066639
+variance = 0.010292427314315645
+se = 0.10145160084649056
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "KEYNOTE-407"
+trial = "Pembrolizumab plus chemotherapy for squamous non-small-cell lung cancer"
+nct_id = "NCT02775435"
+pmid = "30280635"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "pembrolizumab plus chemotherapy"
+control_treatment = "placebo plus chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.56
+ci_lower = 0.45
+ci_upper = 0.7
+estimate = -0.579818495252942
+variance = 0.01270456030498308
+se = 0.11271450796141143
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "IMpower150"
+trial = "Atezolizumab for first-line treatment of metastatic nonsquamous NSCLC"
+nct_id = "NCT02366143"
+pmid = "29863955"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in the wild-type population"
+active_treatment = "atezolizumab plus bevacizumab plus chemotherapy"
+control_treatment = "bevacizumab plus chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.62
+ci_lower = 0.52
+ci_upper = 0.74
+estimate = -0.4780358009429998
+variance = 0.008101279240589924
+se = 0.09000710661158887
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "IMpower130"
+trial = "Atezolizumab plus carboplatin and nab-paclitaxel for metastatic nonsquamous NSCLC"
+nct_id = "NCT02367781"
+pmid = "31122901"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "atezolizumab plus chemotherapy"
+control_treatment = "chemotherapy"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.64
+ci_lower = 0.54
+ci_upper = 0.77
+estimate = -0.4462871026284195
+variance = 0.008193385263174511
+se = 0.09051732023858479
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.543176811623482
+se = 0.04648176353863898
+ci_low = -0.6342793940971214
+ci_high = -0.4520742291498425
+tau2 = 0.0
+q = 3.900000515948327
+df = 4
+hksj = false
+hksj_q_factor = 1.0
+weights = [41.486504609262624, 97.15881098417951, 78.71189368181221, 123.43729555570552, 122.04967396010767]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.5435495970861833
+se = 0.04694079579072781
+ci_low = -0.6738781397934388
+ci_high = -0.4132210543789279
+tau2 = 0.00019368513550200615
+q = 3.8302116788083826
+df = 4
+hksj = true
+hksj_q_factor = 1.0
+weights = [41.1558045797841, 95.36422623594787, 77.5299248734401, 120.55506867301793, 119.23114418567422]
+warnings = []
+pi_low = -0.679485535912891
+pi_high = -0.4076136582594757

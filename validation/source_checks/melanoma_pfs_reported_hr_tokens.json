@@ -1,0 +1,77 @@
+{
+  "benchmark_id": "melanoma_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:40:00Z",
+  "manifest": "validation/survival/melanoma_pfs_reported_hrs.toml",
+  "manifest_sha256": "b37baaa930a17c4099b4889242d6b7598d7f47cacebc7f56e867befb14260da3",
+  "records": [
+    {
+      "abstract_sha256": "4409c00d7f084a7fd9ac1de4ad02df634d0a69b150d9c44c8bf00c8652d1e72f",
+      "ci_lower": "0.46",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.72",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "25891173",
+      "reported_hr": "0.58",
+      "source_terms": [
+        "pembrolizumab",
+        "ipilimumab"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "KEYNOTE-006",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "62455b2bf3d1cb6de87ac54c0eb28afda22942d1e893ad5d6f447fcd0d7e9f55",
+      "ci_lower": "0.34",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.56",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "25399552",
+      "reported_hr": "0.43",
+      "source_terms": [
+        "nivolumab",
+        "dacarbazine"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CheckMate-066",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "5bf3543b83ad8539ef607eb1c089db2d2d2c4ae6d486d858eb5406ebaa79d810",
+      "ci_lower": "0.57",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.99",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "25265492",
+      "reported_hr": "0.75",
+      "source_terms": [
+        "dabrafenib",
+        "trametinib"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "COMBI-d",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

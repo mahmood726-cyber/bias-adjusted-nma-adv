@@ -1,0 +1,182 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "rcc_firstline_pfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/rcc_firstline_pfs_reported_hrs.toml"
+source_manifest_sha256 = "7b67b0f751285361e5588e1cd9444b28ff1e9b2dcfda4157fd0bb013b870d5da"
+source_verification_report = "validation/source_checks/rcc_firstline_pfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "a99ac8080a2f514a85befd532405a29d597696cd9c9ae0ee6cad6f26da08e77a"
+source_identity_report = "validation/source_checks/rcc_firstline_pfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "a9b3d6451352d21548a9501aa3a0ec26a7ce37b5ddf359fe26bb698e60bfd6b9"
+n_studies = 6
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "rcc_firstline_pfs_reported_hr"
+manifest_sha256 = "7b67b0f751285361e5588e1cd9444b28ff1e9b2dcfda4157fd0bb013b870d5da"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 6
+
+[source_identity_bundle]
+benchmark_id = "rcc_firstline_pfs_reported_hr"
+manifest_sha256 = "7b67b0f751285361e5588e1cd9444b28ff1e9b2dcfda4157fd0bb013b870d5da"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 6, pubmed_abstract = 6}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "KEYNOTE-426"
+trial = "Pembrolizumab plus axitinib versus sunitinib for advanced renal-cell carcinoma"
+nct_id = "NCT02853331"
+pmid = "30779529"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in previously untreated advanced renal-cell carcinoma"
+active_treatment = "pembrolizumab plus axitinib"
+control_treatment = "sunitinib"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.69
+ci_lower = 0.57
+ci_upper = 0.84
+estimate = -0.37106368139083207
+variance = 0.009785482160351452
+se = 0.09892159602610268
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "JAVELIN-Renal-101"
+trial = "Avelumab plus axitinib versus sunitinib for advanced renal-cell carcinoma"
+nct_id = "NCT02684006"
+pmid = "30779531"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in the overall population"
+active_treatment = "avelumab plus axitinib"
+control_treatment = "sunitinib"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.69
+ci_lower = 0.56
+ci_upper = 0.84
+estimate = -0.37106368139083207
+variance = 0.010699187572148636
+se = 0.10343687723509752
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "CLEAR"
+trial = "Lenvatinib plus pembrolizumab or everolimus for advanced renal-cell carcinoma"
+nct_id = "NCT02811861"
+pmid = "33616314"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival with lenvatinib plus pembrolizumab versus sunitinib"
+active_treatment = "lenvatinib plus pembrolizumab"
+control_treatment = "sunitinib"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.39
+ci_lower = 0.32
+ci_upper = 0.49
+estimate = -0.941608539858445
+variance = 0.011815036969122766
+se = 0.10869699613661256
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "CheckMate-9ER"
+trial = "Nivolumab plus cabozantinib versus sunitinib for advanced renal-cell carcinoma"
+nct_id = "NCT03141177"
+pmid = "33657295"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "nivolumab plus cabozantinib"
+control_treatment = "sunitinib"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.51
+ci_lower = 0.41
+ci_upper = 0.64
+estimate = -0.6733445532637656
+variance = 0.012905377280525045
+se = 0.11360183660718275
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "CABOSUN"
+trial = "Cabozantinib versus sunitinib as initial targeted therapy for metastatic renal-cell carcinoma"
+nct_id = "NCT01835158"
+pmid = "28199818"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "cabozantinib"
+control_treatment = "sunitinib"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.66
+ci_lower = 0.46
+ci_upper = 0.95
+estimate = -0.4155154439616658
+variance = 0.034229608328490764
+se = 0.18501245452263684
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "COMPARZ"
+trial = "Pazopanib versus sunitinib in metastatic renal-cell carcinoma"
+nct_id = "NCT00720941"
+pmid = "23964934"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival"
+active_treatment = "pazopanib"
+control_treatment = "sunitinib"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 1.05
+ci_lower = 0.9
+ci_upper = 1.22
+estimate = 0.04879016416943204
+variance = 0.006022748429425755
+se = 0.07760636848497522
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.37703055395046897
+se = 0.04252302377975971
+ci_low = -0.46037414907253826
+ci_high = -0.2936869588283997
+tau2 = 0.0
+q = 63.9383457036535
+df = 5
+hksj = false
+hksj_q_factor = 1.0
+weights = [102.19220510684414, 93.46504052355608, 84.63790698356547, 77.48707986314025, 29.21447392571119, 166.03715259203446]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.4498869665452079
+se = 0.14117054193899783
+ci_low = -0.8127773973805303
+ci_high = -0.08699653570988541
+tau2 = 0.10596138591656588
+q = 4.809061567990176
+df = 5
+hksj = true
+hksj_q_factor = 1.0
+weights = [8.639542621019078, 8.571876256863574, 8.490663712639492, 8.412780604969594, 7.133125814429849, 8.92983640798929]
+warnings = []
+pi_low = -1.361956454222008
+pi_high = 0.4621825211315922

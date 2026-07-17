@@ -1,0 +1,119 @@
+{
+  "benchmark_id": "melanoma_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:39:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01866319",
+      "details": {
+        "brief_title": "Study to Evaluate the Safety and Efficacy of Two Different Dosing Schedules of Pembrolizumab (MK-3475) Compared to Ipilimumab in Participants With Advanced Melanoma (MK-3475-006/KEYNOTE-006)",
+        "nct_id": "NCT01866319",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01866319",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01866319",
+      "response_sha256": "0b0bcbaab057fbe4776f3c4b9874be0da3f46f7aab52f01e7240511144289dc8",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-006",
+      "title": "Study to Evaluate the Safety and Efficacy of Two Different Dosing Schedules of Pembrolizumab (MK-3475) Compared to Ipilimumab in Participants With Advanced Melanoma (MK-3475-006/KEYNOTE-006)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25891173&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "4409c00d7f084a7fd9ac1de4ad02df634d0a69b150d9c44c8bf00c8652d1e72f",
+        "article_title": "Pembrolizumab versus Ipilimumab in Advanced Melanoma.",
+        "journal": "N Engl J Med",
+        "pmid": "25891173"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "25891173",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/25891173/",
+      "response_sha256": "1fedc6428127c155b3c533ef72b621c5ca7db7c74666dcd5d9214405cab88ce1",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-006",
+      "title": "Pembrolizumab versus Ipilimumab in Advanced Melanoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01721772",
+      "details": {
+        "brief_title": "Study of Nivolumab (BMS-936558) Compared With Dacarbazine in Untreated, Unresectable, or Metastatic Melanoma",
+        "nct_id": "NCT01721772",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01721772",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01721772",
+      "response_sha256": "02f73ac9fe0d09a7953d95217e8e6fdbe5f295f684bde55d51bf326aa3d9db79",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CheckMate-066",
+      "title": "Study of Nivolumab (BMS-936558) Compared With Dacarbazine in Untreated, Unresectable, or Metastatic Melanoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25399552&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "62455b2bf3d1cb6de87ac54c0eb28afda22942d1e893ad5d6f447fcd0d7e9f55",
+        "article_title": "Nivolumab in previously untreated melanoma without BRAF mutation.",
+        "journal": "N Engl J Med",
+        "pmid": "25399552"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "25399552",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/25399552/",
+      "response_sha256": "5d577cac76a0ad6dcee4a0db31b7c569188b964b0c6dfc2e399314c826368da0",
+      "source_type": "pubmed_abstract",
+      "study_id": "CheckMate-066",
+      "title": "Nivolumab in previously untreated melanoma without BRAF mutation."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01584648",
+      "details": {
+        "brief_title": "A Study Comparing Trametinib and Dabrafenib Combination Therapy to Dabrafenib Monotherapy in Subjects With BRAF-mutant Melanoma",
+        "nct_id": "NCT01584648",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01584648",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01584648",
+      "response_sha256": "e67ae51d077ee1fafd38b8e8ad9bfbf334e8fe8471110248419d570c8d4c5059",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "COMBI-d",
+      "title": "A Study Comparing Trametinib and Dabrafenib Combination Therapy to Dabrafenib Monotherapy in Subjects With BRAF-mutant Melanoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25265492&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "5bf3543b83ad8539ef607eb1c089db2d2d2c4ae6d486d858eb5406ebaa79d810",
+        "article_title": "Combined BRAF and MEK inhibition versus BRAF inhibition alone in melanoma.",
+        "journal": "N Engl J Med",
+        "pmid": "25265492"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "25265492",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/25265492/",
+      "response_sha256": "1cc8be832c7204a657ddc823608ce5dbc3a15f5007d4c1648a82f9a51bb42922",
+      "source_type": "pubmed_abstract",
+      "study_id": "COMBI-d",
+      "title": "Combined BRAF and MEK inhibition versus BRAF inhibition alone in melanoma."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/melanoma_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "b37baaa930a17c4099b4889242d6b7598d7f47cacebc7f56e867befb14260da3",
+  "status": "verified"
+}

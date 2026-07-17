@@ -48,6 +48,13 @@ def test_source_benchmark_registry_validates_all_registered_artifacts():
         "glp1_mace_reported_hr",
         "parp_firstline_ovarian_pfs_reported_hr",
         "parp_recurrent_ovarian_pfs_reported_hr",
+        "cdk46_breast_pfs_reported_hr",
+        "rcc_firstline_pfs_reported_hr",
+        "nsclc_firstline_pfs_reported_hr",
+        "hfref_therapies_primary_reported_hr",
+        "doac_af_primary_reported_hr",
+        "tavi_savr_primary_reported_hr",
+        "melanoma_pfs_reported_hr",
         "t2d_mace_ctgov_hr_network",
         "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",
@@ -67,12 +74,19 @@ def test_source_benchmark_registry_covers_every_source_backed_benchmark_artifact
 
     assert discover_source_backed_benchmark_artifacts(ROOT) == (
         "validation/real_meta/sglt2_hf_primary_benchmark.toml",
+        "validation/survival/cdk46_breast_pfs_reported_hr_benchmark.toml",
+        "validation/survival/doac_af_primary_reported_hr_benchmark.toml",
         "validation/survival/glp1_mace_reported_hr_benchmark.toml",
+        "validation/survival/hfref_therapies_primary_reported_hr_benchmark.toml",
+        "validation/survival/melanoma_pfs_reported_hr_benchmark.toml",
+        "validation/survival/nsclc_firstline_pfs_reported_hr_benchmark.toml",
         "validation/survival/parp_firstline_ovarian_pfs_reported_hr_benchmark.toml",
         "validation/survival/parp_recurrent_ovarian_pfs_reported_hr_benchmark.toml",
         "validation/survival/pcsk9_mace_reported_hr_benchmark.toml",
+        "validation/survival/rcc_firstline_pfs_reported_hr_benchmark.toml",
         "validation/survival/sglt2_ckd_reported_hr_benchmark.toml",
         "validation/survival/sglt2_hf_reported_hr_benchmark.toml",
+        "validation/survival/tavi_savr_primary_reported_hr_benchmark.toml",
         "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml",
         "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
         "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml",
@@ -135,7 +149,7 @@ def test_validate_benchmark_registry_script_emits_machine_readable_summary():
     assert payload["status"] == "passed"
     assert payload["certification_effect"] == "none"
     assert payload["registry"] == "validation/benchmark_registry.toml"
-    assert payload["n_benchmarks"] == 13
+    assert payload["n_benchmarks"] == 20
     assert set(payload["benchmark_ids"]) == {
         "sglt2_hf_primary_log_or",
         "sglt2_hf_reported_hr",
@@ -144,6 +158,13 @@ def test_validate_benchmark_registry_script_emits_machine_readable_summary():
         "glp1_mace_reported_hr",
         "parp_firstline_ovarian_pfs_reported_hr",
         "parp_recurrent_ovarian_pfs_reported_hr",
+        "cdk46_breast_pfs_reported_hr",
+        "rcc_firstline_pfs_reported_hr",
+        "nsclc_firstline_pfs_reported_hr",
+        "hfref_therapies_primary_reported_hr",
+        "doac_af_primary_reported_hr",
+        "tavi_savr_primary_reported_hr",
+        "melanoma_pfs_reported_hr",
         "t2d_mace_ctgov_hr_network",
         "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",

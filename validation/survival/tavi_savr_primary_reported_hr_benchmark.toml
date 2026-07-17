@@ -1,0 +1,106 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "tavi_savr_primary_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/tavi_savr_primary_reported_hrs.toml"
+source_manifest_sha256 = "ca3d7d0244f91439a4d63ee6742a96e137f34454aabff085be92a2e6867c516b"
+source_verification_report = "validation/source_checks/tavi_savr_primary_reported_hr_tokens.json"
+source_verification_report_sha256 = "fd97e831fe79a920e5559c0cefcda250e6ebf5156ca1c0f821f176bfbc0804aa"
+source_identity_report = "validation/source_checks/tavi_savr_primary_reported_hr_source_check.json"
+source_identity_report_sha256 = "15371def01e5854f899fa86605f932ef47ed6968a1ae672f7a66b49c5e4b5968"
+n_studies = 2
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "tavi_savr_primary_reported_hr"
+manifest_sha256 = "ca3d7d0244f91439a4d63ee6742a96e137f34454aabff085be92a2e6867c516b"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 2
+
+[source_identity_bundle]
+benchmark_id = "tavi_savr_primary_reported_hr"
+manifest_sha256 = "ca3d7d0244f91439a4d63ee6742a96e137f34454aabff085be92a2e6867c516b"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 2, pubmed_abstract = 2}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "PARTNER-3"
+trial = "Transcatheter aortic-valve replacement with a balloon-expandable valve in low-risk patients"
+nct_id = "NCT02675114"
+pmid = "30883058"
+outcome_id = "primary_composite_reported"
+outcome_label = "death, stroke, or rehospitalization at 1 year"
+active_treatment = "TAVR"
+control_treatment = "surgery"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.54
+ci_lower = 0.37
+ci_upper = 0.79
+estimate = -0.616186139423817
+variance = 0.037444607404616866
+se = 0.1935060913889195
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "PARTNER-2A"
+trial = "Transcatheter or surgical aortic-valve replacement in intermediate-risk patients"
+nct_id = "NCT01314313"
+pmid = "27040324"
+outcome_id = "primary_composite_reported"
+outcome_label = "death from any cause or disabling stroke at 2 years"
+active_treatment = "TAVR"
+control_treatment = "surgery"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.89
+ci_lower = 0.73
+ci_upper = 1.09
+estimate = -0.11653381625595151
+variance = 0.010459017634550396
+se = 0.10226933868247313
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.22562519409810786
+se = 0.09041820867436805
+ci_low = -0.40284162664649636
+ci_high = -0.048408761549719376
+tau2 = 0.0
+q = 5.21155640816165
+df = 1
+hksj = false
+hksj_q_factor = 1.0
+weights = [26.706115227601543, 95.61127392085014]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.3393556104821417
+se = 0.24836238675646793
+ci_low = -3.4950989453748256
+ci_high = 2.8163877244105424
+tau2 = 0.10087440949523042
+q = 1.0000000000697646
+df = 1
+hksj = true
+hksj_q_factor = 1.0000000000697646
+weights = [7.22966387712306, 8.982028360936962]
+warnings = []
+pi_low = -5.462308979762948
+pi_high = 4.783597758798665

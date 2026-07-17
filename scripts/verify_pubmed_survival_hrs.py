@@ -56,6 +56,7 @@ def abstract_from_pubmed_xml(payload: bytes) -> tuple[str, str]:
 
 def normalise_text(text: str) -> str:
     text = text.lower()
+    text = text.replace("\u00b7", ".")
     text = text.replace("·", ".")
     text = text.replace("−", "-")
     text = text.replace(",", "")

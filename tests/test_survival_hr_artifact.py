@@ -24,6 +24,13 @@ ARTIFACTS = [
     ROOT / "validation" / "survival" / "glp1_mace_reported_hr_benchmark.toml",
     ROOT / "validation" / "survival" / "parp_firstline_ovarian_pfs_reported_hr_benchmark.toml",
     ROOT / "validation" / "survival" / "parp_recurrent_ovarian_pfs_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "cdk46_breast_pfs_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "rcc_firstline_pfs_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "nsclc_firstline_pfs_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "hfref_therapies_primary_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "doac_af_primary_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "tavi_savr_primary_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "melanoma_pfs_reported_hr_benchmark.toml",
 ]
 EFFECTS_CSVS = {
     "sglt2_hf_reported_hr": ROOT
@@ -50,6 +57,34 @@ EFFECTS_CSVS = {
     / "validation"
     / "survival"
     / "parp_recurrent_ovarian_pfs_reported_hr_effects.csv",
+    "cdk46_breast_pfs_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "cdk46_breast_pfs_reported_hr_effects.csv",
+    "rcc_firstline_pfs_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "rcc_firstline_pfs_reported_hr_effects.csv",
+    "nsclc_firstline_pfs_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "nsclc_firstline_pfs_reported_hr_effects.csv",
+    "hfref_therapies_primary_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "hfref_therapies_primary_reported_hr_effects.csv",
+    "doac_af_primary_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "doac_af_primary_reported_hr_effects.csv",
+    "tavi_savr_primary_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "tavi_savr_primary_reported_hr_effects.csv",
+    "melanoma_pfs_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "melanoma_pfs_reported_hr_effects.csv",
 }
 
 
@@ -130,6 +165,18 @@ def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens(a
     if artifact["benchmark_id"] == "glp1_mace_reported_hr":
         assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
     if artifact["benchmark_id"] == "parp_firstline_ovarian_pfs_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "rcc_firstline_pfs_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "nsclc_firstline_pfs_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "hfref_therapies_primary_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "doac_af_primary_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "tavi_savr_primary_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "melanoma_pfs_reported_hr":
         assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
 
 

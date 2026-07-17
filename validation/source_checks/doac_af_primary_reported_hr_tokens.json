@@ -1,0 +1,77 @@
+{
+  "benchmark_id": "doac_af_primary_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:21:00Z",
+  "manifest": "validation/survival/doac_af_primary_reported_hrs.toml",
+  "manifest_sha256": "cb46f42cce91e699b5d6d3da8291ddf19d1bce6b5c25a4bbaf343616120a5df4",
+  "records": [
+    {
+      "abstract_sha256": "ec6e2459f3e23191550b6e87de73a1d488105fb6ead159a98c6cb647a5c35098",
+      "ci_lower": "0.66",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.95",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "stroke_systemic_embolism_reported",
+      "pmid": "21870978",
+      "reported_hr": "0.79",
+      "source_terms": [
+        "apixaban",
+        "warfarin"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ARISTOTLE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "09235ea51b06704208776dc66a7f0d31d848cb4920aab2f31b619418e4190ca4",
+      "ci_lower": "0.66",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.96",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "stroke_systemic_embolism_reported",
+      "pmid": "21830957",
+      "reported_hr": "0.79",
+      "source_terms": [
+        "rivaroxaban",
+        "warfarin"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ROCKET-AF",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "c99e93b7fd35733281d78766ff71c81b0d742bc4de3475756c57728897dd09e3",
+      "ci_lower": "0.32",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.62",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "stroke_systemic_embolism_reported",
+      "pmid": "21309657",
+      "reported_hr": "0.45",
+      "source_terms": [
+        "apixaban",
+        "aspirin"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "AVERROES",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

@@ -1,0 +1,125 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "doac_af_primary_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/doac_af_primary_reported_hrs.toml"
+source_manifest_sha256 = "cb46f42cce91e699b5d6d3da8291ddf19d1bce6b5c25a4bbaf343616120a5df4"
+source_verification_report = "validation/source_checks/doac_af_primary_reported_hr_tokens.json"
+source_verification_report_sha256 = "0a1512fcd7363f987db68e622064c39334a2d20733236eafe28c67334f5aeb21"
+source_identity_report = "validation/source_checks/doac_af_primary_reported_hr_source_check.json"
+source_identity_report_sha256 = "0d54834dec3af0472860b79c6bfb257ac7b1b6bfd93b722097a2d28796b27617"
+n_studies = 3
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "doac_af_primary_reported_hr"
+manifest_sha256 = "cb46f42cce91e699b5d6d3da8291ddf19d1bce6b5c25a4bbaf343616120a5df4"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 3
+
+[source_identity_bundle]
+benchmark_id = "doac_af_primary_reported_hr"
+manifest_sha256 = "cb46f42cce91e699b5d6d3da8291ddf19d1bce6b5c25a4bbaf343616120a5df4"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 3, pubmed_abstract = 3}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "ARISTOTLE"
+trial = "Apixaban versus warfarin in patients with atrial fibrillation"
+nct_id = "NCT00412984"
+pmid = "21870978"
+outcome_id = "stroke_systemic_embolism_reported"
+outcome_label = "stroke or systemic embolism"
+active_treatment = "apixaban"
+control_treatment = "warfarin"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.79
+ci_lower = 0.66
+ci_upper = 0.95
+estimate = -0.23572233352106983
+variance = 0.008633294044814126
+se = 0.09291552101136885
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ROCKET-AF"
+trial = "Rivaroxaban versus warfarin in nonvalvular atrial fibrillation"
+nct_id = "NCT00403767"
+pmid = "21830957"
+outcome_id = "stroke_systemic_embolism_reported"
+outcome_label = "stroke or systemic embolism in the primary analysis"
+active_treatment = "rivaroxaban"
+control_treatment = "warfarin"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.79
+ci_lower = 0.66
+ci_upper = 0.96
+estimate = -0.23572233352106983
+variance = 0.00913684016980654
+se = 0.09558682006326259
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "AVERROES"
+trial = "Apixaban in patients with atrial fibrillation unsuitable for vitamin K antagonist therapy"
+nct_id = "NCT00496769"
+pmid = "21309657"
+outcome_id = "stroke_systemic_embolism_reported"
+outcome_label = "stroke or systemic embolism"
+active_treatment = "apixaban"
+control_treatment = "aspirin"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.45
+ci_lower = 0.32
+ci_upper = 0.62
+estimate = -0.7985076962177716
+variance = 0.028468869037455186
+se = 0.16872720301556351
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.31163693739027987
+se = 0.061969269351982124
+ci_low = -0.4330944734684266
+ci_high = -0.19017940131213312
+tau2 = 0.0
+q = 9.624679372849487
+df = 2
+hksj = false
+hksj_q_factor = 1.0
+weights = [115.83064295147958, 109.4470277924511, 35.12608803266283]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.3983360594810818
+se = 0.18037932375035332
+ci_low = -1.1744456492059014
+ci_high = 0.3777735302437378
+tau2 = 0.07610469540101154
+q = 2.153610627419222
+df = 2
+hksj = true
+hksj_q_factor = 1.076805313709611
+weights = [11.801082448850357, 11.731370080366593, 9.562646213407222]
+warnings = []
+pi_low = -1.8165245735385855
+pi_high = 1.0198524545764218

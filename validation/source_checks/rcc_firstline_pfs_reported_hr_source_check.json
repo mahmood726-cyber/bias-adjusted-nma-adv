@@ -1,0 +1,227 @@
+{
+  "benchmark_id": "rcc_firstline_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:02:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02853331",
+      "details": {
+        "brief_title": "Study to Evaluate the Efficacy and Safety of Pembrolizumab (MK-3475) in Combination With Axitinib Versus Sunitinib Monotherapy in Participants With Renal Cell Carcinoma (MK-3475-426/KEYNOTE-426)",
+        "nct_id": "NCT02853331",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02853331",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02853331",
+      "response_sha256": "134a664b3b987a81446b2dd94800d098d430578fec674eee268dda1c439e549b",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-426",
+      "title": "Study to Evaluate the Efficacy and Safety of Pembrolizumab (MK-3475) in Combination With Axitinib Versus Sunitinib Monotherapy in Participants With Renal Cell Carcinoma (MK-3475-426/KEYNOTE-426)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30779529&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "41e9e99a7bf9276d0011517502b0a257a424182ac20780bb0589f0e06ddf67e8",
+        "article_title": "Pembrolizumab plus Axitinib versus Sunitinib for Advanced Renal-Cell Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "30779529"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30779529",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30779529/",
+      "response_sha256": "9d89689004c38c312dbcc3400888be860e9009d8e2f875277b61363acf264038",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-426",
+      "title": "Pembrolizumab plus Axitinib versus Sunitinib for Advanced Renal-Cell Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02684006",
+      "details": {
+        "brief_title": "A Study of Avelumab With Axitinib Versus Sunitinib In Advanced Renal Cell Cancer (JAVELIN Renal 101)",
+        "nct_id": "NCT02684006",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02684006",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02684006",
+      "response_sha256": "ad687d8b7df044374709e32474a8da0c32c6ac559e781361233f3daceca95d43",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "JAVELIN-Renal-101",
+      "title": "A Study of Avelumab With Axitinib Versus Sunitinib In Advanced Renal Cell Cancer (JAVELIN Renal 101)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30779531&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "7be49f11621eac608524bb3eea5b3b1cd90f8c87e37c44b5baeee3bfb698a5f6",
+        "article_title": "Avelumab plus Axitinib versus Sunitinib for Advanced Renal-Cell Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "30779531"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30779531",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30779531/",
+      "response_sha256": "8f4b9d93a2b3c8c8fcc7c505752d46aca6268f6eff48d5689463e4acb3282149",
+      "source_type": "pubmed_abstract",
+      "study_id": "JAVELIN-Renal-101",
+      "title": "Avelumab plus Axitinib versus Sunitinib for Advanced Renal-Cell Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02811861",
+      "details": {
+        "brief_title": "Lenvatinib/Everolimus or Lenvatinib/Pembrolizumab Versus Sunitinib Alone as Treatment of Advanced Renal Cell Carcinoma",
+        "nct_id": "NCT02811861",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02811861",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02811861",
+      "response_sha256": "eaff1d9d02fc6a1484290668f422f65444b10c970bf15809cd9b153a78131ac1",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CLEAR",
+      "title": "Lenvatinib/Everolimus or Lenvatinib/Pembrolizumab Versus Sunitinib Alone as Treatment of Advanced Renal Cell Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33616314&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "dc45a4bfc835058e8964a7ad2f63a82f93a626bc1d6bbec387a74a3687c0df8e",
+        "article_title": "Lenvatinib plus Pembrolizumab or Everolimus for Advanced Renal Cell Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "33616314"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33616314",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33616314/",
+      "response_sha256": "302a7459c4bb2556dc0f0b093d8579b801618b256a7a801ee764f3bc2eabcffb",
+      "source_type": "pubmed_abstract",
+      "study_id": "CLEAR",
+      "title": "Lenvatinib plus Pembrolizumab or Everolimus for Advanced Renal Cell Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03141177",
+      "details": {
+        "brief_title": "A Study of Nivolumab Combined With Cabozantinib Compared to Sunitinib in Previously Untreated Advanced or Metastatic Renal Cell Carcinoma",
+        "nct_id": "NCT03141177",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03141177",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03141177",
+      "response_sha256": "6f65c0d8fe66b6d67d8ee745892432bcba1ef8be96b04e0a625a430e78b80223",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CheckMate-9ER",
+      "title": "A Study of Nivolumab Combined With Cabozantinib Compared to Sunitinib in Previously Untreated Advanced or Metastatic Renal Cell Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33657295&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "16f128f10581a780c28c8adccef1197f2346ac7dfe614297d2259e65651bc2a4",
+        "article_title": "Nivolumab plus Cabozantinib versus Sunitinib for Advanced Renal-Cell Carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "33657295"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33657295",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33657295/",
+      "response_sha256": "380ffd84b81ac4cf7c7370b8a9cc9c0dc023e1ab07c64e025d2e6bfd3de83465",
+      "source_type": "pubmed_abstract",
+      "study_id": "CheckMate-9ER",
+      "title": "Nivolumab plus Cabozantinib versus Sunitinib for Advanced Renal-Cell Carcinoma."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01835158",
+      "details": {
+        "brief_title": "Cabozantinib-s-malate or Sunitinib Malate in Treating Patients With Previously Untreated Locally Advanced or Metastatic Kidney Cancer",
+        "nct_id": "NCT01835158",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01835158",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01835158",
+      "response_sha256": "2f180467de558abef9a73e289ac33a7e46e0a214ea631599052e72c887fd073c",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CABOSUN",
+      "title": "Cabozantinib-s-malate or Sunitinib Malate in Treating Patients With Previously Untreated Locally Advanced or Metastatic Kidney Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28199818&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "5c5b20bff2df6ce905f9a77dd6487d1e7dda637c244b071ffc85acd88efa8c4c",
+        "article_title": "Cabozantinib Versus Sunitinib As Initial Targeted Therapy for Patients With Metastatic Renal Cell Carcinoma of Poor or Intermediate Risk: The Alliance A031203 CABOSUN Trial.",
+        "journal": "J Clin Oncol",
+        "pmid": "28199818"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28199818",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28199818/",
+      "response_sha256": "f38272c8c7f5acad794bee6e3be1275b934057e506e087a18fa17294220504e4",
+      "source_type": "pubmed_abstract",
+      "study_id": "CABOSUN",
+      "title": "Cabozantinib Versus Sunitinib As Initial Targeted Therapy for Patients With Metastatic Renal Cell Carcinoma of Poor or Intermediate Risk: The Alliance A031203 CABOSUN Trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00720941",
+      "details": {
+        "brief_title": "Pazopanib Versus Sunitinib in the Treatment of Locally Advanced and/or Metastatic Renal Cell Carcinoma",
+        "nct_id": "NCT00720941",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00720941",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00720941",
+      "response_sha256": "3ba23631c3c75b25af6bd52fc879c6bd2495745c29c417e74bfbd49978a1f9de",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "COMPARZ",
+      "title": "Pazopanib Versus Sunitinib in the Treatment of Locally Advanced and/or Metastatic Renal Cell Carcinoma"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23964934&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "464ead7979537a732dcc628729dc56afa065e76271677169b1630f1bb0160bbe",
+        "article_title": "Pazopanib versus sunitinib in metastatic renal-cell carcinoma.",
+        "journal": "N Engl J Med",
+        "pmid": "23964934"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "23964934",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/23964934/",
+      "response_sha256": "03ca763f54f44e9b6d809e633d45d1956d05f2c42ddc93d5d136cf90f6f9b7b3",
+      "source_type": "pubmed_abstract",
+      "study_id": "COMPARZ",
+      "title": "Pazopanib versus sunitinib in metastatic renal-cell carcinoma."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/rcc_firstline_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "7b67b0f751285361e5588e1cd9444b28ff1e9b2dcfda4157fd0bb013b870d5da",
+  "status": "verified"
+}

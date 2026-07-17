@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "hfref_therapies_primary_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:14:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01035255",
+      "details": {
+        "brief_title": "This Study Will Evaluate the Efficacy and Safety of LCZ696 Compared to Enalapril on Morbidity and Mortality of Patients With Chronic Heart Failure",
+        "nct_id": "NCT01035255",
+        "overall_status": "TERMINATED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01035255",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01035255",
+      "response_sha256": "e3c511d24f708a19d40a1b429244a07b1f16ba509dbdad4a2c3089c51cba3be1",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PARADIGM-HF",
+      "title": "This Study Will Evaluate the Efficacy and Safety of LCZ696 Compared to Enalapril on Morbidity and Mortality of Patients With Chronic Heart Failure"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25176015&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "735d8e5310ab4e066ddb20ad28fae13bdc42e22636ffb13dc71625424c042782",
+        "article_title": "Angiotensin-neprilysin inhibition versus enalapril in heart failure.",
+        "journal": "N Engl J Med",
+        "pmid": "25176015"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "25176015",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/25176015/",
+      "response_sha256": "8df25f03ed91739238d89bd55142cb9ea4eea56f61a0b38be60a0047662736b4",
+      "source_type": "pubmed_abstract",
+      "study_id": "PARADIGM-HF",
+      "title": "Angiotensin-neprilysin inhibition versus enalapril in heart failure."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00232180",
+      "details": {
+        "brief_title": "A Comparison Of Outcomes In Patients In New York Heart Association (NYHA) Class II Heart Failure When Treated With Eplerenone Or Placebo In Addition To Standard Heart Failure Medicines",
+        "nct_id": "NCT00232180",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00232180",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00232180",
+      "response_sha256": "48eca2624e1311baf7095ab389461cb3458ab559773b4d72838eb2a2daeda24b",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EMPHASIS-HF",
+      "title": "A Comparison Of Outcomes In Patients In New York Heart Association (NYHA) Class II Heart Failure When Treated With Eplerenone Or Placebo In Addition To Standard Heart Failure Medicines"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=21073363&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "cbc273b86171d5982a50656033728f45d35c93b700e7b277f49276bdbd8290e5",
+        "article_title": "Eplerenone in patients with systolic heart failure and mild symptoms.",
+        "journal": "N Engl J Med",
+        "pmid": "21073363"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "21073363",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/21073363/",
+      "response_sha256": "6b062bd4827dc90a2eebdce40a3a6a0a1611d6884d959216e8f9906157b06eb2",
+      "source_type": "pubmed_abstract",
+      "study_id": "EMPHASIS-HF",
+      "title": "Eplerenone in patients with systolic heart failure and mild symptoms."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02861534",
+      "details": {
+        "brief_title": "A Study of Vericiguat in Participants With Heart Failure With Reduced Ejection Fraction (HFrEF) (MK-1242-001)",
+        "nct_id": "NCT02861534",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02861534",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02861534",
+      "response_sha256": "66a1dce88453ab9119e1a8174d6137f3d54a2c051cc72caded868a72c3907def",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "VICTORIA",
+      "title": "A Study of Vericiguat in Participants With Heart Failure With Reduced Ejection Fraction (HFrEF) (MK-1242-001)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32222134&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "51ccb40f1f5626c77f221a2ec7d3b7d5632b5c1a1a0baec264a6ac9a9218d2a7",
+        "article_title": "Vericiguat in Patients with Heart Failure and Reduced Ejection Fraction.",
+        "journal": "N Engl J Med",
+        "pmid": "32222134"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32222134",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32222134/",
+      "response_sha256": "6c47e6559926368ba9e4160f732466e300c6ae055c0ce8d6fc6c3567be5f516f",
+      "source_type": "pubmed_abstract",
+      "study_id": "VICTORIA",
+      "title": "Vericiguat in Patients with Heart Failure and Reduced Ejection Fraction."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02929329",
+      "details": {
+        "brief_title": "Registrational Study With Omecamtiv Mecarbil (AMG 423) to Treat Chronic Heart Failure With Reduced Ejection Fraction",
+        "nct_id": "NCT02929329",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02929329",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02929329",
+      "response_sha256": "a513789750f74bb16d3d8204b76313cae3105e09630b7316c1c6672dd2227878",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "GALACTIC-HF",
+      "title": "Registrational Study With Omecamtiv Mecarbil (AMG 423) to Treat Chronic Heart Failure With Reduced Ejection Fraction"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=33185990&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "2fb082078e5b7465ea54eab8c6a28c5fbde74a03ef2d5e7ea8472c7573817791",
+        "article_title": "Cardiac Myosin Activation with Omecamtiv Mecarbil in Systolic Heart Failure.",
+        "journal": "N Engl J Med",
+        "pmid": "33185990"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "33185990",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/33185990/",
+      "response_sha256": "bd46ebb7723954396fa6a0e4246da0d2b12f2a97d37e010a22505efa7b0b9de3",
+      "source_type": "pubmed_abstract",
+      "study_id": "GALACTIC-HF",
+      "title": "Cardiac Myosin Activation with Omecamtiv Mecarbil in Systolic Heart Failure."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/hfref_therapies_primary_reported_hrs.toml",
+  "source_manifest_sha256": "100f208ebeea9bd85cf6e1ce4e5c903506bee01ba45883af852834bcb58bd874",
+  "status": "verified"
+}

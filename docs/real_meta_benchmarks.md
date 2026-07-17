@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 13 benchmark artifacts, 92 study-effect rows, 36 unique NCT IDs, and 31 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 20 benchmark artifacts, 121 study-effect rows, 65 unique NCT IDs, and 60 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -257,7 +257,7 @@ Reported HR benchmark on the log-HR scale:
 | Experimental pairwise fixed effect | -0.762967 | 0.069614 | -0.899409 to -0.626526 |
 | Experimental pairwise REML-HKSJ | -0.838248 | 0.153934 | -1.328135 to -0.348360 |
 
-The REML-HKSJ artifact estimates `tau2 = 0.0695959994688312`, so this benchmark adds a third source-backed positive-heterogeneity coverage signal. This is a heterogeneity-stress signal only, not evidence of survival NMA parity or clinical superiority.
+The REML-HKSJ artifact estimates `tau2 = 0.0695959994688312`, so this benchmark is one of nine registered source-backed positive-heterogeneity coverage signals. This is a heterogeneity-stress signal only, not evidence of survival NMA parity or clinical superiority.
 
 Limitations:
 
@@ -266,6 +266,22 @@ Limitations:
 - the public PubMed abstracts provide the reported HR/CI tokens used here, but Kaplan-Meier curves are not digitized;
 - no external reference report is attached to this PARP artifact in this checkpoint;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
+
+## Additional Registered Reported-HR Benchmark Families
+
+The following source-backed PubMed abstract reported-HR families were added to broaden domain coverage and heterogeneity stress testing. Each has a manifest, CT.gov/PubMed identity snapshot, PubMed HR-token snapshot, generated benchmark artifact, and study-effect CSV under `validation/survival/` and `validation/source_checks/`.
+
+| Benchmark ID | Domain | Study-effect rows | Notes |
+| --- | --- | ---: | --- |
+| `cdk46_breast_pfs_reported_hr` | Breast cancer progression-free survival | 6 | HR/CI tokens verified from PubMed abstracts; not a multi-treatment survival NMA |
+| `rcc_firstline_pfs_reported_hr` | First-line renal-cell carcinoma progression-free survival | 6 | Positive `tau2`; source-backed heterogeneity stress signal only |
+| `nsclc_firstline_pfs_reported_hr` | First-line non-small-cell lung cancer progression-free survival | 5 | Positive `tau2`; outcome and treatment regimens are not harmonized into a clinical NMA estimand |
+| `hfref_therapies_primary_reported_hr` | HFrEF primary composite outcomes | 4 | Positive `tau2`; mixes therapy mechanisms and source-defined composite endpoints |
+| `doac_af_primary_reported_hr` | Atrial-fibrillation anticoagulant primary outcomes | 3 | Positive `tau2`; excludes source rows whose abstracts reported non-HR or non-95% uncertainty formats |
+| `tavi_savr_primary_reported_hr` | TAVI/SAVR primary outcomes | 2 | Positive `tau2`; two-row fixture for provenance and HKSJ behavior, not valve-therapy guidance |
+| `melanoma_pfs_reported_hr` | Melanoma progression-free survival | 3 | Positive `tau2`; excluded rows whose abstract tokens did not satisfy the fail-closed source-term verifier |
+
+These additions move the coverage atlas to 20 registered source-backed benchmarks and 60 unique PMIDs. They still leave the large-scale validation gate partial because the platform has not yet reached 200 study-effect rows, 100 unique NCT IDs, or an admissible real ML-NMR benchmark.
 
 ## Benchmark 6: Recurrent PARP Inhibitors And Ovarian Cancer PFS
 

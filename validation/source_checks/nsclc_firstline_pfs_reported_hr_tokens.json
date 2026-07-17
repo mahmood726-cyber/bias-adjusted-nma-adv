@@ -1,0 +1,121 @@
+{
+  "benchmark_id": "nsclc_firstline_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:09:00Z",
+  "manifest": "validation/survival/nsclc_firstline_pfs_reported_hrs.toml",
+  "manifest_sha256": "8ad27b7646c2f19105c8045e383e0b6bffbba7943c64dc2c43efb089e5cb00a0",
+  "records": [
+    {
+      "abstract_sha256": "3bd8a92365cb691145d0fdb00ef8f9d458afcfdfc5d3b63529ab182743b1b0f4",
+      "ci_lower": "0.37",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.68",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "27718847",
+      "reported_hr": "0.50",
+      "source_terms": [
+        "pembrolizumab",
+        "chemotherapy"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "KEYNOTE-024",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "5d68c11917ae47755f8b78f28a11af46eac86c3f61f0074d40405f6ff9825a3f",
+      "ci_lower": "0.43",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.64",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "29658856",
+      "reported_hr": "0.52",
+      "source_terms": [
+        "pembrolizumab",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "KEYNOTE-189",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "8864e9efe7d0b0e5db78b5d3e62511e97b9d1189b5f1160d86cace2ce9785de2",
+      "ci_lower": "0.45",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.70",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "30280635",
+      "reported_hr": "0.56",
+      "source_terms": [
+        "pembrolizumab",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "KEYNOTE-407",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "cbe34a26951a5e322709bbd8030fa4b2191e1763a636f097c85c5e3e257c6927",
+      "ci_lower": "0.52",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.74",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "29863955",
+      "reported_hr": "0.62",
+      "source_terms": [
+        "atezolizumab",
+        "BCP"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "IMpower150",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "99f7fca2bd2c922f08c8ec45b339cd4e02d22e3356098720b1965645bee24fe9",
+      "ci_lower": "0.54",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.77",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "31122901",
+      "reported_hr": "0.64",
+      "source_terms": [
+        "atezolizumab",
+        "chemotherapy"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "IMpower130",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

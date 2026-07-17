@@ -1,0 +1,191 @@
+{
+  "benchmark_id": "nsclc_firstline_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:08:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02142738",
+      "details": {
+        "brief_title": "Study of Pembrolizumab (MK-3475) Compared to Platinum-Based Chemotherapies in Participants With Metastatic Non-Small Cell Lung Cancer (MK-3475-024/KEYNOTE-024)",
+        "nct_id": "NCT02142738",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02142738",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02142738",
+      "response_sha256": "bae871f672125b2e6543405d59c080f626003ca6c1a4381ff38f7ff557d5da72",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-024",
+      "title": "Study of Pembrolizumab (MK-3475) Compared to Platinum-Based Chemotherapies in Participants With Metastatic Non-Small Cell Lung Cancer (MK-3475-024/KEYNOTE-024)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27718847&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "3bd8a92365cb691145d0fdb00ef8f9d458afcfdfc5d3b63529ab182743b1b0f4",
+        "article_title": "Pembrolizumab versus Chemotherapy for PD-L1-Positive Non-Small-Cell Lung Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "27718847"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27718847",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27718847/",
+      "response_sha256": "3f1a45f7036c648bb6dfc2e93443b5e2a016099f933317811c1552b5862762d1",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-024",
+      "title": "Pembrolizumab versus Chemotherapy for PD-L1-Positive Non-Small-Cell Lung Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02578680",
+      "details": {
+        "brief_title": "Study of Pemetrexed+Platinum Chemotherapy With or Without Pembrolizumab (MK-3475) in Participants With First Line Metastatic Nonsquamous Non-small Cell Lung Cancer (MK-3475-189/KEYNOTE-189)",
+        "nct_id": "NCT02578680",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02578680",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02578680",
+      "response_sha256": "8a1e9e8fb5e5715f86d8e8ee5f92eee579d3c8c46cdda4de80b6c422fb968e23",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-189",
+      "title": "Study of Pemetrexed+Platinum Chemotherapy With or Without Pembrolizumab (MK-3475) in Participants With First Line Metastatic Nonsquamous Non-small Cell Lung Cancer (MK-3475-189/KEYNOTE-189)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29658856&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "5d68c11917ae47755f8b78f28a11af46eac86c3f61f0074d40405f6ff9825a3f",
+        "article_title": "Pembrolizumab plus Chemotherapy in Metastatic Non-Small-Cell Lung Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "29658856"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29658856",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29658856/",
+      "response_sha256": "f4c9ee97ce07ff9e6bbd38a1710f7f1939c2bafe8cb1c3f647805acfa5a9a3b3",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-189",
+      "title": "Pembrolizumab plus Chemotherapy in Metastatic Non-Small-Cell Lung Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02775435",
+      "details": {
+        "brief_title": "A Study of Carboplatin-Paclitaxel/Nab-Paclitaxel Chemotherapy With or Without Pembrolizumab (MK-3475) in Adults With First Line Metastatic Squamous Non-small Cell Lung Cancer (MK-3475-407/KEYNOTE-407)",
+        "nct_id": "NCT02775435",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02775435",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02775435",
+      "response_sha256": "0b71f580c3c1ca515401ad6a2b095f8c7e082ded193b82313a8be23950332abb",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "KEYNOTE-407",
+      "title": "A Study of Carboplatin-Paclitaxel/Nab-Paclitaxel Chemotherapy With or Without Pembrolizumab (MK-3475) in Adults With First Line Metastatic Squamous Non-small Cell Lung Cancer (MK-3475-407/KEYNOTE-407)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30280635&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "8864e9efe7d0b0e5db78b5d3e62511e97b9d1189b5f1160d86cace2ce9785de2",
+        "article_title": "Pembrolizumab plus Chemotherapy for Squamous Non-Small-Cell Lung Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "30280635"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30280635",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30280635/",
+      "response_sha256": "0cece8bf728e019bffe9fa8e6813854e0ecf3a06233c6f2de6736683f8a0bc78",
+      "source_type": "pubmed_abstract",
+      "study_id": "KEYNOTE-407",
+      "title": "Pembrolizumab plus Chemotherapy for Squamous Non-Small-Cell Lung Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02366143",
+      "details": {
+        "brief_title": "A Study of Atezolizumab in Combination With Carboplatin Plus (+) Paclitaxel With or Without Bevacizumab Compared With Carboplatin+Paclitaxel+Bevacizumab in Participants With Stage IV Non-Squamous Non-Small Cell Lung Cancer (NSCLC)",
+        "nct_id": "NCT02366143",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02366143",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02366143",
+      "response_sha256": "7989c78e74c6ffe3a3a10571ae138629f2788b16348ff8b107915ec5c8a57797",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "IMpower150",
+      "title": "A Study of Atezolizumab in Combination With Carboplatin Plus (+) Paclitaxel With or Without Bevacizumab Compared With Carboplatin+Paclitaxel+Bevacizumab in Participants With Stage IV Non-Squamous Non-Small Cell Lung Cancer (NSCLC)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29863955&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "cbe34a26951a5e322709bbd8030fa4b2191e1763a636f097c85c5e3e257c6927",
+        "article_title": "Atezolizumab for First-Line Treatment of Metastatic Nonsquamous NSCLC.",
+        "journal": "N Engl J Med",
+        "pmid": "29863955"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29863955",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29863955/",
+      "response_sha256": "226c3b14c6c376aa717ffbf9788caef43a4d299d7fdee8b616779a449c24c468",
+      "source_type": "pubmed_abstract",
+      "study_id": "IMpower150",
+      "title": "Atezolizumab for First-Line Treatment of Metastatic Nonsquamous NSCLC."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02367781",
+      "details": {
+        "brief_title": "A Study of Atezolizumab in Combination With Carboplatin Plus (+) Nab-Paclitaxel Compared With Carboplatin+Nab-Paclitaxel in Participants With Stage IV Non-Squamous Non-Small Cell Lung Cancer (NSCLC)",
+        "nct_id": "NCT02367781",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02367781",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02367781",
+      "response_sha256": "ca8c537b981a2bbe97ec5e9adb14e325c76c7153baba09e8b7e3971e94cc420c",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "IMpower130",
+      "title": "A Study of Atezolizumab in Combination With Carboplatin Plus (+) Nab-Paclitaxel Compared With Carboplatin+Nab-Paclitaxel in Participants With Stage IV Non-Squamous Non-Small Cell Lung Cancer (NSCLC)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31122901&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "99f7fca2bd2c922f08c8ec45b339cd4e02d22e3356098720b1965645bee24fe9",
+        "article_title": "Atezolizumab in combination with carboplatin plus nab-paclitaxel chemotherapy compared with chemotherapy alone as first-line treatment for metastatic non-squamous non-small-cell lung cancer (IMpower130): a multicentre, randomised, open-label, phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "31122901"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31122901",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31122901/",
+      "response_sha256": "a81e6b0620c7751a6953ad89e5a914b2a53d87757aa743cd83a23de54642d4bd",
+      "source_type": "pubmed_abstract",
+      "study_id": "IMpower130",
+      "title": "Atezolizumab in combination with carboplatin plus nab-paclitaxel chemotherapy compared with chemotherapy alone as first-line treatment for metastatic non-squamous non-small-cell lung cancer (IMpower130): a multicentre, randomised, open-label, phase 3 trial."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/nsclc_firstline_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "8ad27b7646c2f19105c8045e383e0b6bffbba7943c64dc2c43efb089e5cb00a0",
+  "status": "verified"
+}

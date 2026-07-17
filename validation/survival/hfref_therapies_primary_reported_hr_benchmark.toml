@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "hfref_therapies_primary_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/hfref_therapies_primary_reported_hrs.toml"
+source_manifest_sha256 = "100f208ebeea9bd85cf6e1ce4e5c903506bee01ba45883af852834bcb58bd874"
+source_verification_report = "validation/source_checks/hfref_therapies_primary_reported_hr_tokens.json"
+source_verification_report_sha256 = "bfe9a7c4f21f45d3eefc6c1a64296e56a8f1568b13adc8d29206f77ce1e93651"
+source_identity_report = "validation/source_checks/hfref_therapies_primary_reported_hr_source_check.json"
+source_identity_report_sha256 = "32d5b44851e737edf5fc34c0ef3033b5ec50294f7e694b18e4602229e5e3d844"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "hfref_therapies_primary_reported_hr"
+manifest_sha256 = "100f208ebeea9bd85cf6e1ce4e5c903506bee01ba45883af852834bcb58bd874"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "hfref_therapies_primary_reported_hr"
+manifest_sha256 = "100f208ebeea9bd85cf6e1ce4e5c903506bee01ba45883af852834bcb58bd874"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "PARADIGM-HF"
+trial = "Angiotensin-neprilysin inhibition versus enalapril in heart failure"
+nct_id = "NCT01035255"
+pmid = "25176015"
+outcome_id = "primary_composite_reported"
+outcome_label = "cardiovascular death or hospitalization for heart failure"
+active_treatment = "LCZ696"
+control_treatment = "enalapril"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.8
+ci_lower = 0.73
+ci_upper = 0.87
+estimate = -0.2231435513142097
+variance = 0.0020032909290115617
+se = 0.04475813813164665
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "EMPHASIS-HF"
+trial = "Eplerenone in patients with systolic heart failure and mild symptoms"
+nct_id = "NCT00232180"
+pmid = "21073363"
+outcome_id = "primary_composite_reported"
+outcome_label = "death from cardiovascular causes or hospitalization for heart failure"
+active_treatment = "eplerenone"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.63
+ci_lower = 0.54
+ci_upper = 0.74
+estimate = -0.4620354595965587
+variance = 0.006460831066110021
+se = 0.08037929500878956
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "VICTORIA"
+trial = "Vericiguat in patients with heart failure and reduced ejection fraction"
+nct_id = "NCT02861534"
+pmid = "32222134"
+outcome_id = "primary_composite_reported"
+outcome_label = "death from cardiovascular causes or first hospitalization for heart failure"
+active_treatment = "vericiguat"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.9
+ci_lower = 0.82
+ci_upper = 0.98
+estimate = -0.10536051565782628
+variance = 0.002067732174318839
+se = 0.0454723231682618
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "GALACTIC-HF"
+trial = "Cardiac myosin activation with omecamtiv mecarbil in systolic heart failure"
+nct_id = "NCT02929329"
+pmid = "33185990"
+outcome_id = "primary_composite_reported"
+outcome_label = "first heart-failure event or death from cardiovascular causes"
+active_treatment = "omecamtiv mecarbil"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.92
+ci_lower = 0.86
+ci_upper = 0.99
+estimate = -0.08338160893905101
+variance = 0.0012896735882893969
+se = 0.03591202567788953
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.15604522693552186
+se = 0.022863674214357095
+ci_low = -0.20085720494991888
+ci_high = -0.11123324892112485
+tau2 = 0.0
+q = 22.07579690851049
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [499.1786192998973, 154.77884961974195, 483.6216278007205, 775.3899971902073]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.20818829131202216
+se = 0.08377336331548586
+ci_low = -0.47479252187657983
+ci_high = 0.05841593925253552
+tau2 = 0.02345189307439644
+q = 3.2069062640364416
+df = 3
+hksj = true
+hksj_q_factor = 1.0689687546788138
+weights = [39.284728794972274, 33.430589447580445, 39.18552840231627, 40.41781240587957]
+warnings = []
+pi_low = -0.7637040480122284
+pi_high = 0.3473274653881841

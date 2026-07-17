@@ -1,0 +1,227 @@
+{
+  "benchmark_id": "cdk46_breast_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:58:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01740427",
+      "details": {
+        "brief_title": "A Study of Palbociclib (PD-0332991) + Letrozole vs. Letrozole For 1st Line Treatment Of Postmenopausal Women With ER+/HER2- Advanced Breast Cancer (PALOMA-2)",
+        "nct_id": "NCT01740427",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01740427",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01740427",
+      "response_sha256": "4c31d22f6a7bbf69208d4688b32a8e27f1cc0ad8c806aeaf62d3882b77f1e407",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PALOMA-2",
+      "title": "A Study of Palbociclib (PD-0332991) + Letrozole vs. Letrozole For 1st Line Treatment Of Postmenopausal Women With ER+/HER2- Advanced Breast Cancer (PALOMA-2)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27959613&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "c583b3c29487c109d8e3e57106438f4e9cee3eda0af4005996011e555fcfc26c",
+        "article_title": "Palbociclib and Letrozole in Advanced Breast Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "27959613"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27959613",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27959613/",
+      "response_sha256": "cdb7aa10943e409aa7d5dba340ec3f960bf14ac96d8cc9f70f7cb0f6b554277d",
+      "source_type": "pubmed_abstract",
+      "study_id": "PALOMA-2",
+      "title": "Palbociclib and Letrozole in Advanced Breast Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01942135",
+      "details": {
+        "brief_title": "Palbociclib (PD-0332991) Combined With Fulvestrant In Hormone Receptor+ HER2-Negative Metastatic Breast Cancer After Endocrine Failure (PALOMA-3)",
+        "nct_id": "NCT01942135",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01942135",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01942135",
+      "response_sha256": "4278bf6dc1e6053760e439bcc75a8aa2843511ddd958442edae5b846ec266337",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PALOMA-3",
+      "title": "Palbociclib (PD-0332991) Combined With Fulvestrant In Hormone Receptor+ HER2-Negative Metastatic Breast Cancer After Endocrine Failure (PALOMA-3)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=26947331&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "2947deafc3d2e2a620ffd87d906291b8578404ddfa8a192dd2ef940e6ee2980f",
+        "article_title": "Fulvestrant plus palbociclib versus fulvestrant plus placebo for treatment of hormone-receptor-positive, HER2-negative metastatic breast cancer that progressed on previous endocrine therapy (PALOMA-3): final analysis of the multicentre, double-blind, phase 3 randomised controlled trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "26947331"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "26947331",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/26947331/",
+      "response_sha256": "b597c85aa0b2499bf7f4c7e602388bdc725f18de11153c8ace5a7f385dc2c455",
+      "source_type": "pubmed_abstract",
+      "study_id": "PALOMA-3",
+      "title": "Fulvestrant plus palbociclib versus fulvestrant plus placebo for treatment of hormone-receptor-positive, HER2-negative metastatic breast cancer that progressed on previous endocrine therapy (PALOMA-3): final analysis of the multicentre, double-blind, phase 3 randomised controlled trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01958021",
+      "details": {
+        "brief_title": "Study of Efficacy and Safety of LEE011 in Postmenopausal Women With Advanced Breast Cancer",
+        "nct_id": "NCT01958021",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01958021",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01958021",
+      "response_sha256": "da56015a796a15fab60beea7f2b3ebbea5127910547c44270b6abb43bd567fa1",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "MONALEESA-2",
+      "title": "Study of Efficacy and Safety of LEE011 in Postmenopausal Women With Advanced Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27717303&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "b7061f1e94bfa887186184338b27ab7f8f10f4c3508a8595ce5a4c6b92fbe63f",
+        "article_title": "Ribociclib as First-Line Therapy for HR-Positive, Advanced Breast Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "27717303"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27717303",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27717303/",
+      "response_sha256": "ea31f646cb8b14d73e7010df77bed3ee19b72648a7979997982b10013aef3f25",
+      "source_type": "pubmed_abstract",
+      "study_id": "MONALEESA-2",
+      "title": "Ribociclib as First-Line Therapy for HR-Positive, Advanced Breast Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02246621",
+      "details": {
+        "brief_title": "A Study of Nonsteroidal Aromatase Inhibitors Plus Abemaciclib (LY2835219) in Postmenopausal Women With Breast Cancer",
+        "nct_id": "NCT02246621",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02246621",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02246621",
+      "response_sha256": "f4e26d44ef1711127ca476796f9f5845928ce55a0dc1c0ba262478b410895a1f",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "MONARCH-3",
+      "title": "A Study of Nonsteroidal Aromatase Inhibitors Plus Abemaciclib (LY2835219) in Postmenopausal Women With Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28968163&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "1af73d06b8a33148879f15b3d33d40dcf3697c44fa4e938805f9cec7da4eed3e",
+        "article_title": "MONARCH 3: Abemaciclib As Initial Therapy for Advanced Breast Cancer.",
+        "journal": "J Clin Oncol",
+        "pmid": "28968163"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28968163",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28968163/",
+      "response_sha256": "d6bec7a666ac37cd284761cf98426399d3f7f483bdfa445383223bace1599538",
+      "source_type": "pubmed_abstract",
+      "study_id": "MONARCH-3",
+      "title": "MONARCH 3: Abemaciclib As Initial Therapy for Advanced Breast Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02278120",
+      "details": {
+        "brief_title": "Study of Efficacy and Safety in Premenopausal Women With Hormone Receptor Positive, HER2-negative Advanced Breast Cancer",
+        "nct_id": "NCT02278120",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02278120",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02278120",
+      "response_sha256": "786c9d7e2be6f9d6cea2e170fa3d47f89a6765106abadbdfbfd4acf83adfadc7",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "MONALEESA-7",
+      "title": "Study of Efficacy and Safety in Premenopausal Women With Hormone Receptor Positive, HER2-negative Advanced Breast Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29804902&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "a4cbb65b21f23ffe5d3f1a50f38174f1dd572958690290e0c4a748bb447f36e1",
+        "article_title": "Ribociclib plus endocrine therapy for premenopausal women with hormone-receptor-positive, advanced breast cancer (MONALEESA-7): a randomised phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "29804902"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29804902",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29804902/",
+      "response_sha256": "6354a595d98a56acc55d058d13aa4169fcefbbe24ac5af8017c955b8582eea82",
+      "source_type": "pubmed_abstract",
+      "study_id": "MONALEESA-7",
+      "title": "Ribociclib plus endocrine therapy for premenopausal women with hormone-receptor-positive, advanced breast cancer (MONALEESA-7): a randomised phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02422615",
+      "details": {
+        "brief_title": "Study of Efficacy and Safety of LEE011 in Men and Postmenopausal Women With Advanced Breast Cancer.",
+        "nct_id": "NCT02422615",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02422615",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02422615",
+      "response_sha256": "4aa96e840e105d9a2d230e1f82dd132727ea7414da3e08be59ca6dd76419ce30",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "MONALEESA-3",
+      "title": "Study of Efficacy and Safety of LEE011 in Men and Postmenopausal Women With Advanced Breast Cancer."
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=29860922&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "42c78e535bfd6e6a21544982ffff6f325f8220eab51f6bb5de2e76b2478c1140",
+        "article_title": "Phase III Randomized Study of Ribociclib and Fulvestrant in Hormone Receptor-Positive, Human Epidermal Growth Factor Receptor 2-Negative Advanced Breast Cancer: MONALEESA-3.",
+        "journal": "J Clin Oncol",
+        "pmid": "29860922"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "29860922",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/29860922/",
+      "response_sha256": "8f63d8401d5e14501ba90b50f7394b32468634ba258a5dac3ab67e958bdf16f6",
+      "source_type": "pubmed_abstract",
+      "study_id": "MONALEESA-3",
+      "title": "Phase III Randomized Study of Ribociclib and Fulvestrant in Hormone Receptor-Positive, Human Epidermal Growth Factor Receptor 2-Negative Advanced Breast Cancer: MONALEESA-3."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/cdk46_breast_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "cd9cb00f732c7b92dcfaefd1b4a3f18637fc4752e012135cf363e3ab58598ac3",
+  "status": "verified"
+}

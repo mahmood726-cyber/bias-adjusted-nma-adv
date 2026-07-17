@@ -1,0 +1,99 @@
+{
+  "benchmark_id": "hfref_therapies_primary_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-18T00:15:00Z",
+  "manifest": "validation/survival/hfref_therapies_primary_reported_hrs.toml",
+  "manifest_sha256": "100f208ebeea9bd85cf6e1ce4e5c903506bee01ba45883af852834bcb58bd874",
+  "records": [
+    {
+      "abstract_sha256": "735d8e5310ab4e066ddb20ad28fae13bdc42e22636ffb13dc71625424c042782",
+      "ci_lower": "0.73",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.87",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "25176015",
+      "reported_hr": "0.80",
+      "source_terms": [
+        "LCZ696",
+        "enalapril"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "PARADIGM-HF",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "cbc273b86171d5982a50656033728f45d35c93b700e7b277f49276bdbd8290e5",
+      "ci_lower": "0.54",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.74",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "21073363",
+      "reported_hr": "0.63",
+      "source_terms": [
+        "eplerenone",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "EMPHASIS-HF",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "51ccb40f1f5626c77f221a2ec7d3b7d5632b5c1a1a0baec264a6ac9a9218d2a7",
+      "ci_lower": "0.82",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.98",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "32222134",
+      "reported_hr": "0.90",
+      "source_terms": [
+        "vericiguat",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "VICTORIA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "2fb082078e5b7465ea54eab8c6a28c5fbde74a03ef2d5e7ea8472c7573817791",
+      "ci_lower": "0.86",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.99",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "primary_composite_reported",
+      "pmid": "33185990",
+      "reported_hr": "0.92",
+      "source_terms": [
+        "omecamtiv",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "GALACTIC-HF",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}
