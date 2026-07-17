@@ -34,6 +34,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/rapidmeta_adapter.py`: Fail-closed importer for a strict RapidMeta-style app-index JSON contract; protocol-only registry rows and ambiguous multi-analysis exports are rejected before estimation.
 - `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.
 - `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests, with pre-fit design diagnostics, deterministic fit-attempt reports, diagnostic-only GLS leverage, residual, approximate Cook-distance, row-level/study-level/heatmap-ready absolute mapping-contribution, and fail-closed covariance-validity outputs.
+- `src/bias_nma_adv/component_nma.py`: Narrow additive component-NMA core with weighted least-squares estimates and estimability checks, validated only on an algorithmic `netmeta::discomb` fixture so far.
 - `src/bias_nma_adv/node_splitting.py`: Experimental fixed-effect node-splitting diagnostic for closed-loop direct-versus-indirect contrast checks.
 - `src/bias_nma_adv/km_reconstruction.py`: Fail-closed screen, native Python Guyot-style reconstruction check, and deterministic curve-fidelity metrics for open-access Kaplan-Meier reconstruction results before they can enter survival validation artifacts.
 - `src/bias_nma_adv/publication_bias.py`: Registry outcome-switching auditor plus diagnostic-only Egger small-study-effect regression and prespecified selection-weight sensitivity analysis.
@@ -74,6 +75,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/reviews/`: Non-certifying review ledgers recording multiperson review findings, actions, and next gates.
 - `validation/reviews/improvement_review_2026_07_15.toml`: Current improvement-review ledger for tier-one blockers, source boundaries, HTML delivery, and implementation polish. It passes the current milestone but explicitly keeps the global goal incomplete.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
+- `validation/component/`: Algorithmic additive component-NMA contrast fixture and local replay benchmark. These artifacts are not source-backed clinical evidence and do not remove the real-data component-NMA blocker.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, rare public result-level ICTRP/PACTR rows, and public FDA/EMA regulatory review rows when numeric per-trial result text is source-bound. Protocol-only registry rows remain metadata only.
 - `validation/benchmark_registry.toml`: Canonical inventory of local source-backed benchmark artifacts. Every entry must retain `certification_effect = "none"` until an external reference run passes, and every source-check report is revalidated against its specialized schema.
 - `validation/source_checks/`: Public-source identity snapshots and PubMed abstract event-count token checks.
@@ -84,7 +86,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/dta/`: Source-backed open-access diagnostic test accuracy 2x2 manifest, CSV, and generated local benchmark artifact for the Midkine ELISA cancer diagnostic table.
 - `validation/networks/`: Source-backed network benchmark manifests, effects CSVs, and generated artifacts, including the CT.gov T2D MACE reported-HR star network with a narrow `netmeta` fixed-effect reference check.
 - `validation/survival/km_reconstruction_policy.toml`: Static OA-only KM reconstruction policy; blocks text-only HR and synthetic-IPD fallbacks from validation evidence.
-- `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; current dose-response smoke validation uses `metafor`, while later targets include `multinma`, `MBNMAdose`, and `crossnma`.
+- `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; current component-NMA smoke validation uses `netmeta::discomb`, current dose-response smoke validation uses `metafor`, while later targets include `multinma`, `MBNMAdose`, and `crossnma`.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
 - `scripts/preflight_stan_nuts_adapter.py`: Regenerates the non-certifying CmdStan/NUTS preflight report for the committed Stan model source.
 - `scripts/run_stan_nuts_reference.py`: Runs the source-backed SGLT2i CmdStan/NUTS reference candidate and writes both JSON output and a hashed reference-run report. It does not certify `multinma` or broad Bayesian parity.

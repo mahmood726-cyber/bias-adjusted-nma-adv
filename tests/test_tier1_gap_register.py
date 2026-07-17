@@ -134,6 +134,14 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "component_nma_additive_core_with_estimability_checks"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "netmeta_discomb_component_reference_adapter"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "reference_matched_optimizer_stress_matrix"
         in by_id["numerical_stability"].missing_capabilities
     )
@@ -253,6 +261,8 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "evalue_and_binary_fragility_sensitivity",
             "pairwise_redescending_outlier_sensitivity",
             "feature_parity_matrix_gate",
+            "component_nma_additive_core_with_estimability_checks",
+            "netmeta_discomb_component_reference_adapter",
         ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",

@@ -53,6 +53,8 @@ implemented_capabilities = [
   "evalue_and_binary_fragility_sensitivity",
   "pairwise_redescending_outlier_sensitivity",
   "feature_parity_matrix_gate",
+  "component_nma_additive_core_with_estimability_checks",
+  "netmeta_discomb_component_reference_adapter",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",

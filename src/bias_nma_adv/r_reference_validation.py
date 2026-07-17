@@ -8,6 +8,7 @@ from pathlib import Path
 import tomllib
 from typing import Any
 
+from bias_nma_adv.component_nma import fit_additive_component_nma
 from bias_nma_adv.dta import fit_bivariate_dta_reml
 
 
@@ -906,6 +907,128 @@ def validate_ctgov_hr_network_netmeta_output(
     }
 
 
+def validate_component_netmeta_cnma_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``netmeta::discomb`` component output against the local CNMA core."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "fixture_id",
+            "source_policy",
+            "effect_scale",
+            "inactive_treatment",
+            "package_versions",
+            "n_studies",
+            "n_contrasts",
+            "n_components",
+            "study_effects",
+            "component_effects",
+            "additive",
+            "limitations",
+        },
+        label="component netmeta output",
+    )
+    if output["schema_version"] != "component_netmeta_cnma_fixture/v1":
+        raise RReferenceValidationError("component netmeta output schema_version mismatch.")
+    if output["fixture_id"] != "netmeta_component_fixture":
+        raise RReferenceValidationError("component netmeta output fixture_id mismatch.")
+    if output["source_policy"] != "algorithmic_fixture_not_clinical_evidence":
+        raise RReferenceValidationError("component netmeta output must remain nonclinical.")
+    if output["effect_scale"] != "mean_difference":
+        raise RReferenceValidationError("component netmeta output effect_scale mismatch.")
+    if output["inactive_treatment"] != "Placebo":
+        raise RReferenceValidationError("component netmeta output inactive_treatment mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "netmeta", "jsonlite"})
+
+    fixture_path = root / "validation" / "component" / "netmeta_component_fixture_effects.csv"
+    fixture_rows = _load_component_fixture_rows(fixture_path)
+    observed_rows = {str(item["study_id"]): item for item in output["study_effects"]}
+    expected_rows = {str(item["study_id"]): item for item in fixture_rows}
+    if set(observed_rows) != set(expected_rows):
+        raise RReferenceValidationError("component netmeta study rows do not match fixture.")
+    for study_id, expected in expected_rows.items():
+        observed = observed_rows[study_id]
+        for field in ("treat1", "treat2"):
+            if str(observed[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: component {field} mismatch.")
+        _assert_close(f"{study_id} estimate", observed["estimate"], expected["estimate"], tolerance)
+        _assert_close(f"{study_id} se", observed["se"], expected["se"], tolerance)
+
+    if int(output["n_studies"]) != len(fixture_rows):
+        raise RReferenceValidationError("component netmeta n_studies mismatch.")
+    if int(output["n_contrasts"]) != len(fixture_rows):
+        raise RReferenceValidationError("component netmeta n_contrasts mismatch.")
+
+    local_fit = fit_additive_component_nma(fixture_rows)
+    if int(output["n_components"]) != len(local_fit.components):
+        raise RReferenceValidationError("component netmeta n_components mismatch.")
+
+    max_abs_diff = 0.0
+    observed_components = output["component_effects"]
+    for expected in local_fit.component_effects:
+        observed = observed_components.get(expected.name)
+        if not isinstance(observed, dict):
+            raise RReferenceValidationError(f"missing netmeta component effect {expected.name!r}.")
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"component {expected.name} estimate",
+                observed["estimate"],
+                expected.estimate,
+                tolerance,
+            ),
+            _assert_close(
+                f"component {expected.name} se",
+                observed["se"],
+                expected.se,
+                tolerance,
+            ),
+        )
+
+    additive = output["additive"]
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_close("component additive Q", additive["q"], local_fit.q, tolerance),
+    )
+    if int(additive["df"]) != local_fit.df:
+        raise RReferenceValidationError("component additive df mismatch.")
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not source-backed" in item for item in limitations):
+        raise RReferenceValidationError("component output must preserve source-backed limitation.")
+    if not any("not broad netmeta cnma" in item for item in limitations):
+        raise RReferenceValidationError("component output must preserve broad-parity limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "component_nma_netmeta_cnma",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "netmeta::discomb additive CNMA",
+        "validated_components": [
+            "algorithmic_component_contrast_rows",
+            "additive_component_effects",
+            "component_standard_errors",
+            "additive_q_df",
+            "source_backed_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates an algorithmic component-NMA fixture only; it is not "
+            "source-backed CNMA validation or broad netmeta CNMA parity."
+        ),
+    }
+
+
 def _load_toml(path: Path) -> dict[str, Any]:
     with path.open("rb") as handle:
         return tomllib.load(handle)
@@ -914,6 +1037,21 @@ def _load_toml(path: Path) -> dict[str, Any]:
 def _load_dta_fixture_rows(path: Path) -> list[dict[str, Any]]:
     with path.open("r", encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def _load_component_fixture_rows(path: Path) -> list[dict[str, Any]]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    return [
+        {
+            "study_id": row["study_id"],
+            "treat1": row["treat1"],
+            "treat2": row["treat2"],
+            "estimate": float(row["estimate"]),
+            "se": float(row["se"]),
+        }
+        for row in rows
+    ]
 
 
 def _require_keys(raw: dict[str, Any], required: set[str], *, label: str) -> None:

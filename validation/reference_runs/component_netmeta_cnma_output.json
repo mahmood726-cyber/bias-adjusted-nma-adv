@@ -1,0 +1,97 @@
+{
+  "schema_version": "component_netmeta_cnma_fixture/v1",
+  "fixture_id": "netmeta_component_fixture",
+  "source_policy": "algorithmic_fixture_not_clinical_evidence",
+  "effect_scale": "mean_difference",
+  "inactive_treatment": "Placebo",
+  "package_versions": {
+    "R": "4.6.0",
+    "netmeta": "3.5.0",
+    "jsonlite": "2.0.0"
+  },
+  "n_studies": 5,
+  "n_contrasts": 5,
+  "n_components": 2,
+  "study_effects": [
+    {
+      "study_id": "S1",
+      "treat1": "A",
+      "treat2": "Placebo",
+      "estimate": 0.2,
+      "se": 0.2
+    },
+    {
+      "study_id": "S2",
+      "treat1": "B",
+      "treat2": "Placebo",
+      "estimate": 0.3,
+      "se": 0.25
+    },
+    {
+      "study_id": "S3",
+      "treat1": "A + B",
+      "treat2": "Placebo",
+      "estimate": 0.55,
+      "se": 0.22
+    },
+    {
+      "study_id": "S4",
+      "treat1": "A + B",
+      "treat2": "A",
+      "estimate": 0.35,
+      "se": 0.21
+    },
+    {
+      "study_id": "S5",
+      "treat1": "A + B",
+      "treat2": "B",
+      "estimate": 0.25,
+      "se": 0.23
+    }
+  ],
+  "component_effects": {
+    "A": {
+      "estimate": 0.221330473313514,
+      "se": 0.132024831264664
+    },
+    "B": {
+      "estimate": 0.329090374045677,
+      "se": 0.137718076719573
+    }
+  },
+  "treatment_effects": {
+    "A": {
+      "estimate": 0,
+      "se": 0
+    },
+    "A + B": {
+      "estimate": 0.329090374045677,
+      "se": 0.137718076719573
+    },
+    "B": {
+      "estimate": 0.107759900732163,
+      "se": 0.220307724933538
+    },
+    "Placebo": {
+      "estimate": -0.221330473313514,
+      "se": 0.132024831264664
+    }
+  },
+  "additive": {
+    "q": 0.0503701505470202,
+    "df": 3
+  },
+  "standard": {
+    "q": 1.37239283505605e-28,
+    "df": 2
+  },
+  "difference": {
+    "q": 0.0503701505470202,
+    "df": 1
+  },
+  "limitations": [
+    "algorithmic fixture only",
+    "not source-backed component NMA validation",
+    "not broad netmeta CNMA feature parity"
+  ]
+}

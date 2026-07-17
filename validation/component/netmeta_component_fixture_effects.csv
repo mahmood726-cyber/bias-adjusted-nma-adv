@@ -1,0 +1,6 @@
+study_id,treat1,treat2,estimate,se
+S1,A,Placebo,0.20,0.20
+S2,B,Placebo,0.30,0.25
+S3,A + B,Placebo,0.55,0.22
+S4,A + B,A,0.35,0.21
+S5,A + B,B,0.25,0.23

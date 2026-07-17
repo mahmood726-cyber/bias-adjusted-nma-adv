@@ -1,0 +1,59 @@
+schema_version = "component_nma_benchmark/v1"
+benchmark_id = "netmeta_component_fixture"
+status = "local_fixture_recomputed"
+certification_effect = "none"
+source_policy = "algorithmic_fixture_not_clinical_evidence"
+evidence_mode = "algorithmic_fixture"
+effect_scale = "mean_difference"
+reference_method = "netmeta::discomb"
+reference_target_id = "component_nma_netmeta_cnma"
+reference_status = "external_netmeta_reference_required_before_feature_parity"
+contrast_data = "validation/component/netmeta_component_fixture_effects.csv"
+tolerance = "absolute <= 1e-6 for deterministic component fixture replay"
+limitations = [
+  "The fixture is algorithmic and is not clinical evidence.",
+  "The fixture validates additive component mechanics only.",
+  "It is not source-backed component NMA validation and does not remove the real-data component-NMA blocker.",
+  "It is not broad netmeta CNMA feature parity.",
+]
+
+[[component_effects]]
+name = "A"
+estimate = 0.22133047331351394
+se = 0.13202483126466402
+estimable = true
+
+[[component_effects]]
+name = "B"
+estimate = 0.3290903740456773
+se = 0.13771807671957265
+estimable = true
+
+[[treatment_effects]]
+name = "A"
+estimate = 0.22133047331351394
+se = 0.13202483126466402
+estimable = true
+
+[[treatment_effects]]
+name = "Placebo"
+estimate = 0.0
+se = 0.0
+estimable = true
+
+[[treatment_effects]]
+name = "B"
+estimate = 0.3290903740456773
+se = 0.13771807671957265
+estimable = true
+
+[[treatment_effects]]
+name = "A + B"
+estimate = 0.5504208473591913
+se = 0.15575029947390334
+estimable = true
+
+[fit]
+rank = 2
+df = 3
+q = 0.050370150547020154

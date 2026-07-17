@@ -86,7 +86,7 @@ evidence_artifacts = []
 [[targets]]
 id = "component_nma_netmeta_cnma"
 domain = "component_nma"
-module = "planned:component"
+module = "src/bias_nma_adv/component_nma.py"
 reference_method = "netmeta additive CNMA plus CNMA hierarchy workflow"
 status = "planned"
 acceptance_criteria = [

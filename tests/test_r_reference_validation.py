@@ -7,6 +7,7 @@ import pytest
 from bias_nma_adv.r_reference_validation import (
     RReferenceValidationError,
     load_r_reference_output,
+    validate_component_netmeta_cnma_output,
     validate_ctgov_hr_network_netmeta_output,
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
@@ -26,6 +27,7 @@ DOSE_RESPONSE_OUTPUT = ROOT / "validation" / "reference_runs" / "dose_response_m
 SGLT2_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "sglt2_survival_hr_metafor_output.json"
 PCSK9_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "pcsk9_survival_hr_metafor_output.json"
 CTGOV_HR_NETWORK_OUTPUT = ROOT / "validation" / "reference_runs" / "t2d_ctgov_hr_network_netmeta_output.json"
+COMPONENT_CNMA_OUTPUT = ROOT / "validation" / "reference_runs" / "component_netmeta_cnma_output.json"
 
 
 def test_pairwise_metafor_output_matches_source_backed_python_artifact():
@@ -132,6 +134,19 @@ def test_ctgov_hr_network_netmeta_output_matches_source_backed_star_network():
     assert "not closed-loop inconsistency" in summary["source_policy_note"]
 
 
+def test_component_netmeta_cnma_output_matches_local_additive_component_core():
+    summary = validate_component_netmeta_cnma_output(COMPONENT_CNMA_OUTPUT, repo_root=ROOT)
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "component_nma_netmeta_cnma"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == "netmeta::discomb additive CNMA"
+    assert summary["max_abs_difference"] < 1e-12
+    assert "additive_component_effects" in summary["validated_components"]
+    assert "not source-backed CNMA validation" in summary["source_policy_note"]
+
+
 def test_pairwise_reference_validation_rejects_numeric_drift(tmp_path):
     payload = load_r_reference_output(PAIRWISE_OUTPUT)
     payload = copy.deepcopy(payload)
@@ -207,3 +222,14 @@ def test_ctgov_hr_network_netmeta_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="GLP-1 RA netmeta common estimate"):
         validate_ctgov_hr_network_netmeta_output(mutated, repo_root=ROOT)
+
+
+def test_component_netmeta_cnma_validation_rejects_numeric_drift(tmp_path):
+    payload = load_r_reference_output(COMPONENT_CNMA_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["component_effects"]["A"]["estimate"] += 0.01
+    mutated = tmp_path / "component_cnma_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="component A estimate"):
+        validate_component_netmeta_cnma_output(mutated, repo_root=ROOT)

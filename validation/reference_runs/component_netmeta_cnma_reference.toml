@@ -1,0 +1,26 @@
+schema_version = "reference_run/v1"
+target_id = "component_nma_netmeta_cnma"
+adapter_id = "r_netmeta_component_cnma_output_validation"
+reference_method = "netmeta::discomb additive CNMA"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-17T12:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/component_netmeta_cnma_fixture.R", "--effects", "validation/component/netmeta_component_fixture_effects.csv", "--output", "validation/reference_runs/component_netmeta_cnma_output.json", "--inactive", "Placebo"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", netmeta = "3.5.0", jsonlite = "2.0.0"}
+input_artifacts = ["validation/component/netmeta_component_fixture_effects.csv", "validation/component/netmeta_component_fixture_benchmark.toml", "external/r/component_netmeta_cnma_fixture.R"]
+output_artifacts = ["validation/reference_runs/component_netmeta_cnma_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["algorithmic_component_contrast_rows", "additive_component_effects", "component_standard_errors", "additive_q_df", "source_backed_limitation_preserved"]
+max_abs_difference = 3.6082248300317588e-16
+notes = ["This validates an algorithmic component-NMA fixture only; it is not source-backed CNMA validation or broad netmeta CNMA parity."]
+
+[input_sha256]
+"validation/component/netmeta_component_fixture_effects.csv" = "4057bdd2bf98426725429dbad0976d22d8eb3286af22c6da86f50f59e11e88bc"
+"validation/component/netmeta_component_fixture_benchmark.toml" = "6354ea69d64bf8ebbcf27d088f7f1e581658f8c7ad412e3be8f15a0abbfbad24"
+"external/r/component_netmeta_cnma_fixture.R" = "1dbe4314c8017a33db1725945e429844422bda0bcfbaba800639170c928a2c25"
+
+[output_sha256]
+"validation/reference_runs/component_netmeta_cnma_output.json" = "1d8380fa5484783c966326973caf119df78f7981e574f7c6bec134f4d92d22e2"

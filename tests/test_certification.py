@@ -31,6 +31,7 @@ DTA_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_dta_mada_adapter.py"
 DOSE_RESPONSE_R_ADAPTER = ROOT / "external" / "r" / "dose_response_metafor_polynomial.R"
 SURVIVAL_HR_R_ADAPTER = ROOT / "external" / "r" / "survival_hr_metafor_pairwise.R"
 CTGOV_HR_NETWORK_R_ADAPTER = ROOT / "external" / "r" / "ctgov_hr_network_netmeta.R"
+COMPONENT_CNMA_R_ADAPTER = ROOT / "external" / "r" / "component_netmeta_cnma_fixture.R"
 STAN_MODEL = ROOT / "external" / "stan" / "standard_binary_nma.stan"
 STAN_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_stan_nuts_adapter.py"
 STAN_REFERENCE_SCRIPT = ROOT / "scripts" / "run_stan_nuts_reference.py"
@@ -105,7 +106,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 4, "passed": 9}
+    assert summary == {"failed": 4, "passed": 10}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -120,6 +121,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_metafor_sglt2_survival_hr_output_validation",
         "r_metafor_pcsk9_survival_hr_output_validation",
         "r_netmeta_t2d_ctgov_hr_network_output_validation",
+        "r_netmeta_component_cnma_output_validation",
         "python_cmdstan_nuts_preflight",
         "python_cmdstan_nuts_output_validation",
     }
@@ -288,6 +290,21 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert CTGOV_HR_NETWORK_R_ADAPTER.is_file()
 
+    component_reference = by_adapter["r_netmeta_component_cnma_output_validation"]
+    assert component_reference.target_id == "component_nma_netmeta_cnma"
+    assert component_reference.status == "passed"
+    assert component_reference.certification_effect == "evidence_candidate"
+    assert component_reference.reference_method == "netmeta::discomb additive CNMA"
+    assert component_reference.output_artifacts == (
+        "validation/reference_runs/component_netmeta_cnma_output.json",
+    )
+    assert (
+        "validation/component/netmeta_component_fixture_benchmark.toml"
+        in component_reference.input_artifacts
+    )
+    assert "absolute <= 1e-06" in component_reference.tolerance
+    assert COMPONENT_CNMA_R_ADAPTER.is_file()
+
     for report in reports:
         for artifact, expected_sha in report.input_sha256.items():
             assert sha256_file(ROOT / artifact) == expected_sha
@@ -303,6 +320,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
+        "validation/reference_runs/component_netmeta_cnma_output.json",
     }
 
 

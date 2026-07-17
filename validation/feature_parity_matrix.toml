@@ -149,14 +149,19 @@ certification_effect = "none"
 id = "component_nma_netmeta"
 domain = "component_nma"
 reference_methods = ["netmeta"]
-status = "planned"
-evidence_artifacts = []
+status = "reference_candidate"
+evidence_artifacts = [
+  "src/bias_nma_adv/component_nma.py",
+  "validation/component/netmeta_component_fixture_benchmark.toml",
+  "validation/reference_runs/component_netmeta_cnma_reference.toml",
+  "validation/reference_runs/component_netmeta_cnma_output.json",
+]
 required_next_artifacts = [
-  "component_network_fixture",
-  "netmeta_cnma_reference_run",
+  "source_backed_component_network_fixture",
+  "published_component_network_corpus",
   "estimability_and_hierarchy_guard",
 ]
-claim_limit = "Component NMA remains planned and is not netmeta CNMA parity."
+claim_limit = "A narrow algorithmic netmeta::discomb reference candidate exists, but component NMA is not source-backed real validation or broad netmeta CNMA parity."
 certification_effect = "none"
 
 [[features]]

@@ -151,6 +151,8 @@ def test_validation_status_composes_all_current_gates():
             "evalue_and_binary_fragility_sensitivity",
             "pairwise_redescending_outlier_sensitivity",
             "feature_parity_matrix_gate",
+            "component_nma_additive_core_with_estimability_checks",
+            "netmeta_discomb_component_reference_adapter",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -247,8 +249,8 @@ def test_validation_status_composes_all_current_gates():
     assert feature_parity["status_counts"] == {
         "blocking": 1,
         "local_implemented": 3,
-        "planned": 4,
-        "reference_candidate": 4,
+        "planned": 3,
+        "reference_candidate": 5,
     }
     assert feature_parity["reference_matched_ids"] == []
     assert "stan_nuts_multinma_bayesian_nma" in feature_parity["blocking_ids"]
@@ -264,7 +266,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 20,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 9,
+        "observed": 10,
         "required": 10,
     }
     assert "diagnostic_test_accuracy" not in large_scale["missing_required_real_domains"]
@@ -369,10 +371,10 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 13
+    assert reference_runs["n_reports"] == 14
     assert reference_runs["status_counts"] == {
         "failed": 4,
-        "passed": 9,
+        "passed": 10,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
@@ -384,6 +386,7 @@ def test_validation_status_composes_all_current_gates():
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
+        "validation/reference_runs/component_netmeta_cnma_output.json",
     }
     assert {item["certification_effect"] for item in reference_runs["reports"]} == {
         "none",
@@ -404,6 +407,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_metafor_sglt2_survival_hr_output_validation", "passed"),
         ("r_metafor_pcsk9_survival_hr_output_validation", "passed"),
         ("r_netmeta_t2d_ctgov_hr_network_output_validation", "passed"),
+        ("r_netmeta_component_cnma_output_validation", "passed"),
         ("python_cmdstan_nuts_preflight", "failed"),
         ("python_cmdstan_nuts_output_validation", "passed"),
     }
