@@ -104,10 +104,20 @@ def test_validation_status_composes_all_current_gates():
 
     simulation_matrix = report["simulation_matrix"]
     assert simulation_matrix["matrix"] == "validation/simulation_matrix.toml"
-    assert simulation_matrix["n_jobs"] == 1
-    assert simulation_matrix["job_status_counts"] == {"active": 1}
-    assert simulation_matrix["execution_mode_counts"] == {"smoke": 1}
+    assert simulation_matrix["n_jobs"] == 26
+    assert simulation_matrix["job_status_counts"] == {"active": 26}
+    assert simulation_matrix["execution_mode_counts"] == {"full": 25, "smoke": 1}
     assert simulation_matrix["certification_effect"] == "none"
+
+    simulation_full_report = report["simulation_full_report"]
+    assert simulation_full_report["report"] == "validation/simulation_full_report.json"
+    assert simulation_full_report["status"] == "passed"
+    assert simulation_full_report["n_jobs"] == 25
+    assert simulation_full_report["job_status_counts"] == {"passed": 25}
+    assert simulation_full_report["execution_mode_counts"] == {"full": 25}
+    assert simulation_full_report["full_validation_jobs"] == 25
+    assert simulation_full_report["full_validation_iterations_successful"] == 10588
+    assert simulation_full_report["certification_effect"] == "none"
 
     portfolio_reuse = report["portfolio_reuse"]
     assert portfolio_reuse["registry"] == "validation/portfolio_reuse_sources.toml"
@@ -305,14 +315,17 @@ def test_validation_status_composes_all_current_gates():
         "required": 1,
     }
     assert large_scale["dynamic_counts"]["simulation_jobs"] == {
-        "observed": 0,
+        "observed": 25,
         "required": 25,
     }
     assert large_scale["dynamic_counts"]["simulation_iterations"] == {
-        "observed": 0,
+        "observed": 10588,
         "required": 10000,
     }
-    assert "Only active full simulation jobs count" in large_scale["simulation_counting_rule"]
+    assert "Only passed full jobs from a validated simulation report count" in large_scale[
+        "simulation_counting_rule"
+    ]
+    assert large_scale["simulation_evidence_status"] == "passed"
     assert "diagnostic_test_accuracy" not in large_scale["missing_required_real_domains"]
     assert "component_nma" not in large_scale["missing_required_real_domains"]
     assert "cross_design_nma" not in large_scale["missing_required_real_domains"]

@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from dataclasses import asdict
 from dataclasses import dataclass
+import json
 from pathlib import Path
 import time
 import tomllib
-from typing import Any
+from typing import Any, Mapping
 
 from bias_nma_adv.grand_benchmark_plan import GrandBenchmarkPlan
 from bias_nma_adv.grand_benchmark_plan import load_grand_benchmark_plan
@@ -240,6 +241,7 @@ def build_simulation_matrix_report(
     *,
     grand_benchmark_plan_path: str | Path,
     checked_at: str,
+    execution_modes: tuple[str, ...] = ("smoke",),
 ) -> dict[str, Any]:
     """Run active simulation jobs and return a non-certifying report."""
 
@@ -247,14 +249,24 @@ def build_simulation_matrix_report(
         matrix_path,
         grand_benchmark_plan_path=grand_benchmark_plan_path,
     )
-    job_reports = [_run_job(job) for job in matrix.jobs if job.status == "active"]
-    status = "passed" if all(report["status"] == "passed" for report in job_reports) else "failed"
+    selected_modes = _normalise_execution_modes(execution_modes)
+    job_reports = [
+        _run_job(job)
+        for job in matrix.jobs
+        if job.status == "active" and job.execution_mode in selected_modes
+    ]
+    status = (
+        "passed"
+        if job_reports and all(report["status"] == "passed" for report in job_reports)
+        else "failed"
+    )
     return {
         "schema_version": SIMULATION_MATRIX_REPORT_SCHEMA_VERSION,
         "status": status,
         "checked_at": checked_at,
         "matrix_checked_at": matrix.checked_at,
         "source_policy": matrix.source_policy,
+        "execution_modes_requested": sorted(selected_modes),
         "uses_real_data": False,
         "certification_effect": "none",
         "n_jobs": len(job_reports),
@@ -264,6 +276,130 @@ def build_simulation_matrix_report(
             "Simulation reports are not real clinical validation, tier-one parity, or superiority evidence.",
             "Simulation reports cannot enable clinical, regulatory, or HTA outputs.",
         ],
+    }
+
+
+def load_simulation_matrix_report(path: str | Path) -> dict[str, Any]:
+    """Load a simulation-matrix report JSON artifact."""
+
+    with Path(path).open("r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+    if not isinstance(payload, dict):
+        raise SimulationMatrixError("simulation matrix report must be a JSON object.")
+    return payload
+
+
+def validate_simulation_matrix_report(
+    report: Mapping[str, Any],
+    matrix: SimulationMatrix,
+) -> dict[str, Any]:
+    """Validate an executed simulation report against the prespecified matrix."""
+
+    required = {
+        "schema_version",
+        "status",
+        "source_policy",
+        "execution_modes_requested",
+        "uses_real_data",
+        "certification_effect",
+        "n_jobs",
+        "jobs",
+    }
+    missing = sorted(required - set(report))
+    if missing:
+        raise SimulationMatrixError(f"simulation matrix report missing required keys: {missing}")
+    if report["schema_version"] != SIMULATION_MATRIX_REPORT_SCHEMA_VERSION:
+        raise SimulationMatrixError(
+            f"simulation matrix report schema_version must be {SIMULATION_MATRIX_REPORT_SCHEMA_VERSION}."
+        )
+    if report["status"] != "passed":
+        raise SimulationMatrixError("simulation matrix report must have status='passed'.")
+    if report["source_policy"] != matrix.source_policy:
+        raise SimulationMatrixError("simulation matrix report source_policy does not match matrix.")
+    if bool(report["uses_real_data"]):
+        raise SimulationMatrixError("simulation matrix report must not use real data.")
+    if report["certification_effect"] != "none":
+        raise SimulationMatrixError("simulation matrix report cannot certify methods.")
+    jobs = report["jobs"]
+    if not isinstance(jobs, list):
+        raise SimulationMatrixError("simulation matrix report jobs must be a list.")
+    if int(report["n_jobs"]) != len(jobs):
+        raise SimulationMatrixError("simulation matrix report n_jobs does not match jobs length.")
+
+    matrix_jobs = {job.id: job for job in matrix.jobs}
+    seen: set[str] = set()
+    for raw_job in jobs:
+        if not isinstance(raw_job, Mapping):
+            raise SimulationMatrixError("simulation matrix report job entries must be objects.")
+        job_id = str(raw_job.get("id", ""))
+        if not job_id:
+            raise SimulationMatrixError("simulation matrix report job id must not be empty.")
+        if job_id in seen:
+            raise SimulationMatrixError(f"duplicate simulation matrix report job id: {job_id}.")
+        seen.add(job_id)
+        matrix_job = matrix_jobs.get(job_id)
+        if matrix_job is None:
+            raise SimulationMatrixError(f"simulation matrix report job {job_id!r} is absent from matrix.")
+        if matrix_job.status != "active":
+            raise SimulationMatrixError(f"simulation matrix report job {job_id!r} is not active in matrix.")
+        if raw_job.get("status") != "passed":
+            raise SimulationMatrixError(f"simulation matrix report job {job_id!r} did not pass.")
+        if raw_job.get("execution_mode") != matrix_job.execution_mode:
+            raise SimulationMatrixError(f"simulation matrix report job {job_id!r} execution_mode drift.")
+        if raw_job.get("uses_real_data") is not False:
+            raise SimulationMatrixError(f"simulation matrix report job {job_id!r} must not use real data.")
+        if raw_job.get("certification_effect") != "none":
+            raise SimulationMatrixError(f"simulation matrix report job {job_id!r} cannot certify methods.")
+        if raw_job.get("inputs") != _job_inputs(matrix_job):
+            raise SimulationMatrixError(f"simulation matrix report job {job_id!r} input drift.")
+        if int(raw_job.get("iterations_successful", 0)) < matrix_job.min_successful_iterations:
+            raise SimulationMatrixError(
+                f"simulation matrix report job {job_id!r} has fewer successful iterations than required."
+            )
+        summary = raw_job.get("methods_summary", {})
+        if not isinstance(summary, Mapping):
+            raise SimulationMatrixError(f"simulation matrix report job {job_id!r} methods_summary must be an object.")
+        missing_methods = sorted(set(matrix_job.required_methods) - set(summary))
+        if missing_methods:
+            raise SimulationMatrixError(
+                f"simulation matrix report job {job_id!r} missing methods {missing_methods}."
+            )
+        for method in matrix_job.required_methods:
+            metrics = summary[method]
+            missing_metrics = sorted(set(matrix_job.required_metrics) - set(metrics))
+            if missing_metrics:
+                raise SimulationMatrixError(
+                    f"simulation matrix report job {job_id!r} method {method!r} missing metrics {missing_metrics}."
+                )
+
+    return dict(report)
+
+
+def summarize_simulation_matrix_report(report: Mapping[str, Any]) -> dict[str, Any]:
+    """Summarize passed simulation evidence from a validated report."""
+
+    status_counts: dict[str, int] = {}
+    execution_mode_counts: dict[str, int] = {}
+    full_jobs = 0
+    full_iterations_successful = 0
+    for raw_job in report.get("jobs", []):
+        status = str(raw_job.get("status", ""))
+        mode = str(raw_job.get("execution_mode", ""))
+        status_counts[status] = status_counts.get(status, 0) + 1
+        execution_mode_counts[mode] = execution_mode_counts.get(mode, 0) + 1
+        if status == "passed" and mode == "full":
+            full_jobs += 1
+            full_iterations_successful += int(raw_job.get("iterations_successful", 0))
+    return {
+        "schema_version": report["schema_version"],
+        "status": report["status"],
+        "n_jobs": int(report["n_jobs"]),
+        "job_status_counts": dict(sorted(status_counts.items())),
+        "execution_mode_counts": dict(sorted(execution_mode_counts.items())),
+        "full_validation_jobs": full_jobs,
+        "full_validation_iterations_successful": full_iterations_successful,
+        "uses_real_data": bool(report["uses_real_data"]),
+        "certification_effect": str(report["certification_effect"]),
     }
 
 
@@ -302,6 +438,7 @@ def _run_job(job: SimulationMatrixJob) -> dict[str, Any]:
         "certification_effect": "none",
         "runtime_seconds": runtime_seconds,
         "inputs": _job_inputs(job),
+        "iterations_attempted": result["iterations_attempted"],
         "iterations_successful": result["iterations_successful"],
         "methods_summary": result["methods_summary"],
         "claim_limit": job.claim_limit,
@@ -332,3 +469,15 @@ def _job_inputs(job: SimulationMatrixJob) -> dict[str, Any]:
     for key in ("required_methods", "required_metrics"):
         payload[key] = list(payload[key])
     return payload
+
+
+def _normalise_execution_modes(execution_modes: tuple[str, ...]) -> frozenset[str]:
+    if not execution_modes:
+        raise SimulationMatrixError("at least one execution mode must be requested.")
+    raw_modes = tuple(mode.strip().lower() for mode in execution_modes)
+    if "all" in raw_modes:
+        return frozenset(ALLOWED_EXECUTION_MODES)
+    unknown = sorted(set(raw_modes) - ALLOWED_EXECUTION_MODES)
+    if unknown:
+        raise SimulationMatrixError(f"unsupported execution modes requested: {unknown}")
+    return frozenset(raw_modes)

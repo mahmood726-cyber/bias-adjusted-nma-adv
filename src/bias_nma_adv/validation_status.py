@@ -64,7 +64,10 @@ from bias_nma_adv.reversal_yardstick import (
 )
 from bias_nma_adv.review_ledger import summarize_review_ledger
 from bias_nma_adv.simulation_matrix import (
+    load_simulation_matrix_report,
     summarize_simulation_matrix,
+    summarize_simulation_matrix_report,
+    validate_simulation_matrix_report,
     validate_simulation_matrix,
 )
 from bias_nma_adv.tier1_gap_register import (
@@ -99,6 +102,7 @@ def build_validation_status(
     registry_path = root / "validation" / "benchmark_registry.toml"
     grand_benchmark_plan_path = root / "validation" / "grand_benchmark_plan.toml"
     simulation_matrix_path = root / "validation" / "simulation_matrix.toml"
+    simulation_full_report_path = root / "validation" / "simulation_full_report.json"
     portfolio_reuse_registry_path = root / "validation" / "portfolio_reuse_sources.toml"
     proof_effect_bundle_path = (
         root / "validation" / "ingestion" / "sglt2_hf_reported_hr_proof_effects.json"
@@ -131,6 +135,12 @@ def build_validation_status(
         simulation_matrix_path,
         grand_benchmark_plan_path=grand_benchmark_plan_path,
     )
+    simulation_full_report = None
+    if simulation_full_report_path.exists():
+        simulation_full_report = validate_simulation_matrix_report(
+            load_simulation_matrix_report(simulation_full_report_path),
+            simulation_matrix,
+        )
     portfolio_reuse_registry = load_portfolio_reuse_registry(portfolio_reuse_registry_path)
     tier1_gap_register = load_tier1_gap_register(tier1_gap_register_path)
     html_delivery_contract = load_html_delivery_contract(html_delivery_contract_path)
@@ -200,6 +210,11 @@ def build_validation_status(
             "matrix": _relpath(simulation_matrix_path, root),
             **summarize_simulation_matrix(simulation_matrix),
         },
+        "simulation_full_report": _simulation_full_report_summary(
+            simulation_full_report,
+            report_path=simulation_full_report_path,
+            repo_root=root,
+        ),
         "portfolio_reuse": {
             "registry": _relpath(portfolio_reuse_registry_path, root),
             **summarize_portfolio_reuse_registry(portfolio_reuse_registry),
@@ -231,6 +246,7 @@ def build_validation_status(
                 real_benchmark_atlas=real_benchmark_atlas,
                 simulation_matrix=simulation_matrix,
                 reference_reports=reports,
+                simulation_report=simulation_full_report,
             ),
         },
         "reversal_yardstick": {
@@ -304,6 +320,26 @@ def _source_registry_summary(
         "benchmark_ids": [entry.id for entry in registry.benchmarks],
         "domains": dict(sorted(domains.items())),
         "certification_effect": "none",
+    }
+
+
+def _simulation_full_report_summary(
+    report: dict[str, Any] | None,
+    *,
+    report_path: Path,
+    repo_root: Path,
+) -> dict[str, Any]:
+    if report is None:
+        return {
+            "report": _relpath(report_path, repo_root),
+            "status": "absent",
+            "full_validation_jobs": 0,
+            "full_validation_iterations_successful": 0,
+            "certification_effect": "none",
+        }
+    return {
+        "report": _relpath(report_path, repo_root),
+        **summarize_simulation_matrix_report(report),
     }
 
 

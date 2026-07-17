@@ -32,7 +32,7 @@ jobs:
         run: python scripts\write_validation_status.py --output validation_status.json
 
       - name: Run simulation matrix smoke
-        run: python scripts\run_simulation_matrix.py --output simulation_matrix_report.json
+        run: python scripts\run_simulation_matrix.py --execution-mode smoke --output simulation_matrix_report.json
 
       - name: Upload validation status artifact
         uses: actions/upload-artifact@v4

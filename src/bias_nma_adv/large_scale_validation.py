@@ -159,16 +159,20 @@ def summarize_large_scale_validation(
     real_benchmark_atlas: dict[str, Any],
     simulation_matrix: SimulationMatrix,
     reference_reports: list[ReferenceRunReport],
+    simulation_report: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Summarize current dynamic evidence against large-scale thresholds."""
 
     thresholds = gate.thresholds
-    validation_simulation_jobs = [
-        job
-        for job in simulation_matrix.jobs
-        if job.status == "active" and job.execution_mode == "full"
-    ]
-    current_sim_iterations = sum(job.n_iterations for job in validation_simulation_jobs)
+    validation_simulation_jobs = 0
+    current_sim_iterations = 0
+    simulation_evidence_status = "absent"
+    if simulation_report is not None:
+        simulation_evidence_status = str(simulation_report["status"])
+        for raw_job in simulation_report.get("jobs", []):
+            if raw_job.get("status") == "passed" and raw_job.get("execution_mode") == "full":
+                validation_simulation_jobs += 1
+                current_sim_iterations += int(raw_job.get("iterations_successful", 0))
     passed_reference_reports = [
         report for report in reference_reports if report.status == "passed"
     ]
@@ -199,10 +203,7 @@ def summarize_large_scale_validation(
             int(real_benchmark_atlas.get("n_tau2_positive_benchmarks", 0)),
             thresholds.minimum_tau2_positive_benchmarks,
         ),
-        "simulation_jobs": (
-            len(validation_simulation_jobs),
-            thresholds.minimum_simulation_jobs,
-        ),
+        "simulation_jobs": (validation_simulation_jobs, thresholds.minimum_simulation_jobs),
         "simulation_iterations": (
             current_sim_iterations,
             thresholds.minimum_simulation_iterations,
@@ -226,9 +227,11 @@ def summarize_large_scale_validation(
         "missing_required_real_domains": missing_domains,
         "failed_checks": failed_checks,
         "simulation_counting_rule": (
-            "Only active full simulation jobs count toward large-scale validation; "
-            "smoke and planned jobs are CI checks or plans, not validation evidence."
+            "Only passed full jobs from a validated simulation report count toward "
+            "large-scale validation; smoke, planned, and unexecuted matrix jobs are "
+            "CI checks or plans, not validation evidence."
         ),
+        "simulation_evidence_status": simulation_evidence_status,
         "certification_effect": gate.certification_effect,
         "claim_limit": gate.claim_limit,
     }

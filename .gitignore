@@ -53,6 +53,7 @@ output/
 !validation/ingestion/*.json
 !validation/reference_runs/*.json
 !validation/real_benchmark_atlas.json
+!validation/simulation_full_report.json
 
 # Stan/CmdStan local build artifacts
 external/stan/*.exe

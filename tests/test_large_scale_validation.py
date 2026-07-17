@@ -12,6 +12,10 @@ from bias_nma_adv.large_scale_validation import (
 )
 from bias_nma_adv.real_benchmark_atlas import build_real_benchmark_atlas
 from bias_nma_adv.simulation_matrix import validate_simulation_matrix
+from bias_nma_adv.simulation_matrix import (
+    load_simulation_matrix_report,
+    validate_simulation_matrix_report,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +29,10 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         ROOT / "validation" / "simulation_matrix.toml",
         grand_benchmark_plan_path=ROOT / "validation" / "grand_benchmark_plan.toml",
     )
+    simulation_report = validate_simulation_matrix_report(
+        load_simulation_matrix_report(ROOT / "validation" / "simulation_full_report.json"),
+        matrix,
+    )
     reports = load_reference_run_reports(ROOT / "validation" / "reference_runs")
 
     summary = summarize_large_scale_validation(
@@ -32,6 +40,7 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         real_benchmark_atlas=atlas,
         simulation_matrix=matrix,
         reference_reports=reports,
+        simulation_report=simulation_report,
     )
 
     assert summary["schema_version"] == LARGE_SCALE_VALIDATION_SCHEMA_VERSION
@@ -62,14 +71,17 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         "required": 1,
     }
     assert summary["dynamic_counts"]["simulation_jobs"] == {
-        "observed": 0,
+        "observed": 25,
         "required": 25,
     }
     assert summary["dynamic_counts"]["simulation_iterations"] == {
-        "observed": 0,
+        "observed": 10588,
         "required": 10000,
     }
-    assert "Only active full simulation jobs count" in summary["simulation_counting_rule"]
+    assert "Only passed full jobs from a validated simulation report count" in summary[
+        "simulation_counting_rule"
+    ]
+    assert summary["simulation_evidence_status"] == "passed"
     assert "diagnostic_test_accuracy" not in summary["missing_required_real_domains"]
     assert "component_nma" not in summary["missing_required_real_domains"]
     assert "cross_design_nma" not in summary["missing_required_real_domains"]

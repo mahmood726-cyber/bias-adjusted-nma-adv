@@ -1,0 +1,2920 @@
+{
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T20:25:00Z",
+  "execution_modes_requested": [
+    "full"
+  ],
+  "jobs": [
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_01",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.0,
+        "design_ratio": 0.0,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_01",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 10,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261701,
+        "status": "active",
+        "true_bias": 0.0,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.0,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.010514610381615032,
+          "coverage": 1.0,
+          "mean_se": 0.20819946142332188,
+          "mse": 0.02340896409689631,
+          "rmse": 0.1529998826695508
+        },
+        "hksj_bias_adj": {
+          "bias": 0.009620091562650488,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.157662225828235,
+          "mse": 0.01796565750359972,
+          "rmse": 0.1340360306171431
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.007690569934408418,
+          "coverage": 1.0,
+          "mean_se": 0.16977283848110333,
+          "mse": 0.017986181516794576,
+          "rmse": 0.13411257031611382
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.009620091562650488,
+          "coverage": 0.8674418604651163,
+          "mean_se": 0.1171119614092966,
+          "mse": 0.01796565750359972,
+          "rmse": 0.1340360306171431
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.007690569934408418,
+          "coverage": 0.8558139534883721,
+          "mean_se": 0.11610115471192278,
+          "mse": 0.017986181516794576,
+          "rmse": 0.13411257031611382
+        },
+        "standard_bias_adj": {
+          "bias": 0.009620091562650488,
+          "coverage": 0.9813953488372092,
+          "mean_se": 0.15620763114914973,
+          "mse": 0.01796565750359972,
+          "rmse": 0.1340360306171431
+        },
+        "standard_nma": {
+          "bias": 0.009620091562650488,
+          "coverage": 0.9813953488372092,
+          "mean_se": 0.15620763114914973,
+          "mse": 0.01796565750359972,
+          "rmse": 0.1340360306171431
+        },
+        "stratified_re_nma": {
+          "bias": 0.009596426283134672,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.15760940559002296,
+          "mse": 0.017964494852539432,
+          "rmse": 0.1340316934629248
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.007690569934408418,
+          "coverage": 1.0,
+          "mean_se": 0.16977283848110333,
+          "mse": 0.017986181516794576,
+          "rmse": 0.13411257031611382
+        },
+        "topological_regularization": {
+          "bias": 0.008679535497308597,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.1573994219300989,
+          "mse": 0.017868830353934117,
+          "rmse": 0.13367434441183587
+        }
+      },
+      "runtime_seconds": 108.73463180000545,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_02",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.2,
+        "design_ratio": 0.25,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_02",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 10,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261702,
+        "status": "active",
+        "true_bias": 0.0,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.0,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": -0.0025545328710885563,
+          "coverage": 1.0,
+          "mean_se": 0.2987468519713484,
+          "mse": 0.03478263506949499,
+          "rmse": 0.18650103235503818
+        },
+        "hksj_bias_adj": {
+          "bias": 0.009899796252868916,
+          "coverage": 0.9813953488372092,
+          "mean_se": 0.1900201966867463,
+          "mse": 0.0273084023827758,
+          "rmse": 0.1652525412294038
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.008392285271228726,
+          "coverage": 0.9930232558139535,
+          "mean_se": 0.2020504652471591,
+          "mse": 0.027411606430383303,
+          "rmse": 0.16556450836572223
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.009899796252868916,
+          "coverage": 0.8372093023255814,
+          "mean_se": 0.13586430206431918,
+          "mse": 0.0273084023827758,
+          "rmse": 0.1652525412294038
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.008392285271228726,
+          "coverage": 0.8418604651162791,
+          "mean_se": 0.13838675370361245,
+          "mse": 0.027411606430383303,
+          "rmse": 0.16556450836572223
+        },
+        "standard_bias_adj": {
+          "bias": 0.009899796252868916,
+          "coverage": 0.9604651162790697,
+          "mean_se": 0.1871547444424641,
+          "mse": 0.0273084023827758,
+          "rmse": 0.1652525412294038
+        },
+        "standard_nma": {
+          "bias": 0.009899796252868916,
+          "coverage": 0.9604651162790697,
+          "mean_se": 0.1871547444424641,
+          "mse": 0.0273084023827758,
+          "rmse": 0.1652525412294038
+        },
+        "stratified_re_nma": {
+          "bias": 0.009664489714459571,
+          "coverage": 0.9790697674418605,
+          "mean_se": 0.19384886911207688,
+          "mse": 0.030355257538395918,
+          "rmse": 0.17422760268796653
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.007241244929116993,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.21930573924335273,
+          "mse": 0.029713779661364258,
+          "rmse": 0.17237685361255511
+        },
+        "topological_regularization": {
+          "bias": 0.008501387745711518,
+          "coverage": 0.9813953488372092,
+          "mean_se": 0.18945716584268757,
+          "mse": 0.027023145227380776,
+          "rmse": 0.16438718084869264
+        }
+      },
+      "runtime_seconds": 119.01225140001043,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_03",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.5,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_03",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 10,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261703,
+        "status": "active",
+        "true_bias": 0.0,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.0,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 424,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.006066597052920202,
+          "coverage": 1.0,
+          "mean_se": 0.3328142950147465,
+          "mse": 0.03120665168098789,
+          "rmse": 0.17665404518716205
+        },
+        "hksj_bias_adj": {
+          "bias": 0.0038882002787083195,
+          "coverage": 0.9834905660377359,
+          "mean_se": 0.21525024904041937,
+          "mse": 0.033719529847472084,
+          "rmse": 0.1836287827315535
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.00926399720379586,
+          "coverage": 0.9882075471698113,
+          "mean_se": 0.23684367606830814,
+          "mse": 0.03681034617538897,
+          "rmse": 0.19186022562112495
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.0038882002787083195,
+          "coverage": 0.8632075471698113,
+          "mean_se": 0.16428155401133604,
+          "mse": 0.033719529847472084,
+          "rmse": 0.1836287827315535
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.00926399720379586,
+          "coverage": 0.8372641509433962,
+          "mean_se": 0.16109495110451294,
+          "mse": 0.03681034617538897,
+          "rmse": 0.19186022562112495
+        },
+        "standard_bias_adj": {
+          "bias": 0.0038882002787083195,
+          "coverage": 0.9575471698113207,
+          "mean_se": 0.2121308978405411,
+          "mse": 0.033719529847472084,
+          "rmse": 0.1836287827315535
+        },
+        "standard_nma": {
+          "bias": 0.0038882002787083195,
+          "coverage": 0.9575471698113207,
+          "mean_se": 0.2121308978405411,
+          "mse": 0.033719529847472084,
+          "rmse": 0.1836287827315535
+        },
+        "stratified_re_nma": {
+          "bias": 0.009269464670897301,
+          "coverage": 0.9811320754716981,
+          "mean_se": 0.20895771283267817,
+          "mse": 0.03739919133046208,
+          "rmse": 0.19338870528151866
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.010095252838233376,
+          "coverage": 1.0,
+          "mean_se": 0.3241641192018361,
+          "mse": 0.04702270121530691,
+          "rmse": 0.21684718401516517
+        },
+        "topological_regularization": {
+          "bias": 0.00194644547095939,
+          "coverage": 0.9834905660377359,
+          "mean_se": 0.2142753747623639,
+          "mse": 0.03334907179935278,
+          "rmse": 0.1826172823129092
+        }
+      },
+      "runtime_seconds": 116.17251669999678,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_04",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.75,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_04",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 10,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261704,
+        "status": "active",
+        "true_bias": 0.2,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.0,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 428,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.09490335285706518,
+          "coverage": 1.0,
+          "mean_se": 0.5487050010210696,
+          "mse": 0.05122348854985994,
+          "rmse": 0.22632606688108187
+        },
+        "hksj_bias_adj": {
+          "bias": 0.11541382052929872,
+          "coverage": 0.9813084112149533,
+          "mean_se": 0.26000269669531295,
+          "mse": 0.05500201522574704,
+          "rmse": 0.23452508442754486
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.09403957806520874,
+          "coverage": 0.9883177570093458,
+          "mean_se": 0.29660814499573274,
+          "mse": 0.05908074266048533,
+          "rmse": 0.24306530534094192
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.11541382052929872,
+          "coverage": 0.7920560747663551,
+          "mean_se": 0.17869896933667517,
+          "mse": 0.05500201522574704,
+          "rmse": 0.23452508442754486
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.09403957806520874,
+          "coverage": 0.75,
+          "mean_se": 0.17145078839999203,
+          "mse": 0.05908074266048533,
+          "rmse": 0.24306530534094192
+        },
+        "standard_bias_adj": {
+          "bias": 0.11541382052929872,
+          "coverage": 0.9462616822429907,
+          "mean_se": 0.2559903389535587,
+          "mse": 0.05500201522574704,
+          "rmse": 0.23452508442754486
+        },
+        "standard_nma": {
+          "bias": 0.11541382052929872,
+          "coverage": 0.9462616822429907,
+          "mean_se": 0.2559903389535587,
+          "mse": 0.05500201522574704,
+          "rmse": 0.23452508442754486
+        },
+        "stratified_re_nma": {
+          "bias": 0.12024096768212841,
+          "coverage": 0.9789719626168224,
+          "mean_se": 0.2551956419530529,
+          "mse": 0.06336581114836465,
+          "rmse": 0.2517256664473542
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.08923526286286701,
+          "coverage": 1.0,
+          "mean_se": 0.5040624290502075,
+          "mse": 0.06738519705991035,
+          "rmse": 0.25958658875202
+        },
+        "topological_regularization": {
+          "bias": 0.11183511680259628,
+          "coverage": 0.9813084112149533,
+          "mean_se": 0.2577024691485318,
+          "mse": 0.053578420411953355,
+          "rmse": 0.23147012855215973
+        }
+      },
+      "runtime_seconds": 119.55026079999516,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_05",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 1.0,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_05",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 10,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261705,
+        "status": "active",
+        "true_bias": 0.4,
+        "true_bias_interaction": 0.1,
+        "true_heterogeneity": 0.0,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 375,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.4194579850137469,
+          "coverage": 1.0,
+          "mean_se": 0.48581066494597075,
+          "mse": 0.22359649070961995,
+          "rmse": 0.4728599060077096
+        },
+        "hksj_bias_adj": {
+          "bias": 0.4145892358045197,
+          "coverage": 0.8826666666666667,
+          "mean_se": 0.3565697784427234,
+          "mse": 0.2523109207097115,
+          "rmse": 0.502305604895776
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.41295999338831946,
+          "coverage": 0.9733333333333334,
+          "mean_se": 0.4061123829160947,
+          "mse": 0.25186592705835503,
+          "rmse": 0.5018624583074082
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.4145892358045197,
+          "coverage": 0.5573333333333333,
+          "mean_se": 0.23898954271078757,
+          "mse": 0.2523109207097115,
+          "rmse": 0.502305604895776
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.41295999338831946,
+          "coverage": 0.504,
+          "mean_se": 0.22169655493398704,
+          "mse": 0.25186592705835503,
+          "rmse": 0.5018624583074082
+        },
+        "standard_bias_adj": {
+          "bias": 0.4145892358045197,
+          "coverage": 0.8053333333333333,
+          "mean_se": 0.35086761831419044,
+          "mse": 0.2523109207097115,
+          "rmse": 0.502305604895776
+        },
+        "standard_nma": {
+          "bias": 0.4145892358045197,
+          "coverage": 0.8053333333333333,
+          "mean_se": 0.35086761831419044,
+          "mse": 0.2523109207097115,
+          "rmse": 0.502305604895776
+        },
+        "stratified_re_nma": {
+          "bias": 0.4145731494931265,
+          "coverage": 0.8826666666666667,
+          "mean_se": 0.3565669155040003,
+          "mse": 0.2523040103478352,
+          "rmse": 0.5022987262056665
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.40390144785955767,
+          "coverage": 1.0,
+          "mean_se": 0.4019894002578255,
+          "mse": 0.2132098398848854,
+          "rmse": 0.46174651041982484
+        },
+        "topological_regularization": {
+          "bias": 0.40032638904782675,
+          "coverage": 0.8906666666666667,
+          "mean_se": 0.3507444522853995,
+          "mse": 0.2365031137110402,
+          "rmse": 0.4863158579678851
+        }
+      },
+      "runtime_seconds": 98.82686509998166,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_06",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.0,
+        "design_ratio": 0.0,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_06",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 12,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261706,
+        "status": "active",
+        "true_bias": 0.0,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.1,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": -0.00032357112604460654,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.16975187918410084,
+          "mse": 0.016652934561648736,
+          "rmse": 0.12904624970005418
+        },
+        "hksj_bias_adj": {
+          "bias": -0.002848120780937719,
+          "coverage": 0.9883720930232558,
+          "mean_se": 0.13688073180502744,
+          "mse": 0.013317195491320356,
+          "rmse": 0.11540015377511573
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": -0.0027118781436332585,
+          "coverage": 0.9953488372093023,
+          "mean_se": 0.14753131248743395,
+          "mse": 0.013270949636600176,
+          "rmse": 0.11519960779707618
+        },
+        "sandwich_bias_adj": {
+          "bias": -0.002848120780937719,
+          "coverage": 0.9046511627906977,
+          "mean_se": 0.10453606061025154,
+          "mse": 0.013317195491320356,
+          "rmse": 0.11540015377511573
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": -0.0027118781436332585,
+          "coverage": 0.8837209302325582,
+          "mean_se": 0.10330737426701027,
+          "mse": 0.013270949636600176,
+          "rmse": 0.11519960779707618
+        },
+        "standard_bias_adj": {
+          "bias": -0.002848120780937719,
+          "coverage": 0.9790697674418605,
+          "mean_se": 0.1353253822301905,
+          "mse": 0.013317195491320356,
+          "rmse": 0.11540015377511573
+        },
+        "standard_nma": {
+          "bias": -0.002848120780937719,
+          "coverage": 0.9790697674418605,
+          "mean_se": 0.1353253822301905,
+          "mse": 0.013317195491320356,
+          "rmse": 0.11540015377511573
+        },
+        "stratified_re_nma": {
+          "bias": -0.0028569912289835467,
+          "coverage": 0.9883720930232558,
+          "mean_se": 0.13682540374854626,
+          "mse": 0.013316844798071041,
+          "rmse": 0.11539863429898571
+        },
+        "study_specific_bias_coupled": {
+          "bias": -0.0027118781436332585,
+          "coverage": 0.9953488372093023,
+          "mean_se": 0.14753131248743395,
+          "mse": 0.013270949636600176,
+          "rmse": 0.11519960779707618
+        },
+        "topological_regularization": {
+          "bias": -0.003786739443447149,
+          "coverage": 0.9883720930232558,
+          "mean_se": 0.13665870223561066,
+          "mse": 0.013248155898841603,
+          "rmse": 0.11510063378992143
+        }
+      },
+      "runtime_seconds": 119.95844980000402,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_07",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.2,
+        "design_ratio": 0.25,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_07",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 12,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261707,
+        "status": "active",
+        "true_bias": 0.2,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.1,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.00507492894134614,
+          "coverage": 1.0,
+          "mean_se": 0.21873553117216998,
+          "mse": 0.01949952429193039,
+          "rmse": 0.13964069711917937
+        },
+        "hksj_bias_adj": {
+          "bias": 0.033360053222662875,
+          "coverage": 0.986046511627907,
+          "mean_se": 0.1646813286639563,
+          "mse": 0.01954286076370504,
+          "rmse": 0.13979578235306328
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.01636488256029939,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.17580944962764986,
+          "mse": 0.02006445499753062,
+          "rmse": 0.14164905575940356
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.033360053222662875,
+          "coverage": 0.8906976744186047,
+          "mean_se": 0.13099516835282585,
+          "mse": 0.01954286076370504,
+          "rmse": 0.13979578235306328
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.01636488256029939,
+          "coverage": 0.8674418604651163,
+          "mean_se": 0.1310999434494685,
+          "mse": 0.02006445499753062,
+          "rmse": 0.14164905575940356
+        },
+        "standard_bias_adj": {
+          "bias": 0.033360053222662875,
+          "coverage": 0.9627906976744186,
+          "mean_se": 0.16206867953485768,
+          "mse": 0.01954286076370504,
+          "rmse": 0.13979578235306328
+        },
+        "standard_nma": {
+          "bias": 0.033360053222662875,
+          "coverage": 0.9627906976744186,
+          "mean_se": 0.16206867953485768,
+          "mse": 0.01954286076370504,
+          "rmse": 0.13979578235306328
+        },
+        "stratified_re_nma": {
+          "bias": 0.023961192097509455,
+          "coverage": 0.9790697674418605,
+          "mean_se": 0.1634112825380233,
+          "mse": 0.02165501880880162,
+          "rmse": 0.14715644331391547
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.0024753494608887204,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.1973039487195872,
+          "mse": 0.02200808135545228,
+          "rmse": 0.14835120948429198
+        },
+        "topological_regularization": {
+          "bias": 0.031967325615419595,
+          "coverage": 0.986046511627907,
+          "mean_se": 0.1642661716170577,
+          "mse": 0.01935143143534258,
+          "rmse": 0.13910942252537237
+        }
+      },
+      "runtime_seconds": 127.05604990001302,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_08",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.5,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_08",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 12,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261708,
+        "status": "active",
+        "true_bias": 0.4,
+        "true_bias_interaction": 0.1,
+        "true_heterogeneity": 0.1,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.09058256398431824,
+          "coverage": 1.0,
+          "mean_se": 0.2512389144903268,
+          "mse": 0.0344041403461381,
+          "rmse": 0.18548353119923638
+        },
+        "hksj_bias_adj": {
+          "bias": 0.13342908290966082,
+          "coverage": 0.9511627906976744,
+          "mean_se": 0.21302234355008415,
+          "mse": 0.047727931149267856,
+          "rmse": 0.21846723129400403
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.10606380894903623,
+          "coverage": 0.9767441860465116,
+          "mean_se": 0.21741084365341437,
+          "mse": 0.043241886236843545,
+          "rmse": 0.20794683512100767
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.13342908290966082,
+          "coverage": 0.8186046511627907,
+          "mean_se": 0.16782498979782973,
+          "mse": 0.047727931149267856,
+          "rmse": 0.21846723129400403
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.10606380894903623,
+          "coverage": 0.8325581395348837,
+          "mean_se": 0.16478862404190772,
+          "mse": 0.043241886236843545,
+          "rmse": 0.20794683512100767
+        },
+        "standard_bias_adj": {
+          "bias": 0.13342908290966082,
+          "coverage": 0.9302325581395349,
+          "mean_se": 0.20971209925732262,
+          "mse": 0.047727931149267856,
+          "rmse": 0.21846723129400403
+        },
+        "standard_nma": {
+          "bias": 0.13342908290966082,
+          "coverage": 0.9302325581395349,
+          "mean_se": 0.20971209925732262,
+          "mse": 0.047727931149267856,
+          "rmse": 0.21846723129400403
+        },
+        "stratified_re_nma": {
+          "bias": 0.12449165412648411,
+          "coverage": 0.9372093023255814,
+          "mean_se": 0.19919813715679968,
+          "mse": 0.05433116702413378,
+          "rmse": 0.2330904696124099
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.06821428579814642,
+          "coverage": 1.0,
+          "mean_se": 0.2933422548210067,
+          "mse": 0.04554223715225165,
+          "rmse": 0.2134062725232125
+        },
+        "topological_regularization": {
+          "bias": 0.13042294876522467,
+          "coverage": 0.9511627906976744,
+          "mean_se": 0.21197849782189024,
+          "mse": 0.04658491753483187,
+          "rmse": 0.21583539453674383
+        }
+      },
+      "runtime_seconds": 128.43297069999971,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_09",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.75,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_09",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 12,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261709,
+        "status": "active",
+        "true_bias": 0.6,
+        "true_bias_interaction": 0.2,
+        "true_heterogeneity": 0.1,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 419,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.26240044351373704,
+          "coverage": 0.9976133651551312,
+          "mean_se": 0.344885325210424,
+          "mse": 0.10248624488362104,
+          "rmse": 0.3201347292681958
+        },
+        "hksj_bias_adj": {
+          "bias": 0.2934391701453886,
+          "coverage": 0.9069212410501193,
+          "mean_se": 0.27946468178145445,
+          "mse": 0.12144685581275114,
+          "rmse": 0.3484922607644984
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.26394007773622774,
+          "coverage": 0.9451073985680191,
+          "mean_se": 0.28071723629368495,
+          "mse": 0.10837158393223813,
+          "rmse": 0.3291983960049595
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.2934391701453886,
+          "coverage": 0.6443914081145584,
+          "mean_se": 0.19790106171383512,
+          "mse": 0.12144685581275114,
+          "rmse": 0.3484922607644984
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.26394007773622774,
+          "coverage": 0.6754176610978521,
+          "mean_se": 0.1931026182811148,
+          "mse": 0.10837158393223813,
+          "rmse": 0.3291983960049595
+        },
+        "standard_bias_adj": {
+          "bias": 0.2934391701453886,
+          "coverage": 0.8568019093078759,
+          "mean_se": 0.2752756945911894,
+          "mse": 0.12144685581275114,
+          "rmse": 0.3484922607644984
+        },
+        "standard_nma": {
+          "bias": 0.2934391701453886,
+          "coverage": 0.8568019093078759,
+          "mean_se": 0.2752756945911894,
+          "mse": 0.12144685581275114,
+          "rmse": 0.3484922607644984
+        },
+        "stratified_re_nma": {
+          "bias": 0.29755835152761345,
+          "coverage": 0.8568019093078759,
+          "mean_se": 0.25981593059555297,
+          "mse": 0.1583069925198842,
+          "rmse": 0.39787811264240736
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.24094591406688098,
+          "coverage": 1.0,
+          "mean_se": 1.0957345436933768,
+          "mse": 0.1290357541267406,
+          "rmse": 0.3592154703332536
+        },
+        "topological_regularization": {
+          "bias": 0.2869042877489182,
+          "coverage": 0.9093078758949881,
+          "mean_se": 0.2761711745447635,
+          "mse": 0.11673301212052437,
+          "rmse": 0.3416621315283922
+        }
+      },
+      "runtime_seconds": 129.08445600001141,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_10",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.4,
+        "design_ratio": 1.0,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_10",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 12,
+        "n_treatments": 3,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261710,
+        "status": "active",
+        "true_bias": 0.8,
+        "true_bias_interaction": 0.2,
+        "true_heterogeneity": 0.1,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 409,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.795586776387113,
+          "coverage": 0.8068459657701712,
+          "mean_se": 0.4348900546521543,
+          "mse": 0.6864814664801452,
+          "rmse": 0.8285417711136507
+        },
+        "hksj_bias_adj": {
+          "bias": 0.7988710681855269,
+          "coverage": 0.6943765281173594,
+          "mean_se": 0.4358423067780676,
+          "mse": 0.7327153243062092,
+          "rmse": 0.8559879229908616
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.8021519604925306,
+          "coverage": 0.7090464547677262,
+          "mean_se": 0.4457309296700875,
+          "mse": 0.7412552830180074,
+          "rmse": 0.8609618359822968
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.7988710681855269,
+          "coverage": 0.2200488997555012,
+          "mean_se": 0.2706425925852448,
+          "mse": 0.7327153243062092,
+          "rmse": 0.8559879229908616
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.8021519604925306,
+          "coverage": 0.22493887530562348,
+          "mean_se": 0.25984463314660283,
+          "mse": 0.7412552830180074,
+          "rmse": 0.8609618359822968
+        },
+        "standard_bias_adj": {
+          "bias": 0.7988710681855269,
+          "coverage": 0.5427872860635696,
+          "mean_se": 0.42977357406411004,
+          "mse": 0.7327153243062092,
+          "rmse": 0.8559879229908616
+        },
+        "standard_nma": {
+          "bias": 0.7988710681855269,
+          "coverage": 0.5427872860635696,
+          "mean_se": 0.42977357406411004,
+          "mse": 0.7327153243062092,
+          "rmse": 0.8559879229908616
+        },
+        "stratified_re_nma": {
+          "bias": 0.7988641289035165,
+          "coverage": 0.6943765281173594,
+          "mean_se": 0.43584099608699894,
+          "mse": 0.7327008939790521,
+          "rmse": 0.8559794939010233
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.8006154335828325,
+          "coverage": 1.0,
+          "mean_se": 0.42046952720565617,
+          "mse": 0.7056060375508385,
+          "rmse": 0.8400035937725734
+        },
+        "topological_regularization": {
+          "bias": 0.7553762305779413,
+          "coverage": 0.7163814180929096,
+          "mean_se": 0.42344197101403924,
+          "mse": 0.6556282985007325,
+          "rmse": 0.8097087738815311
+        }
+      },
+      "runtime_seconds": 117.33034110002336,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_11",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.0,
+        "design_ratio": 0.0,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_11",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 14,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261711,
+        "status": "active",
+        "true_bias": 0.0,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.25,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 427,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.008581131448544157,
+          "coverage": 0.9976580796252927,
+          "mean_se": 0.21658443300097222,
+          "mse": 0.02858057164639405,
+          "rmse": 0.16905789436283078
+        },
+        "hksj_bias_adj": {
+          "bias": -0.0004964495937445698,
+          "coverage": 0.9882903981264637,
+          "mean_se": 0.1543255512799111,
+          "mse": 0.016886225445296093,
+          "rmse": 0.1299470101437355
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": -0.0017065677129467257,
+          "coverage": 0.9929742388758782,
+          "mean_se": 0.16595242338011046,
+          "mse": 0.01728017333277005,
+          "rmse": 0.1314540730931151
+        },
+        "sandwich_bias_adj": {
+          "bias": -0.0004964495937445698,
+          "coverage": 0.8805620608899297,
+          "mean_se": 0.11673683635424441,
+          "mse": 0.016886225445296093,
+          "rmse": 0.1299470101437355
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": -0.0017065677129467257,
+          "coverage": 0.8665105386416861,
+          "mean_se": 0.11536908855762279,
+          "mse": 0.01728017333277005,
+          "rmse": 0.1314540730931151
+        },
+        "standard_bias_adj": {
+          "bias": -0.0004964495937445698,
+          "coverage": 0.9718969555035128,
+          "mean_se": 0.15271555698184508,
+          "mse": 0.016886225445296093,
+          "rmse": 0.1299470101437355
+        },
+        "standard_nma": {
+          "bias": -0.0004964495937445698,
+          "coverage": 0.9718969555035128,
+          "mean_se": 0.15271555698184508,
+          "mse": 0.016886225445296093,
+          "rmse": 0.1299470101437355
+        },
+        "stratified_re_nma": {
+          "bias": -0.000530246044160116,
+          "coverage": 0.9882903981264637,
+          "mean_se": 0.15426148957804564,
+          "mse": 0.016880423504456475,
+          "rmse": 0.129924683969046
+        },
+        "study_specific_bias_coupled": {
+          "bias": -0.0017065677129467257,
+          "coverage": 0.9929742388758782,
+          "mean_se": 0.16595242338011046,
+          "mse": 0.01728017333277005,
+          "rmse": 0.1314540730931151
+        },
+        "topological_regularization": {
+          "bias": -0.0033387151527844187,
+          "coverage": 0.9882903981264637,
+          "mean_se": 0.15372237350947227,
+          "mse": 0.016696344994111965,
+          "rmse": 0.12921433741699087
+        }
+      },
+      "runtime_seconds": 131.2439114000008,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_12",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.2,
+        "design_ratio": 0.25,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_12",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 14,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261712,
+        "status": "active",
+        "true_bias": 0.2,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.25,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 426,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.019686924136323506,
+          "coverage": 1.0,
+          "mean_se": 0.27773079602097483,
+          "mse": 0.03312791197946672,
+          "rmse": 0.18201074687904206
+        },
+        "hksj_bias_adj": {
+          "bias": 0.04116073908243165,
+          "coverage": 0.9741784037558685,
+          "mean_se": 0.18414620881342122,
+          "mse": 0.023084986340858923,
+          "rmse": 0.15193744219532893
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.030283039760552972,
+          "coverage": 0.9953051643192489,
+          "mean_se": 0.195307828937544,
+          "mse": 0.023201267379261023,
+          "rmse": 0.15231962243670716
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.04116073908243165,
+          "coverage": 0.8661971830985915,
+          "mean_se": 0.13861561958726495,
+          "mse": 0.023084986340858923,
+          "rmse": 0.15193744219532893
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.030283039760552972,
+          "coverage": 0.863849765258216,
+          "mean_se": 0.1363290399340697,
+          "mse": 0.023201267379261023,
+          "rmse": 0.15231962243670716
+        },
+        "standard_bias_adj": {
+          "bias": 0.04116073908243165,
+          "coverage": 0.9624413145539906,
+          "mean_se": 0.1813827705261315,
+          "mse": 0.023084986340858923,
+          "rmse": 0.15193744219532893
+        },
+        "standard_nma": {
+          "bias": 0.04116073908243165,
+          "coverage": 0.9624413145539906,
+          "mean_se": 0.1813827705261315,
+          "mse": 0.023084986340858923,
+          "rmse": 0.15193744219532893
+        },
+        "stratified_re_nma": {
+          "bias": 0.033884102844392805,
+          "coverage": 0.9765258215962441,
+          "mean_se": 0.18253595758658347,
+          "mse": 0.024825227608759,
+          "rmse": 0.15756023485879614
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.02083046184254079,
+          "coverage": 0.9976525821596244,
+          "mean_se": 0.2161856328063304,
+          "mse": 0.024973278440539124,
+          "rmse": 0.15802935942583304
+        },
+        "topological_regularization": {
+          "bias": 0.0368715912036464,
+          "coverage": 0.9741784037558685,
+          "mean_se": 0.18300351168029552,
+          "mse": 0.02244107893615495,
+          "rmse": 0.14980346770403863
+        }
+      },
+      "runtime_seconds": 139.35557600000175,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_13",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.5,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_13",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 14,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261713,
+        "status": "active",
+        "true_bias": 0.4,
+        "true_bias_interaction": 0.1,
+        "true_heterogeneity": 0.25,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 424,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.09433786331477184,
+          "coverage": 1.0,
+          "mean_se": 0.32733407205891174,
+          "mse": 0.04696505470168638,
+          "rmse": 0.21671422357954814
+        },
+        "hksj_bias_adj": {
+          "bias": 0.143424371346313,
+          "coverage": 0.9528301886792453,
+          "mean_se": 0.24273999197947133,
+          "mse": 0.061030852065501774,
+          "rmse": 0.24704423099012407
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.11956774516149127,
+          "coverage": 0.9764150943396226,
+          "mean_se": 0.24845371464246344,
+          "mse": 0.05429315235431571,
+          "rmse": 0.23300891046120042
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.143424371346313,
+          "coverage": 0.7877358490566038,
+          "mean_se": 0.17944437066319463,
+          "mse": 0.061030852065501774,
+          "rmse": 0.24704423099012407
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.11956774516149127,
+          "coverage": 0.8066037735849056,
+          "mean_se": 0.17546129690180579,
+          "mse": 0.05429315235431571,
+          "rmse": 0.23300891046120042
+        },
+        "standard_bias_adj": {
+          "bias": 0.143424371346313,
+          "coverage": 0.9339622641509434,
+          "mean_se": 0.23912969938953912,
+          "mse": 0.061030852065501774,
+          "rmse": 0.24704423099012407
+        },
+        "standard_nma": {
+          "bias": 0.143424371346313,
+          "coverage": 0.9339622641509434,
+          "mean_se": 0.23912969938953912,
+          "mse": 0.061030852065501774,
+          "rmse": 0.24704423099012407
+        },
+        "stratified_re_nma": {
+          "bias": 0.12119903425007512,
+          "coverage": 0.9528301886792453,
+          "mean_se": 0.22817670061419176,
+          "mse": 0.05981832262458565,
+          "rmse": 0.24457784573543379
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.09723225225515354,
+          "coverage": 1.0,
+          "mean_se": 0.47462540437547346,
+          "mse": 0.055716446271330204,
+          "rmse": 0.23604331439659587
+        },
+        "topological_regularization": {
+          "bias": 0.13317398560489013,
+          "coverage": 0.9551886792452831,
+          "mean_se": 0.2395046636231246,
+          "mse": 0.056808747194928934,
+          "rmse": 0.2383458562570974
+        }
+      },
+      "runtime_seconds": 140.0274832000141,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_14",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.75,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_14",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 14,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261714,
+        "status": "active",
+        "true_bias": 0.6,
+        "true_bias_interaction": 0.2,
+        "true_heterogeneity": 0.25,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 426,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.25127665490072476,
+          "coverage": 1.0,
+          "mean_se": 0.42510247431404813,
+          "mse": 0.11547554347589839,
+          "rmse": 0.33981692641170536
+        },
+        "hksj_bias_adj": {
+          "bias": 0.32295595350322975,
+          "coverage": 0.9107981220657277,
+          "mean_se": 0.3050467800023579,
+          "mse": 0.15626755670617315,
+          "rmse": 0.39530691456913974
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.2856772453890076,
+          "coverage": 0.9436619718309859,
+          "mean_se": 0.31024484740737307,
+          "mse": 0.1367107572014229,
+          "rmse": 0.36974417804939524
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.32295595350322975,
+          "coverage": 0.6408450704225352,
+          "mean_se": 0.21334737457730196,
+          "mse": 0.15626755670617315,
+          "rmse": 0.39530691456913974
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.2856772453890076,
+          "coverage": 0.6502347417840375,
+          "mean_se": 0.20728961321300396,
+          "mse": 0.1367107572014229,
+          "rmse": 0.36974417804939524
+        },
+        "standard_bias_adj": {
+          "bias": 0.32295595350322975,
+          "coverage": 0.8427230046948356,
+          "mean_se": 0.3008162402026451,
+          "mse": 0.15626755670617315,
+          "rmse": 0.39530691456913974
+        },
+        "standard_nma": {
+          "bias": 0.32295595350322975,
+          "coverage": 0.8427230046948356,
+          "mean_se": 0.3008162402026451,
+          "mse": 0.15626755670617315,
+          "rmse": 0.39530691456913974
+        },
+        "stratified_re_nma": {
+          "bias": 0.29205371522105017,
+          "coverage": 0.8779342723004695,
+          "mean_se": 0.28638585239684755,
+          "mse": 0.1560680659640714,
+          "rmse": 0.3950545101173652
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.31535553110839815,
+          "coverage": 1.0,
+          "mean_se": 1.5322460504323023,
+          "mse": 0.17727284647252747,
+          "rmse": 0.42103782071510804
+        },
+        "topological_regularization": {
+          "bias": 0.3003979583374771,
+          "coverage": 0.92018779342723,
+          "mean_se": 0.2973009959111966,
+          "mse": 0.13911750654190486,
+          "rmse": 0.3729845929015096
+        }
+      },
+      "runtime_seconds": 144.87753950001206,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_15",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.4,
+        "design_ratio": 1.0,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_15",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 14,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261715,
+        "status": "active",
+        "true_bias": 0.8,
+        "true_bias_interaction": 0.2,
+        "true_heterogeneity": 0.25,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 403,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.810169216276052,
+          "coverage": 0.7990074441687345,
+          "mean_se": 0.4379788956565843,
+          "mse": 0.7082169071484459,
+          "rmse": 0.8415562412271956
+        },
+        "hksj_bias_adj": {
+          "bias": 0.811243758225268,
+          "coverage": 0.5831265508684863,
+          "mean_se": 0.40486332378219625,
+          "mse": 0.7284134939107877,
+          "rmse": 0.853471437079641
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.810251490090181,
+          "coverage": 0.5856079404466501,
+          "mean_se": 0.413216115375025,
+          "mse": 0.7335679052827851,
+          "rmse": 0.8564857881382417
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.811243758225268,
+          "coverage": 0.14640198511166252,
+          "mean_se": 0.2571203580825262,
+          "mse": 0.7284134939107877,
+          "rmse": 0.853471437079641
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.810251490090181,
+          "coverage": 0.16377171215880892,
+          "mean_se": 0.24917981169462955,
+          "mse": 0.7335679052827851,
+          "rmse": 0.8564857881382417
+        },
+        "standard_bias_adj": {
+          "bias": 0.811243758225268,
+          "coverage": 0.42431761786600497,
+          "mean_se": 0.3992226765097488,
+          "mse": 0.7284134939107877,
+          "rmse": 0.853471437079641
+        },
+        "standard_nma": {
+          "bias": 0.811243758225268,
+          "coverage": 0.42431761786600497,
+          "mean_se": 0.3992226765097488,
+          "mse": 0.7284134939107877,
+          "rmse": 0.853471437079641
+        },
+        "stratified_re_nma": {
+          "bias": 0.8112437581662386,
+          "coverage": 0.5831265508684863,
+          "mean_se": 0.4048633336255204,
+          "mse": 0.728413493257661,
+          "rmse": 0.8534714366970115
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.8112655106239831,
+          "coverage": 1.0,
+          "mean_se": 0.47873686942052807,
+          "mse": 0.7244774146014745,
+          "rmse": 0.8511623902649097
+        },
+        "topological_regularization": {
+          "bias": 0.7087908947979039,
+          "coverage": 0.6575682382133995,
+          "mean_se": 0.3833158412007632,
+          "mse": 0.5627740382452123,
+          "rmse": 0.7501826699179422
+        }
+      },
+      "runtime_seconds": 127.69566369999666,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_16",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.0,
+        "design_ratio": 0.0,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_16",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 16,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261716,
+        "status": "active",
+        "true_bias": 0.0,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": -0.004543280333204987,
+          "coverage": 0.9930232558139535,
+          "mean_se": 0.1907321997741313,
+          "mse": 0.02247115404519491,
+          "rmse": 0.14990381597943034
+        },
+        "hksj_bias_adj": {
+          "bias": -0.011152360934459121,
+          "coverage": 0.9906976744186047,
+          "mean_se": 0.14135308836815844,
+          "mse": 0.01567052600629782,
+          "rmse": 0.12518197157058128
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": -0.012199332586668537,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.1523966131559511,
+          "mse": 0.01588448725398492,
+          "rmse": 0.12603367507926172
+        },
+        "sandwich_bias_adj": {
+          "bias": -0.011152360934459121,
+          "coverage": 0.8697674418604651,
+          "mean_se": 0.10720527256470501,
+          "mse": 0.01567052600629782,
+          "rmse": 0.12518197157058128
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": -0.012199332586668537,
+          "coverage": 0.858139534883721,
+          "mean_se": 0.10633847563288115,
+          "mse": 0.01588448725398492,
+          "rmse": 0.12603367507926172
+        },
+        "standard_bias_adj": {
+          "bias": -0.011152360934459121,
+          "coverage": 0.9744186046511628,
+          "mean_se": 0.1397512453590205,
+          "mse": 0.01567052600629782,
+          "rmse": 0.12518197157058128
+        },
+        "standard_nma": {
+          "bias": -0.011152360934459121,
+          "coverage": 0.9744186046511628,
+          "mean_se": 0.1397512453590205,
+          "mse": 0.01567052600629782,
+          "rmse": 0.12518197157058128
+        },
+        "stratified_re_nma": {
+          "bias": -0.011144789912882517,
+          "coverage": 0.9906976744186047,
+          "mean_se": 0.1412887481128003,
+          "mse": 0.015671803393995664,
+          "rmse": 0.12518707358987055
+        },
+        "study_specific_bias_coupled": {
+          "bias": -0.012199332586668537,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.1523966131559511,
+          "mse": 0.01588448725398492,
+          "rmse": 0.12603367507926172
+        },
+        "topological_regularization": {
+          "bias": -0.013646471583520479,
+          "coverage": 0.9906976744186047,
+          "mean_se": 0.1408685153616919,
+          "mse": 0.015533920702809874,
+          "rmse": 0.12463515035017157
+        }
+      },
+      "runtime_seconds": 140.93855489999987,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_17",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.2,
+        "design_ratio": 0.25,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_17",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 16,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261717,
+        "status": "active",
+        "true_bias": 0.2,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 426,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.01862869826451939,
+          "coverage": 0.9906103286384976,
+          "mean_se": 0.24053697508865196,
+          "mse": 0.030382252960029735,
+          "rmse": 0.17430505718432193
+        },
+        "hksj_bias_adj": {
+          "bias": 0.04185556230873757,
+          "coverage": 0.9671361502347418,
+          "mean_se": 0.17286238880950625,
+          "mse": 0.025920294815893655,
+          "rmse": 0.16099780997235227
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.03224421178147835,
+          "coverage": 0.9765258215962441,
+          "mean_se": 0.18413201150163408,
+          "mse": 0.028295690823178152,
+          "rmse": 0.1682132302263355
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.04185556230873757,
+          "coverage": 0.852112676056338,
+          "mean_se": 0.13353500860973952,
+          "mse": 0.025920294815893655,
+          "rmse": 0.16099780997235227
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.03224421178147835,
+          "coverage": 0.8309859154929577,
+          "mean_se": 0.13303049405479572,
+          "mse": 0.028295690823178152,
+          "rmse": 0.1682132302263355
+        },
+        "standard_bias_adj": {
+          "bias": 0.04185556230873757,
+          "coverage": 0.9577464788732394,
+          "mean_se": 0.17015540431890985,
+          "mse": 0.025920294815893655,
+          "rmse": 0.16099780997235227
+        },
+        "standard_nma": {
+          "bias": 0.04185556230873757,
+          "coverage": 0.9577464788732394,
+          "mean_se": 0.17015540431890985,
+          "mse": 0.025920294815893655,
+          "rmse": 0.16099780997235227
+        },
+        "stratified_re_nma": {
+          "bias": 0.042033220295384734,
+          "coverage": 0.9624413145539906,
+          "mean_se": 0.1717138385725482,
+          "mse": 0.028044769147449387,
+          "rmse": 0.16746572529162315
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.0286901911874988,
+          "coverage": 0.9859154929577465,
+          "mean_se": 0.21342043456956972,
+          "mse": 0.032615108196230605,
+          "rmse": 0.1805965342863218
+        },
+        "topological_regularization": {
+          "bias": 0.03755984253793749,
+          "coverage": 0.9671361502347418,
+          "mean_se": 0.17184927228498872,
+          "mse": 0.02513509193913084,
+          "rmse": 0.15854050567325323
+        }
+      },
+      "runtime_seconds": 147.26689490000717,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_18",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.5,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_18",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 16,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261718,
+        "status": "active",
+        "true_bias": 0.4,
+        "true_bias_interaction": 0.1,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 427,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.07704683178586419,
+          "coverage": 1.0,
+          "mean_se": 0.2709369134079022,
+          "mse": 0.0352823423892869,
+          "rmse": 0.18783594541324325
+        },
+        "hksj_bias_adj": {
+          "bias": 0.1218348905418523,
+          "coverage": 0.9578454332552693,
+          "mean_se": 0.22088729253238185,
+          "mse": 0.04864534696259593,
+          "rmse": 0.22055690187023377
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.09720898739512362,
+          "coverage": 0.9765807962529274,
+          "mean_se": 0.22396141359432906,
+          "mse": 0.04478215406881004,
+          "rmse": 0.21161794363619083
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.1218348905418523,
+          "coverage": 0.8149882903981265,
+          "mean_se": 0.17382983304801022,
+          "mse": 0.04864534696259593,
+          "rmse": 0.22055690187023377
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.09720898739512362,
+          "coverage": 0.8173302107728337,
+          "mean_se": 0.16986892948843516,
+          "mse": 0.04478215406881004,
+          "rmse": 0.21161794363619083
+        },
+        "standard_bias_adj": {
+          "bias": 0.1218348905418523,
+          "coverage": 0.9250585480093677,
+          "mean_se": 0.21745794509084646,
+          "mse": 0.04864534696259593,
+          "rmse": 0.22055690187023377
+        },
+        "standard_nma": {
+          "bias": 0.1218348905418523,
+          "coverage": 0.9250585480093677,
+          "mean_se": 0.21745794509084646,
+          "mse": 0.04864534696259593,
+          "rmse": 0.22055690187023377
+        },
+        "stratified_re_nma": {
+          "bias": 0.11139312064788595,
+          "coverage": 0.9484777517564403,
+          "mean_se": 0.20944773805184363,
+          "mse": 0.05335053370623326,
+          "rmse": 0.23097734457351712
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.08194714293761192,
+          "coverage": 1.0,
+          "mean_se": 0.32847529609393084,
+          "mse": 0.04976662026108836,
+          "rmse": 0.22308433441433836
+        },
+        "topological_regularization": {
+          "bias": 0.1126855715304588,
+          "coverage": 0.9625292740046838,
+          "mean_se": 0.2184556134062462,
+          "mse": 0.045318672384473006,
+          "rmse": 0.212881827276245
+        }
+      },
+      "runtime_seconds": 148.92593369999668,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_19",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.75,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_19",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 16,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261719,
+        "status": "active",
+        "true_bias": 0.6,
+        "true_bias_interaction": 0.2,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 429,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.255755902096931,
+          "coverage": 0.986013986013986,
+          "mean_se": 0.37443401760335143,
+          "mse": 0.10800388862082844,
+          "rmse": 0.3286394507980264
+        },
+        "hksj_bias_adj": {
+          "bias": 0.31274926291599836,
+          "coverage": 0.916083916083916,
+          "mean_se": 0.2993172179640552,
+          "mse": 0.14269963531799726,
+          "rmse": 0.3777560526556752
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.2700624590991357,
+          "coverage": 0.9440559440559441,
+          "mean_se": 0.300166129974863,
+          "mse": 0.12324443506197605,
+          "rmse": 0.35106186785519167
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.31274926291599836,
+          "coverage": 0.627039627039627,
+          "mean_se": 0.2119944712606388,
+          "mse": 0.14269963531799726,
+          "rmse": 0.3777560526556752
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.2700624590991357,
+          "coverage": 0.6526806526806527,
+          "mean_se": 0.20716255496859898,
+          "mse": 0.12324443506197605,
+          "rmse": 0.35106186785519167
+        },
+        "standard_bias_adj": {
+          "bias": 0.31274926291599836,
+          "coverage": 0.8671328671328671,
+          "mean_se": 0.29517157705077335,
+          "mse": 0.14269963531799726,
+          "rmse": 0.3777560526556752
+        },
+        "standard_nma": {
+          "bias": 0.31274926291599836,
+          "coverage": 0.8671328671328671,
+          "mean_se": 0.29517157705077335,
+          "mse": 0.14269963531799726,
+          "rmse": 0.3777560526556752
+        },
+        "stratified_re_nma": {
+          "bias": 0.29000301156704,
+          "coverage": 0.8601398601398601,
+          "mean_se": 0.28220402318119,
+          "mse": 0.1597381224532864,
+          "rmse": 0.399672519011861
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.33084442443481515,
+          "coverage": 1.0,
+          "mean_se": 1.4885677272758084,
+          "mse": 0.1786098884085002,
+          "rmse": 0.42262263120720384
+        },
+        "topological_regularization": {
+          "bias": 0.28809656661308014,
+          "coverage": 0.9207459207459208,
+          "mean_se": 0.2911611961832203,
+          "mse": 0.12529483097242827,
+          "rmse": 0.3539700989807307
+        }
+      },
+      "runtime_seconds": 155.05846090000705,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_20",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.4,
+        "design_ratio": 1.0,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_20",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 16,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261720,
+        "status": "active",
+        "true_bias": 0.8,
+        "true_bias_interaction": 0.2,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 417,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.8185490805350732,
+          "coverage": 0.6091127098321343,
+          "mean_se": 0.4060972221135513,
+          "mse": 0.7173086484092827,
+          "rmse": 0.8469407585004294
+        },
+        "hksj_bias_adj": {
+          "bias": 0.8168192515858934,
+          "coverage": 0.5467625899280576,
+          "mean_se": 0.39764638658920737,
+          "mse": 0.743633424735307,
+          "rmse": 0.8623418259224743
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.8096455648533758,
+          "coverage": 0.5587529976019184,
+          "mean_se": 0.39889625004164936,
+          "mse": 0.7361305017806978,
+          "rmse": 0.8579804786711046
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.8168192515858934,
+          "coverage": 0.15587529976019185,
+          "mean_se": 0.25118986117444236,
+          "mse": 0.743633424735307,
+          "rmse": 0.8623418259224743
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.8096455648533758,
+          "coverage": 0.15827338129496402,
+          "mean_se": 0.24667968549898045,
+          "mse": 0.7361305017806978,
+          "rmse": 0.8579804786711046
+        },
+        "standard_bias_adj": {
+          "bias": 0.8168192515858934,
+          "coverage": 0.41007194244604317,
+          "mean_se": 0.3915136475666079,
+          "mse": 0.743633424735307,
+          "rmse": 0.8623418259224743
+        },
+        "standard_nma": {
+          "bias": 0.8168192515858934,
+          "coverage": 0.41007194244604317,
+          "mean_se": 0.3915136475666079,
+          "mse": 0.743633424735307,
+          "rmse": 0.8623418259224743
+        },
+        "stratified_re_nma": {
+          "bias": 0.8168192474752746,
+          "coverage": 0.5467625899280576,
+          "mean_se": 0.3976463827759305,
+          "mse": 0.7436334197613915,
+          "rmse": 0.8623418230385161
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.8165746864886457,
+          "coverage": 1.0,
+          "mean_se": 0.49530951631325215,
+          "mse": 0.7360581430114278,
+          "rmse": 0.8579383095604414
+        },
+        "topological_regularization": {
+          "bias": 0.709338741292091,
+          "coverage": 0.6282973621103117,
+          "mean_se": 0.3758519509631308,
+          "mse": 0.5699390017341304,
+          "rmse": 0.754943045357814
+        }
+      },
+      "runtime_seconds": 140.62344600001234,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_21",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.2,
+        "design_ratio": 0.3,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_21",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 18,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261721,
+        "status": "active",
+        "true_bias": 0.0,
+        "true_bias_interaction": 0.0,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 428,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": -0.003500769002533087,
+          "coverage": 0.9976635514018691,
+          "mean_se": 0.21203083892687033,
+          "mse": 0.022698348751011354,
+          "rmse": 0.15065971177130053
+        },
+        "hksj_bias_adj": {
+          "bias": 0.0007680363050178137,
+          "coverage": 0.9813084112149533,
+          "mean_se": 0.15376733402442877,
+          "mse": 0.018162151318007032,
+          "rmse": 0.1347670260783662
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.0027739323836168226,
+          "coverage": 0.9929906542056075,
+          "mean_se": 0.167932011479562,
+          "mse": 0.020062267090455645,
+          "rmse": 0.1416413325638235
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.0007680363050178137,
+          "coverage": 0.8948598130841121,
+          "mean_se": 0.12277376751677752,
+          "mse": 0.018162151318007032,
+          "rmse": 0.1347670260783662
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.0027739323836168226,
+          "coverage": 0.8691588785046729,
+          "mean_se": 0.12407090012995835,
+          "mse": 0.020062267090455645,
+          "rmse": 0.1416413325638235
+        },
+        "standard_bias_adj": {
+          "bias": 0.0007680363050178137,
+          "coverage": 0.9672897196261683,
+          "mean_se": 0.1515282414657493,
+          "mse": 0.018162151318007032,
+          "rmse": 0.1347670260783662
+        },
+        "standard_nma": {
+          "bias": 0.0007680363050178137,
+          "coverage": 0.9672897196261683,
+          "mean_se": 0.1515282414657493,
+          "mse": 0.018162151318007032,
+          "rmse": 0.1347670260783662
+        },
+        "stratified_re_nma": {
+          "bias": 7.670907632184172e-05,
+          "coverage": 0.9719626168224299,
+          "mean_se": 0.15301332490466357,
+          "mse": 0.019575110475207404,
+          "rmse": 0.13991108060195734
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.004059250429368472,
+          "coverage": 0.9906542056074766,
+          "mean_se": 0.20208643349571984,
+          "mse": 0.024239719535276802,
+          "rmse": 0.15569110294193692
+        },
+        "topological_regularization": {
+          "bias": -0.0021746397403081723,
+          "coverage": 0.9813084112149533,
+          "mean_se": 0.15314778761454334,
+          "mse": 0.01793205066553267,
+          "rmse": 0.1339106069941163
+        }
+      },
+      "runtime_seconds": 157.89802010002313,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_22",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.2,
+        "design_ratio": 0.3,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_22",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 18,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261722,
+        "status": "active",
+        "true_bias": 0.2,
+        "true_bias_interaction": 0.1,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.017483082284784,
+          "coverage": 0.9953488372093023,
+          "mean_se": 0.20759129160153655,
+          "mse": 0.02164707187818175,
+          "rmse": 0.14712943919617769
+        },
+        "hksj_bias_adj": {
+          "bias": 0.04680005261850817,
+          "coverage": 0.9720930232558139,
+          "mean_se": 0.1613829757584151,
+          "mse": 0.02007377121950574,
+          "rmse": 0.14168193681449212
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.03490856600784782,
+          "coverage": 0.9930232558139535,
+          "mean_se": 0.16984938457837506,
+          "mse": 0.020031998790755793,
+          "rmse": 0.14153444383172525
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.04680005261850817,
+          "coverage": 0.9046511627906977,
+          "mean_se": 0.13325114242514982,
+          "mse": 0.02007377121950574,
+          "rmse": 0.14168193681449212
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.03490856600784782,
+          "coverage": 0.9,
+          "mean_se": 0.1306046199904142,
+          "mse": 0.020031998790755793,
+          "rmse": 0.14153444383172525
+        },
+        "standard_bias_adj": {
+          "bias": 0.04680005261850817,
+          "coverage": 0.9627906976744186,
+          "mean_se": 0.158512103415765,
+          "mse": 0.02007377121950574,
+          "rmse": 0.14168193681449212
+        },
+        "standard_nma": {
+          "bias": 0.04680005261850817,
+          "coverage": 0.9627906976744186,
+          "mean_se": 0.158512103415765,
+          "mse": 0.02007377121950574,
+          "rmse": 0.14168193681449212
+        },
+        "stratified_re_nma": {
+          "bias": 0.0397503627207646,
+          "coverage": 0.9674418604651163,
+          "mean_se": 0.15784606089293476,
+          "mse": 0.021102235302969435,
+          "rmse": 0.14526608448970266
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.020433654659274995,
+          "coverage": 0.9906976744186047,
+          "mean_se": 0.2017858008089938,
+          "mse": 0.022970793238197347,
+          "rmse": 0.15156118645021668
+        },
+        "topological_regularization": {
+          "bias": 0.04325246894389082,
+          "coverage": 0.9720930232558139,
+          "mean_se": 0.16063723257486212,
+          "mse": 0.019509136406744225,
+          "rmse": 0.13967511019055695
+        }
+      },
+      "runtime_seconds": 158.73590620001778,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_23",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.3,
+        "design_ratio": 0.5,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_23",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 18,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261723,
+        "status": "active",
+        "true_bias": 0.4,
+        "true_bias_interaction": 0.2,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.10012430056334981,
+          "coverage": 0.9953488372093023,
+          "mean_se": 0.22899965077343373,
+          "mse": 0.03922753019917555,
+          "rmse": 0.19805941078165296
+        },
+        "hksj_bias_adj": {
+          "bias": 0.14171745630383303,
+          "coverage": 0.9418604651162791,
+          "mean_se": 0.21517537059686195,
+          "mse": 0.0528766390253511,
+          "rmse": 0.22994920966454985
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.11252035874961229,
+          "coverage": 0.9604651162790697,
+          "mean_se": 0.21129048282813082,
+          "mse": 0.04563693763501398,
+          "rmse": 0.21362803569525696
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.14171745630383303,
+          "coverage": 0.827906976744186,
+          "mean_se": 0.17174313980759562,
+          "mse": 0.0528766390253511,
+          "rmse": 0.22994920966454985
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.11252035874961229,
+          "coverage": 0.8511627906976744,
+          "mean_se": 0.16703988819146026,
+          "mse": 0.04563693763501398,
+          "rmse": 0.21362803569525696
+        },
+        "standard_bias_adj": {
+          "bias": 0.14171745630383303,
+          "coverage": 0.9186046511627907,
+          "mean_se": 0.2120319419711289,
+          "mse": 0.0528766390253511,
+          "rmse": 0.22994920966454985
+        },
+        "standard_nma": {
+          "bias": 0.14171745630383303,
+          "coverage": 0.9186046511627907,
+          "mean_se": 0.2120319419711289,
+          "mse": 0.0528766390253511,
+          "rmse": 0.22994920966454985
+        },
+        "stratified_re_nma": {
+          "bias": 0.11656172512018925,
+          "coverage": 0.9279069767441861,
+          "mean_se": 0.19752368492961775,
+          "mse": 0.05172914212169687,
+          "rmse": 0.22744041444232568
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.0784617607064834,
+          "coverage": 0.9976744186046511,
+          "mean_se": 0.31664591594909913,
+          "mse": 0.04722028795559713,
+          "rmse": 0.2173022962501711
+        },
+        "topological_regularization": {
+          "bias": 0.13327189131522338,
+          "coverage": 0.9418604651162791,
+          "mean_se": 0.21321867196673025,
+          "mse": 0.049665433747834414,
+          "rmse": 0.22285742919596468
+        }
+      },
+      "runtime_seconds": 161.71835199999623,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_24",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.4,
+        "design_ratio": 0.7,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_24",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 18,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261724,
+        "status": "active",
+        "true_bias": 0.6,
+        "true_bias_interaction": 0.2,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.20301525550319785,
+          "coverage": 0.9883720930232558,
+          "mean_se": 0.28257036724733076,
+          "mse": 0.0773320514351346,
+          "rmse": 0.2780864100151868
+        },
+        "hksj_bias_adj": {
+          "bias": 0.25577040926320227,
+          "coverage": 0.913953488372093,
+          "mean_se": 0.2910269901113616,
+          "mse": 0.12229813426788635,
+          "rmse": 0.349711501480701
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.2237648183540058,
+          "coverage": 0.9,
+          "mean_se": 0.2808003415454441,
+          "mse": 0.10925060655632997,
+          "rmse": 0.3305307951709341
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.25577040926320227,
+          "coverage": 0.7232558139534884,
+          "mean_se": 0.21596981639664653,
+          "mse": 0.12229813426788635,
+          "rmse": 0.349711501480701
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.2237648183540058,
+          "coverage": 0.7372093023255814,
+          "mean_se": 0.21355917473445787,
+          "mse": 0.10925060655632997,
+          "rmse": 0.3305307951709341
+        },
+        "standard_bias_adj": {
+          "bias": 0.25577040926320227,
+          "coverage": 0.8790697674418605,
+          "mean_se": 0.286802244818205,
+          "mse": 0.12229813426788635,
+          "rmse": 0.349711501480701
+        },
+        "standard_nma": {
+          "bias": 0.25577040926320227,
+          "coverage": 0.8790697674418605,
+          "mean_se": 0.286802244818205,
+          "mse": 0.12229813426788635,
+          "rmse": 0.349711501480701
+        },
+        "stratified_re_nma": {
+          "bias": 0.19481608689932656,
+          "coverage": 0.8953488372093024,
+          "mean_se": 0.25918745759085504,
+          "mse": 0.10982188753320854,
+          "rmse": 0.33139385560569545
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.21706860891845692,
+          "coverage": 1.0,
+          "mean_se": 0.5652578095880337,
+          "mse": 0.11760714592017635,
+          "rmse": 0.34293898279457286
+        },
+        "topological_regularization": {
+          "bias": 0.23509606802147406,
+          "coverage": 0.9209302325581395,
+          "mean_se": 0.28510994707070936,
+          "mse": 0.1088121371397673,
+          "rmse": 0.32986684759121715
+        }
+      },
+      "runtime_seconds": 167.10231550000026,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    },
+    {
+      "certification_effect": "none",
+      "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+      "execution_mode": "full",
+      "id": "binary_sparse_multiarm_bias_grid_full_25",
+      "inputs": {
+        "certification_effect": "none",
+        "claim_limit": "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence.",
+        "covariate_effect": 0.4,
+        "design_ratio": 0.9,
+        "execution_mode": "full",
+        "id": "binary_sparse_multiarm_bias_grid_full_25",
+        "min_successful_iterations": 350,
+        "n_iterations": 430,
+        "n_studies": 18,
+        "n_treatments": 4,
+        "required_methods": [
+          "standard_nma",
+          "standard_bias_adj",
+          "hksj_bias_adj",
+          "hksj_weighted_bias_adj",
+          "full_advanced_bias_adj"
+        ],
+        "required_metrics": [
+          "bias",
+          "rmse",
+          "coverage",
+          "mean_se"
+        ],
+        "scenario_id": "binary_sparse_multiarm_bias_grid",
+        "seed": 20261725,
+        "status": "active",
+        "true_bias": 0.8,
+        "true_bias_interaction": 0.3,
+        "true_heterogeneity": 0.5,
+        "uses_real_data": false
+      },
+      "iterations_attempted": 430,
+      "iterations_successful": 430,
+      "methods_summary": {
+        "full_advanced_bias_adj": {
+          "bias": 0.577716536398121,
+          "coverage": 0.8558139534883721,
+          "mean_se": 0.4531280691309917,
+          "mse": 0.3936113205531956,
+          "rmse": 0.6273845077408237
+        },
+        "hksj_bias_adj": {
+          "bias": 0.6254991149518875,
+          "coverage": 0.7697674418604651,
+          "mean_se": 0.40553726257684736,
+          "mse": 0.46382584034999086,
+          "rmse": 0.6810476050541481
+        },
+        "hksj_weighted_bias_adj": {
+          "bias": 0.5887083548295886,
+          "coverage": 0.7930232558139535,
+          "mean_se": 0.4074582831454731,
+          "mse": 0.4226326538584999,
+          "rmse": 0.6501020334212929
+        },
+        "sandwich_bias_adj": {
+          "bias": 0.6254991149518875,
+          "coverage": 0.3953488372093023,
+          "mean_se": 0.28453570065638495,
+          "mse": 0.46382584034999086,
+          "rmse": 0.6810476050541481
+        },
+        "sandwich_weighted_bias_adj": {
+          "bias": 0.5887083548295886,
+          "coverage": 0.4604651162790698,
+          "mean_se": 0.28841950438631264,
+          "mse": 0.4226326538584999,
+          "rmse": 0.6501020334212929
+        },
+        "standard_bias_adj": {
+          "bias": 0.6254991149518875,
+          "coverage": 0.6790697674418604,
+          "mean_se": 0.4001032178710952,
+          "mse": 0.46382584034999086,
+          "rmse": 0.6810476050541481
+        },
+        "standard_nma": {
+          "bias": 0.6254991149518875,
+          "coverage": 0.6790697674418604,
+          "mean_se": 0.4001032178710952,
+          "mse": 0.46382584034999086,
+          "rmse": 0.6810476050541481
+        },
+        "stratified_re_nma": {
+          "bias": 0.605889145964231,
+          "coverage": 0.7767441860465116,
+          "mean_se": 0.47703708595533784,
+          "mse": 0.4692330631918395,
+          "rmse": 0.6850058855162046
+        },
+        "study_specific_bias_coupled": {
+          "bias": 0.5549716801909075,
+          "coverage": 1.0,
+          "mean_se": 0.6636233360924062,
+          "mse": 0.4078204177376969,
+          "rmse": 0.638608187966375
+        },
+        "topological_regularization": {
+          "bias": 0.553358241714401,
+          "coverage": 0.8069767441860465,
+          "mean_se": 0.3848873768817736,
+          "mse": 0.37192507812465986,
+          "rmse": 0.6098566045593504
+        }
+      },
+      "runtime_seconds": 164.2927710999793,
+      "scenario_id": "binary_sparse_multiarm_bias_grid",
+      "status": "passed",
+      "uses_real_data": false
+    }
+  ],
+  "limitations": [
+    "Simulation reports test operating characteristics only.",
+    "Simulation reports are not real clinical validation, tier-one parity, or superiority evidence.",
+    "Simulation reports cannot enable clinical, regulatory, or HTA outputs."
+  ],
+  "matrix_checked_at": "2026-07-15",
+  "n_jobs": 25,
+  "schema_version": "simulation_matrix_report/v1",
+  "source_policy": "simulation_only_no_real_data",
+  "status": "passed",
+  "uses_real_data": false
+}

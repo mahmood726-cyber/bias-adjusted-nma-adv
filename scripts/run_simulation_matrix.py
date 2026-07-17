@@ -30,6 +30,16 @@ def main(argv: list[str] | None = None) -> int:
         default=Path("validation/grand_benchmark_plan.toml"),
     )
     parser.add_argument("--checked-at", help="Optional deterministic timestamp.")
+    parser.add_argument(
+        "--execution-mode",
+        action="append",
+        choices=("smoke", "full", "all"),
+        default=None,
+        help=(
+            "Execution mode(s) to run. Defaults to smoke. Use --execution-mode full "
+            "for the long validation report."
+        ),
+    )
     parser.add_argument("--output", type=Path, help="Optional JSON report path. Prints to stdout when omitted.")
     args = parser.parse_args(argv)
 
@@ -46,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
             matrix_path,
             grand_benchmark_plan_path=plan_path,
             checked_at=checked_at,
+            execution_modes=tuple(args.execution_mode or ("smoke",)),
         )
     except (SimulationMatrixError, OSError, json.JSONDecodeError, tomllib.TOMLDecodeError) as exc:
         failure = {

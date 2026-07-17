@@ -32,3 +32,678 @@ required_methods = [
 ]
 required_metrics = ["bias", "rmse", "coverage", "mean_se"]
 claim_limit = "Simulation smoke output checks execution and metric shape only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_01"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 10
+n_treatments = 3
+design_ratio = 0.0
+true_heterogeneity = 0.0
+true_bias = 0.0
+true_bias_interaction = 0.0
+covariate_effect = 0.0
+seed = 20261701
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_02"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 10
+n_treatments = 3
+design_ratio = 0.25
+true_heterogeneity = 0.0
+true_bias = 0.0
+true_bias_interaction = 0.0
+covariate_effect = 0.2
+seed = 20261702
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_03"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 10
+n_treatments = 3
+design_ratio = 0.5
+true_heterogeneity = 0.0
+true_bias = 0.0
+true_bias_interaction = 0.0
+covariate_effect = 0.3
+seed = 20261703
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_04"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 10
+n_treatments = 3
+design_ratio = 0.75
+true_heterogeneity = 0.0
+true_bias = 0.2
+true_bias_interaction = 0.0
+covariate_effect = 0.3
+seed = 20261704
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_05"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 10
+n_treatments = 3
+design_ratio = 1.0
+true_heterogeneity = 0.0
+true_bias = 0.4
+true_bias_interaction = 0.1
+covariate_effect = 0.3
+seed = 20261705
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_06"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 12
+n_treatments = 3
+design_ratio = 0.0
+true_heterogeneity = 0.1
+true_bias = 0.0
+true_bias_interaction = 0.0
+covariate_effect = 0.0
+seed = 20261706
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_07"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 12
+n_treatments = 3
+design_ratio = 0.25
+true_heterogeneity = 0.1
+true_bias = 0.2
+true_bias_interaction = 0.0
+covariate_effect = 0.2
+seed = 20261707
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_08"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 12
+n_treatments = 3
+design_ratio = 0.5
+true_heterogeneity = 0.1
+true_bias = 0.4
+true_bias_interaction = 0.1
+covariate_effect = 0.3
+seed = 20261708
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_09"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 12
+n_treatments = 3
+design_ratio = 0.75
+true_heterogeneity = 0.1
+true_bias = 0.6
+true_bias_interaction = 0.2
+covariate_effect = 0.3
+seed = 20261709
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_10"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 12
+n_treatments = 3
+design_ratio = 1.0
+true_heterogeneity = 0.1
+true_bias = 0.8
+true_bias_interaction = 0.2
+covariate_effect = 0.4
+seed = 20261710
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_11"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 14
+n_treatments = 4
+design_ratio = 0.0
+true_heterogeneity = 0.25
+true_bias = 0.0
+true_bias_interaction = 0.0
+covariate_effect = 0.0
+seed = 20261711
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_12"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 14
+n_treatments = 4
+design_ratio = 0.25
+true_heterogeneity = 0.25
+true_bias = 0.2
+true_bias_interaction = 0.0
+covariate_effect = 0.2
+seed = 20261712
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_13"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 14
+n_treatments = 4
+design_ratio = 0.5
+true_heterogeneity = 0.25
+true_bias = 0.4
+true_bias_interaction = 0.1
+covariate_effect = 0.3
+seed = 20261713
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_14"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 14
+n_treatments = 4
+design_ratio = 0.75
+true_heterogeneity = 0.25
+true_bias = 0.6
+true_bias_interaction = 0.2
+covariate_effect = 0.3
+seed = 20261714
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_15"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 14
+n_treatments = 4
+design_ratio = 1.0
+true_heterogeneity = 0.25
+true_bias = 0.8
+true_bias_interaction = 0.2
+covariate_effect = 0.4
+seed = 20261715
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_16"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 16
+n_treatments = 4
+design_ratio = 0.0
+true_heterogeneity = 0.5
+true_bias = 0.0
+true_bias_interaction = 0.0
+covariate_effect = 0.0
+seed = 20261716
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_17"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 16
+n_treatments = 4
+design_ratio = 0.25
+true_heterogeneity = 0.5
+true_bias = 0.2
+true_bias_interaction = 0.0
+covariate_effect = 0.2
+seed = 20261717
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_18"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 16
+n_treatments = 4
+design_ratio = 0.5
+true_heterogeneity = 0.5
+true_bias = 0.4
+true_bias_interaction = 0.1
+covariate_effect = 0.3
+seed = 20261718
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_19"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 16
+n_treatments = 4
+design_ratio = 0.75
+true_heterogeneity = 0.5
+true_bias = 0.6
+true_bias_interaction = 0.2
+covariate_effect = 0.3
+seed = 20261719
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_20"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 16
+n_treatments = 4
+design_ratio = 1.0
+true_heterogeneity = 0.5
+true_bias = 0.8
+true_bias_interaction = 0.2
+covariate_effect = 0.4
+seed = 20261720
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_21"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 18
+n_treatments = 4
+design_ratio = 0.3
+true_heterogeneity = 0.5
+true_bias = 0.0
+true_bias_interaction = 0.0
+covariate_effect = 0.2
+seed = 20261721
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_22"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 18
+n_treatments = 4
+design_ratio = 0.3
+true_heterogeneity = 0.5
+true_bias = 0.2
+true_bias_interaction = 0.1
+covariate_effect = 0.2
+seed = 20261722
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_23"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 18
+n_treatments = 4
+design_ratio = 0.5
+true_heterogeneity = 0.5
+true_bias = 0.4
+true_bias_interaction = 0.2
+covariate_effect = 0.3
+seed = 20261723
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_24"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 18
+n_treatments = 4
+design_ratio = 0.7
+true_heterogeneity = 0.5
+true_bias = 0.6
+true_bias_interaction = 0.2
+covariate_effect = 0.4
+seed = 20261724
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
+
+[[jobs]]
+id = "binary_sparse_multiarm_bias_grid_full_25"
+scenario_id = "binary_sparse_multiarm_bias_grid"
+status = "active"
+execution_mode = "full"
+uses_real_data = false
+certification_effect = "none"
+n_iterations = 430
+n_studies = 18
+n_treatments = 4
+design_ratio = 0.9
+true_heterogeneity = 0.5
+true_bias = 0.8
+true_bias_interaction = 0.3
+covariate_effect = 0.4
+seed = 20261725
+min_successful_iterations = 350
+required_methods = [
+  "standard_nma",
+  "standard_bias_adj",
+  "hksj_bias_adj",
+  "hksj_weighted_bias_adj",
+  "full_advanced_bias_adj",
+]
+required_metrics = ["bias", "rmse", "coverage", "mean_se"]
+claim_limit = "Full simulation output checks operating characteristics only; it is not real clinical validation, tier-one parity, or superiority evidence."
