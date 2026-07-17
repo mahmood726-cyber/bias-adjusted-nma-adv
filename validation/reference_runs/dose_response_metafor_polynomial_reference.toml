@@ -1,0 +1,28 @@
+schema_version = "reference_run/v1"
+target_id = "dose_response_metafor_polynomial_smoke"
+adapter_id = "r_metafor_dose_response_polynomial_output_validation"
+reference_method = "metafor fixed-effect polynomial meta-regression"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-17T00:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/dose_response_metafor_polynomial.R", "--effects", "validation/dose_response/semaglutide_obesity_dose_response_effects.csv", "--output", "validation/reference_runs/dose_response_metafor_polynomial_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", jsonlite = "2.0.0"}
+input_artifacts = ["validation/dose_response/semaglutide_obesity_dose_response_effects.csv", "validation/dose_response/semaglutide_obesity_dose_response.toml", "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml", "validation/source_checks/semaglutide_obesity_dose_response_check.json", "external/r/dose_response_metafor_polynomial.R"]
+output_artifacts = ["validation/reference_runs/dose_response_metafor_polynomial_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_dose_level_effects", "weighted_linear_coefficients", "weighted_quadratic_coefficients", "weighted_residual_q_df", "mbnmadose_limitation_preserved"]
+max_abs_difference = 4.6799897290838999e-11
+notes = ["This validates a source-backed dose-response smoke artifact; it is not MBNMAdose parity or dose-response NMA certification."]
+
+[input_sha256]
+"validation/dose_response/semaglutide_obesity_dose_response_effects.csv" = "b5ba09f50de05d32f59c2393735346092f353a7ad9c36ce5d6f0f9da6cb519bc"
+"validation/dose_response/semaglutide_obesity_dose_response.toml" = "4095b64b12def6b794ce633de3353e8b93fa2d08469b2e2356e77e843892098b"
+"validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml" = "b92ee0d462eb176b7a0327658225cca8abb1c8fd5023fb859fb783bc221e57cd"
+"validation/source_checks/semaglutide_obesity_dose_response_check.json" = "160c7a13b72ec5f692bfc9d75b7828ed28a503f15f96c70cb6f2bcdc52844bc3"
+"external/r/dose_response_metafor_polynomial.R" = "10f7840946eee4c75c8567abfb88f1c94d5dee98151dfae72186e4238570f0d2"
+
+[output_sha256]
+"validation/reference_runs/dose_response_metafor_polynomial_output.json" = "3f9bdbdae56a5e69fb620cd2ee5dcb0be8bdfff656ee79162a95007adb38120d"

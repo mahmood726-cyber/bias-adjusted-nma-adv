@@ -11,7 +11,7 @@ registered_source_counts = {aact_clinicaltrials_gov = 0, clinicaltrials_gov = 1,
 source_search_summary = [
   "validation/benchmark_registry.toml contains one dose_response_pairwise benchmark entry: semaglutide_obesity_dose_response.",
   "validation/grand_benchmark_plan.toml contains one active real-data dose-response lane.",
-  "validation/reference_targets.toml still contains a planned MBNMAdose reference target only; no external dose-response reference run has passed.",
+  "validation/reference_runs/dose_response_metafor_polynomial_reference.toml now records a narrow metafor polynomial smoke candidate, but validation/reference_targets.toml still keeps the broader MBNMAdose target planned.",
 ]
 required_next_artifacts = [
   "dose_response_source_manifest_with_nct_pmid_and_open_access_identifiers",

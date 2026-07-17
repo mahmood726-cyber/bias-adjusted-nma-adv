@@ -58,6 +58,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "dose_response_metafor_polynomial_smoke"
+domain = "dose_response_pairwise"
+module = "src/bias_nma_adv/dose_response_benchmark.py"
+reference_method = "metafor fixed-effect polynomial meta-regression"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed dose-level effects from the semaglutide CT.gov/PubMed benchmark",
+  "match weighted linear and quadratic polynomial coefficients, standard errors, residual Q, and df",
+  "preserve the limitation that this smoke check is not MBNMAdose reference matching or dose-response NMA parity",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "cross_design_crossnma"
 domain = "cross_design_nma"
 module = "planned:cross_design"

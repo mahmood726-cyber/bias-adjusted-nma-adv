@@ -1,3 +1,4 @@
+import csv
 import json
 from pathlib import Path
 import subprocess
@@ -23,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "validation" / "dose_response" / "semaglutide_obesity_dose_response.toml"
 SOURCE_CHECK = ROOT / "validation" / "source_checks" / "semaglutide_obesity_dose_response_check.json"
 ARTIFACT = ROOT / "validation" / "dose_response" / "semaglutide_obesity_dose_response_benchmark.toml"
+EFFECTS_CSV = ROOT / "validation" / "dose_response" / "semaglutide_obesity_dose_response_effects.csv"
 WRITE_SCRIPT = ROOT / "scripts" / "write_dose_response_benchmark.py"
 
 
@@ -74,6 +76,24 @@ def test_dose_response_benchmark_artifact_recomputes_from_verified_sources():
     )
     assert "not MBNMAdose reference matched" in observed["limitations"]
     assert "does not certify model performance" in observed["limitations"]
+
+
+def test_dose_response_effects_csv_matches_source_backed_artifact():
+    benchmark = tomllib.loads(ARTIFACT.read_text(encoding="utf-8"))
+    with EFFECTS_CSV.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+
+    expected = {row["study_id"]: row for row in benchmark["study_effects"]}
+    observed = {row["study_id"]: row for row in rows}
+    assert set(observed) == set(expected)
+    for study_id, expected_row in expected.items():
+        observed_row = observed[study_id]
+        assert observed_row["nct_id"] == expected_row["nct_id"]
+        assert observed_row["pmid"] == str(expected_row["pmid"])
+        assert float(observed_row["dose"]) == pytest.approx(expected_row["dose"])
+        assert float(observed_row["estimate"]) == pytest.approx(expected_row["estimate"])
+        assert float(observed_row["se"]) == pytest.approx(expected_row["se"])
+        assert float(observed_row["variance"]) == pytest.approx(expected_row["variance"])
 
 
 def test_write_dose_response_benchmark_script_regenerates_artifact(tmp_path):

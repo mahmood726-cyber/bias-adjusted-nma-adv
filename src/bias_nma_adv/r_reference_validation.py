@@ -361,6 +361,127 @@ def validate_dta_mada_reitsma_output(
     }
 
 
+def validate_dose_response_metafor_polynomial_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``metafor`` polynomial dose-response output against the local artifact."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "package_versions",
+            "study_effects",
+            "metafor",
+            "limitations",
+        },
+        label="dose-response metafor output",
+    )
+    if output["schema_version"] != "dose_response_metafor_polynomial/v1":
+        raise RReferenceValidationError("dose-response metafor output schema_version mismatch.")
+    if output["benchmark_id"] != "semaglutide_obesity_dose_response":
+        raise RReferenceValidationError("dose-response metafor output benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("dose-response metafor output source_policy mismatch.")
+    if output["effect_scale"] != "percentage_point_change_vs_placebo":
+        raise RReferenceValidationError("dose-response metafor output effect_scale mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "jsonlite"})
+
+    benchmark = _load_toml(
+        root
+        / "validation"
+        / "dose_response"
+        / "semaglutide_obesity_dose_response_benchmark.toml"
+    )
+    expected_effects = {
+        str(effect["study_id"]): effect for effect in benchmark["study_effects"]
+    }
+    observed_effects = {
+        str(effect["study_id"]): effect for effect in output["study_effects"]
+    }
+    if set(expected_effects) != set(observed_effects):
+        raise RReferenceValidationError(
+            "dose-response metafor study effects do not match benchmark effects."
+        )
+
+    max_abs_diff = 0.0
+    for study_id, expected in expected_effects.items():
+        observed = observed_effects[study_id]
+        if str(observed["nct_id"]) != expected["nct_id"]:
+            raise RReferenceValidationError(f"{study_id}: dose-response NCT ID mismatch.")
+        if str(observed["pmid"]) != str(expected["pmid"]):
+            raise RReferenceValidationError(f"{study_id}: dose-response PMID mismatch.")
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(f"{study_id} dose", observed["dose"], expected["dose"], tolerance),
+            _assert_close(
+                f"{study_id} estimate",
+                observed["estimate"],
+                expected["estimate"],
+                tolerance,
+            ),
+            _assert_close(f"{study_id} se", observed["se"], expected["se"], tolerance),
+            _assert_close(
+                f"{study_id} variance",
+                observed["variance"],
+                expected["variance"],
+                tolerance,
+            ),
+        )
+
+    metafor = output["metafor"]
+    max_abs_diff = max(
+        max_abs_diff,
+        _validate_polynomial_fit(
+            observed=metafor["weighted_linear"],
+            expected=benchmark["candidate"]["weighted_linear"],
+            label="metafor weighted_linear",
+            tolerance=tolerance,
+        ),
+        _validate_polynomial_fit(
+            observed=metafor["weighted_quadratic"],
+            expected=benchmark["candidate"]["weighted_quadratic"],
+            label="metafor weighted_quadratic",
+            tolerance=tolerance,
+        ),
+    )
+
+    limitations = [str(item) for item in output["limitations"]]
+    if not any("not MBNMAdose reference matching" in item for item in limitations):
+        raise RReferenceValidationError(
+            "dose-response metafor output must preserve the MBNMAdose limitation."
+        )
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "dose_response_metafor_polynomial_smoke",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor fixed-effect polynomial meta-regression",
+        "validated_components": [
+            "source_backed_dose_level_effects",
+            "weighted_linear_coefficients",
+            "weighted_quadratic_coefficients",
+            "weighted_residual_q_df",
+            "mbnmadose_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates a source-backed dose-response smoke artifact; it is not "
+            "MBNMAdose parity or dose-response NMA certification."
+        ),
+    }
+
+
 def _load_toml(path: Path) -> dict[str, Any]:
     with path.open("rb") as handle:
         return tomllib.load(handle)
@@ -404,3 +525,65 @@ def _assert_many_close(checks: dict[str, tuple[Any, Any]], tolerance: float) -> 
     for label, (observed, expected) in checks.items():
         max_abs_diff = max(max_abs_diff, _assert_close(label, observed, expected, tolerance))
     return max_abs_diff
+
+
+def _validate_polynomial_fit(
+    *,
+    observed: dict[str, Any],
+    expected: dict[str, Any],
+    label: str,
+    tolerance: float,
+) -> float:
+    _require_keys(
+        observed,
+        {"coefficients", "coefficient_ses", "q", "df"},
+        label=label,
+    )
+    max_abs_diff = 0.0
+    observed_coefficients = _as_list(observed["coefficients"])
+    expected_coefficients = list(expected["coefficients"])
+    if len(observed_coefficients) != len(expected_coefficients):
+        raise RReferenceValidationError(f"{label} coefficient count mismatch.")
+    for index, (observed_value, expected_value) in enumerate(
+        zip(observed_coefficients, expected_coefficients, strict=True)
+    ):
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"{label} coefficient {index}",
+                observed_value,
+                expected_value,
+                tolerance,
+            ),
+        )
+
+    observed_ses = _as_list(observed["coefficient_ses"])
+    expected_ses = list(expected["coefficient_ses"])
+    if len(observed_ses) != len(expected_ses):
+        raise RReferenceValidationError(f"{label} coefficient SE count mismatch.")
+    for index, (observed_value, expected_value) in enumerate(
+        zip(observed_ses, expected_ses, strict=True)
+    ):
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"{label} coefficient SE {index}",
+                observed_value,
+                expected_value,
+                tolerance,
+            ),
+        )
+
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_close(f"{label} q", observed["q"], expected["q"], tolerance),
+    )
+    if int(observed["df"]) != int(expected["df"]):
+        raise RReferenceValidationError(f"{label} df mismatch.")
+    return max_abs_diff
+
+
+def _as_list(value: Any) -> list[Any]:
+    if isinstance(value, list):
+        return value
+    return [value]

@@ -38,7 +38,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/km_reconstruction.py`: Fail-closed screen, native Python Guyot-style reconstruction check, and deterministic curve-fidelity metrics for open-access Kaplan-Meier reconstruction results before they can enter survival validation artifacts.
 - `src/bias_nma_adv/publication_bias.py`: Registry outcome-switching auditor plus diagnostic-only Egger small-study-effect regression and prespecified selection-weight sensitivity analysis.
 - `src/bias_nma_adv/ctgov_hr_network.py`: Source-verified ClinicalTrials.gov reported-HR network benchmark support, including sparse design-bias diagnostics for underidentified cross-design borrowing.
-- `src/bias_nma_adv/dose_response_benchmark.py`: Source-verified CT.gov/PubMed dose-response smoke benchmark support for dose-level effects that remain non-certifying until `MBNMAdose` reference matching.
+- `src/bias_nma_adv/dose_response_benchmark.py`: Source-verified CT.gov/PubMed dose-response smoke benchmark support for dose-level effects and narrow `metafor` polynomial validation; it remains non-certifying until `MBNMAdose` reference matching.
 - `src/bias_nma_adv/dose_response_coverage.py`: Fail-closed source-coverage check showing whether dose-response benchmark data are currently registered from AACT/ClinicalTrials.gov, ICTRP/PACTR result rows, PubMed abstracts, open-access papers, or public FDA/EMA regulatory review rows.
 - `src/bias_nma_adv/dta.py`: Experimental bivariate logit-normal REML DTA prototype for algorithmic fixture validation against `mada::reitsma`; it is not source-backed clinical DTA evidence.
 - `src/bias_nma_adv/dta_coverage.py`: Fail-closed DTA coverage gate requiring source-backed TP/FP/FN/TN tables and bivariate GLMM/HSROC modeling before diagnostic-accuracy claims.
@@ -53,7 +53,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/portfolio_reuse.py`: Local portfolio reuse registry and scanner for candidate methods/source-ingestion components; it is non-certifying and takes roots at runtime.
 - `src/bias_nma_adv/proof_effect_bundle.py`: Validator and writer support for proof-carrying extracted-effect bundles that bind reported effects to verified source manifests, source-check reports, and minimal source snippets.
 - `src/bias_nma_adv/real_benchmark_atlas.py`: Non-certifying coverage atlas for registered source-backed real benchmark artifacts, source-check scopes, and current evidence gaps.
-- `src/bias_nma_adv/r_reference_validation.py`: Validates optional R reference-output JSON from `metafor`, `meta`, and `netmeta` against local source-backed or algorithmic benchmark artifacts before any report can become an evidence candidate.
+- `src/bias_nma_adv/r_reference_validation.py`: Validates optional R reference-output JSON from `metafor`, `meta`, `netmeta`, and `mada` against local source-backed or algorithmic benchmark artifacts before any report can become an evidence candidate.
 - `src/bias_nma_adv/review_ledger.py`: Machine-readable multiperson review ledger validator for source-boundary, statistical, implementation, and claims-governance review rounds.
 - `src/bias_nma_adv/validation_status.py`: Unified validation-status report composing source-backed benchmark, reference-target, and reference-run gates without changing certification status.
 - `simulation.py`: Synthetic NMA dataset generator and benchmarking loop.
@@ -66,7 +66,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/feature_parity_matrix.toml`: Fine-grained feature-parity matrix. It currently records reference candidates and local implementations, but no completed broad feature parity.
 - `validation/large_scale_validation.toml`: Large-scale validation gate. It records thresholds and dynamically reports the current corpus as partial, not large-scale validation.
 - `validation/html_delivery_contract.toml`: Machine-readable delivery contract for HTML dashboards versus backend-required engines and gates.
-- `validation/dose_response_source_coverage.toml`: Machine-readable check for dose-response real-data coverage. Current status records one source-backed CT.gov/PubMed semaglutide dose-response smoke benchmark and still blocks dose-response NMA parity or superiority claims.
+- `validation/dose_response_source_coverage.toml`: Machine-readable check for dose-response real-data coverage. Current status records one source-backed CT.gov/PubMed semaglutide dose-response smoke benchmark plus a narrow `metafor` polynomial reference candidate, and still blocks dose-response NMA parity or superiority claims.
 - `validation/dta_source_coverage.toml`: Machine-readable DTA gap gate. Current status is no registered source-backed DTA 2x2 benchmark data; a nonclinical algorithmic DTA prototype and `mada::reitsma` fixture adapter are present.
 - `validation/simulation_matrix.toml`: Executable simulation smoke matrix. It uses no real data and cannot support clinical or tier-one superiority claims.
 - `validation/portfolio_reuse_sources.toml`: Machine-readable inventory of local portfolio repositories worth inspecting for reusable code patterns. It stores repo names and relative assets only, not local absolute paths.
@@ -80,10 +80,10 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/ingestion/`: Proof-carrying extracted-effect bundles. These are model-ingestion evidence contracts only and carry `certification_effect = "none"`.
 - `validation/real_benchmark_atlas.json`: Generated coverage atlas over the registered real-data benchmark artifacts. It records current source-backed coverage and explicit non-claims; it is not certification evidence.
 - `validation/survival/`: Source-backed survival HR benchmark manifests; current entries verify reported HR tokens from PubMed abstracts. KM reconstruction remains non-certifying and requires OA figure provenance before any real KM artifact can enter validation.
-- `validation/dose_response/`: Source-backed semaglutide dose-response manifest and generated local benchmark artifact from ClinicalTrials.gov results plus PubMed identity verification.
+- `validation/dose_response/`: Source-backed semaglutide dose-response manifest, effects CSV, and generated local benchmark artifact from ClinicalTrials.gov results plus PubMed identity verification.
 - `validation/networks/`: Source-backed network benchmark manifests and generated artifacts, including the CT.gov T2D MACE reported-HR star network.
 - `validation/survival/km_reconstruction_policy.toml`: Static OA-only KM reconstruction policy; blocks text-only HR and synthetic-IPD fallbacks from validation evidence.
-- `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; later targets include `multinma`, `MBNMAdose`, and `crossnma`.
+- `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; current dose-response smoke validation uses `metafor`, while later targets include `multinma`, `MBNMAdose`, and `crossnma`.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
 - `scripts/preflight_stan_nuts_adapter.py`: Regenerates the non-certifying CmdStan/NUTS preflight report for the committed Stan model source.
 - `scripts/run_stan_nuts_reference.py`: Runs the source-backed SGLT2i CmdStan/NUTS reference candidate and writes both JSON output and a hashed reference-run report. It does not certify `multinma` or broad Bayesian parity.
