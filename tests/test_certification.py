@@ -107,7 +107,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 4, "passed": 11}
+    assert summary == {"failed": 4, "passed": 12}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -121,6 +121,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_metafor_dose_response_polynomial_output_validation",
         "r_metafor_sglt2_survival_hr_output_validation",
         "r_metafor_pcsk9_survival_hr_output_validation",
+        "r_metafor_sglt2_ckd_survival_hr_output_validation",
         "r_netmeta_t2d_ctgov_hr_network_output_validation",
         "r_netmeta_psoriasis_ctgov_binary_network_output_validation",
         "r_netmeta_component_cnma_output_validation",
@@ -274,6 +275,19 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     assert "validation/survival/pcsk9_mace_reported_hr_benchmark.toml" in (
         pcsk9_survival_reference.input_artifacts
     )
+
+    sglt2_ckd_survival_reference = by_adapter[
+        "r_metafor_sglt2_ckd_survival_hr_output_validation"
+    ]
+    assert sglt2_ckd_survival_reference.target_id == "reported_hr_survival_metafor_pairwise"
+    assert sglt2_ckd_survival_reference.status == "passed"
+    assert sglt2_ckd_survival_reference.certification_effect == "evidence_candidate"
+    assert sglt2_ckd_survival_reference.output_artifacts == (
+        "validation/reference_runs/sglt2_ckd_survival_hr_metafor_output.json",
+    )
+    assert "validation/survival/sglt2_ckd_reported_hr_benchmark.toml" in (
+        sglt2_ckd_survival_reference.input_artifacts
+    )
     assert SURVIVAL_HR_R_ADAPTER.is_file()
 
     ctgov_hr_network_reference = by_adapter["r_netmeta_t2d_ctgov_hr_network_output_validation"]
@@ -340,6 +354,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/dose_response_metafor_polynomial_output.json",
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
+        "validation/reference_runs/sglt2_ckd_survival_hr_metafor_output.json",
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
         "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
         "validation/reference_runs/component_netmeta_cnma_output.json",

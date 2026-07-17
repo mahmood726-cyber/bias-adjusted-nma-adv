@@ -1,0 +1,125 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "sglt2_ckd_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/sglt2_ckd_reported_hrs.toml"
+source_manifest_sha256 = "45ee6ccf7cdc8b424df2fd97c0a941e1d5818ed39603998b3419e225a683dbc2"
+source_verification_report = "validation/source_checks/sglt2_ckd_reported_hr_tokens.json"
+source_verification_report_sha256 = "fb58a63210e4190dc60d462bbfe234b6b75a9dae243bfcea7a44427c208f8dce"
+source_identity_report = "validation/source_checks/sglt2_ckd_reported_hr_source_check.json"
+source_identity_report_sha256 = "e1bcfa27611763824f86fd2d767b98c09953ec1448f70f6cc495470e52a5424f"
+n_studies = 3
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "sglt2_ckd_reported_hr"
+manifest_sha256 = "45ee6ccf7cdc8b424df2fd97c0a941e1d5818ed39603998b3419e225a683dbc2"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 3
+
+[source_identity_bundle]
+benchmark_id = "sglt2_ckd_reported_hr"
+manifest_sha256 = "45ee6ccf7cdc8b424df2fd97c0a941e1d5818ed39603998b3419e225a683dbc2"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 3, pubmed_abstract = 3}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "CREDENCE"
+trial = "Canagliflozin and renal outcomes in type 2 diabetes and nephropathy"
+nct_id = "NCT02065791"
+pmid = "30990260"
+outcome_id = "kidney_primary_composite"
+outcome_label = "end-stage kidney disease, doubling of serum creatinine level, or renal or cardiovascular death"
+active_treatment = "canagliflozin"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.7
+ci_lower = 0.59
+ci_upper = 0.82
+estimate = -0.35667494393873245
+variance = 0.007052051363835542
+se = 0.08397649292412455
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "DAPA-CKD"
+trial = "Dapagliflozin in patients with chronic kidney disease"
+nct_id = "NCT03036150"
+pmid = "32970396"
+outcome_id = "kidney_primary_composite"
+outcome_label = "sustained decline in estimated glomerular filtration rate, end-stage kidney disease, or death from renal or cardiovascular causes"
+active_treatment = "dapagliflozin"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.61
+ci_lower = 0.51
+ci_upper = 0.72
+estimate = -0.4942963218147801
+variance = 0.007738919414241526
+se = 0.08797112829924103
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "EMPA-KIDNEY"
+trial = "Empagliflozin in patients with chronic kidney disease"
+nct_id = "NCT03594110"
+pmid = "36331190"
+outcome_id = "kidney_primary_composite"
+outcome_label = "progression of kidney disease or death from cardiovascular causes"
+active_treatment = "empagliflozin"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.72
+ci_lower = 0.64
+ci_upper = 0.82
+estimate = -0.3285040669720361
+variance = 0.003997359271954901
+se = 0.06322467296835074
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.3772734901867094
+se = 0.043803024584237286
+ci_low = -0.46312584078573704
+ci_high = -0.2914211395876818
+tau2 = 0.0
+q = 2.424715902301602
+df = 2
+hksj = false
+hksj_q_factor = 1.0
+weights = [141.8027107868525, 129.21700646730505, 250.16515453487168]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.3798643618909125
+se = 0.04887417355857808
+ci_low = -0.5901529581669774
+ci_high = -0.16957576561484755
+tau2 = 0.00107019168474418
+q = 2.0732423404681577
+df = 2
+hksj = true
+hksj_q_factor = 1.0366211702340788
+weights = [123.1186993566836, 113.51883166908196, 197.33398017005504]
+warnings = []
+pi_low = -0.632912895373602
+pi_high = -0.12681582840822303

@@ -27,6 +27,9 @@ DTA_SOURCE_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_m
 DOSE_RESPONSE_OUTPUT = ROOT / "validation" / "reference_runs" / "dose_response_metafor_polynomial_output.json"
 SGLT2_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "sglt2_survival_hr_metafor_output.json"
 PCSK9_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "pcsk9_survival_hr_metafor_output.json"
+SGLT2_CKD_SURVIVAL_OUTPUT = (
+    ROOT / "validation" / "reference_runs" / "sglt2_ckd_survival_hr_metafor_output.json"
+)
 CTGOV_HR_NETWORK_OUTPUT = ROOT / "validation" / "reference_runs" / "t2d_ctgov_hr_network_netmeta_output.json"
 COMPONENT_CNMA_OUTPUT = ROOT / "validation" / "reference_runs" / "component_netmeta_cnma_output.json"
 CTGOV_BINARY_NETWORK_OUTPUT = (
@@ -106,6 +109,7 @@ def test_dose_response_metafor_output_matches_source_backed_smoke_artifact():
     [
         (SGLT2_SURVIVAL_OUTPUT, "sglt2_hf_reported_hr"),
         (PCSK9_SURVIVAL_OUTPUT, "pcsk9_mace_reported_hr"),
+        (SGLT2_CKD_SURVIVAL_OUTPUT, "sglt2_ckd_reported_hr"),
     ],
 )
 def test_survival_hr_metafor_output_matches_source_backed_reported_hr_artifact(

@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 9 benchmark artifacts, 73 study-effect rows, 21 unique NCT IDs, and 12 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 10 benchmark artifacts, 76 study-effect rows, 23 unique NCT IDs, and 15 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -158,7 +158,34 @@ Limitations:
 - with only two studies, the HKSJ interval is intentionally conservative and should not be treated as a superiority result;
 - this benchmark does not yet have a passed external `metafor`, `meta`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference run.
 
-## Benchmark 3: Type 2 Diabetes MACE-Class Star Network
+## Benchmark 3: SGLT2 Inhibitors And Chronic Kidney Disease Progression
+
+Reported survival HR manifest: `validation/survival/sglt2_ckd_reported_hrs.toml`
+
+Reported survival HR source-identity snapshot: `validation/source_checks/sglt2_ckd_reported_hr_source_check.json`
+
+Reported survival HR token snapshot: `validation/source_checks/sglt2_ckd_reported_hr_tokens.json`
+
+Reported survival HR benchmark: `validation/survival/sglt2_ckd_reported_hr_benchmark.toml`
+
+External `metafor` reference output: `validation/reference_runs/sglt2_ckd_survival_hr_metafor_reference.toml` validates `validation/reference_runs/sglt2_ckd_survival_hr_metafor_output.json`.
+
+Trials: CREDENCE (`NCT02065791`, PMID 30990260), DAPA-CKD (`NCT03036150`, PMID 32970396), and EMPA-KIDNEY (`NCT03594110`, PMID 36331190).
+
+Outcome: trial-defined kidney disease progression composite or renal/cardiovascular death composite, as reported in the PubMed abstract.
+
+Scale currently tested: log hazard ratio, derived from reported PubMed abstract HR and 95% CI tokens.
+
+The REML-HKSJ artifact estimates `tau2 = 0.00107019168474418`, so this benchmark satisfies the positive-heterogeneity coverage gate. This is a heterogeneity-stress signal only, not evidence of survival NMA parity or clinical superiority.
+
+Limitations:
+
+- this is a three-study pairwise class benchmark, not a multi-treatment survival NMA;
+- the public PubMed abstracts provide the reported HR/CI tokens used here, but Kaplan-Meier curves are not digitized;
+- the outcome definitions are related but not identical across trials;
+- the `metafor` reference report validates fixed-effect reported-HR pooling only; it does not certify REML superiority, KM reconstruction, or clinical/HTA use.
+
+## Benchmark 4: Type 2 Diabetes MACE-Class Star Network
 
 CT.gov reported-HR network manifest: `validation/networks/t2d_mace_ctgov_hrs.toml`
 
@@ -208,7 +235,7 @@ Limitations:
 - CT.gov results records are verified and fixed-effect class estimates have a narrow local `netmeta` reference check, but this is not broad `netmeta`, `multinma`, or CmdStan parity;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
-## Benchmark 4: Psoriasis PASI 90 Closed-Loop Binary Network
+## Benchmark 5: Psoriasis PASI 90 Closed-Loop Binary Network
 
 CT.gov arm-count network manifest: `validation/networks/psoriasis_pasi90_ctgov_binary_network.toml`
 
@@ -242,7 +269,7 @@ Limitations:
 - the `netmeta` reference report is a narrow evidence candidate, not full `netmeta`, `multinma`, CINeMA, or ROB-MEN parity;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
-## Benchmark 5: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
+## Benchmark 6: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
 
 Component-NMA manifest: `validation/component/sitagliptin_pioglitazone_component.toml`
 
@@ -274,7 +301,7 @@ Limitations:
 - same-trial arm covariance is not modeled;
 - the artifact is not broad `netmeta` CNMA parity and cannot support component hierarchy or clinical superiority claims.
 
-## Benchmark 6: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
+## Benchmark 7: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
 
 Cross-design manifest: `validation/cross_design/sglt2_rct_nrs_cross_design.toml`
 

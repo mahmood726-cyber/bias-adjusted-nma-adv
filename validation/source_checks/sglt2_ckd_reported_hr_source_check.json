@@ -1,0 +1,119 @@
+{
+  "benchmark_id": "sglt2_ckd_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T17:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02065791",
+      "details": {
+        "brief_title": "Evaluation of the Effects of Canagliflozin on Renal and Cardiovascular Outcomes in Participants With Diabetic Nephropathy",
+        "nct_id": "NCT02065791",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02065791",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02065791",
+      "response_sha256": "de8c97f8c0e453ad4e07cf5d7e54ca1e9b1ecd0b3bcde8c966e50eea3849fe10",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "CREDENCE",
+      "title": "Evaluation of the Effects of Canagliflozin on Renal and Cardiovascular Outcomes in Participants With Diabetic Nephropathy"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30990260&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "c0c930081a2374f6f28ff711eb2ce1fdd566984fdb33a7ec3abede6d49cf8bf8",
+        "article_title": "Canagliflozin and Renal Outcomes in Type 2 Diabetes and Nephropathy.",
+        "journal": "N Engl J Med",
+        "pmid": "30990260"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30990260",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30990260/",
+      "response_sha256": "3733b5f7137093f2a598fa448c4a6ffb8226f410d438703467d571f64f268ada",
+      "source_type": "pubmed_abstract",
+      "study_id": "CREDENCE",
+      "title": "Canagliflozin and Renal Outcomes in Type 2 Diabetes and Nephropathy."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03036150",
+      "details": {
+        "brief_title": "A Study to Evaluate the Effect of Dapagliflozin on Renal Outcomes and Cardiovascular Mortality in Patients With Chronic Kidney Disease",
+        "nct_id": "NCT03036150",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03036150",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03036150",
+      "response_sha256": "e1b1205b83a7260667e46ccdf8b34ad8dd9d109723c1df3804e25d9dc4f940c0",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "DAPA-CKD",
+      "title": "A Study to Evaluate the Effect of Dapagliflozin on Renal Outcomes and Cardiovascular Mortality in Patients With Chronic Kidney Disease"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32970396&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "ebf259503bd53578b5d4cc4ab295759aa088adc9e56ed7da516c3d4b7eb2bc8b",
+        "article_title": "Dapagliflozin in Patients with Chronic Kidney Disease.",
+        "journal": "N Engl J Med",
+        "pmid": "32970396"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "32970396",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/32970396/",
+      "response_sha256": "00f73eca914196ec04ee4fa8f586078dda46e50024778d0c2b75d9542ebd2fd3",
+      "source_type": "pubmed_abstract",
+      "study_id": "DAPA-CKD",
+      "title": "Dapagliflozin in Patients with Chronic Kidney Disease."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT03594110",
+      "details": {
+        "brief_title": "EMPA-KIDNEY (The Study of Heart and Kidney Protection With Empagliflozin)",
+        "nct_id": "NCT03594110",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT03594110",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT03594110",
+      "response_sha256": "5dca48d2b9cc3ef7a672b15d70ca097d32654ea8477cc3d0774648b2f9be256c",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "EMPA-KIDNEY",
+      "title": "EMPA-KIDNEY (The Study of Heart and Kidney Protection With Empagliflozin)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=36331190&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "e1dd1794b4f8fd23f05dab2b01f90dd7c86c644073c38b21d9e608613a53483f",
+        "article_title": "Empagliflozin in Patients with Chronic Kidney Disease.",
+        "journal": "N Engl J Med",
+        "pmid": "36331190"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "36331190",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/36331190/",
+      "response_sha256": "d32e700391c241bb3cecba3ed4ca1bc4de49fe9f28d7c1f87c7ee4f84b6e0545",
+      "source_type": "pubmed_abstract",
+      "study_id": "EMPA-KIDNEY",
+      "title": "Empagliflozin in Patients with Chronic Kidney Disease."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/sglt2_ckd_reported_hrs.toml",
+  "source_manifest_sha256": "45ee6ccf7cdc8b424df2fd97c0a941e1d5818ed39603998b3419e225a683dbc2",
+  "status": "verified"
+}

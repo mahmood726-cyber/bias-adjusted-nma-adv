@@ -1,0 +1,53 @@
+{
+  "schema_version": "survival_hr_metafor_pairwise/v1",
+  "benchmark_id": "sglt2_ckd_reported_hr",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+  "effect_scale": "log_hr",
+  "package_versions": {
+    "R": "4.6.0",
+    "metafor": "5.0.1",
+    "jsonlite": "2.0.0"
+  },
+  "study_effects": [
+    {
+      "study_id": "CREDENCE",
+      "nct_id": "NCT02065791",
+      "pmid": 30990260,
+      "estimate": -0.356674943938732,
+      "se": 0.0839764929241246,
+      "variance": 0.00705205136383554
+    },
+    {
+      "study_id": "DAPA-CKD",
+      "nct_id": "NCT03036150",
+      "pmid": 32970396,
+      "estimate": -0.49429632181478,
+      "se": 0.087971128299241,
+      "variance": 0.00773891941424153
+    },
+    {
+      "study_id": "EMPA-KIDNEY",
+      "nct_id": "NCT03594110",
+      "pmid": 36331190,
+      "estimate": -0.328504066972036,
+      "se": 0.0632246729683507,
+      "variance": 0.0039973592719549
+    }
+  ],
+  "metafor": {
+    "fixed_effect": {
+      "estimate": -0.377273490186709,
+      "se": 0.0438030245842373,
+      "ci_low": -0.463125840785737,
+      "ci_high": -0.291421139587682,
+      "tau2": 0,
+      "q": 2.4247159023016,
+      "df": 2
+    }
+  },
+  "limitations": [
+    "Reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized.",
+    "This is a pairwise class meta-analysis, not a multi-treatment survival NMA.",
+    "This does not establish survival NMA parity or clinical certification."
+  ]
+}

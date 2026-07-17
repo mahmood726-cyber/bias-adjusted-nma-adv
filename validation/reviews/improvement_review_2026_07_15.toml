@@ -45,7 +45,7 @@ findings = [
   "The DTA gate now records one source-backed open-access diagnostic test accuracy 2x2 benchmark and a narrow mada::reitsma source-table smoke reference, but this is not broad HSROC or diagnostic-accuracy parity.",
   "Gemini's transportability panel feedback matches local code coverage: topological support, non-collapsibility guards, and local ported tests are present, but they remain exploratory diagnostics rather than clinical evidence.",
   "The source-backed CT.gov/PubMed psoriasis PASI 90 benchmark closes the previous absence of a closed-loop real binary network, and the local netmeta reference validates its multi-arm estimates and standard errors.",
-  "The psoriasis benchmark estimates tau2 = 0, so it still cannot stress-test positive heterogeneity; the large-scale gate now records zero source-backed positive-tau2 benchmarks and requires at least one before heterogeneity-stress claims.",
+  "The psoriasis benchmark estimates tau2 = 0, so it still cannot stress-test positive heterogeneity; the SGLT2 CKD reported-HR benchmark now supplies one source-backed positive-tau2 pairwise benchmark, but broader heterogeneous real-network validation remains incomplete.",
 ]
 actions = [
   "Added a machine-readable tier-one gap register with three blocking gaps and required evidence artifacts.",
@@ -72,7 +72,7 @@ remaining_blockers = [
   "Reference-match node-splitting behavior and add contribution heatmaps, outlier diagnostics, trim-and-fill, and selection-model sensitivity workflows.",
   "Run broader sparse-network numerical stability stress tests against tier-one references.",
   "Add Stan/NUTS or externally matched Bayesian reference artifacts before Bayesian tier-one claims.",
-  "Add at least one source-backed benchmark with positive tau2 and at least one closed-loop network with reference-matched inconsistency diagnostics before treating real-network validation as discriminating.",
+  "Add more source-backed positive-tau2 benchmarks across domains and at least one closed-loop network with reference-matched inconsistency diagnostics before treating real-network validation as discriminating.",
 ]
 verdict = "passed_current_milestone_not_global_goal"
 
@@ -179,7 +179,7 @@ findings = [
   "The native KM reconstruction and sparse design-bias helpers are focused diagnostics with direct tests and non-certifying output.",
   "The DTA prototype is isolated from certification claims: tests validate the nonclinical fixture and one source-backed Midkine table against mada::reitsma while the coverage gate still blocks broad DTA real-data validation.",
   "The closed-loop psoriasis tests lock source-bound arm counts, artifact regeneration, non-certification, and exact netmeta output matching while preserving the current node-splitting non-estimability limitation.",
-  "The large-scale validation tests now fail closed if positive real heterogeneity is absent, preventing homogeneous source-backed benchmarks from satisfying heterogeneity-stress evidence.",
+  "The large-scale validation tests now count positive real heterogeneity explicitly, preventing homogeneous source-backed benchmarks from satisfying heterogeneity-stress evidence by themselves.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",

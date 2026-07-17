@@ -27,6 +27,9 @@ IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "sglt2_hf_reported_hr_
 PCSK9_MANIFEST = ROOT / "validation" / "survival" / "pcsk9_mace_reported_hrs.toml"
 PCSK9_REPORT = ROOT / "validation" / "source_checks" / "pcsk9_mace_reported_hr_tokens.json"
 PCSK9_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "pcsk9_mace_reported_hr_source_check.json"
+CKD_MANIFEST = ROOT / "validation" / "survival" / "sglt2_ckd_reported_hrs.toml"
+CKD_REPORT = ROOT / "validation" / "source_checks" / "sglt2_ckd_reported_hr_tokens.json"
+CKD_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "sglt2_ckd_reported_hr_source_check.json"
 VERIFY_SCRIPT = ROOT / "scripts" / "verify_pubmed_survival_hrs.py"
 IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
 
@@ -50,6 +53,15 @@ IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
             {
                 "FOURIER",
                 "ODYSSEY-Outcomes",
+            },
+        ),
+        (
+            CKD_MANIFEST,
+            "sglt2_ckd_reported_hr",
+            {
+                "CREDENCE",
+                "DAPA-CKD",
+                "EMPA-KIDNEY",
             },
         ),
     ],
@@ -136,6 +148,11 @@ def test_survival_hr_manifest_rejects_scalar_source_terms():
             PCSK9_REPORT,
             "validation/survival/pcsk9_mace_reported_hrs.toml",
         ),
+        (
+            CKD_MANIFEST,
+            CKD_REPORT,
+            "validation/survival/sglt2_ckd_reported_hrs.toml",
+        ),
     ],
 )
 def test_survival_hr_verification_snapshot_matches_manifest(
@@ -189,6 +206,12 @@ def test_survival_hr_verification_snapshot_matches_manifest(
             PCSK9_IDENTITY_REPORT,
             "validation/survival/pcsk9_mace_reported_hrs.toml",
             {"clinicaltrials_gov": 2, "pubmed_abstract": 2},
+        ),
+        (
+            CKD_MANIFEST,
+            CKD_IDENTITY_REPORT,
+            "validation/survival/sglt2_ckd_reported_hrs.toml",
+            {"clinicaltrials_gov": 3, "pubmed_abstract": 3},
         ),
     ],
 )

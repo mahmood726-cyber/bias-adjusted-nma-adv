@@ -1297,6 +1297,10 @@ def _survival_hr_benchmark_path(root: Path, benchmark_id: str) -> Path:
         / "validation"
         / "survival"
         / "pcsk9_mace_reported_hr_benchmark.toml",
+        "sglt2_ckd_reported_hr": root
+        / "validation"
+        / "survival"
+        / "sglt2_ckd_reported_hr_benchmark.toml",
     }
     try:
         return paths[benchmark_id]

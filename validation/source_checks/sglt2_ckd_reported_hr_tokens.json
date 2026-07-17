@@ -1,0 +1,77 @@
+{
+  "benchmark_id": "sglt2_ckd_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T17:30:00Z",
+  "manifest": "validation/survival/sglt2_ckd_reported_hrs.toml",
+  "manifest_sha256": "45ee6ccf7cdc8b424df2fd97c0a941e1d5818ed39603998b3419e225a683dbc2",
+  "records": [
+    {
+      "abstract_sha256": "c0c930081a2374f6f28ff711eb2ce1fdd566984fdb33a7ec3abede6d49cf8bf8",
+      "ci_lower": "0.59",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.82",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "kidney_primary_composite",
+      "pmid": "30990260",
+      "reported_hr": "0.70",
+      "source_terms": [
+        "canagliflozin",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "CREDENCE",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "ebf259503bd53578b5d4cc4ab295759aa088adc9e56ed7da516c3d4b7eb2bc8b",
+      "ci_lower": "0.51",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.72",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "kidney_primary_composite",
+      "pmid": "32970396",
+      "reported_hr": "0.61",
+      "source_terms": [
+        "dapagliflozin",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "DAPA-CKD",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "e1dd1794b4f8fd23f05dab2b01f90dd7c86c644073c38b21d9e608613a53483f",
+      "ci_lower": "0.64",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.82",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "kidney_primary_composite",
+      "pmid": "36331190",
+      "reported_hr": "0.72",
+      "source_terms": [
+        "empagliflozin",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "EMPA-KIDNEY",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

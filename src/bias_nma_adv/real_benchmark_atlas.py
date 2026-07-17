@@ -142,7 +142,7 @@ def build_real_benchmark_atlas(
             "external reference runs for every applicable module",
             "open-access Kaplan-Meier curve artifacts before KM reconstruction claims",
             "additional source-backed closed-loop networks and external inconsistency references before performance claims",
-            "at least one source-backed benchmark with positive tau2 before heterogeneity-stress claims",
+            "broader source-backed positive-tau benchmarks across domains before broad heterogeneity-stress claims",
             "prespecified simulation expansion before statistical superiority claims",
         ],
     }
