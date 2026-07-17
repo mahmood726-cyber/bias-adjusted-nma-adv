@@ -21,6 +21,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     validate_dta_mada_reitsma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_meta_output,
+    validate_survival_hr_metafor_pairwise_output,
 )
 from bias_nma_adv.real_meta import sha256_file  # noqa: E402
 
@@ -33,6 +34,10 @@ DTA_OUTPUT = Path("validation/reference_runs/dta_mada_reitsma_output.json")
 DTA_REPORT = Path("validation/reference_runs/dta_mada_reitsma_reference.toml")
 DOSE_RESPONSE_OUTPUT = Path("validation/reference_runs/dose_response_metafor_polynomial_output.json")
 DOSE_RESPONSE_REPORT = Path("validation/reference_runs/dose_response_metafor_polynomial_reference.toml")
+SGLT2_SURVIVAL_OUTPUT = Path("validation/reference_runs/sglt2_survival_hr_metafor_output.json")
+SGLT2_SURVIVAL_REPORT = Path("validation/reference_runs/sglt2_survival_hr_metafor_reference.toml")
+PCSK9_SURVIVAL_OUTPUT = Path("validation/reference_runs/pcsk9_survival_hr_metafor_output.json")
+PCSK9_SURVIVAL_REPORT = Path("validation/reference_runs/pcsk9_survival_hr_metafor_reference.toml")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -46,6 +51,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dta-report", type=Path, default=DTA_REPORT)
     parser.add_argument("--dose-response-output", type=Path, default=DOSE_RESPONSE_OUTPUT)
     parser.add_argument("--dose-response-report", type=Path, default=DOSE_RESPONSE_REPORT)
+    parser.add_argument("--sglt2-survival-output", type=Path, default=SGLT2_SURVIVAL_OUTPUT)
+    parser.add_argument("--sglt2-survival-report", type=Path, default=SGLT2_SURVIVAL_REPORT)
+    parser.add_argument("--pcsk9-survival-output", type=Path, default=PCSK9_SURVIVAL_OUTPUT)
+    parser.add_argument("--pcsk9-survival-report", type=Path, default=PCSK9_SURVIVAL_REPORT)
     parser.add_argument("--tolerance", type=float, default=1e-6)
     parser.add_argument(
         "--checked-at",
@@ -75,6 +84,18 @@ def main(argv: list[str] | None = None) -> int:
         dose_response_output = _resolve(root, args.dose_response_output)
         dose_response_summary = validate_dose_response_metafor_polynomial_output(
             dose_response_output,
+            repo_root=root,
+            tolerance=args.tolerance,
+        )
+        sglt2_survival_output = _resolve(root, args.sglt2_survival_output)
+        sglt2_survival_summary = validate_survival_hr_metafor_pairwise_output(
+            sglt2_survival_output,
+            repo_root=root,
+            tolerance=args.tolerance,
+        )
+        pcsk9_survival_output = _resolve(root, args.pcsk9_survival_output)
+        pcsk9_survival_summary = validate_survival_hr_metafor_pairwise_output(
+            pcsk9_survival_output,
             repo_root=root,
             tolerance=args.tolerance,
         )
@@ -117,6 +138,26 @@ def main(argv: list[str] | None = None) -> int:
                 tolerance=args.tolerance,
             ),
         )
+        _write_report(
+            _resolve(root, args.sglt2_survival_report),
+            _survival_hr_report(
+                root=root,
+                output_path=sglt2_survival_output,
+                summary=sglt2_survival_summary,
+                checked_at=args.checked_at,
+                tolerance=args.tolerance,
+            ),
+        )
+        _write_report(
+            _resolve(root, args.pcsk9_survival_report),
+            _survival_hr_report(
+                root=root,
+                output_path=pcsk9_survival_output,
+                summary=pcsk9_survival_summary,
+                checked_at=args.checked_at,
+                tolerance=args.tolerance,
+            ),
+        )
     except (OSError, RReferenceValidationError, json.JSONDecodeError, tomllib.TOMLDecodeError) as exc:
         print(f"R reference output validation failed: {exc}", file=sys.stderr)
         return 1
@@ -124,7 +165,8 @@ def main(argv: list[str] | None = None) -> int:
     print(
         "R reference output validation passed: "
         f"{args.pairwise_report}, {args.multiarm_report}, {args.dta_report}, "
-        f"{args.dose_response_report}"
+        f"{args.dose_response_report}, {args.sglt2_survival_report}, "
+        f"{args.pcsk9_survival_report}"
     )
     return 0
 
@@ -321,6 +363,78 @@ def _dose_response_report(
             "external/r/dose_response_metafor_polynomial.R",
             "--effects",
             "validation/dose_response/semaglutide_obesity_dose_response_effects.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": f"absolute <= {tolerance:g} for validated components",
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _survival_hr_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+    tolerance: float,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    benchmark_id = str(summary["benchmark_id"])
+    if benchmark_id == "sglt2_hf_reported_hr":
+        input_artifacts = [
+            Path("validation/survival/sglt2_hf_reported_hr_effects.csv"),
+            Path("validation/survival/sglt2_hf_reported_hrs.toml"),
+            Path("validation/survival/sglt2_hf_reported_hr_benchmark.toml"),
+            Path("validation/source_checks/sglt2_hf_reported_hr_tokens.json"),
+            Path("validation/source_checks/sglt2_hf_reported_hr_source_check.json"),
+            Path("external/r/survival_hr_metafor_pairwise.R"),
+        ]
+        adapter_id = "r_metafor_sglt2_survival_hr_output_validation"
+    elif benchmark_id == "pcsk9_mace_reported_hr":
+        input_artifacts = [
+            Path("validation/survival/pcsk9_mace_reported_hr_effects.csv"),
+            Path("validation/survival/pcsk9_mace_reported_hrs.toml"),
+            Path("validation/survival/pcsk9_mace_reported_hr_benchmark.toml"),
+            Path("validation/source_checks/pcsk9_mace_reported_hr_tokens.json"),
+            Path("validation/source_checks/pcsk9_mace_reported_hr_source_check.json"),
+            Path("external/r/survival_hr_metafor_pairwise.R"),
+        ]
+        adapter_id = "r_metafor_pcsk9_survival_hr_output_validation"
+    else:
+        raise ValueError(f"unsupported survival HR benchmark_id {benchmark_id!r}")
+
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "reported_hr_survival_metafor_pairwise",
+        "adapter_id": adapter_id,
+        "reference_method": "metafor fixed-effect reported-HR meta-analysis",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/survival_hr_metafor_pairwise.R",
+            "--benchmark-id",
+            benchmark_id,
+            "--effects",
+            input_artifacts[0].as_posix(),
             "--output",
             output_path.relative_to(root).as_posix(),
         ],

@@ -149,6 +149,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "reported_hr_survival_metafor_pairwise"
+domain = "reported_survival_hr_pairwise"
+module = "src/bias_nma_adv/survival_benchmark.py"
+reference_method = "metafor fixed-effect reported-HR meta-analysis"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed reported-HR log-scale effects from PubMed/CT.gov manifests",
+  "match fixed-effect log-HR estimate, standard error, confidence interval, Q, and df",
+  "preserve the limitation that reported-HR pooling is not KM reconstruction or survival NMA parity",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "transportability_support_topology"
 domain = "transportability"
 module = "src/bias_nma_adv/transportability.py"

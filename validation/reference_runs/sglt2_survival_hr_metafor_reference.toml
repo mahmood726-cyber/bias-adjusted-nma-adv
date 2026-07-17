@@ -1,0 +1,29 @@
+schema_version = "reference_run/v1"
+target_id = "reported_hr_survival_metafor_pairwise"
+adapter_id = "r_metafor_sglt2_survival_hr_output_validation"
+reference_method = "metafor fixed-effect reported-HR meta-analysis"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-17T09:10:00Z"
+command = ["Rscript", "--vanilla", "external/r/survival_hr_metafor_pairwise.R", "--benchmark-id", "sglt2_hf_reported_hr", "--effects", "validation/survival/sglt2_hf_reported_hr_effects.csv", "--output", "validation/reference_runs/sglt2_survival_hr_metafor_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", jsonlite = "2.0.0"}
+input_artifacts = ["validation/survival/sglt2_hf_reported_hr_effects.csv", "validation/survival/sglt2_hf_reported_hrs.toml", "validation/survival/sglt2_hf_reported_hr_benchmark.toml", "validation/source_checks/sglt2_hf_reported_hr_tokens.json", "validation/source_checks/sglt2_hf_reported_hr_source_check.json", "external/r/survival_hr_metafor_pairwise.R"]
+output_artifacts = ["validation/reference_runs/sglt2_survival_hr_metafor_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_reported_hr_effects", "fixed_effect_log_hr", "fixed_effect_standard_error", "fixed_effect_q_df", "survival_nma_limitation_preserved"]
+max_abs_difference = 4.4408920985006262e-15
+notes = ["This validates reported-HR pairwise pooling only; it is not KM reconstruction, survival NMA parity, or clinical certification."]
+
+[input_sha256]
+"validation/survival/sglt2_hf_reported_hr_effects.csv" = "3471e46ecb8bedd787b9009167f39a8029b62b9ce202fd8a0a37de2787ce106e"
+"validation/survival/sglt2_hf_reported_hrs.toml" = "f80293d7744011306f12a44aa5210db22bf3ca45cfbf838f3989546f5cd1ff06"
+"validation/survival/sglt2_hf_reported_hr_benchmark.toml" = "2ceaaecf37edf85f7f449665f2bccbd394d2c973bf087d577251868c1cfb8618"
+"validation/source_checks/sglt2_hf_reported_hr_tokens.json" = "7ddfb4688cdfe937d4c4fb79399fbaaece856ad10774b3b7ec099601b917dcb1"
+"validation/source_checks/sglt2_hf_reported_hr_source_check.json" = "7096e532721fb1b866e0d9048d7ccc8533aeeda8d2545d43d9df5a5cb254c214"
+"external/r/survival_hr_metafor_pairwise.R" = "90281bc0376bfdcc683d4bc8a5e7362775fa9e446781da307f54ed81f2e6577d"
+
+[output_sha256]
+"validation/reference_runs/sglt2_survival_hr_metafor_output.json" = "9811137bd8fccfd90d9ac0e257267ea3b4c8f28a772f176a8a22bda7d9332e95"

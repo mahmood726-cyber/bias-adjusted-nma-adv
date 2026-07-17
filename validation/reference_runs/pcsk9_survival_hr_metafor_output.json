@@ -1,0 +1,45 @@
+{
+  "schema_version": "survival_hr_metafor_pairwise/v1",
+  "benchmark_id": "pcsk9_mace_reported_hr",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+  "effect_scale": "log_hr",
+  "package_versions": {
+    "R": "4.6.0",
+    "metafor": "5.0.1",
+    "jsonlite": "2.0.0"
+  },
+  "study_effects": [
+    {
+      "study_id": "FOURIER",
+      "nct_id": "NCT01764633",
+      "pmid": 28304224,
+      "estimate": -0.162518929497775,
+      "se": 0.0388631438596992,
+      "variance": 0.00151034395065968
+    },
+    {
+      "study_id": "ODYSSEY-Outcomes",
+      "nct_id": "NCT01663402",
+      "pmid": 30403574,
+      "estimate": -0.162518929497775,
+      "se": 0.0448708924886037,
+      "variance": 0.00201339699272383
+    }
+  ],
+  "metafor": {
+    "fixed_effect": {
+      "estimate": -0.162518929497775,
+      "se": 0.0293765406010887,
+      "ci_low": -0.220095891066288,
+      "ci_high": -0.104941967929262,
+      "tau2": 0,
+      "q": 0,
+      "df": 1
+    }
+  },
+  "limitations": [
+    "Reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized.",
+    "This is a pairwise class meta-analysis, not a multi-treatment survival NMA.",
+    "This does not establish survival NMA parity or clinical certification."
+  ]
+}

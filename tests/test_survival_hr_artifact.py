@@ -1,3 +1,4 @@
+import csv
 from pathlib import Path
 import tomllib
 
@@ -20,6 +21,16 @@ ARTIFACTS = [
     ROOT / "validation" / "survival" / "sglt2_hf_reported_hr_benchmark.toml",
     ROOT / "validation" / "survival" / "pcsk9_mace_reported_hr_benchmark.toml",
 ]
+EFFECTS_CSVS = {
+    "sglt2_hf_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "sglt2_hf_reported_hr_effects.csv",
+    "pcsk9_mace_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "pcsk9_mace_reported_hr_effects.csv",
+}
 
 
 @pytest.mark.parametrize("artifact_path", ARTIFACTS)
@@ -93,3 +104,23 @@ def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens(a
         if "pi_low" in expected:
             assert abs(observed["pi_low"] - expected["pi_low"]) < 1e-14
             assert abs(observed["pi_high"] - expected["pi_high"]) < 1e-14
+
+
+@pytest.mark.parametrize("artifact_path", ARTIFACTS)
+def test_survival_hr_effects_csv_matches_source_backed_artifact(artifact_path):
+    with artifact_path.open("rb") as handle:
+        artifact = tomllib.load(handle)
+    csv_path = EFFECTS_CSVS[artifact["benchmark_id"]]
+    with csv_path.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+
+    expected = {row["study_id"]: row for row in artifact["study_effects"]}
+    observed = {row["study_id"]: row for row in rows}
+    assert set(observed) == set(expected)
+    for study_id, expected_row in expected.items():
+        observed_row = observed[study_id]
+        assert observed_row["nct_id"] == expected_row["nct_id"]
+        assert observed_row["pmid"] == str(expected_row["pmid"])
+        assert float(observed_row["estimate"]) == pytest.approx(expected_row["estimate"])
+        assert float(observed_row["se"]) == pytest.approx(expected_row["se"])
+        assert float(observed_row["variance"]) == pytest.approx(expected_row["variance"])

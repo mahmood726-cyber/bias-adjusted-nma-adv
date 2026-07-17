@@ -11,6 +11,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_dta_mada_reitsma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_meta_output,
+    validate_survival_hr_metafor_pairwise_output,
 )
 
 
@@ -19,6 +20,8 @@ PAIRWISE_OUTPUT = ROOT / "validation" / "reference_runs" / "pairwise_metafor_met
 MULTIARM_OUTPUT = ROOT / "validation" / "reference_runs" / "multiarm_netmeta_output.json"
 DTA_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_output.json"
 DOSE_RESPONSE_OUTPUT = ROOT / "validation" / "reference_runs" / "dose_response_metafor_polynomial_output.json"
+SGLT2_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "sglt2_survival_hr_metafor_output.json"
+PCSK9_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "pcsk9_survival_hr_metafor_output.json"
 
 
 def test_pairwise_metafor_output_matches_source_backed_python_artifact():
@@ -74,6 +77,30 @@ def test_dose_response_metafor_output_matches_source_backed_smoke_artifact():
     assert "not MBNMAdose parity" in summary["source_policy_note"]
 
 
+@pytest.mark.parametrize(
+    ("output_path", "benchmark_id"),
+    [
+        (SGLT2_SURVIVAL_OUTPUT, "sglt2_hf_reported_hr"),
+        (PCSK9_SURVIVAL_OUTPUT, "pcsk9_mace_reported_hr"),
+    ],
+)
+def test_survival_hr_metafor_output_matches_source_backed_reported_hr_artifact(
+    output_path,
+    benchmark_id,
+):
+    summary = validate_survival_hr_metafor_pairwise_output(output_path, repo_root=ROOT)
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "reported_hr_survival_metafor_pairwise"
+    assert summary["benchmark_id"] == benchmark_id
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == "metafor fixed-effect reported-HR meta-analysis"
+    assert summary["max_abs_difference"] < 1e-10
+    assert "survival_nma_limitation_preserved" in summary["validated_components"]
+    assert "not KM reconstruction" in summary["source_policy_note"]
+
+
 def test_pairwise_reference_validation_rejects_numeric_drift(tmp_path):
     payload = load_r_reference_output(PAIRWISE_OUTPUT)
     payload = copy.deepcopy(payload)
@@ -116,3 +143,14 @@ def test_dose_response_reference_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="weighted_quadratic coefficient 1"):
         validate_dose_response_metafor_polynomial_output(mutated, repo_root=ROOT)
+
+
+def test_survival_hr_reference_validation_rejects_numeric_drift(tmp_path):
+    payload = load_r_reference_output(SGLT2_SURVIVAL_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["metafor"]["fixed_effect"]["estimate"] += 0.01
+    mutated = tmp_path / "survival_hr_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="fixed_effect estimate"):
+        validate_survival_hr_metafor_pairwise_output(mutated, repo_root=ROOT)

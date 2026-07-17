@@ -28,6 +28,7 @@ MULTIARM_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_multiarm_netmeta_adapt
 DTA_R_ADAPTER = ROOT / "external" / "r" / "dta_mada_reitsma_fixture.R"
 DTA_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_dta_mada_adapter.py"
 DOSE_RESPONSE_R_ADAPTER = ROOT / "external" / "r" / "dose_response_metafor_polynomial.R"
+SURVIVAL_HR_R_ADAPTER = ROOT / "external" / "r" / "survival_hr_metafor_pairwise.R"
 STAN_MODEL = ROOT / "external" / "stan" / "standard_binary_nma.stan"
 STAN_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_stan_nuts_adapter.py"
 STAN_REFERENCE_SCRIPT = ROOT / "scripts" / "run_stan_nuts_reference.py"
@@ -47,6 +48,7 @@ def test_reference_targets_registry_is_valid():
         "certainty_cinema_robmen",
         "dta_bivariate_hsroc_reference",
         "pairwise_metafor_meta",
+        "reported_hr_survival_metafor_pairwise",
     }
 
     summary = summarize_reference_targets(targets)
@@ -99,7 +101,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 4, "passed": 5}
+    assert summary == {"failed": 4, "passed": 7}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -110,6 +112,8 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_mada_dta_reitsma_preflight",
         "r_mada_dta_reitsma_output_validation",
         "r_metafor_dose_response_polynomial_output_validation",
+        "r_metafor_sglt2_survival_hr_output_validation",
+        "r_metafor_pcsk9_survival_hr_output_validation",
         "python_cmdstan_nuts_preflight",
         "python_cmdstan_nuts_output_validation",
     }
@@ -225,6 +229,29 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert DOSE_RESPONSE_R_ADAPTER.is_file()
 
+    sglt2_survival_reference = by_adapter["r_metafor_sglt2_survival_hr_output_validation"]
+    assert sglt2_survival_reference.target_id == "reported_hr_survival_metafor_pairwise"
+    assert sglt2_survival_reference.status == "passed"
+    assert sglt2_survival_reference.certification_effect == "evidence_candidate"
+    assert sglt2_survival_reference.output_artifacts == (
+        "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
+    )
+    assert "validation/survival/sglt2_hf_reported_hr_benchmark.toml" in (
+        sglt2_survival_reference.input_artifacts
+    )
+
+    pcsk9_survival_reference = by_adapter["r_metafor_pcsk9_survival_hr_output_validation"]
+    assert pcsk9_survival_reference.target_id == "reported_hr_survival_metafor_pairwise"
+    assert pcsk9_survival_reference.status == "passed"
+    assert pcsk9_survival_reference.certification_effect == "evidence_candidate"
+    assert pcsk9_survival_reference.output_artifacts == (
+        "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
+    )
+    assert "validation/survival/pcsk9_mace_reported_hr_benchmark.toml" in (
+        pcsk9_survival_reference.input_artifacts
+    )
+    assert SURVIVAL_HR_R_ADAPTER.is_file()
+
     for report in reports:
         for artifact, expected_sha in report.input_sha256.items():
             assert sha256_file(ROOT / artifact) == expected_sha
@@ -236,6 +263,8 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/dta_mada_reitsma_output.json",
         "validation/reference_runs/stan_nuts_cmdstan_output.json",
         "validation/reference_runs/dose_response_metafor_polynomial_output.json",
+        "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
+        "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
     }
 
 

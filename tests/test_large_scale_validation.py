@@ -42,7 +42,7 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         "required": 20,
     }
     assert summary["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 5,
+        "observed": 7,
         "required": 10,
     }
     assert "diagnostic_test_accuracy" in summary["missing_required_real_domains"]

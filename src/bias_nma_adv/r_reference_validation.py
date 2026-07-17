@@ -482,6 +482,120 @@ def validate_dose_response_metafor_polynomial_output(
     }
 
 
+def validate_survival_hr_metafor_pairwise_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``metafor`` fixed-effect reported-HR output against a local artifact."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "package_versions",
+            "study_effects",
+            "metafor",
+            "limitations",
+        },
+        label="survival HR metafor output",
+    )
+    if output["schema_version"] != "survival_hr_metafor_pairwise/v1":
+        raise RReferenceValidationError("survival HR metafor output schema_version mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("survival HR metafor output source_policy mismatch.")
+    if output["effect_scale"] != "log_hr":
+        raise RReferenceValidationError("survival HR metafor output must use log_hr scale.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "jsonlite"})
+
+    benchmark_id = str(output["benchmark_id"])
+    benchmark_path = _survival_hr_benchmark_path(root, benchmark_id)
+    benchmark = _load_toml(benchmark_path)
+    expected_effects = {
+        str(effect["study_id"]): effect for effect in benchmark["study_effects"]
+    }
+    observed_effects = {
+        str(effect["study_id"]): effect for effect in output["study_effects"]
+    }
+    if set(expected_effects) != set(observed_effects):
+        raise RReferenceValidationError(
+            f"{benchmark_id}: survival HR metafor study effects do not match benchmark effects."
+        )
+
+    max_abs_diff = 0.0
+    for study_id, expected in expected_effects.items():
+        observed = observed_effects[study_id]
+        if str(observed["nct_id"]) != expected["nct_id"]:
+            raise RReferenceValidationError(f"{study_id}: survival HR NCT ID mismatch.")
+        if str(observed["pmid"]) != str(expected["pmid"]):
+            raise RReferenceValidationError(f"{study_id}: survival HR PMID mismatch.")
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"{study_id} estimate",
+                observed["estimate"],
+                expected["estimate"],
+                tolerance,
+            ),
+            _assert_close(f"{study_id} se", observed["se"], expected["se"], tolerance),
+            _assert_close(
+                f"{study_id} variance",
+                observed["variance"],
+                expected["variance"],
+                tolerance,
+            ),
+        )
+
+    fixed = output["metafor"]["fixed_effect"]
+    expected_fixed = benchmark["candidate"]["pairwise_fixed_effect"]
+    for field in ("estimate", "se", "ci_low", "ci_high", "tau2", "q"):
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"{benchmark_id} metafor fixed_effect {field}",
+                fixed[field],
+                expected_fixed[field],
+                tolerance,
+            ),
+        )
+    if int(fixed["df"]) != int(expected_fixed["df"]):
+        raise RReferenceValidationError(f"{benchmark_id}: survival HR fixed_effect df mismatch.")
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not a multi-treatment survival nma" in item for item in limitations):
+        raise RReferenceValidationError(
+            f"{benchmark_id}: survival HR output must preserve the pairwise limitation."
+        )
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "reported_hr_survival_metafor_pairwise",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor fixed-effect reported-HR meta-analysis",
+        "benchmark_id": benchmark_id,
+        "validated_components": [
+            "source_backed_reported_hr_effects",
+            "fixed_effect_log_hr",
+            "fixed_effect_standard_error",
+            "fixed_effect_q_df",
+            "survival_nma_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates reported-HR pairwise pooling only; it is not KM "
+            "reconstruction, survival NMA parity, or clinical certification."
+        ),
+    }
+
+
 def _load_toml(path: Path) -> dict[str, Any]:
     with path.open("rb") as handle:
         return tomllib.load(handle)
@@ -587,3 +701,22 @@ def _as_list(value: Any) -> list[Any]:
     if isinstance(value, list):
         return value
     return [value]
+
+
+def _survival_hr_benchmark_path(root: Path, benchmark_id: str) -> Path:
+    paths = {
+        "sglt2_hf_reported_hr": root
+        / "validation"
+        / "survival"
+        / "sglt2_hf_reported_hr_benchmark.toml",
+        "pcsk9_mace_reported_hr": root
+        / "validation"
+        / "survival"
+        / "pcsk9_mace_reported_hr_benchmark.toml",
+    }
+    try:
+        return paths[benchmark_id]
+    except KeyError as exc:
+        raise RReferenceValidationError(
+            f"unsupported survival HR benchmark_id '{benchmark_id}'."
+        ) from exc
