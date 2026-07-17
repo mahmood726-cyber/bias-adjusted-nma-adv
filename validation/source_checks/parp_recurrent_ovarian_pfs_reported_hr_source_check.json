@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "parp_recurrent_ovarian_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:30:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01847274",
+      "details": {
+        "brief_title": "A Maintenance Study With Niraparib Versus Placebo in Patients With Platinum Sensitive Ovarian Cancer",
+        "nct_id": "NCT01847274",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01847274",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01847274",
+      "response_sha256": "72aa370649272542eb916061922c516af91d71ed33416885a61ee7841ce387ba",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "NOVA",
+      "title": "A Maintenance Study With Niraparib Versus Placebo in Patients With Platinum Sensitive Ovarian Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27717299&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "d461f010548ebd48df06ceb5d9d5f74f1b48709bc6fe333d778e838aa4114af0",
+        "article_title": "Niraparib Maintenance Therapy in Platinum-Sensitive, Recurrent Ovarian Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "27717299"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "27717299",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/27717299/",
+      "response_sha256": "91f93c938ea0dc87d633bce659d66b679805146676d942f1d500d161bbc67fb1",
+      "source_type": "pubmed_abstract",
+      "study_id": "NOVA",
+      "title": "Niraparib Maintenance Therapy in Platinum-Sensitive, Recurrent Ovarian Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01968213",
+      "details": {
+        "brief_title": "Phase 3 Study of Rucaparib as Switch Maintenance After Platinum in Relapsed High Grade Serous or Endometrioid Ovarian Cancer (ARIEL3)",
+        "nct_id": "NCT01968213",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01968213",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01968213",
+      "response_sha256": "4af771b83a4b96250c7c7952a4410e3fe1b7158257837e8be66d98a4da385a25",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "ARIEL3",
+      "title": "Phase 3 Study of Rucaparib as Switch Maintenance After Platinum in Relapsed High Grade Serous or Endometrioid Ovarian Cancer (ARIEL3)"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28916367&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "feba81bacda186071f7b5f4cdbf671c04b177c74ddeaebbd850c3918da9413d9",
+        "article_title": "Rucaparib maintenance treatment for recurrent ovarian carcinoma after response to platinum therapy (ARIEL3): a randomised, double-blind, placebo-controlled, phase 3 trial.",
+        "journal": "Lancet",
+        "pmid": "28916367"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28916367",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28916367/",
+      "response_sha256": "84184d50b85fd7d4fe0baf9b9fc847cad8664cbf4a130b3f13870746f5f41d9e",
+      "source_type": "pubmed_abstract",
+      "study_id": "ARIEL3",
+      "title": "Rucaparib maintenance treatment for recurrent ovarian carcinoma after response to platinum therapy (ARIEL3): a randomised, double-blind, placebo-controlled, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01874353",
+      "details": {
+        "brief_title": "Olaparib Treatment in BRCA Mutated Ovarian Cancer Patients After Complete or Partial Response to Platinum Chemotherapy",
+        "nct_id": "NCT01874353",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01874353",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01874353",
+      "response_sha256": "b8a1d72ae3d2eb6f6d02bbb5850dea8dbe559b8e3db68450fddcdc97ac9b4040",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "SOLO2",
+      "title": "Olaparib Treatment in BRCA Mutated Ovarian Cancer Patients After Complete or Partial Response to Platinum Chemotherapy"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=28754483&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "35b37b6927cdcb792b98ff486f2dc44fcf63d643252fe68e6b33a601b09ce126",
+        "article_title": "Olaparib tablets as maintenance therapy in patients with platinum-sensitive, relapsed ovarian cancer and a BRCA1/2 mutation (SOLO2/ENGOT-Ov21): a double-blind, randomised, placebo-controlled, phase 3 trial.",
+        "journal": "Lancet Oncol",
+        "pmid": "28754483"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "28754483",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/28754483/",
+      "response_sha256": "fad15b1720ebffac75da4b5c9b4900a6f6443dd8d42d804362c90478299af281",
+      "source_type": "pubmed_abstract",
+      "study_id": "SOLO2",
+      "title": "Olaparib tablets as maintenance therapy in patients with platinum-sensitive, relapsed ovarian cancer and a BRCA1/2 mutation (SOLO2/ENGOT-Ov21): a double-blind, randomised, placebo-controlled, phase 3 trial."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT00753545",
+      "details": {
+        "brief_title": "Assessment of Efficacy of AZD2281 in Platinum Sensitive Relapsed Serous Ovarian Cancer",
+        "nct_id": "NCT00753545",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT00753545",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT00753545",
+      "response_sha256": "e033324ff0ddca6d3082169ec257edcd5dc5b62f49b1f3da39a887c79b149efa",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "Study19",
+      "title": "Assessment of Efficacy of AZD2281 in Platinum Sensitive Relapsed Serous Ovarian Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=22452356&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "6d845dac1160da4fada27047ec1d1b57cc79c880ab11f9a514d9d366f535a191",
+        "article_title": "Olaparib maintenance therapy in platinum-sensitive relapsed ovarian cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "22452356"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "22452356",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/22452356/",
+      "response_sha256": "255343de7eb22729d023d210b6e5505d7e2a3475bf9dddb612da86e3b88ddd59",
+      "source_type": "pubmed_abstract",
+      "study_id": "Study19",
+      "title": "Olaparib maintenance therapy in platinum-sensitive relapsed ovarian cancer."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "f2d368106493a1cce8c6a41c905ca4057b5742ae4fa79b554fa4482da52b1e19",
+  "status": "verified"
+}

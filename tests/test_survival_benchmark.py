@@ -34,6 +34,12 @@ CKD_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "sglt2_ckd_reporte
 GLP1_MANIFEST = ROOT / "validation" / "survival" / "glp1_mace_reported_hrs.toml"
 GLP1_REPORT = ROOT / "validation" / "source_checks" / "glp1_mace_reported_hr_tokens.json"
 GLP1_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "glp1_mace_reported_hr_source_check.json"
+PARP_FIRSTLINE_MANIFEST = ROOT / "validation" / "survival" / "parp_firstline_ovarian_pfs_reported_hrs.toml"
+PARP_FIRSTLINE_REPORT = ROOT / "validation" / "source_checks" / "parp_firstline_ovarian_pfs_reported_hr_tokens.json"
+PARP_FIRSTLINE_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "parp_firstline_ovarian_pfs_reported_hr_source_check.json"
+PARP_RECURRENT_MANIFEST = ROOT / "validation" / "survival" / "parp_recurrent_ovarian_pfs_reported_hrs.toml"
+PARP_RECURRENT_REPORT = ROOT / "validation" / "source_checks" / "parp_recurrent_ovarian_pfs_reported_hr_tokens.json"
+PARP_RECURRENT_IDENTITY_REPORT = ROOT / "validation" / "source_checks" / "parp_recurrent_ovarian_pfs_reported_hr_source_check.json"
 VERIFY_SCRIPT = ROOT / "scripts" / "verify_pubmed_survival_hrs.py"
 IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
 
@@ -80,6 +86,26 @@ IDENTITY_VERIFY_SCRIPT = ROOT / "scripts" / "verify_survival_sources.py"
                 "REWIND",
                 "PIONEER-6",
                 "AMPLITUDE-O",
+            },
+        ),
+        (
+            PARP_FIRSTLINE_MANIFEST,
+            "parp_firstline_ovarian_pfs_reported_hr",
+            {
+                "SOLO1",
+                "PAOLA-1",
+                "PRIMA",
+                "VELIA",
+            },
+        ),
+        (
+            PARP_RECURRENT_MANIFEST,
+            "parp_recurrent_ovarian_pfs_reported_hr",
+            {
+                "NOVA",
+                "ARIEL3",
+                "SOLO2",
+                "Study19",
             },
         ),
     ],
@@ -213,6 +239,16 @@ def test_survival_hr_manifest_rejects_scalar_source_terms():
             GLP1_REPORT,
             "validation/survival/glp1_mace_reported_hrs.toml",
         ),
+        (
+            PARP_FIRSTLINE_MANIFEST,
+            PARP_FIRSTLINE_REPORT,
+            "validation/survival/parp_firstline_ovarian_pfs_reported_hrs.toml",
+        ),
+        (
+            PARP_RECURRENT_MANIFEST,
+            PARP_RECURRENT_REPORT,
+            "validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml",
+        ),
     ],
 )
 def test_survival_hr_verification_snapshot_matches_manifest(
@@ -279,6 +315,18 @@ def test_survival_hr_verification_snapshot_matches_manifest(
             "validation/survival/glp1_mace_reported_hrs.toml",
             {"clinicaltrials_gov": 8, "pubmed_abstract": 8},
         ),
+        (
+            PARP_FIRSTLINE_MANIFEST,
+            PARP_FIRSTLINE_IDENTITY_REPORT,
+            "validation/survival/parp_firstline_ovarian_pfs_reported_hrs.toml",
+            {"clinicaltrials_gov": 4, "pubmed_abstract": 4},
+        ),
+        (
+            PARP_RECURRENT_MANIFEST,
+            PARP_RECURRENT_IDENTITY_REPORT,
+            "validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml",
+            {"clinicaltrials_gov": 4, "pubmed_abstract": 4},
+        ),
     ],
 )
 def test_survival_hr_identity_snapshot_matches_manifest(
@@ -315,7 +363,11 @@ def test_survival_hr_identity_snapshot_matches_manifest(
         assert len(record.response_sha256) == 64
         if record.source_type == "clinicaltrials_gov":
             assert record.details["nct_id"] == record.identifier
-            assert record.details["overall_status"] in {"COMPLETED", "TERMINATED"}
+            assert record.details["overall_status"] in {
+                "ACTIVE_NOT_RECRUITING",
+                "COMPLETED",
+                "TERMINATED",
+            }
         if record.source_type == "pubmed_abstract":
             assert record.details["pmid"] == record.identifier
             assert record.details["abstract_present"] is True

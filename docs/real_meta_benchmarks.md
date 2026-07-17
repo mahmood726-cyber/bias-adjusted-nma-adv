@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 11 benchmark artifacts, 84 study-effect rows, 28 unique NCT IDs, and 23 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 13 benchmark artifacts, 92 study-effect rows, 36 unique NCT IDs, and 31 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -229,7 +229,81 @@ Limitations:
 - no external `metafor`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference report is attached to this GLP-1 artifact in this checkpoint;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
-## Benchmark 5: Type 2 Diabetes MACE-Class Star Network
+## Benchmark 5: First-Line PARP Inhibitors And Ovarian Cancer PFS
+
+Reported survival HR manifest: `validation/survival/parp_firstline_ovarian_pfs_reported_hrs.toml`
+
+Reported survival HR source-identity snapshot: `validation/source_checks/parp_firstline_ovarian_pfs_reported_hr_source_check.json`
+
+Reported survival HR token snapshot: `validation/source_checks/parp_firstline_ovarian_pfs_reported_hr_tokens.json`
+
+Reported survival HR benchmark: `validation/survival/parp_firstline_ovarian_pfs_reported_hr_benchmark.toml`
+
+Trials: SOLO1 (`NCT01844986`, PMID 30345884), PAOLA-1 (`NCT02477644`, PMID 31851799), PRIMA (`NCT02655016`, PMID 31562799), and VELIA (`NCT02470585`, PMID 31562800).
+
+Scale currently tested: log hazard ratio, derived from reported PubMed abstract HR and 95% CI tokens for progression-free survival.
+
+| Trial | Active treatment | Control | Reported HR | 95% CI |
+| --- | --- | --- | ---: | --- |
+| SOLO1 | olaparib | placebo | 0.30 | 0.23 to 0.41 |
+| PAOLA-1 | olaparib plus bevacizumab | placebo plus bevacizumab | 0.59 | 0.49 to 0.72 |
+| PRIMA | niraparib | placebo | 0.43 | 0.31 to 0.59 |
+| VELIA | veliparib throughout | chemotherapy plus placebo followed by placebo maintenance | 0.44 | 0.28 to 0.68 |
+
+Reported HR benchmark on the log-HR scale:
+
+| Engine | Estimate | SE | 95% interval |
+| --- | ---: | ---: | ---: |
+| Experimental pairwise fixed effect | -0.762967 | 0.069614 | -0.899409 to -0.626526 |
+| Experimental pairwise REML-HKSJ | -0.838248 | 0.153934 | -1.328135 to -0.348360 |
+
+The REML-HKSJ artifact estimates `tau2 = 0.0695959994688312`, so this benchmark adds a third source-backed positive-heterogeneity coverage signal. This is a heterogeneity-stress signal only, not evidence of survival NMA parity or clinical superiority.
+
+Limitations:
+
+- this is a four-study pairwise class benchmark, not a multi-treatment survival NMA;
+- the selected abstract HRs refer to source-reported primary or favorable-biomarker cohorts, so this is not a harmonized clinical estimand;
+- the public PubMed abstracts provide the reported HR/CI tokens used here, but Kaplan-Meier curves are not digitized;
+- no external reference report is attached to this PARP artifact in this checkpoint;
+- no clinical, regulatory, or HTA decision claim is made from this local artifact.
+
+## Benchmark 6: Recurrent PARP Inhibitors And Ovarian Cancer PFS
+
+Reported survival HR manifest: `validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml`
+
+Reported survival HR source-identity snapshot: `validation/source_checks/parp_recurrent_ovarian_pfs_reported_hr_source_check.json`
+
+Reported survival HR token snapshot: `validation/source_checks/parp_recurrent_ovarian_pfs_reported_hr_tokens.json`
+
+Reported survival HR benchmark: `validation/survival/parp_recurrent_ovarian_pfs_reported_hr_benchmark.toml`
+
+Trials: NOVA (`NCT01847274`, PMID 27717299), ARIEL3 (`NCT01968213`, PMID 28916367), SOLO2 (`NCT01874353`, PMID 28754483), and Study19 (`NCT00753545`, PMID 22452356).
+
+Scale currently tested: log hazard ratio, derived from reported PubMed abstract HR and 95% CI tokens for progression-free survival.
+
+| Trial | Active treatment | Control | Reported HR | 95% CI |
+| --- | --- | --- | ---: | --- |
+| NOVA | niraparib | placebo | 0.27 | 0.17 to 0.41 |
+| ARIEL3 | rucaparib | placebo | 0.23 | 0.16 to 0.34 |
+| SOLO2 | olaparib | placebo | 0.30 | 0.22 to 0.41 |
+| Study19 | olaparib | placebo | 0.35 | 0.25 to 0.49 |
+
+Reported HR benchmark on the log-HR scale:
+
+| Engine | Estimate | SE | 95% interval |
+| --- | ---: | ---: | ---: |
+| Experimental pairwise fixed effect | -1.237548 | 0.091116 | -1.416132 to -1.058964 |
+| Experimental pairwise REML-HKSJ | -1.237548 | 0.091116 | -1.527520 to -0.947576 |
+
+Limitations:
+
+- this is a four-study pairwise class benchmark, not a multi-treatment survival NMA;
+- the selected abstract HRs mix BRCA-defined and broader source-reported cohorts, so this is not a harmonized clinical estimand;
+- the public PubMed abstracts provide the reported HR/CI tokens used here, but Kaplan-Meier curves are not digitized;
+- no external reference report is attached to this PARP artifact in this checkpoint;
+- no clinical, regulatory, or HTA decision claim is made from this local artifact.
+
+## Benchmark 7: Type 2 Diabetes MACE-Class Star Network
 
 CT.gov reported-HR network manifest: `validation/networks/t2d_mace_ctgov_hrs.toml`
 
@@ -279,7 +353,7 @@ Limitations:
 - CT.gov results records are verified and fixed-effect class estimates have a narrow local `netmeta` reference check, but this is not broad `netmeta`, `multinma`, or CmdStan parity;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
-## Benchmark 6: Psoriasis PASI 90 Closed-Loop Binary Network
+## Benchmark 8: Psoriasis PASI 90 Closed-Loop Binary Network
 
 CT.gov arm-count network manifest: `validation/networks/psoriasis_pasi90_ctgov_binary_network.toml`
 
@@ -313,7 +387,7 @@ Limitations:
 - the `netmeta` reference report is a narrow evidence candidate, not full `netmeta`, `multinma`, CINeMA, or ROB-MEN parity;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
-## Benchmark 7: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
+## Benchmark 9: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
 
 Component-NMA manifest: `validation/component/sitagliptin_pioglitazone_component.toml`
 
@@ -345,7 +419,7 @@ Limitations:
 - same-trial arm covariance is not modeled;
 - the artifact is not broad `netmeta` CNMA parity and cannot support component hierarchy or clinical superiority claims.
 
-## Benchmark 8: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
+## Benchmark 10: SGLT2 RCT/NRS Cross-Design Routing Smoke Benchmark
 
 Cross-design manifest: `validation/cross_design/sglt2_rct_nrs_cross_design.toml`
 

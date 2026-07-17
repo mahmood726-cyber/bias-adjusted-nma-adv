@@ -1,0 +1,99 @@
+{
+  "benchmark_id": "parp_recurrent_ovarian_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:35:00Z",
+  "manifest": "validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml",
+  "manifest_sha256": "f2d368106493a1cce8c6a41c905ca4057b5742ae4fa79b554fa4482da52b1e19",
+  "records": [
+    {
+      "abstract_sha256": "d461f010548ebd48df06ceb5d9d5f74f1b48709bc6fe333d778e838aa4114af0",
+      "ci_lower": "0.17",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.41",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "27717299",
+      "reported_hr": "0.27",
+      "source_terms": [
+        "niraparib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "NOVA",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "feba81bacda186071f7b5f4cdbf671c04b177c74ddeaebbd850c3918da9413d9",
+      "ci_lower": "0.16",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.34",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "28916367",
+      "reported_hr": "0.23",
+      "source_terms": [
+        "rucaparib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "ARIEL3",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "35b37b6927cdcb792b98ff486f2dc44fcf63d643252fe68e6b33a601b09ce126",
+      "ci_lower": "0.22",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.41",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "28754483",
+      "reported_hr": "0.30",
+      "source_terms": [
+        "olaparib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "SOLO2",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    },
+    {
+      "abstract_sha256": "6d845dac1160da4fada27047ec1d1b57cc79c880ab11f9a514d9d366f535a191",
+      "ci_lower": "0.25",
+      "ci_lower_token_found": true,
+      "ci_upper": "0.49",
+      "ci_upper_token_found": true,
+      "confidence_interval_anchor_found": true,
+      "evidence_scope": "pubmed_abstract_reported_hr_tokens",
+      "hazard_ratio_anchor_found": true,
+      "hr_token_found": true,
+      "outcome_id": "pfs_primary_reported",
+      "pmid": "22452356",
+      "reported_hr": "0.35",
+      "source_terms": [
+        "olaparib",
+        "placebo"
+      ],
+      "source_terms_near_hazard_ratio_anchor": true,
+      "study_id": "Study19",
+      "tokens_near_hazard_ratio_anchor": true,
+      "verified": true
+    }
+  ],
+  "schema_version": "survival_hr_verification/v1",
+  "status": "verified"
+}

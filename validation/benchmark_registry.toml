@@ -128,6 +128,54 @@ required_limitations = [
 ]
 
 [[benchmarks]]
+id = "parp_firstline_ovarian_pfs_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/parp_firstline_ovarian_pfs_reported_hr_benchmark.toml"
+artifact_sha256 = "ad1202994144409482618af45e0d1620fc68fe32fc29aa16b97e8000901dd91c"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/parp_firstline_ovarian_pfs_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/parp_firstline_ovarian_pfs_reported_hrs.toml" = "fe4bd579d8d2b7ef353a00863aae784cb74f68a12ca5ee38fe4cfbecc7311ff9" }
+source_checks = [
+  "validation/source_checks/parp_firstline_ovarian_pfs_reported_hr_source_check.json",
+  "validation/source_checks/parp_firstline_ovarian_pfs_reported_hr_tokens.json",
+]
+source_check_sha256 = { "validation/source_checks/parp_firstline_ovarian_pfs_reported_hr_source_check.json" = "ca0a549e2ff0187b07126b6e87167ee02124e1a7087d42d1be75e2df06dae7a8", "validation/source_checks/parp_firstline_ovarian_pfs_reported_hr_tokens.json" = "9823d58ea7327acc00c5256e10121a9173d2fc2241a67707f49206287faa9ed5" }
+required_limitations = [
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
+id = "parp_recurrent_ovarian_pfs_reported_hr"
+domain = "reported_survival_hr_pairwise"
+artifact_path = "validation/survival/parp_recurrent_ovarian_pfs_reported_hr_benchmark.toml"
+artifact_sha256 = "9871d46b34687818d3b0ca78faae25d49b59d59b14d067f135431dbf3e74d4b0"
+artifact_schema_version = "survival_hr_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml"]
+source_manifest_sha256 = { "validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml" = "f2d368106493a1cce8c6a41c905ca4057b5742ae4fa79b554fa4482da52b1e19" }
+source_checks = [
+  "validation/source_checks/parp_recurrent_ovarian_pfs_reported_hr_source_check.json",
+  "validation/source_checks/parp_recurrent_ovarian_pfs_reported_hr_tokens.json",
+]
+source_check_sha256 = { "validation/source_checks/parp_recurrent_ovarian_pfs_reported_hr_source_check.json" = "bf4fef6491555b69e9e5cd688dc76575e424b39797bb27e7f0b2d2d9351d7807", "validation/source_checks/parp_recurrent_ovarian_pfs_reported_hr_tokens.json" = "90f9b4372cd27cc53285c75dae0cd6054b50eb91db7f8daed931df6a8afc11b5" }
+required_limitations = [
+  "not a multi-treatment survival NMA",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
 id = "t2d_mace_ctgov_hr_network"
 domain = "reported_hr_star_network"
 artifact_path = "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml"

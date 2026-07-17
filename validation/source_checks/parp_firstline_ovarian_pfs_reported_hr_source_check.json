@@ -1,0 +1,155 @@
+{
+  "benchmark_id": "parp_firstline_ovarian_pfs_reported_hr",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T23:05:00Z",
+  "records": [
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT01844986",
+      "details": {
+        "brief_title": "Olaparib Maintenance Monotherapy in Patients With BRCA Mutated Ovarian Cancer Following First Line Platinum Based Chemotherapy.",
+        "nct_id": "NCT01844986",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT01844986",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT01844986",
+      "response_sha256": "e0d320138ef6a6221001bb46b8d33b129404bc9cbf3d3041d22a4e01115d3069",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "SOLO1",
+      "title": "Olaparib Maintenance Monotherapy in Patients With BRCA Mutated Ovarian Cancer Following First Line Platinum Based Chemotherapy."
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30345884&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "8544ed81532bd47bc9d078b8936bd25796f81701b7be3ea49882f71a0ebc4bee",
+        "article_title": "Maintenance Olaparib in Patients with Newly Diagnosed Advanced Ovarian Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "30345884"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "30345884",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/30345884/",
+      "response_sha256": "0f8d6d6a375999c07772c8fd41cd0345c29cbeeed802c59660b655eb62a101ca",
+      "source_type": "pubmed_abstract",
+      "study_id": "SOLO1",
+      "title": "Maintenance Olaparib in Patients with Newly Diagnosed Advanced Ovarian Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02477644",
+      "details": {
+        "brief_title": "Platine, Avastin and OLAparib in 1st Line",
+        "nct_id": "NCT02477644",
+        "overall_status": "COMPLETED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02477644",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02477644",
+      "response_sha256": "4727e93f7841b399941afd4775c42c5d180caadb9112f3cfd07fb2cfb26344d0",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PAOLA-1",
+      "title": "Platine, Avastin and OLAparib in 1st Line"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31851799&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "4d9310c4fac6610c987c630bca7596bf49ff8a92d33cb8eff1f9357b94d04dd4",
+        "article_title": "Olaparib plus Bevacizumab as First-Line Maintenance in Ovarian Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "31851799"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31851799",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31851799/",
+      "response_sha256": "3d7361e9bcf724463a7614e8ae59e8d3939ac04adeb24e4fd89f968e8b15e787",
+      "source_type": "pubmed_abstract",
+      "study_id": "PAOLA-1",
+      "title": "Olaparib plus Bevacizumab as First-Line Maintenance in Ovarian Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02655016",
+      "details": {
+        "brief_title": "A Study of Niraparib (GSK3985771) Maintenance Treatment in Participants With Advanced Ovarian Cancer Following Response on Front-Line Platinum-Based Chemotherapy",
+        "nct_id": "NCT02655016",
+        "overall_status": "ACTIVE_NOT_RECRUITING"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02655016",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02655016",
+      "response_sha256": "10e71682c79a0572865ce9cd85a8a7ff6440e26cd7c03629dfb74bbdd0e096cb",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "PRIMA",
+      "title": "A Study of Niraparib (GSK3985771) Maintenance Treatment in Participants With Advanced Ovarian Cancer Following Response on Front-Line Platinum-Based Chemotherapy"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31562799&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "9ceaea64a5b6489f541453b0bc37fb62d19167784367e03396a16d4ab57b1220",
+        "article_title": "Niraparib in Patients with Newly Diagnosed Advanced Ovarian Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "31562799"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31562799",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31562799/",
+      "response_sha256": "e955c5f7dd2c5a81e8439a93b4e2cb0818801d67fe8919398d2e788d5472b046",
+      "source_type": "pubmed_abstract",
+      "study_id": "PRIMA",
+      "title": "Niraparib in Patients with Newly Diagnosed Advanced Ovarian Cancer."
+    },
+    {
+      "api_url": "https://clinicaltrials.gov/api/v2/studies/NCT02470585",
+      "details": {
+        "brief_title": "Veliparib With Carboplatin and Paclitaxel and as Continuation Maintenance Therapy in Adults With Newly Diagnosed Stage III or IV, High-grade Serous, Epithelial Ovarian, Fallopian Tube, or Primary Peritoneal Cancer",
+        "nct_id": "NCT02470585",
+        "overall_status": "TERMINATED"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "NCT02470585",
+      "identity_verified": true,
+      "manifest_url": "https://clinicaltrials.gov/study/NCT02470585",
+      "response_sha256": "172a5d847b980c406cdc4c23535fb1b6a43d331e7855acd5f44fe40ccb64e1aa",
+      "source_type": "clinicaltrials_gov",
+      "study_id": "VELIA",
+      "title": "Veliparib With Carboplatin and Paclitaxel and as Continuation Maintenance Therapy in Adults With Newly Diagnosed Stage III or IV, High-grade Serous, Epithelial Ovarian, Fallopian Tube, or Primary Peritoneal Cancer"
+    },
+    {
+      "api_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31562800&retmode=xml",
+      "details": {
+        "abstract_present": true,
+        "abstract_sha256": "4e2f1804f9985832f1abe926c85ae88b2c8027efa5289e2f41eacaae0f416522",
+        "article_title": "Veliparib with First-Line Chemotherapy and as Maintenance Therapy in Ovarian Cancer.",
+        "journal": "N Engl J Med",
+        "pmid": "31562800"
+      },
+      "evidence_scope": "identity_and_reachability",
+      "http_status": 200,
+      "identifier": "31562800",
+      "identity_verified": true,
+      "manifest_url": "https://pubmed.ncbi.nlm.nih.gov/31562800/",
+      "response_sha256": "6d07e997709fa6890831c4283d3e1b8e9ee4db3a6302c296aaa721e9b182d757",
+      "source_type": "pubmed_abstract",
+      "study_id": "VELIA",
+      "title": "Veliparib with First-Line Chemotherapy and as Maintenance Therapy in Ovarian Cancer."
+    }
+  ],
+  "schema_version": "source_verification/v1",
+  "source_manifest": "validation/survival/parp_firstline_ovarian_pfs_reported_hrs.toml",
+  "source_manifest_sha256": "fe4bd579d8d2b7ef353a00863aae784cb74f68a12ca5ee38fe4cfbecc7311ff9",
+  "status": "verified"
+}

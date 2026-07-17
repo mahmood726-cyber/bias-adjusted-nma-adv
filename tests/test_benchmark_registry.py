@@ -46,6 +46,8 @@ def test_source_benchmark_registry_validates_all_registered_artifacts():
         "pcsk9_mace_reported_hr",
         "sglt2_ckd_reported_hr",
         "glp1_mace_reported_hr",
+        "parp_firstline_ovarian_pfs_reported_hr",
+        "parp_recurrent_ovarian_pfs_reported_hr",
         "t2d_mace_ctgov_hr_network",
         "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",
@@ -66,6 +68,8 @@ def test_source_benchmark_registry_covers_every_source_backed_benchmark_artifact
     assert discover_source_backed_benchmark_artifacts(ROOT) == (
         "validation/real_meta/sglt2_hf_primary_benchmark.toml",
         "validation/survival/glp1_mace_reported_hr_benchmark.toml",
+        "validation/survival/parp_firstline_ovarian_pfs_reported_hr_benchmark.toml",
+        "validation/survival/parp_recurrent_ovarian_pfs_reported_hr_benchmark.toml",
         "validation/survival/pcsk9_mace_reported_hr_benchmark.toml",
         "validation/survival/sglt2_ckd_reported_hr_benchmark.toml",
         "validation/survival/sglt2_hf_reported_hr_benchmark.toml",
@@ -131,13 +135,15 @@ def test_validate_benchmark_registry_script_emits_machine_readable_summary():
     assert payload["status"] == "passed"
     assert payload["certification_effect"] == "none"
     assert payload["registry"] == "validation/benchmark_registry.toml"
-    assert payload["n_benchmarks"] == 11
+    assert payload["n_benchmarks"] == 13
     assert set(payload["benchmark_ids"]) == {
         "sglt2_hf_primary_log_or",
         "sglt2_hf_reported_hr",
         "pcsk9_mace_reported_hr",
         "sglt2_ckd_reported_hr",
         "glp1_mace_reported_hr",
+        "parp_firstline_ovarian_pfs_reported_hr",
+        "parp_recurrent_ovarian_pfs_reported_hr",
         "t2d_mace_ctgov_hr_network",
         "psoriasis_pasi90_ctgov_binary_network",
         "semaglutide_obesity_dose_response",

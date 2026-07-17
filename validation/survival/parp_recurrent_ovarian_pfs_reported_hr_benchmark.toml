@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "parp_recurrent_ovarian_pfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml"
+source_manifest_sha256 = "f2d368106493a1cce8c6a41c905ca4057b5742ae4fa79b554fa4482da52b1e19"
+source_verification_report = "validation/source_checks/parp_recurrent_ovarian_pfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "90f9b4372cd27cc53285c75dae0cd6054b50eb91db7f8daed931df6a8afc11b5"
+source_identity_report = "validation/source_checks/parp_recurrent_ovarian_pfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "bf4fef6491555b69e9e5cd688dc76575e424b39797bb27e7f0b2d2d9351d7807"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "parp_recurrent_ovarian_pfs_reported_hr"
+manifest_sha256 = "f2d368106493a1cce8c6a41c905ca4057b5742ae4fa79b554fa4482da52b1e19"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "parp_recurrent_ovarian_pfs_reported_hr"
+manifest_sha256 = "f2d368106493a1cce8c6a41c905ca4057b5742ae4fa79b554fa4482da52b1e19"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "NOVA"
+trial = "Niraparib maintenance therapy in platinum-sensitive recurrent ovarian cancer"
+nct_id = "NCT01847274"
+pmid = "27717299"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in the germline BRCA cohort"
+active_treatment = "niraparib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.27
+ci_lower = 0.17
+ci_upper = 0.41
+estimate = -1.3093333199837622
+variance = 0.050438616988905824
+se = 0.2245854336080277
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "ARIEL3"
+trial = "Rucaparib maintenance treatment for recurrent ovarian carcinoma"
+nct_id = "NCT01968213"
+pmid = "28916367"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in patients with BRCA-mutant carcinoma"
+active_treatment = "rucaparib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.23
+ci_lower = 0.16
+ci_upper = 0.34
+estimate = -1.4696759700589417
+variance = 0.03697631268341126
+se = 0.19229225851139006
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "SOLO2"
+trial = "Olaparib maintenance therapy in platinum-sensitive relapsed ovarian cancer with BRCA1/2 mutation"
+nct_id = "NCT01874353"
+pmid = "28754483"
+outcome_id = "pfs_primary_reported"
+outcome_label = "investigator-assessed progression-free survival"
+active_treatment = "olaparib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.3
+ci_lower = 0.22
+ci_upper = 0.41
+estimate = -1.2039728043259361
+variance = 0.025221090318930176
+se = 0.15881149303161335
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "Study19"
+trial = "Olaparib maintenance therapy in platinum-sensitive relapsed ovarian cancer"
+nct_id = "NCT00753545"
+pmid = "22452356"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival after response to platinum-based chemotherapy"
+active_treatment = "olaparib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.35
+ci_lower = 0.25
+ci_upper = 0.49
+estimate = -1.0498221244986778
+variance = 0.02947150322346149
+se = 0.17167266300567918
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -1.2375479361955826
+se = 0.09111608486036704
+ci_low = -1.4161321809341971
+ci_high = -1.058963691456968
+tau2 = 0.0
+q = 2.7998691752191416
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [19.826078899426484, 27.044340753009465, 39.649356445523324, 33.931082253175546]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -1.2375479361955826
+se = 0.09111608486036704
+ci_low = -1.5275199838113744
+ci_high = -0.9475758885797907
+tau2 = 0.0
+q = 2.7998691752191416
+df = 3
+hksj = true
+hksj_q_factor = 1.0
+weights = [19.826078899426484, 27.044340753009465, 39.649356445523324, 33.931082253175546]
+warnings = []
+pi_low = -1.5275199838113744
+pi_high = -0.9475758885797907

@@ -1,0 +1,144 @@
+schema_version = "survival_hr_benchmark/v1"
+benchmark_id = "parp_firstline_ovarian_pfs_reported_hr"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "reported_hr_pubmed_abstract"
+effect_scale = "log_hr"
+source_manifest = "validation/survival/parp_firstline_ovarian_pfs_reported_hrs.toml"
+source_manifest_sha256 = "fe4bd579d8d2b7ef353a00863aae784cb74f68a12ca5ee38fe4cfbecc7311ff9"
+source_verification_report = "validation/source_checks/parp_firstline_ovarian_pfs_reported_hr_tokens.json"
+source_verification_report_sha256 = "9823d58ea7327acc00c5256e10121a9173d2fc2241a67707f49206287faa9ed5"
+source_identity_report = "validation/source_checks/parp_firstline_ovarian_pfs_reported_hr_source_check.json"
+source_identity_report_sha256 = "ca0a549e2ff0187b07126b6e87167ee02124e1a7087d42d1be75e2df06dae7a8"
+n_studies = 4
+limitations = ["reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized", "this is a pairwise class meta-analysis, not a multi-treatment survival NMA", "source-token verification does not certify model performance or tier-one parity"]
+
+[source_bundle]
+benchmark_id = "parp_firstline_ovarian_pfs_reported_hr"
+manifest_sha256 = "fe4bd579d8d2b7ef353a00863aae784cb74f68a12ca5ee38fe4cfbecc7311ff9"
+verification_status = "verified"
+certification_effect = "none"
+n_studies = 4
+
+[source_identity_bundle]
+benchmark_id = "parp_firstline_ovarian_pfs_reported_hr"
+manifest_sha256 = "fe4bd579d8d2b7ef353a00863aae784cb74f68a12ca5ee38fe4cfbecc7311ff9"
+verification_status = "verified"
+certification_effect = "none"
+source_counts = {clinicaltrials_gov = 4, pubmed_abstract = 4}
+
+[model_config]
+pairwise_fixed_effect_method = "FE"
+pairwise_random_effect_method = "REML"
+pairwise_hksj = true
+pairwise_hksj_floor = true
+pairwise_prediction_interval = true
+pairwise_prediction_interval_df = "k_minus_1"
+level = 0.95
+
+[[study_effects]]
+study_id = "SOLO1"
+trial = "Olaparib maintenance in newly diagnosed advanced ovarian cancer"
+nct_id = "NCT01844986"
+pmid = "30345884"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in newly diagnosed advanced ovarian cancer with BRCA1/2 mutation"
+active_treatment = "olaparib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.3
+ci_lower = 0.23
+ci_upper = 0.41
+estimate = -1.2039728043259361
+variance = 0.02174785785523812
+se = 0.14747154930778383
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "PAOLA-1"
+trial = "Olaparib plus bevacizumab as first-line maintenance in ovarian cancer"
+nct_id = "NCT02477644"
+pmid = "31851799"
+outcome_id = "pfs_primary_reported"
+outcome_label = "investigator-assessed disease progression or death"
+active_treatment = "olaparib plus bevacizumab"
+control_treatment = "placebo plus bevacizumab"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.59
+ci_lower = 0.49
+ci_upper = 0.72
+estimate = -0.527632742082372
+variance = 0.009638675876890664
+se = 0.09817675833358251
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "PRIMA"
+trial = "Niraparib in newly diagnosed advanced ovarian cancer"
+nct_id = "NCT02655016"
+pmid = "31562799"
+outcome_id = "pfs_primary_reported"
+outcome_label = "progression-free survival in homologous-recombination-deficient tumors"
+active_treatment = "niraparib"
+control_treatment = "placebo"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.43
+ci_lower = 0.31
+ci_upper = 0.59
+estimate = -0.843970070294529
+variance = 0.026953101021621892
+se = 0.16417399617972966
+variance_source = "reported_95_ci_log_scale"
+
+[[study_effects]]
+study_id = "VELIA"
+trial = "Veliparib with first-line chemotherapy and as maintenance therapy in ovarian cancer"
+nct_id = "NCT02470585"
+pmid = "31562800"
+outcome_id = "pfs_primary_reported"
+outcome_label = "investigator-assessed progression-free survival in the BRCA-mutation cohort"
+active_treatment = "veliparib throughout"
+control_treatment = "chemotherapy plus placebo followed by placebo maintenance"
+effect_direction = "active_vs_control"
+effect_scale = "log_hr"
+reported_hr = 0.44
+ci_lower = 0.28
+ci_upper = 0.68
+estimate = -0.8209805520698302
+variance = 0.05123749834421946
+se = 0.22635701523085044
+variance_source = "reported_95_ci_log_scale"
+
+[candidate.pairwise_fixed_effect]
+method = "FE"
+estimate = -0.7629674214008372
+se = 0.06961441278847819
+ci_low = -0.8994091632711589
+ci_high = -0.6265256795305154
+tau2 = 0.0
+q = 14.997730390367575
+df = 3
+hksj = false
+hksj_q_factor = 1.0
+weights = [45.98154018921653, 103.7486904604359, 37.10148228204969, 19.516955985670574]
+warnings = []
+
+[candidate.pairwise_reml_hksj]
+method = "REML"
+estimate = -0.8382478681909233
+se = 0.15393424806576742
+ci_low = -1.3281353472044506
+ci_high = -0.3483603891773961
+tau2 = 0.0695959994688312
+q = 2.6847766542858884
+df = 3
+hksj = true
+hksj_q_factor = 1.0
+weights = [10.947643654375186, 12.620737014908373, 10.357424304526601, 8.275850803782614]
+warnings = []
+pi_low = -1.8102846746356152
+pi_high = 0.13378893825376847

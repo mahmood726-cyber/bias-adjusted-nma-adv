@@ -22,6 +22,8 @@ ARTIFACTS = [
     ROOT / "validation" / "survival" / "pcsk9_mace_reported_hr_benchmark.toml",
     ROOT / "validation" / "survival" / "sglt2_ckd_reported_hr_benchmark.toml",
     ROOT / "validation" / "survival" / "glp1_mace_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "parp_firstline_ovarian_pfs_reported_hr_benchmark.toml",
+    ROOT / "validation" / "survival" / "parp_recurrent_ovarian_pfs_reported_hr_benchmark.toml",
 ]
 EFFECTS_CSVS = {
     "sglt2_hf_reported_hr": ROOT
@@ -40,6 +42,14 @@ EFFECTS_CSVS = {
     / "validation"
     / "survival"
     / "glp1_mace_reported_hr_effects.csv",
+    "parp_firstline_ovarian_pfs_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "parp_firstline_ovarian_pfs_reported_hr_effects.csv",
+    "parp_recurrent_ovarian_pfs_reported_hr": ROOT
+    / "validation"
+    / "survival"
+    / "parp_recurrent_ovarian_pfs_reported_hr_effects.csv",
 }
 
 
@@ -118,6 +128,8 @@ def test_survival_hr_benchmark_artifact_recomputes_from_verified_source_tokens(a
     if artifact["benchmark_id"] == "sglt2_ckd_reported_hr":
         assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
     if artifact["benchmark_id"] == "glp1_mace_reported_hr":
+        assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
+    if artifact["benchmark_id"] == "parp_firstline_ovarian_pfs_reported_hr":
         assert artifact["candidate"]["pairwise_reml_hksj"]["tau2"] > 0.0
 
 
