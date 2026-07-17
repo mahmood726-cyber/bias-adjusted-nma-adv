@@ -164,6 +164,7 @@ def test_validation_status_composes_all_current_gates():
             "input_verified_reversal_yardstick_gate",
             "reversal_aggregate_answer_key_runner",
             "dta_source_coverage_gate",
+            "mlnmr_source_coverage_gate",
             "dta_bivariate_logitnormal_reml_prototype",
             "dta_mada_reitsma_algorithmic_reference_adapter",
             "rapidmeta_app_index_fail_closed_adapter_contract",
@@ -270,6 +271,33 @@ def test_validation_status_composes_all_current_gates():
         "hsroc",
     ]
     assert dta_coverage["certification_effect"] == "none"
+
+    mlnmr_coverage = report["mlnmr_source_coverage"]
+    assert mlnmr_coverage["coverage"] == "validation/mlnmr_source_coverage.toml"
+    assert mlnmr_coverage["schema_version"] == "mlnmr_source_coverage/v1"
+    assert mlnmr_coverage["status"] == "missing_source_backed_mlnmr_data"
+    assert mlnmr_coverage["model_status"] == "simulated_reference_only"
+    assert mlnmr_coverage["registered_benchmark_ids"] == []
+    assert mlnmr_coverage["registered_source_counts"] == {
+        "aact_clinicaltrials_gov": 0,
+        "clinicaltrials_gov": 0,
+        "ema_epar": 0,
+        "fda_review": 0,
+        "open_access_paper": 0,
+        "pactr_results": 0,
+        "pubmed_abstract": 0,
+        "who_ictrp_results": 0,
+    }
+    assert mlnmr_coverage["has_source_backed_mlnmr_data"] is False
+    assert "public_trial_ipd_rows" in mlnmr_coverage["required_source_components"]
+    assert "multinma_mlnmr_reference_run_before_certification" in mlnmr_coverage[
+        "required_source_components"
+    ]
+    assert any(
+        "pseudo-IPD" in exclusion
+        for exclusion in mlnmr_coverage["excluded_source_patterns"]
+    )
+    assert mlnmr_coverage["certification_effect"] == "none"
 
     feature_parity = report["feature_parity_matrix"]
     assert feature_parity["matrix"] == "validation/feature_parity_matrix.toml"
@@ -512,6 +540,8 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     ] is True
     assert payload["dta_source_coverage"]["has_source_backed_dta_data"] is True
     assert payload["dta_source_coverage"]["model_status"] == "source_backed_not_reference_matched"
+    assert payload["mlnmr_source_coverage"]["has_source_backed_mlnmr_data"] is False
+    assert payload["mlnmr_source_coverage"]["model_status"] == "simulated_reference_only"
     assert payload["feature_parity_matrix"]["global_feature_parity_complete"] is False
     assert payload["large_scale_validation"]["status"] == "partial_not_large_scale"
     assert payload["reversal_yardstick"]["headline_metric"] == "detected_taint"

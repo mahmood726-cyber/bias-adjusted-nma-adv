@@ -49,6 +49,10 @@ from bias_nma_adv.large_scale_validation import (
     load_large_scale_validation_gate,
     summarize_large_scale_validation,
 )
+from bias_nma_adv.mlnmr_coverage import (
+    load_mlnmr_source_coverage,
+    summarize_mlnmr_source_coverage,
+)
 from bias_nma_adv.portfolio_reuse import (
     load_portfolio_reuse_registry,
     summarize_portfolio_reuse_registry,
@@ -120,6 +124,7 @@ def build_validation_status(
     html_delivery_contract_path = root / "validation" / "html_delivery_contract.toml"
     dose_response_coverage_path = root / "validation" / "dose_response_source_coverage.toml"
     dta_coverage_path = root / "validation" / "dta_source_coverage.toml"
+    mlnmr_coverage_path = root / "validation" / "mlnmr_source_coverage.toml"
     reversal_yardstick_path = root / "validation" / "reversal_yardstick.toml"
     feature_parity_matrix_path = root / "validation" / "feature_parity_matrix.toml"
     large_scale_validation_path = root / "validation" / "large_scale_validation.toml"
@@ -148,6 +153,7 @@ def build_validation_status(
         dose_response_coverage_path
     )
     dta_coverage = load_dta_source_coverage(dta_coverage_path)
+    mlnmr_coverage = load_mlnmr_source_coverage(mlnmr_coverage_path)
     feature_parity_matrix = load_feature_parity_matrix(feature_parity_matrix_path)
     large_scale_validation_gate = load_large_scale_validation_gate(
         large_scale_validation_path
@@ -234,6 +240,10 @@ def build_validation_status(
         "dta_source_coverage": {
             "coverage": _relpath(dta_coverage_path, root),
             **summarize_dta_source_coverage(dta_coverage),
+        },
+        "mlnmr_source_coverage": {
+            "coverage": _relpath(mlnmr_coverage_path, root),
+            **summarize_mlnmr_source_coverage(mlnmr_coverage),
         },
         "feature_parity_matrix": {
             "matrix": _relpath(feature_parity_matrix_path, root),

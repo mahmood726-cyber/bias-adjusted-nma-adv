@@ -113,6 +113,7 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert "dta_source_coverage_gate" in by_id["feature_completeness"].implemented_capabilities
+    assert "mlnmr_source_coverage_gate" in by_id["feature_completeness"].implemented_capabilities
     assert (
         "dta_bivariate_logitnormal_reml_prototype"
         in by_id["feature_completeness"].implemented_capabilities
@@ -300,6 +301,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "input_verified_reversal_yardstick_gate",
             "reversal_aggregate_answer_key_runner",
             "dta_source_coverage_gate",
+            "mlnmr_source_coverage_gate",
             "dta_bivariate_logitnormal_reml_prototype",
             "dta_mada_reitsma_algorithmic_reference_adapter",
             "rapidmeta_app_index_fail_closed_adapter_contract",

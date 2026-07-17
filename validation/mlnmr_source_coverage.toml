@@ -1,0 +1,41 @@
+schema_version = "mlnmr_source_coverage/v1"
+checked_at = "2026-07-17"
+status = "missing_source_backed_mlnmr_data"
+model_status = "simulated_reference_only"
+certification_effect = "none"
+purpose = "Machine-readable gate for whether ML-NMR has source-backed public trial IPD plus aggregate covariate evidence under the project source boundary."
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+protocol_only_sources = ["other_trial_registry_protocol", "pactr_protocol", "who_ictrp_protocol"]
+protocol_registry_rule = "Protocol-only ICTRP, PACTR, and other registry rows cannot supply ML-NMR model-ready IPD, aggregate covariate distributions, or treatment effects; downloaded registry result rows and public FDA/EMA regulatory review rows may supply effects only when public numeric text is source-bound."
+registered_benchmark_ids = []
+registered_source_counts = {aact_clinicaltrials_gov = 0, clinicaltrials_gov = 0, ema_epar = 0, fda_review = 0, open_access_paper = 0, pactr_results = 0, pubmed_abstract = 0, who_ictrp_results = 0}
+required_source_components = [
+  "public_trial_ipd_rows",
+  "source_bound_aggregate_covariate_distribution",
+  "shared_estimand_treatments_and_outcome",
+  "source_verified_trial_identifiers_nct_pmid_or_doi",
+  "covariate_overlap_diagnostics",
+  "multinma_mlnmr_reference_run_before_certification",
+]
+excluded_source_patterns = [
+  "simulated IPD from package vignettes or demos",
+  "synthetic cohorts generated from GAN, VAE, KM reconstruction, or text-only reports",
+  "pseudo-IPD reconstructed from Kaplan-Meier curves unless explicitly labelled non-real and excluded from real ML-NMR validation",
+  "survey-only public IPD such as NHANES, MEPS, or NSDUH without randomized-trial treatment arms and shared aggregate evidence",
+  "closed, proprietary, credentialed, or requester-only patient datasets",
+]
+source_search_summary = [
+  "The local feature-parity matrix still records mlnmr_multinma as planned with no evidence artifacts.",
+  "Portfolio search found WorldIPD-style public-health survey registries and IPD browser demos, but those are not source-backed trial IPD plus aggregate covariate networks under this project's allowed evidence boundary.",
+  "Registry-IPD and Wasserstein contain useful pseudo-IPD and KM-reconstruction infrastructure; pseudo-IPD remains excluded from real ML-NMR validation and can only support non-certifying survival reconstruction experiments.",
+  "The public multinma plaque-psoriasis vignette is useful for a future simulated reference adapter, but its IPD are simulated and cannot clear the missing real ML-NMR domain.",
+]
+required_next_artifacts = [
+  "public_trial_ipd_manifest_with_nct_pmid_doi_or_oa_source",
+  "ipd_row_hash_and_schema_validation",
+  "aggregate_covariate_distribution_manifest_for_shared_network",
+  "shared_estimand_and_treatment_mapping_between_ipd_and_aggregate_studies",
+  "covariate_overlap_and_positivity_report",
+  "multinma_mlnmr_reference_output_with_versions_hashes_and_tolerance",
+]
+claim_limit = "No ML-NMR real-data validation, multinma ML-NMR parity, causal transport superiority, or clinical population-adjustment claim is supported until public trial IPD plus source-bound aggregate covariate evidence and reference matching pass."

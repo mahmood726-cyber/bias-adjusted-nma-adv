@@ -22,6 +22,7 @@ scope = [
   "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml",
   "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_reference.toml",
   "validation/large_scale_validation.toml",
+  "validation/mlnmr_source_coverage.toml",
 ]
 findings = [
   "Feature completeness, numerical stability, and Bayesian ecosystem integration are legitimate blockers to tier-one parity.",
@@ -46,6 +47,7 @@ findings = [
   "Gemini's transportability panel feedback matches local code coverage: topological support, non-collapsibility guards, and local ported tests are present, but they remain exploratory diagnostics rather than clinical evidence.",
   "The source-backed CT.gov/PubMed psoriasis PASI 90 benchmark closes the previous absence of a closed-loop real binary network, and the local netmeta reference validates its multi-arm estimates and standard errors.",
   "The psoriasis benchmark estimates tau2 = 0, so it still cannot stress-test positive heterogeneity; the SGLT2 CKD reported-HR benchmark now supplies one source-backed positive-tau2 pairwise benchmark, but broader heterogeneous real-network validation remains incomplete.",
+  "The ML-NMR source-coverage gate correctly keeps the domain blocked because simulated IPD, synthetic cohorts, pseudo-IPD, survey-only public IPD, and closed patient datasets do not satisfy public trial-IPD plus aggregate-covariate validation.",
 ]
 actions = [
   "Added a machine-readable tier-one gap register with three blocking gaps and required evidence artifacts.",
@@ -67,11 +69,13 @@ actions = [
   "Recorded causal transportability and topological positivity as locally tested exploratory diagnostics, not as independent external reproduction.",
   "Registered the psoriasis PASI 90 closed-loop binary network as a source-backed benchmark and added a narrow netmeta reference-output validation candidate.",
   "Added a real-benchmark atlas field and large-scale validation threshold for source-backed positive-tau2 benchmarks.",
+  "Added an ML-NMR source-coverage gate that records the current absence of admissible public trial-IPD plus aggregate covariate evidence while keeping multinma ML-NMR parity blocked.",
 ]
 remaining_blockers = [
   "Reference-match node-splitting behavior and add contribution heatmaps, outlier diagnostics, trim-and-fill, and selection-model sensitivity workflows.",
   "Run broader sparse-network numerical stability stress tests against tier-one references.",
   "Add Stan/NUTS or externally matched Bayesian reference artifacts before Bayesian tier-one claims.",
+  "Find or curate a true public-source ML-NMR fixture with public trial IPD, source-bound aggregate covariates, overlap diagnostics, and a multinma reference run before clearing the ML-NMR real-data domain.",
   "Add more source-backed positive-tau2 benchmarks across domains and at least one closed-loop network with reference-matched inconsistency diagnostics before treating real-network validation as discriminating.",
 ]
 verdict = "passed_current_milestone_not_global_goal"
@@ -87,6 +91,7 @@ scope = [
   "validation/real_benchmark_atlas.json",
   "validation/networks/psoriasis_pasi90_ctgov_binary_network.toml",
   "validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json",
+  "validation/mlnmr_source_coverage.toml",
 ]
 findings = [
   "The source boundary now distinguishes effect-evidence sources from protocol-only registries.",
@@ -96,6 +101,7 @@ findings = [
   "FDA/EMA regulatory review rows are now an explicit effect-source tier only when public numeric per-trial provenance is present.",
   "Protocol-only ICTRP/PACTR rows now have a non-effect metadata ledger path for registered primary outcomes and completeness denominators.",
   "The new psoriasis PASI 90 binary network uses CT.gov arm-level numeric counts with PubMed identity verification; it does not depend on protocol-only registry rows.",
+  "The ML-NMR source search did not identify admissible real trial IPD plus aggregate covariate data from the allowed sources; pseudo-IPD and survey-only sources remain excluded from real validation.",
 ]
 actions = [
   "Centralized effect-source and protocol-only source constants.",
@@ -106,6 +112,7 @@ actions = [
   "Added a config-backed source-type policy for FDA/EMA regulatory review sources and protocol-only registry sources.",
   "Added a protocol-only registry metadata ledger and a config-backed study-design policy.",
   "Added CT.gov/PubMed source verification for FIXTURE and UNCOVER-3 PASI 90 arm-count records before computing model-ready contrasts.",
+  "Added an ML-NMR source-coverage artifact and validator so the missing public-source ML-NMR domain is visible in validation status.",
 ]
 remaining_blockers = [
   "Add open-access full-paper/table extraction artifacts beyond PubMed abstract token checks.",
@@ -113,6 +120,7 @@ remaining_blockers = [
   "Add source-backed DTA 2x2 manifests and broader bivariate GLMM/HSROC reference artifacts before DTA validation claims.",
   "Add protocol discrepancy audits using ICTRP, PACTR, or other registries without treating protocol-only rows as effect sources.",
   "Add more source-backed closed-loop networks from allowed sources so the current single-dermatology smoke benchmark is not overinterpreted.",
+  "Add a public trial-IPD plus aggregate-covariate ML-NMR manifest only if the IPD rows and aggregate covariate summaries are source-bound to the allowed evidence sources.",
 ]
 verdict = "passed_current_milestone_not_global_goal"
 
@@ -156,6 +164,7 @@ scope = [
   "tests/test_ctgov_binary_network.py",
   "tests/test_r_reference_validation.py",
   "tests/test_large_scale_validation.py",
+  "tests/test_mlnmr_coverage.py",
 ]
 findings = [
   "The new governance contracts are test-covered and exposed through the unified validation status report.",
@@ -180,6 +189,7 @@ findings = [
   "The DTA prototype is isolated from certification claims: tests validate the nonclinical fixture and one source-backed Midkine table against mada::reitsma while the coverage gate still blocks broad DTA real-data validation.",
   "The closed-loop psoriasis tests lock source-bound arm counts, artifact regeneration, non-certification, and exact netmeta output matching while preserving the current node-splitting non-estimability limitation.",
   "The large-scale validation tests now count positive real heterogeneity explicitly, preventing homogeneous source-backed benchmarks from satisfying heterogeneity-stress evidence by themselves.",
+  "The ML-NMR coverage tests reject pseudo-IPD shortcuts, simulated examples, and premature certification while exposing the blocker in validation status.",
 ]
 actions = [
   "Added targeted tests for blocker removal, status softening, HTML-only downgrade, certification drift, and validation-status exposure.",
@@ -201,6 +211,7 @@ actions = [
   "Added focused tests for native Guyot-style reconstruction fidelity reporting and sparse design-bias underidentification.",
   "Added focused tests for DTA source coverage, bivariate prototype behavior, mada::reitsma fixture/source-table validation, and validation-status exposure.",
   "Added focused tests for the CT.gov binary closed-loop benchmark, the psoriasis netmeta reference-output validator, and the positive-tau2 large-scale validation gate.",
+  "Added focused tests for ML-NMR source coverage and validation-status exposure.",
 ]
 remaining_blockers = [
   "Run the full test suite, validation-status writer, atlas writer, Sentinel scan, and commit each capability milestone before treating the batch as reviewed.",
