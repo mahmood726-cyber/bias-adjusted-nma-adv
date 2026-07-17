@@ -125,6 +125,29 @@ required_limitations = [
 ]
 
 [[benchmarks]]
+id = "sitagliptin_pioglitazone_component"
+domain = "component_nma"
+artifact_path = "validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml"
+artifact_sha256 = "8a66930dfdf50c4e88374c91d89da15f9bd34657c56c9266959c3265d67e5385"
+artifact_schema_version = "component_nma_source_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_component_lsmean"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 1
+source_manifests = ["validation/component/sitagliptin_pioglitazone_component.toml"]
+source_manifest_sha256 = { "validation/component/sitagliptin_pioglitazone_component.toml" = "1eb1acaedc57e0610749f340ad157e2998f80e177b30746434bb785719ac21f4" }
+source_checks = ["validation/source_checks/sitagliptin_pioglitazone_component_check.json"]
+source_check_sha256 = { "validation/source_checks/sitagliptin_pioglitazone_component_check.json" = "5fd32dc6966112a67eb564d579ad8c7329342f0be4cdd6246dde0b3f4ed617dc" }
+required_limitations = [
+  "single CT.gov factorial trial",
+  "same-trial covariance is not modeled",
+  "not broad netmeta CNMA parity",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
 id = "midkine_elisa_cancer_dta"
 domain = "diagnostic_test_accuracy"
 artifact_path = "validation/dta/midkine_elisa_cancer_dta_benchmark.toml"

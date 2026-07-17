@@ -55,6 +55,7 @@ implemented_capabilities = [
   "feature_parity_matrix_gate",
   "component_nma_additive_core_with_estimability_checks",
   "netmeta_discomb_component_reference_adapter",
+  "source_backed_component_smoke_benchmark",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",

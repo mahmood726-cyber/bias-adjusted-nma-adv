@@ -1,0 +1,540 @@
+schema_version = "component_nma_source_benchmark/v1"
+benchmark_id = "sitagliptin_pioglitazone_component"
+status = "local_pass"
+certification_effect = "none"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_component_lsmean"
+effect_scale = "percentage_point_change_a1c"
+source_manifest = "validation/component/sitagliptin_pioglitazone_component.toml"
+source_manifest_sha256 = "1eb1acaedc57e0610749f340ad157e2998f80e177b30746434bb785719ac21f4"
+source_verification_report = "validation/source_checks/sitagliptin_pioglitazone_component_check.json"
+source_verification_report_sha256 = "5fd32dc6966112a67eb564d579ad8c7329342f0be4cdd6246dde0b3f4ed617dc"
+n_studies = 1
+n_component_contrasts = 21
+limitations = ["single CT.gov factorial trial only", "arm-level LS mean contrasts are derived from reported confidence intervals", "same-trial covariance is not modeled", "not broad netmeta CNMA parity", "not clinical superiority claims", "does not certify model performance"]
+
+[source_bundle]
+benchmark_id = "sitagliptin_pioglitazone_component"
+manifest_sha256 = "1eb1acaedc57e0610749f340ad157e2998f80e177b30746434bb785719ac21f4"
+verification_status = "verified"
+certification_effect = "none"
+n_records = 2
+source_counts = {clinicaltrials_gov = 1, pubmed_abstract = 1}
+
+[model_config]
+candidate_model = "fixed_effect_additive_component_wls"
+outcome_title = "Change From Baseline in Hemoglobin A1C (A1C) at Week 24"
+component_separator = " + "
+
+[[study_effects]]
+study_id = "NCT00722371_pioglitazone_15_vs_sitagliptin_100"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "pioglitazone_15"
+treat2 = "sitagliptin_100"
+arm1_id = "pioglitazone_15"
+arm2_id = "sitagliptin_100"
+arm1_group_id = "OG001"
+arm2_group_id = "OG000"
+arm1_n = 163
+arm2_n = 172
+arm1_lsmean = -0.88
+arm2_lsmean = -1.09
+arm1_se = 0.10459375867
+arm2_se = 0.102042691385
+estimate = 0.21
+se = 0.146125169693
+variance = 0.0213525652177
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_pioglitazone_30_vs_sitagliptin_100"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "pioglitazone_30"
+treat2 = "sitagliptin_100"
+arm1_id = "pioglitazone_30"
+arm2_id = "sitagliptin_100"
+arm1_group_id = "OG002"
+arm2_group_id = "OG000"
+arm1_n = 181
+arm2_n = 172
+arm1_lsmean = -1.21
+arm2_lsmean = -1.09
+arm1_se = 0.0994916241003
+arm2_se = 0.102042691385
+estimate = -0.12
+se = 0.142517697607
+variance = 0.0203112941312
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_pioglitazone_45_vs_sitagliptin_100"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "pioglitazone_45"
+treat2 = "sitagliptin_100"
+arm1_id = "pioglitazone_45"
+arm2_id = "sitagliptin_100"
+arm1_group_id = "OG003"
+arm2_group_id = "OG000"
+arm1_n = 171
+arm2_n = 172
+arm1_lsmean = -1.2
+arm2_lsmean = -1.09
+arm1_se = 0.102042691385
+arm2_se = 0.102042691385
+estimate = -0.11
+se = 0.144310158098
+variance = 0.0208254217302
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_15_vs_sitagliptin_100"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_15"
+treat2 = "sitagliptin_100"
+arm1_id = "sitagliptin_100_pioglitazone_15"
+arm2_id = "sitagliptin_100"
+arm1_group_id = "OG004"
+arm2_group_id = "OG000"
+arm1_n = 179
+arm2_n = 172
+arm1_lsmean = -1.53
+arm2_lsmean = -1.09
+arm1_se = 0.0994916241003
+arm2_se = 0.102042691385
+estimate = -0.44
+se = 0.142517697607
+variance = 0.0203112941312
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_30_vs_sitagliptin_100"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_30"
+treat2 = "sitagliptin_100"
+arm1_id = "sitagliptin_100_pioglitazone_30"
+arm2_id = "sitagliptin_100"
+arm1_group_id = "OG005"
+arm2_group_id = "OG000"
+arm1_n = 173
+arm2_n = 172
+arm1_lsmean = -1.63
+arm2_lsmean = -1.09
+arm1_se = 0.0994916241003
+arm2_se = 0.102042691385
+estimate = -0.54
+se = 0.142517697607
+variance = 0.0203112941312
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_45_vs_sitagliptin_100"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_45"
+treat2 = "sitagliptin_100"
+arm1_id = "sitagliptin_100_pioglitazone_45"
+arm2_id = "sitagliptin_100"
+arm1_group_id = "OG006"
+arm2_group_id = "OG000"
+arm1_n = 188
+arm2_n = 172
+arm1_lsmean = -1.81
+arm2_lsmean = -1.09
+arm1_se = 0.0969405568157
+arm2_se = 0.102042691385
+estimate = -0.72
+se = 0.140748649801
+variance = 0.0198101824208
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_pioglitazone_30_vs_pioglitazone_15"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "pioglitazone_30"
+treat2 = "pioglitazone_15"
+arm1_id = "pioglitazone_30"
+arm2_id = "pioglitazone_15"
+arm1_group_id = "OG002"
+arm2_group_id = "OG001"
+arm1_n = 181
+arm2_n = 163
+arm1_lsmean = -1.21
+arm2_lsmean = -0.88
+arm1_se = 0.0994916241003
+arm2_se = 0.10459375867
+estimate = -0.33
+se = 0.144355247978
+variance = 0.0208384376187
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_pioglitazone_45_vs_pioglitazone_15"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "pioglitazone_45"
+treat2 = "pioglitazone_15"
+arm1_id = "pioglitazone_45"
+arm2_id = "pioglitazone_15"
+arm1_group_id = "OG003"
+arm2_group_id = "OG001"
+arm1_n = 171
+arm2_n = 163
+arm1_lsmean = -1.2
+arm2_lsmean = -0.88
+arm1_se = 0.102042691385
+arm2_se = 0.10459375867
+estimate = -0.32
+se = 0.146125169693
+variance = 0.0213525652177
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_15_vs_pioglitazone_15"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_15"
+treat2 = "pioglitazone_15"
+arm1_id = "sitagliptin_100_pioglitazone_15"
+arm2_id = "pioglitazone_15"
+arm1_group_id = "OG004"
+arm2_group_id = "OG001"
+arm1_n = 179
+arm2_n = 163
+arm1_lsmean = -1.53
+arm2_lsmean = -0.88
+arm1_se = 0.0994916241003
+arm2_se = 0.10459375867
+estimate = -0.65
+se = 0.144355247978
+variance = 0.0208384376187
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_30_vs_pioglitazone_15"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_30"
+treat2 = "pioglitazone_15"
+arm1_id = "sitagliptin_100_pioglitazone_30"
+arm2_id = "pioglitazone_15"
+arm1_group_id = "OG005"
+arm2_group_id = "OG001"
+arm1_n = 173
+arm2_n = 163
+arm1_lsmean = -1.63
+arm2_lsmean = -0.88
+arm1_se = 0.0994916241003
+arm2_se = 0.10459375867
+estimate = -0.75
+se = 0.144355247978
+variance = 0.0208384376187
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_45_vs_pioglitazone_15"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_45"
+treat2 = "pioglitazone_15"
+arm1_id = "sitagliptin_100_pioglitazone_45"
+arm2_id = "pioglitazone_15"
+arm1_group_id = "OG006"
+arm2_group_id = "OG001"
+arm1_n = 188
+arm2_n = 163
+arm1_lsmean = -1.81
+arm2_lsmean = -0.88
+arm1_se = 0.0969405568157
+arm2_se = 0.10459375867
+estimate = -0.93
+se = 0.14260899659
+variance = 0.0203373259084
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_pioglitazone_45_vs_pioglitazone_30"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "pioglitazone_45"
+treat2 = "pioglitazone_30"
+arm1_id = "pioglitazone_45"
+arm2_id = "pioglitazone_30"
+arm1_group_id = "OG003"
+arm2_group_id = "OG002"
+arm1_n = 171
+arm2_n = 181
+arm1_lsmean = -1.2
+arm2_lsmean = -1.21
+arm1_se = 0.102042691385
+arm2_se = 0.0994916241003
+estimate = 0.01
+se = 0.142517697607
+variance = 0.0203112941312
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_15_vs_pioglitazone_30"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_15"
+treat2 = "pioglitazone_30"
+arm1_id = "sitagliptin_100_pioglitazone_15"
+arm2_id = "pioglitazone_30"
+arm1_group_id = "OG004"
+arm2_group_id = "OG002"
+arm1_n = 179
+arm2_n = 181
+arm1_lsmean = -1.53
+arm2_lsmean = -1.21
+arm1_se = 0.0994916241003
+arm2_se = 0.0994916241003
+estimate = -0.32
+se = 0.140702404145
+variance = 0.0197971665322
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_30_vs_pioglitazone_30"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_30"
+treat2 = "pioglitazone_30"
+arm1_id = "sitagliptin_100_pioglitazone_30"
+arm2_id = "pioglitazone_30"
+arm1_group_id = "OG005"
+arm2_group_id = "OG002"
+arm1_n = 173
+arm2_n = 181
+arm1_lsmean = -1.63
+arm2_lsmean = -1.21
+arm1_se = 0.0994916241003
+arm2_se = 0.0994916241003
+estimate = -0.42
+se = 0.140702404145
+variance = 0.0197971665322
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_45_vs_pioglitazone_30"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_45"
+treat2 = "pioglitazone_30"
+arm1_id = "sitagliptin_100_pioglitazone_45"
+arm2_id = "pioglitazone_30"
+arm1_group_id = "OG006"
+arm2_group_id = "OG002"
+arm1_n = 188
+arm2_n = 181
+arm1_lsmean = -1.81
+arm2_lsmean = -1.21
+arm1_se = 0.0969405568157
+arm2_se = 0.0994916241003
+estimate = -0.6
+se = 0.138910240162
+variance = 0.0192960548219
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_15_vs_pioglitazone_45"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_15"
+treat2 = "pioglitazone_45"
+arm1_id = "sitagliptin_100_pioglitazone_15"
+arm2_id = "pioglitazone_45"
+arm1_group_id = "OG004"
+arm2_group_id = "OG003"
+arm1_n = 179
+arm2_n = 171
+arm1_lsmean = -1.53
+arm2_lsmean = -1.2
+arm1_se = 0.0994916241003
+arm2_se = 0.102042691385
+estimate = -0.33
+se = 0.142517697607
+variance = 0.0203112941312
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_30_vs_pioglitazone_45"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_30"
+treat2 = "pioglitazone_45"
+arm1_id = "sitagliptin_100_pioglitazone_30"
+arm2_id = "pioglitazone_45"
+arm1_group_id = "OG005"
+arm2_group_id = "OG003"
+arm1_n = 173
+arm2_n = 171
+arm1_lsmean = -1.63
+arm2_lsmean = -1.2
+arm1_se = 0.0994916241003
+arm2_se = 0.102042691385
+estimate = -0.43
+se = 0.142517697607
+variance = 0.0203112941312
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_45_vs_pioglitazone_45"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_45"
+treat2 = "pioglitazone_45"
+arm1_id = "sitagliptin_100_pioglitazone_45"
+arm2_id = "pioglitazone_45"
+arm1_group_id = "OG006"
+arm2_group_id = "OG003"
+arm1_n = 188
+arm2_n = 171
+arm1_lsmean = -1.81
+arm2_lsmean = -1.2
+arm1_se = 0.0969405568157
+arm2_se = 0.102042691385
+estimate = -0.61
+se = 0.140748649801
+variance = 0.0198101824208
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_30_vs_sitagliptin_100_pioglitazone_15"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_30"
+treat2 = "sitagliptin_100 + pioglitazone_15"
+arm1_id = "sitagliptin_100_pioglitazone_30"
+arm2_id = "sitagliptin_100_pioglitazone_15"
+arm1_group_id = "OG005"
+arm2_group_id = "OG004"
+arm1_n = 173
+arm2_n = 179
+arm1_lsmean = -1.63
+arm2_lsmean = -1.53
+arm1_se = 0.0994916241003
+arm2_se = 0.0994916241003
+estimate = -0.1
+se = 0.140702404145
+variance = 0.0197971665322
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_45_vs_sitagliptin_100_pioglitazone_15"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_45"
+treat2 = "sitagliptin_100 + pioglitazone_15"
+arm1_id = "sitagliptin_100_pioglitazone_45"
+arm2_id = "sitagliptin_100_pioglitazone_15"
+arm1_group_id = "OG006"
+arm2_group_id = "OG004"
+arm1_n = 188
+arm2_n = 179
+arm1_lsmean = -1.81
+arm2_lsmean = -1.53
+arm1_se = 0.0969405568157
+arm2_se = 0.0994916241003
+estimate = -0.28
+se = 0.138910240162
+variance = 0.0192960548219
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[[study_effects]]
+study_id = "NCT00722371_sitagliptin_100_pioglitazone_45_vs_sitagliptin_100_pioglitazone_30"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+treat1 = "sitagliptin_100 + pioglitazone_45"
+treat2 = "sitagliptin_100 + pioglitazone_30"
+arm1_id = "sitagliptin_100_pioglitazone_45"
+arm2_id = "sitagliptin_100_pioglitazone_30"
+arm1_group_id = "OG006"
+arm2_group_id = "OG005"
+arm1_n = 188
+arm2_n = 173
+arm1_lsmean = -1.81
+arm2_lsmean = -1.63
+arm1_se = 0.0969405568157
+arm2_se = 0.0994916241003
+estimate = -0.18
+se = 0.138910240162
+variance = 0.0192960548219
+effect_scale = "percentage_point_change_a1c"
+variance_source = "sqrt(arm1_ci_se^2 + arm2_ci_se^2); same-trial covariance not modeled"
+
+[candidate.additive_component_wls]
+rank = 4
+df = 17
+q = 5.24520862432
+warnings = ["Source-backed component smoke benchmark only; not netmeta CNMA parity.", "Same-trial arm covariance is ignored."]
+
+[[candidate.additive_component_wls.component_effects]]
+name = "pioglitazone_15"
+estimate = -0.395756122769
+se = 0.069672920212
+estimable = true
+
+[[candidate.additive_component_wls.component_effects]]
+name = "sitagliptin_100"
+estimate = -0.559209779591
+se = 0.0438485105554
+estimable = true
+
+[[candidate.additive_component_wls.component_effects]]
+name = "pioglitazone_30"
+estimate = -0.609592044792
+se = 0.0695897698662
+estimable = true
+
+[[candidate.additive_component_wls.component_effects]]
+name = "pioglitazone_45"
+estimate = -0.695235904567
+se = 0.0694134172674
+estimable = true

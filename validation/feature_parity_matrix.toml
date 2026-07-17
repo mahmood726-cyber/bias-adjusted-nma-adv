@@ -153,15 +153,18 @@ status = "reference_candidate"
 evidence_artifacts = [
   "src/bias_nma_adv/component_nma.py",
   "validation/component/netmeta_component_fixture_benchmark.toml",
+  "validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml",
+  "validation/source_checks/sitagliptin_pioglitazone_component_check.json",
   "validation/reference_runs/component_netmeta_cnma_reference.toml",
   "validation/reference_runs/component_netmeta_cnma_output.json",
 ]
 required_next_artifacts = [
-  "source_backed_component_network_fixture",
   "published_component_network_corpus",
   "estimability_and_hierarchy_guard",
+  "same_trial_covariance_or_external_reference",
+  "netmeta_cnma_source_backed_reference_run",
 ]
-claim_limit = "A narrow algorithmic netmeta::discomb reference candidate exists, but component NMA is not source-backed real validation or broad netmeta CNMA parity."
+claim_limit = "A narrow algorithmic netmeta::discomb reference candidate and one CT.gov/PubMed factorial smoke benchmark exist, but component NMA is not broad source-backed CNMA or netmeta parity."
 certification_effect = "none"
 
 [[features]]

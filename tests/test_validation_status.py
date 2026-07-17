@@ -48,7 +48,7 @@ def test_validation_status_composes_all_current_gates():
 
     source_registry = report["source_benchmark_registry"]
     assert source_registry["registry"] == "validation/benchmark_registry.toml"
-    assert source_registry["n_benchmarks"] == 6
+    assert source_registry["n_benchmarks"] == 7
     assert source_registry["certification_effect"] == "none"
     assert set(source_registry["benchmark_ids"]) == {
         "sglt2_hf_primary_log_or",
@@ -56,6 +56,7 @@ def test_validation_status_composes_all_current_gates():
         "pcsk9_mace_reported_hr",
         "t2d_mace_ctgov_hr_network",
         "semaglutide_obesity_dose_response",
+        "sitagliptin_pioglitazone_component",
         "midkine_elisa_cancer_dta",
     }
 
@@ -76,21 +77,22 @@ def test_validation_status_composes_all_current_gates():
     assert real_atlas["atlas"] == "validation/real_benchmark_atlas.json"
     assert real_atlas["schema_version"] == "real_benchmark_atlas/v1"
     assert real_atlas["status"] == "passed"
-    assert real_atlas["n_benchmarks"] == 6
-    assert real_atlas["n_benchmark_study_effects"] == 36
-    assert real_atlas["n_unique_nct_ids"] == 17
-    assert real_atlas["n_unique_pmids"] == 7
+    assert real_atlas["n_benchmarks"] == 7
+    assert real_atlas["n_benchmark_study_effects"] == 57
+    assert real_atlas["n_unique_nct_ids"] == 18
+    assert real_atlas["n_unique_pmids"] == 8
     assert real_atlas["domain_counts"] == {
         "binary_pairwise_meta": 1,
+        "component_nma": 1,
         "diagnostic_test_accuracy": 1,
         "dose_response_pairwise": 1,
         "reported_hr_star_network": 1,
         "reported_survival_hr_pairwise": 2,
     }
     assert real_atlas["source_type_counts"] == {
-        "clinicaltrials_gov": 21,
+        "clinicaltrials_gov": 22,
         "open_access_paper": 11,
-        "pubmed_abstract": 21,
+        "pubmed_abstract": 22,
     }
     assert real_atlas["certification_effect"] == "none"
 
@@ -153,6 +155,7 @@ def test_validation_status_composes_all_current_gates():
             "feature_parity_matrix_gate",
             "component_nma_additive_core_with_estimability_checks",
             "netmeta_discomb_component_reference_adapter",
+            "source_backed_component_smoke_benchmark",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -262,15 +265,31 @@ def test_validation_status_composes_all_current_gates():
     assert large_scale["schema_version"] == "large_scale_validation/v1"
     assert large_scale["status"] == "partial_not_large_scale"
     assert large_scale["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 6,
+        "observed": 7,
         "required": 20,
+    }
+    assert large_scale["dynamic_counts"]["benchmark_study_effects"] == {
+        "observed": 57,
+        "required": 200,
+    }
+    assert large_scale["dynamic_counts"]["unique_nct_ids"] == {
+        "observed": 18,
+        "required": 100,
+    }
+    assert large_scale["dynamic_counts"]["unique_pmids"] == {
+        "observed": 8,
+        "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
         "observed": 10,
         "required": 10,
     }
     assert "diagnostic_test_accuracy" not in large_scale["missing_required_real_domains"]
-    assert "component_nma" in large_scale["missing_required_real_domains"]
+    assert "component_nma" not in large_scale["missing_required_real_domains"]
+    assert large_scale["missing_required_real_domains"] == [
+        "cross_design_nma",
+        "mlnmr",
+    ]
     assert large_scale["global_large_scale_validation_complete"] is False
     assert large_scale["certification_effect"] == "none"
 
@@ -437,8 +456,8 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["status"] == "passed"
     assert payload["checked_at"] == "2026-07-15T00:00:00Z"
     assert payload["clinical_hta_reporting_enabled"] is False
-    assert payload["source_benchmark_registry"]["n_benchmarks"] == 6
-    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 36
+    assert payload["source_benchmark_registry"]["n_benchmarks"] == 7
+    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 57
     assert payload["tier1_gap_register"]["status_counts"] == {"blocking": 3}
     assert payload["html_delivery_contract"]["status_counts"] == {
         "allowed": 2,

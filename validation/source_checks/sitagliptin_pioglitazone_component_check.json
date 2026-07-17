@@ -1,0 +1,106 @@
+{
+  "benchmark_id": "sitagliptin_pioglitazone_component",
+  "certification_effect": "none",
+  "checked_at": "2026-07-17T12:35:00Z",
+  "manifest": "validation/component/sitagliptin_pioglitazone_component.toml",
+  "manifest_sha256": "1eb1acaedc57e0610749f340ad157e2998f80e177b30746434bb785719ac21f4",
+  "records": [
+    {
+      "details": {
+        "arm_checks": [
+          {
+            "arm_id": "sitagliptin_100",
+            "group_id": "OG000",
+            "lower_found": true,
+            "n_found": true,
+            "source_terms_found": true,
+            "upper_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "pioglitazone_15",
+            "group_id": "OG001",
+            "lower_found": true,
+            "n_found": true,
+            "source_terms_found": true,
+            "upper_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "pioglitazone_30",
+            "group_id": "OG002",
+            "lower_found": true,
+            "n_found": true,
+            "source_terms_found": true,
+            "upper_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "pioglitazone_45",
+            "group_id": "OG003",
+            "lower_found": true,
+            "n_found": true,
+            "source_terms_found": true,
+            "upper_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "sitagliptin_100_pioglitazone_15",
+            "group_id": "OG004",
+            "lower_found": true,
+            "n_found": true,
+            "source_terms_found": true,
+            "upper_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "sitagliptin_100_pioglitazone_30",
+            "group_id": "OG005",
+            "lower_found": true,
+            "n_found": true,
+            "source_terms_found": true,
+            "upper_found": true,
+            "value_found": true
+          },
+          {
+            "arm_id": "sitagliptin_100_pioglitazone_45",
+            "group_id": "OG006",
+            "lower_found": true,
+            "n_found": true,
+            "source_terms_found": true,
+            "upper_found": true,
+            "value_found": true
+          }
+        ],
+        "arm_values_found": true,
+        "matched_outcome_title": "Change From Baseline in Hemoglobin A1C (A1C) at Week 24",
+        "nct_id_found": true,
+        "outcome_dispersion_type_found": true,
+        "outcome_found": true,
+        "outcome_param_type_found": true,
+        "source_terms_found": true,
+        "status_completed": true
+      },
+      "evidence_scope": "clinicaltrials_gov_component_lsmean",
+      "identifier": "NCT00722371",
+      "response_sha256": "c98ec4c8ada007eca833b5bf8b86a4abc9341ed91a43b42a57337a79cebae7fb",
+      "source_type": "clinicaltrials_gov",
+      "verified": true
+    },
+    {
+      "details": {
+        "factorial_terms_found": true,
+        "pmid_found": true,
+        "title": "Efficacy and safety of initial combination treatment with sitagliptin and pioglitazone--a factorial study.",
+        "title_terms_found": true
+      },
+      "evidence_scope": "pubmed_abstract_component_identity",
+      "identifier": "23909985",
+      "response_sha256": "563cb177c93f2041559d4bfdf26af3a8f9c097b2a3140287883c08f15154a945",
+      "source_type": "pubmed_abstract",
+      "verified": true
+    }
+  ],
+  "schema_version": "component_nma_source_verification/v1",
+  "status": "verified"
+}

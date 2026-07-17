@@ -1,0 +1,96 @@
+schema_version = "component_nma_ctgov_manifest/v1"
+benchmark_id = "sitagliptin_pioglitazone_component"
+source_policy = "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
+evidence_mode = "ctgov_component_lsmean"
+status = "candidate_source_verified"
+certification_effect = "none"
+trial = "MK0431 and Pioglitazone co-administration factorial study in type 2 diabetes"
+nct_id = "NCT00722371"
+pmid = "23909985"
+source_url = "https://clinicaltrials.gov/study/NCT00722371"
+pubmed_url = "https://pubmed.ncbi.nlm.nih.gov/23909985/"
+access_statement = "ClinicalTrials.gov public results plus PubMed abstract identity record; no closed or proprietary source is used."
+outcome_id = "a1c_change_week_24"
+outcome_title = "Change From Baseline in Hemoglobin A1C (A1C) at Week 24"
+outcome_param_type = "LEAST_SQUARES_MEAN"
+outcome_dispersion_type = "95% Confidence Interval"
+outcome_unit = "Percentage of glycosylated hemoglobin"
+effect_scale = "percentage_point_change_a1c"
+reuse_origin = "source_backed_new_component_lane"
+
+[[arms]]
+arm_id = "sitagliptin_100"
+group_id = "OG000"
+treatment_label = "Sitagliptin 100 mg"
+components = ["sitagliptin_100"]
+n = 172
+lsmean = -1.09
+lower = -1.29
+upper = -0.89
+source_terms = ["Sitagliptin 100 mg"]
+
+[[arms]]
+arm_id = "pioglitazone_15"
+group_id = "OG001"
+treatment_label = "Pioglitazone 15 mg"
+components = ["pioglitazone_15"]
+n = 163
+lsmean = -0.88
+lower = -1.09
+upper = -0.68
+source_terms = ["Pioglitazone 15 mg"]
+
+[[arms]]
+arm_id = "pioglitazone_30"
+group_id = "OG002"
+treatment_label = "Pioglitazone 30 mg"
+components = ["pioglitazone_30"]
+n = 181
+lsmean = -1.21
+lower = -1.41
+upper = -1.02
+source_terms = ["Pioglitazone 30 mg"]
+
+[[arms]]
+arm_id = "pioglitazone_45"
+group_id = "OG003"
+treatment_label = "Pioglitazone 45 mg"
+components = ["pioglitazone_45"]
+n = 171
+lsmean = -1.20
+lower = -1.40
+upper = -1.00
+source_terms = ["Pioglitazone 45 mg"]
+
+[[arms]]
+arm_id = "sitagliptin_100_pioglitazone_15"
+group_id = "OG004"
+treatment_label = "Sitagliptin 100 mg/ Pioglitazone 15 mg"
+components = ["sitagliptin_100", "pioglitazone_15"]
+n = 179
+lsmean = -1.53
+lower = -1.73
+upper = -1.34
+source_terms = ["Sitagliptin 100 mg", "pioglitazone 15 mg"]
+
+[[arms]]
+arm_id = "sitagliptin_100_pioglitazone_30"
+group_id = "OG005"
+treatment_label = "Sitagliptin 100 mg/ Pioglitazone 30 mg"
+components = ["sitagliptin_100", "pioglitazone_30"]
+n = 173
+lsmean = -1.63
+lower = -1.82
+upper = -1.43
+source_terms = ["Sitagliptin 100 mg", "pioglitazone 30 mg"]
+
+[[arms]]
+arm_id = "sitagliptin_100_pioglitazone_45"
+group_id = "OG006"
+treatment_label = "Sitagliptin 100 mg/ Pioglitazone 45 mg"
+components = ["sitagliptin_100", "pioglitazone_45"]
+n = 188
+lsmean = -1.81
+lower = -2.00
+upper = -1.62
+source_terms = ["Sitagliptin 100 mg", "pioglitazone 45 mg"]

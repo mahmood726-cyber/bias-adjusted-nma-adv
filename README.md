@@ -34,7 +34,8 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `src/bias_nma_adv/rapidmeta_adapter.py`: Fail-closed importer for a strict RapidMeta-style app-index JSON contract; protocol-only registry rows and ambiguous multi-analysis exports are rejected before estimation.
 - `src/bias_nma_adv/transportability.py`: Experimental effect-modifier transport meta-regression with collapsibility guards and topological support certificates.
 - `src/bias_nma_adv/multiarm.py`: Experimental contrast-level NMA solver preserving multi-arm covariance for netmeta-style parity tests, with pre-fit design diagnostics, deterministic fit-attempt reports, diagnostic-only GLS leverage, residual, approximate Cook-distance, row-level/study-level/heatmap-ready absolute mapping-contribution, and fail-closed covariance-validity outputs.
-- `src/bias_nma_adv/component_nma.py`: Narrow additive component-NMA core with weighted least-squares estimates and estimability checks, validated only on an algorithmic `netmeta::discomb` fixture so far.
+- `src/bias_nma_adv/component_nma.py`: Narrow additive component-NMA core with weighted least-squares estimates and estimability checks, validated on an algorithmic `netmeta::discomb` fixture and one source-backed CT.gov/PubMed factorial smoke benchmark.
+- `src/bias_nma_adv/component_benchmark.py`: Source-verified CT.gov/PubMed component-NMA smoke benchmark support for factorial arm-level least-squares mean contrasts; it remains non-certifying and does not model same-trial arm covariance.
 - `src/bias_nma_adv/node_splitting.py`: Experimental fixed-effect node-splitting diagnostic for closed-loop direct-versus-indirect contrast checks.
 - `src/bias_nma_adv/km_reconstruction.py`: Fail-closed screen, native Python Guyot-style reconstruction check, and deterministic curve-fidelity metrics for open-access Kaplan-Meier reconstruction results before they can enter survival validation artifacts.
 - `src/bias_nma_adv/publication_bias.py`: Registry outcome-switching auditor plus diagnostic-only Egger small-study-effect regression and prespecified selection-weight sensitivity analysis.
@@ -75,7 +76,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/reviews/`: Non-certifying review ledgers recording multiperson review findings, actions, and next gates.
 - `validation/reviews/improvement_review_2026_07_15.toml`: Current improvement-review ledger for tier-one blockers, source boundaries, HTML delivery, and implementation polish. It passes the current milestone but explicitly keeps the global goal incomplete.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
-- `validation/component/`: Algorithmic additive component-NMA contrast fixture and local replay benchmark. These artifacts are not source-backed clinical evidence and do not remove the real-data component-NMA blocker.
+- `validation/component/`: Algorithmic additive component-NMA contrast fixture plus one source-backed sitagliptin/pioglitazone CT.gov/PubMed factorial smoke benchmark. These artifacts remain non-certifying and do not establish broad `netmeta` CNMA parity.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, rare public result-level ICTRP/PACTR rows, and public FDA/EMA regulatory review rows when numeric per-trial result text is source-bound. Protocol-only registry rows remain metadata only.
 - `validation/benchmark_registry.toml`: Canonical inventory of local source-backed benchmark artifacts. Every entry must retain `certification_effect = "none"` until an external reference run passes, and every source-check report is revalidated against its specialized schema.
 - `validation/source_checks/`: Public-source identity snapshots and PubMed abstract event-count token checks.
@@ -83,6 +84,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/real_benchmark_atlas.json`: Generated coverage atlas over the registered real-data benchmark artifacts. It records current source-backed coverage and explicit non-claims; it is not certification evidence.
 - `validation/survival/`: Source-backed survival HR benchmark manifests and effects CSVs; current entries verify reported HR tokens from PubMed abstracts and support narrow `metafor` fixed-effect reported-HR checks. KM reconstruction remains non-certifying and requires OA figure provenance before any real KM artifact can enter validation.
 - `validation/dose_response/`: Source-backed semaglutide dose-response manifest, effects CSV, and generated local benchmark artifact from ClinicalTrials.gov results plus PubMed identity verification.
+- `validation/component/`: Source-backed sitagliptin/pioglitazone component-NMA manifest and generated local benchmark artifact from ClinicalTrials.gov LS mean results plus PubMed identity verification.
 - `validation/dta/`: Source-backed open-access diagnostic test accuracy 2x2 manifest, CSV, and generated local benchmark artifact for the Midkine ELISA cancer diagnostic table.
 - `validation/networks/`: Source-backed network benchmark manifests, effects CSVs, and generated artifacts, including the CT.gov T2D MACE reported-HR star network with a narrow `netmeta` fixed-effect reference check.
 - `validation/survival/km_reconstruction_policy.toml`: Static OA-only KM reconstruction policy; blocks text-only HR and synthetic-IPD fallbacks from validation evidence.
@@ -110,6 +112,8 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/write_ctgov_hr_network_benchmark.py`: Writes the deterministic CT.gov reported-HR network benchmark artifact from a verified CT.gov source snapshot.
 - `scripts/verify_dose_response_sources.py`: Regenerates live CT.gov/PubMed source checks for the source-backed dose-response manifest and exits nonzero on failed verification.
 - `scripts/write_dose_response_benchmark.py`: Writes the deterministic non-certifying dose-response smoke benchmark from a verified source check.
+- `scripts/verify_component_sources.py`: Regenerates live CT.gov/PubMed source checks for the source-backed component-NMA manifest and exits nonzero on failed verification.
+- `scripts/write_component_benchmark.py`: Writes the deterministic non-certifying component-NMA smoke benchmark from a verified source check.
 - `.github/workflows/validation.yml`: CI workflow running pytest, the source-backed benchmark registry gate, the unified validation-status writer, and the simulation-matrix smoke runner. Uploaded artifacts are evidence of gate execution, not certification.
 - `docs/portfolio_reuse_map.md`: Local portfolio scan describing reusable methods and hard stops before porting them.
 - `docs/review_artifact_policy.md`: Scope guard for historical review transcripts that contain hypotheses or critique, not certified evidence.

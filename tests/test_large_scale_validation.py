@@ -38,15 +38,31 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
     assert summary["status"] == "partial_not_large_scale"
     assert summary["global_large_scale_validation_complete"] is False
     assert summary["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 6,
+        "observed": 7,
         "required": 20,
+    }
+    assert summary["dynamic_counts"]["benchmark_study_effects"] == {
+        "observed": 57,
+        "required": 200,
+    }
+    assert summary["dynamic_counts"]["unique_nct_ids"] == {
+        "observed": 18,
+        "required": 100,
+    }
+    assert summary["dynamic_counts"]["unique_pmids"] == {
+        "observed": 8,
+        "required": 50,
     }
     assert summary["dynamic_counts"]["passed_reference_reports"] == {
         "observed": 10,
         "required": 10,
     }
     assert "diagnostic_test_accuracy" not in summary["missing_required_real_domains"]
-    assert "component_nma" in summary["missing_required_real_domains"]
+    assert "component_nma" not in summary["missing_required_real_domains"]
+    assert summary["missing_required_real_domains"] == [
+        "cross_design_nma",
+        "mlnmr",
+    ]
     assert "source_backed_benchmarks" in summary["failed_checks"]
     assert summary["certification_effect"] == "none"
 

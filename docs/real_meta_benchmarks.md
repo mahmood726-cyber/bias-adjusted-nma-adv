@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 5 benchmark artifacts, 25 study-effect rows, 17 unique NCT IDs, and 7 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 7 benchmark artifacts, 57 study-effect rows, 18 unique NCT IDs, and 8 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, component-NMA parity, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -206,6 +206,38 @@ Limitations:
 - CT.gov results records are verified, but this is not yet external `netmeta`, `multinma`, or CmdStan parity;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
+## Benchmark 4: Sitagliptin/Pioglitazone Factorial Component Smoke Benchmark
+
+Component-NMA manifest: `validation/component/sitagliptin_pioglitazone_component.toml`
+
+Component-NMA source snapshot: `validation/source_checks/sitagliptin_pioglitazone_component_check.json`
+
+Component-NMA local benchmark: `validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml`
+
+Trial: NCT00722371, verified against ClinicalTrials.gov API v2.
+
+PubMed identity: PMID 23909985, verified against PubMed ESummary.
+
+Outcome: change from baseline in hemoglobin A1C at week 24, reported as CT.gov least-squares means with 95% confidence intervals.
+
+Scale currently tested: percentage-point A1C change contrasts between seven single-component or combination arms.
+
+Current tests:
+
+- validate the manifest schema, NCT ID, PMID, CT.gov URL, PubMed URL, treatment components, and no certification effect;
+- verify CT.gov trial identity, completed status, outcome title, outcome parameter type, dispersion type, arm counts, LS means, confidence limits, and treatment terms;
+- verify PubMed article identity by PMID and title terms for sitagliptin, pioglitazone, and factorial design;
+- derive 21 pairwise component-treatment contrasts from the seven verified CT.gov arms;
+- fit the narrow fixed-effect additive component WLS core with rank and estimability checks;
+- require the generated artifact to retain `certification_effect = "none"` and state that same-trial covariance is not modeled.
+
+Limitations:
+
+- this is a single CT.gov factorial trial, not a multi-study component network;
+- arm-level LS mean contrasts are derived from reported confidence intervals;
+- same-trial arm covariance is not modeled;
+- the artifact is not broad `netmeta` CNMA parity and cannot support component hierarchy or clinical superiority claims.
+
 ## Static-Vs-Dynamic Hardcode Disclosure
 
 | Item | Static or dynamic | Evidence source | Disclosure |
@@ -222,6 +254,7 @@ Limitations:
 | CT.gov reported-HR network manifest | Static fixture | `validation/networks/t2d_mace_ctgov_hrs.toml` | Stores NCT IDs, class labels, drug terms, outcome-search terms, and HR/CI values that must be verified before use |
 | CT.gov reported-HR network snapshot | Dynamic public API check | `scripts/verify_ctgov_hr_network.py` against ClinicalTrials.gov API v2 | Verifies NCT identity, completed status, exact HR/CI analysis fields, outcome-title terms, and drug/placebo terms |
 | CT.gov reported-HR network benchmark | Dynamic computation | `scripts/write_ctgov_hr_network_benchmark.py` plus `bias_nma_adv.ctgov_hr_network` | Recomputes log-HR study effects and fixed/random contrast-GLS NMA from the verified CT.gov source snapshot |
+| CT.gov/PubMed component-NMA smoke benchmark | Dynamic computation | `scripts/verify_component_sources.py`, `scripts/write_component_benchmark.py`, `validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml`, and `tests/test_component_benchmark.py` | Verifies one factorial CT.gov/PubMed component benchmark and recomputes additive WLS contrasts; same-trial covariance and broad CNMA parity remain blocked |
 | Proof-carrying extracted effect | Static contract plus unit fixtures | `bias_nma_adv.ingestion.ProofCarryingEffectRecord` | Blocks model-ready extracted effects unless source provenance, source snippet, uncertainty, and effect-scale sanity checks pass |
 | Registry/regulatory/protocol boundary | Static source-policy contract plus unit fixtures | `bias_nma_adv.source_type_policy`, `bias_nma_adv.evidence_sources`, `bias_nma_adv.ingestion`, and source-boundary tests | Allows AACT/ClinicalTrials.gov, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows as effect sources when numeric per-trial provenance is present; rejects protocol-only registry records as model-ready effects while allowing metadata ledgers |
 | Real benchmark coverage atlas | Dynamic registry-derived summary | `validation/real_benchmark_atlas.json`, `scripts/write_real_benchmark_atlas.py`, and `tests/test_real_benchmark_atlas.py` | Summarizes registered real-data benchmark coverage and explicit non-claims; not tier-one parity or clinical evidence certification |
