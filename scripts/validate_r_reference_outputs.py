@@ -22,6 +22,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
     validate_dta_mada_source_table_output,
+    validate_mbnmadose_semaglutide_polynomial_output,
     validate_multinma_sglt2_binary_nma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_meta_output,
@@ -42,6 +43,8 @@ DTA_SOURCE_OUTPUT = Path("validation/reference_runs/dta_mada_reitsma_midkine_sou
 DTA_SOURCE_REPORT = Path("validation/reference_runs/dta_mada_reitsma_midkine_source_reference.toml")
 DOSE_RESPONSE_OUTPUT = Path("validation/reference_runs/dose_response_metafor_polynomial_output.json")
 DOSE_RESPONSE_REPORT = Path("validation/reference_runs/dose_response_metafor_polynomial_reference.toml")
+MBNMADOSE_OUTPUT = Path("validation/reference_runs/mbnmadose_semaglutide_polynomial_output.json")
+MBNMADOSE_REPORT = Path("validation/reference_runs/mbnmadose_semaglutide_polynomial_reference.toml")
 SGLT2_SURVIVAL_OUTPUT = Path("validation/reference_runs/sglt2_survival_hr_metafor_output.json")
 SGLT2_SURVIVAL_REPORT = Path("validation/reference_runs/sglt2_survival_hr_metafor_reference.toml")
 PCSK9_SURVIVAL_OUTPUT = Path("validation/reference_runs/pcsk9_survival_hr_metafor_output.json")
@@ -67,6 +70,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dta-source-report", type=Path, default=DTA_SOURCE_REPORT)
     parser.add_argument("--dose-response-output", type=Path, default=DOSE_RESPONSE_OUTPUT)
     parser.add_argument("--dose-response-report", type=Path, default=DOSE_RESPONSE_REPORT)
+    parser.add_argument("--mbnmadose-output", type=Path, default=MBNMADOSE_OUTPUT)
+    parser.add_argument("--mbnmadose-report", type=Path, default=MBNMADOSE_REPORT)
     parser.add_argument("--sglt2-survival-output", type=Path, default=SGLT2_SURVIVAL_OUTPUT)
     parser.add_argument("--sglt2-survival-report", type=Path, default=SGLT2_SURVIVAL_REPORT)
     parser.add_argument("--pcsk9-survival-output", type=Path, default=PCSK9_SURVIVAL_OUTPUT)
@@ -116,6 +121,11 @@ def main(argv: list[str] | None = None) -> int:
             dose_response_output,
             repo_root=root,
             tolerance=args.tolerance,
+        )
+        mbnmadose_output = _resolve(root, args.mbnmadose_output)
+        mbnmadose_summary = validate_mbnmadose_semaglutide_polynomial_output(
+            mbnmadose_output,
+            repo_root=root,
         )
         sglt2_survival_output = _resolve(root, args.sglt2_survival_output)
         sglt2_survival_summary = validate_survival_hr_metafor_pairwise_output(
@@ -200,6 +210,15 @@ def main(argv: list[str] | None = None) -> int:
             ),
         )
         _write_report(
+            _resolve(root, args.mbnmadose_report),
+            _mbnmadose_report(
+                root=root,
+                output_path=mbnmadose_output,
+                summary=mbnmadose_summary,
+                checked_at=args.checked_at,
+            ),
+        )
+        _write_report(
             _resolve(root, args.sglt2_survival_report),
             _survival_hr_report(
                 root=root,
@@ -246,7 +265,8 @@ def main(argv: list[str] | None = None) -> int:
     print(
         "R reference output validation passed: "
         f"{args.pairwise_report}, {args.multinma_report}, {args.multiarm_report}, {args.dta_report}, "
-        f"{args.dta_source_report}, {args.dose_response_report}, {args.sglt2_survival_report}, "
+        f"{args.dta_source_report}, {args.dose_response_report}, {args.mbnmadose_report}, "
+        f"{args.sglt2_survival_report}, "
         f"{args.pcsk9_survival_report}, {args.ctgov_hr_network_report}, {args.component_report}"
     )
     return 0
@@ -577,6 +597,76 @@ def _dose_response_report(
         "input_artifacts": [path.as_posix() for path in input_artifacts],
         "output_artifacts": [output_path.relative_to(root).as_posix()],
         "tolerance": f"absolute <= {tolerance:g} for validated components",
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _mbnmadose_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    input_artifacts = [
+        Path("validation/dose_response/semaglutide_obesity_dose_response_arms.csv"),
+        Path("validation/dose_response/semaglutide_obesity_dose_response.toml"),
+        Path("validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml"),
+        Path("validation/source_checks/semaglutide_obesity_dose_response_check.json"),
+        Path("external/r/mbnmadose_semaglutide_polynomial.R"),
+    ]
+    tolerances = summary["tolerance"]
+    tolerance_label = (
+        f"posterior mean abs <= {tolerances['mean']:g}; "
+        f"posterior sd abs <= {tolerances['sd']:g}; "
+        f"R-hat <= {tolerances['rhat']:g}; "
+        f"n_eff >= {tolerances['neff']:g}"
+    )
+    model = output["model"]
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "dose_response_mbnmadose",
+        "adapter_id": "r_mbnmadose_semaglutide_polynomial_output_validation",
+        "reference_method": "MBNMAdose common-effect linear polynomial dose-response smoke",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/mbnmadose_semaglutide_polynomial.R",
+            "--arms",
+            "validation/dose_response/semaglutide_obesity_dose_response_arms.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+            "--chains",
+            str(model["chains"]),
+            "--iter",
+            str(model["iter"]),
+            "--burnin",
+            str(model["burnin"]),
+            "--thin",
+            str(model["thin"]),
+            "--seed",
+            str(model["seed"]),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": tolerance_label,
         "skip_reason": "",
         "validated_components": summary["validated_components"],
         "max_abs_difference": float(summary["max_abs_difference"]),

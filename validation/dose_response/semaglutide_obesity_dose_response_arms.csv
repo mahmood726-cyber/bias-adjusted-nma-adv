@@ -1,0 +1,7 @@
+study_id,nct_id,pmid,arm_id,group_id,treatment,agent,dose,dose_unit,dose_frequency,lsmean,se,outcome_id,outcome_label
+NCT02453711,NCT02453711,30122305,semaglutide_0_05,OG000,Semaglutide,semaglutide,0.05,mg,once daily subcutaneous,-5.99,0.85,relative_body_weight_change,Relative Change in Body Weight (%)
+NCT02453711,NCT02453711,30122305,semaglutide_0_1,OG001,Semaglutide,semaglutide,0.1,mg,once daily subcutaneous,-8.62,0.84,relative_body_weight_change,Relative Change in Body Weight (%)
+NCT02453711,NCT02453711,30122305,semaglutide_0_2,OG002,Semaglutide,semaglutide,0.2,mg,once daily subcutaneous,-11.6,0.85,relative_body_weight_change,Relative Change in Body Weight (%)
+NCT02453711,NCT02453711,30122305,semaglutide_0_3,OG003,Semaglutide,semaglutide,0.3,mg,once daily subcutaneous,-11.17,0.85,relative_body_weight_change,Relative Change in Body Weight (%)
+NCT02453711,NCT02453711,30122305,semaglutide_0_4,OG004,Semaglutide,semaglutide,0.4,mg,once daily subcutaneous,-13.84,0.83,relative_body_weight_change,Relative Change in Body Weight (%)
+NCT02453711,NCT02453711,30122305,placebo_pool,OG008,Placebo Pool,placebo,0.0,mg,once daily subcutaneous,-2.29,0.74,relative_body_weight_change,Relative Change in Body Weight (%)

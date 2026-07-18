@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 from pathlib import Path
 import tomllib
 from typing import Any
@@ -828,6 +829,183 @@ def validate_dose_response_metafor_polynomial_output(
     }
 
 
+def validate_mbnmadose_semaglutide_polynomial_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    mean_tolerance: float = 0.25,
+    sd_tolerance: float = 0.25,
+    max_rhat: float = 1.01,
+    min_neff: float = 400.0,
+) -> dict[str, Any]:
+    """Validate a narrow source-backed ``MBNMAdose`` dose-response output."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "evidence_mode",
+            "effect_scale",
+            "package_versions",
+            "model",
+            "study_arms",
+            "mbnma",
+            "independent_wls_reference",
+            "diagnostics",
+            "limitations",
+        },
+        label="MBNMAdose semaglutide output",
+    )
+    if output["schema_version"] != "mbnmadose_semaglutide_polynomial/v1":
+        raise RReferenceValidationError("MBNMAdose semaglutide schema_version mismatch.")
+    if output["benchmark_id"] != "semaglutide_obesity_dose_response":
+        raise RReferenceValidationError("MBNMAdose semaglutide benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("MBNMAdose semaglutide source_policy mismatch.")
+    if output["evidence_mode"] != "ctgov_dose_response_lsmean":
+        raise RReferenceValidationError("MBNMAdose semaglutide evidence_mode mismatch.")
+    if output["effect_scale"] != "absolute_percentage_point_change":
+        raise RReferenceValidationError("MBNMAdose semaglutide effect_scale mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "MBNMAdose", "rjags", "JAGS", "jsonlite"})
+
+    model = output["model"]
+    expected_model = {
+        "engine": "MBNMAdose",
+        "likelihood": "normal",
+        "link": "identity",
+        "dose_function": "dpoly(degree=1)",
+        "method": "common",
+    }
+    for field, expected in expected_model.items():
+        if str(model[field]) != expected:
+            raise RReferenceValidationError(f"MBNMAdose semaglutide model {field} mismatch.")
+    if int(model["chains"]) < 3:
+        raise RReferenceValidationError("MBNMAdose semaglutide reference must use at least 3 chains.")
+
+    arm_path = root / "validation" / "dose_response" / "semaglutide_obesity_dose_response_arms.csv"
+    expected_arms = _load_dose_response_arm_rows(arm_path)
+    observed_arms = {
+        (str(row["arm_id"]), str(row["agent"]), float(row["dose"])): row
+        for row in output["study_arms"]
+    }
+    if set(expected_arms) != set(observed_arms):
+        raise RReferenceValidationError("MBNMAdose semaglutide arms do not match arm CSV.")
+    for key, expected in expected_arms.items():
+        observed = observed_arms[key]
+        for field in (
+            "study_id",
+            "nct_id",
+            "pmid",
+            "group_id",
+            "treatment",
+            "dose_unit",
+            "dose_frequency",
+            "outcome_id",
+            "outcome_label",
+        ):
+            if str(observed[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{key}: MBNMAdose semaglutide {field} mismatch.")
+        for field in ("lsmean", "se"):
+            _assert_close(
+                f"{key} MBNMAdose semaglutide {field}",
+                observed[field],
+                expected[field],
+                1e-12,
+            )
+
+    recomputed_wls = _weighted_linear_arm_reference(list(expected_arms.values()))
+    output_wls = output["independent_wls_reference"]
+    max_abs_diff = 0.0
+    for field in ("intercept", "slope", "intercept_se", "slope_se"):
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"MBNMAdose semaglutide independent WLS {field}",
+                output_wls[field],
+                recomputed_wls[field],
+                1e-10,
+            ),
+        )
+
+    beta = output["mbnma"]["beta_1"]
+    _require_keys(
+        beta,
+        {"parameter", "mean", "sd", "ci_low", "median", "ci_high", "rhat", "n_eff"},
+        label="MBNMAdose semaglutide beta_1",
+    )
+    if str(beta["parameter"]) != "beta.1[2]":
+        raise RReferenceValidationError("MBNMAdose semaglutide beta parameter mismatch.")
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_close(
+            "MBNMAdose semaglutide beta mean vs WLS slope",
+            beta["mean"],
+            recomputed_wls["slope"],
+            mean_tolerance,
+        ),
+        _assert_close(
+            "MBNMAdose semaglutide beta sd vs WLS slope SE",
+            beta["sd"],
+            recomputed_wls["slope_se"],
+            sd_tolerance,
+        ),
+    )
+    if not float(beta["ci_low"]) < float(beta["mean"]) < float(beta["ci_high"]):
+        raise RReferenceValidationError("MBNMAdose semaglutide beta CrI does not contain mean.")
+    if float(beta["rhat"]) > max_rhat:
+        raise RReferenceValidationError("MBNMAdose semaglutide beta R-hat exceeds threshold.")
+    if float(beta["n_eff"]) < min_neff:
+        raise RReferenceValidationError("MBNMAdose semaglutide beta n_eff below threshold.")
+
+    diagnostics = output["diagnostics"]
+    if float(diagnostics["max_rhat"]) > max_rhat:
+        raise RReferenceValidationError("MBNMAdose semaglutide maximum R-hat exceeds threshold.")
+    if float(diagnostics["min_neff"]) < min_neff:
+        raise RReferenceValidationError("MBNMAdose semaglutide minimum n_eff below threshold.")
+    model_fit = output["mbnma"]["model_fit"]
+    if float(model_fit["dic"]) <= 0.0 or float(model_fit["pd"]) <= 0.0:
+        raise RReferenceValidationError("MBNMAdose semaglutide DIC/pD must be positive.")
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not dose-response nma feature parity" in item for item in limitations):
+        raise RReferenceValidationError("MBNMAdose semaglutide output must preserve feature-parity limitation.")
+    if not any("shared-placebo covariance" in item for item in limitations):
+        raise RReferenceValidationError("MBNMAdose semaglutide output must preserve covariance limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "dose_response_mbnmadose",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "MBNMAdose common-effect linear polynomial dose-response smoke",
+        "benchmark_id": "semaglutide_obesity_dose_response",
+        "validated_components": [
+            "source_backed_arm_level_lsmean_rows",
+            "mbnmadose_common_linear_beta",
+            "independent_weighted_linear_reference",
+            "rhat_and_neff_diagnostics",
+            "dose_response_nma_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": {
+            "mean": mean_tolerance,
+            "sd": sd_tolerance,
+            "rhat": max_rhat,
+            "neff": min_neff,
+        },
+        "source_policy_note": (
+            "This validates one source-backed single-trial MBNMAdose linear "
+            "polynomial smoke run only. It is not broad MBNMAdose parity, "
+            "multi-trial dose-response NMA validation, clinical guidance, "
+            "regulatory evidence, or HTA certification."
+        ),
+    }
+
+
 def validate_survival_hr_metafor_pairwise_output(
     output_path: str | Path,
     *,
@@ -1329,6 +1507,44 @@ def _load_event_rows(path: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
     return {
         (str(row["study_id"]), str(row["arm_role"]), str(row["treatment"])): row
         for row in rows
+    }
+
+
+def _load_dose_response_arm_rows(path: Path) -> dict[tuple[str, str, float], dict[str, Any]]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    return {
+        (str(row["arm_id"]), str(row["agent"]), float(row["dose"])): row
+        for row in rows
+    }
+
+
+def _weighted_linear_arm_reference(rows: list[dict[str, Any]]) -> dict[str, float]:
+    s0 = 0.0
+    s1 = 0.0
+    s2 = 0.0
+    sy = 0.0
+    sxy = 0.0
+    for row in rows:
+        x = float(row["dose"])
+        y = float(row["lsmean"])
+        se = float(row["se"])
+        if se <= 0.0:
+            raise RReferenceValidationError("dose-response arm SE must be positive.")
+        weight = 1.0 / (se * se)
+        s0 += weight
+        s1 += weight * x
+        s2 += weight * x * x
+        sy += weight * y
+        sxy += weight * x * y
+    denom = s0 * s2 - s1 * s1
+    if denom <= 0.0:
+        raise RReferenceValidationError("dose-response arm WLS design is singular.")
+    return {
+        "intercept": (sy * s2 - s1 * sxy) / denom,
+        "slope": (s0 * sxy - s1 * sy) / denom,
+        "intercept_se": math.sqrt(s2 / denom),
+        "slope_se": math.sqrt(s0 / denom),
     }
 
 

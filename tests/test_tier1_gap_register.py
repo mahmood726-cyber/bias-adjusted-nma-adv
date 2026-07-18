@@ -85,6 +85,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "mbnmadose_source_backed_linear_reference_candidate"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "aact_ctgov_ingestion_contract"
         in by_id["feature_completeness"].implemented_capabilities
     )
@@ -293,6 +297,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "selection_weight_publication_bias_sensitivity",
             "native_python_guyot_reconstruction_check",
             "source_backed_dose_response_smoke_benchmark",
+            "mbnmadose_source_backed_linear_reference_candidate",
             "aact_ctgov_ingestion_contract",
             "ictrp_pactr_result_source_ingestion_contract",
             "fda_ema_regulatory_review_source_tier_contract",

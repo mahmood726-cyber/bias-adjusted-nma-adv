@@ -11,7 +11,8 @@ registered_source_counts = {aact_clinicaltrials_gov = 0, clinicaltrials_gov = 1,
 source_search_summary = [
   "validation/benchmark_registry.toml contains one dose_response_pairwise benchmark entry: semaglutide_obesity_dose_response.",
   "validation/grand_benchmark_plan.toml contains one active real-data dose-response lane.",
-  "validation/reference_runs/dose_response_metafor_polynomial_reference.toml now records a narrow metafor polynomial smoke candidate, but validation/reference_targets.toml still keeps the broader MBNMAdose target planned.",
+  "validation/reference_runs/dose_response_metafor_polynomial_reference.toml records a narrow metafor polynomial smoke candidate.",
+  "validation/reference_runs/mbnmadose_semaglutide_polynomial_reference.toml records a single-trial source-backed MBNMAdose linear polynomial reference candidate; broader MBNMAdose parity remains blocked.",
 ]
 required_next_artifacts = [
   "dose_response_source_manifest_with_nct_pmid_and_open_access_identifiers",
@@ -22,6 +23,7 @@ required_next_artifacts = [
   "aact_or_registry_result_row_checks_when_used",
   "fda_or_ema_regulatory_review_row_checks_when_used",
   "dose_response_analysis_artifact",
-  "MBNMAdose_reference_run_before_certification",
+  "additional_multi_trial_MBNMAdose_reference_runs_before_certification",
+  "shared_control_covariance_checks_before_certification",
 ]
 claim_limit = "No dose-response NMA validation, MBNMAdose parity, or dose-response superiority claim is supported until external reference matching and broader source-backed artifacts pass."

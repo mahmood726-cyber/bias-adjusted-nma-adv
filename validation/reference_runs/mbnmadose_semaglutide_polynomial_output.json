@@ -1,0 +1,159 @@
+{
+  "schema_version": "mbnmadose_semaglutide_polynomial/v1",
+  "benchmark_id": "semaglutide_obesity_dose_response",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+  "evidence_mode": "ctgov_dose_response_lsmean",
+  "effect_scale": "absolute_percentage_point_change",
+  "package_versions": {
+    "R": "4.6.0",
+    "MBNMAdose": "0.5.1",
+    "rjags": "4.17",
+    "JAGS": "4.3.2",
+    "jsonlite": "2.0.0"
+  },
+  "model": {
+    "engine": "MBNMAdose",
+    "likelihood": "normal",
+    "link": "identity",
+    "dose_function": "dpoly(degree=1)",
+    "method": "common",
+    "chains": 3,
+    "iter": 3000,
+    "burnin": 1000,
+    "thin": 2,
+    "seed": 20260718
+  },
+  "study_arms": [
+    {
+      "study_id": "NCT02453711",
+      "nct_id": "NCT02453711",
+      "pmid": 30122305,
+      "arm_id": "semaglutide_0_05",
+      "group_id": "OG000",
+      "treatment": "Semaglutide",
+      "agent": "semaglutide",
+      "dose": 0.05,
+      "dose_unit": "mg",
+      "dose_frequency": "once daily subcutaneous",
+      "lsmean": -5.99,
+      "se": 0.85,
+      "outcome_id": "relative_body_weight_change",
+      "outcome_label": "Relative Change in Body Weight (%)"
+    },
+    {
+      "study_id": "NCT02453711",
+      "nct_id": "NCT02453711",
+      "pmid": 30122305,
+      "arm_id": "semaglutide_0_1",
+      "group_id": "OG001",
+      "treatment": "Semaglutide",
+      "agent": "semaglutide",
+      "dose": 0.1,
+      "dose_unit": "mg",
+      "dose_frequency": "once daily subcutaneous",
+      "lsmean": -8.62,
+      "se": 0.84,
+      "outcome_id": "relative_body_weight_change",
+      "outcome_label": "Relative Change in Body Weight (%)"
+    },
+    {
+      "study_id": "NCT02453711",
+      "nct_id": "NCT02453711",
+      "pmid": 30122305,
+      "arm_id": "semaglutide_0_2",
+      "group_id": "OG002",
+      "treatment": "Semaglutide",
+      "agent": "semaglutide",
+      "dose": 0.2,
+      "dose_unit": "mg",
+      "dose_frequency": "once daily subcutaneous",
+      "lsmean": -11.6,
+      "se": 0.85,
+      "outcome_id": "relative_body_weight_change",
+      "outcome_label": "Relative Change in Body Weight (%)"
+    },
+    {
+      "study_id": "NCT02453711",
+      "nct_id": "NCT02453711",
+      "pmid": 30122305,
+      "arm_id": "semaglutide_0_3",
+      "group_id": "OG003",
+      "treatment": "Semaglutide",
+      "agent": "semaglutide",
+      "dose": 0.3,
+      "dose_unit": "mg",
+      "dose_frequency": "once daily subcutaneous",
+      "lsmean": -11.17,
+      "se": 0.85,
+      "outcome_id": "relative_body_weight_change",
+      "outcome_label": "Relative Change in Body Weight (%)"
+    },
+    {
+      "study_id": "NCT02453711",
+      "nct_id": "NCT02453711",
+      "pmid": 30122305,
+      "arm_id": "semaglutide_0_4",
+      "group_id": "OG004",
+      "treatment": "Semaglutide",
+      "agent": "semaglutide",
+      "dose": 0.4,
+      "dose_unit": "mg",
+      "dose_frequency": "once daily subcutaneous",
+      "lsmean": -13.84,
+      "se": 0.83,
+      "outcome_id": "relative_body_weight_change",
+      "outcome_label": "Relative Change in Body Weight (%)"
+    },
+    {
+      "study_id": "NCT02453711",
+      "nct_id": "NCT02453711",
+      "pmid": 30122305,
+      "arm_id": "placebo_pool",
+      "group_id": "OG008",
+      "treatment": "Placebo Pool",
+      "agent": "placebo",
+      "dose": 0,
+      "dose_unit": "mg",
+      "dose_frequency": "once daily subcutaneous",
+      "lsmean": -2.29,
+      "se": 0.74,
+      "outcome_id": "relative_body_weight_change",
+      "outcome_label": "Relative Change in Body Weight (%)"
+    }
+  ],
+  "mbnma": {
+    "beta_1": {
+      "parameter": "beta.1[2]",
+      "mean": -26.069407472085,
+      "sd": 2.37053331283372,
+      "ci_low": -30.6131108283037,
+      "median": -26.0714258489679,
+      "ci_high": -21.4911504997485,
+      "rhat": 1.00203325178731,
+      "n_eff": 1300
+    },
+    "model_fit": {
+      "dic": 32.9547316923772,
+      "pd": 1.99037645130843,
+      "deviance_mean": 30.9123299838485,
+      "residual_deviance_mean": 22.1837572786195
+    }
+  },
+  "independent_wls_reference": {
+    "intercept": -4.24452807338616,
+    "slope": -26.1136787508685,
+    "intercept_se": 0.518040655278151,
+    "slope_se": 2.3503102590277
+  },
+  "diagnostics": {
+    "max_rhat": 1.00203325178731,
+    "min_neff": 1300,
+    "n_parameters": 3
+  },
+  "limitations": [
+    "Single source-backed semaglutide dose-ranging trial only.",
+    "This is a narrow MBNMAdose linear polynomial smoke reference, not dose-response NMA feature parity.",
+    "Shared-placebo covariance and multi-trial class effects are not tested here.",
+    "This is not clinical, regulatory, HTA, or production certification."
+  ]
+}

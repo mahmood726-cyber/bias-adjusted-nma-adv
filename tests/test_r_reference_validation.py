@@ -13,6 +13,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
     validate_dta_mada_source_table_output,
+    validate_mbnmadose_semaglutide_polynomial_output,
     validate_multinma_sglt2_binary_nma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_meta_output,
@@ -27,6 +28,7 @@ MULTIARM_OUTPUT = ROOT / "validation" / "reference_runs" / "multiarm_netmeta_out
 DTA_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_output.json"
 DTA_SOURCE_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_midkine_source_output.json"
 DOSE_RESPONSE_OUTPUT = ROOT / "validation" / "reference_runs" / "dose_response_metafor_polynomial_output.json"
+MBNMADOSE_OUTPUT = ROOT / "validation" / "reference_runs" / "mbnmadose_semaglutide_polynomial_output.json"
 SGLT2_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "sglt2_survival_hr_metafor_output.json"
 PCSK9_SURVIVAL_OUTPUT = ROOT / "validation" / "reference_runs" / "pcsk9_survival_hr_metafor_output.json"
 SGLT2_CKD_SURVIVAL_OUTPUT = (
@@ -117,6 +119,25 @@ def test_dose_response_metafor_output_matches_source_backed_smoke_artifact():
     assert summary["max_abs_difference"] < 1e-10
     assert "mbnmadose_limitation_preserved" in summary["validated_components"]
     assert "not MBNMAdose parity" in summary["source_policy_note"]
+
+
+def test_mbnmadose_semaglutide_output_matches_source_backed_arm_level_smoke():
+    summary = validate_mbnmadose_semaglutide_polynomial_output(
+        MBNMADOSE_OUTPUT,
+        repo_root=ROOT,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "dose_response_mbnmadose"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == (
+        "MBNMAdose common-effect linear polynomial dose-response smoke"
+    )
+    assert summary["benchmark_id"] == "semaglutide_obesity_dose_response"
+    assert summary["max_abs_difference"] <= 0.25
+    assert "mbnmadose_common_linear_beta" in summary["validated_components"]
+    assert "not broad MBNMAdose parity" in summary["source_policy_note"]
 
 
 @pytest.mark.parametrize(
@@ -251,6 +272,28 @@ def test_dose_response_reference_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="weighted_quadratic coefficient 1"):
         validate_dose_response_metafor_polynomial_output(mutated, repo_root=ROOT)
+
+
+def test_mbnmadose_reference_validation_rejects_diagnostic_drift(tmp_path):
+    payload = load_r_reference_output(MBNMADOSE_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["mbnma"]["beta_1"]["rhat"] = 1.02
+    mutated = tmp_path / "mbnmadose_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="R-hat exceeds"):
+        validate_mbnmadose_semaglutide_polynomial_output(mutated, repo_root=ROOT)
+
+
+def test_mbnmadose_reference_validation_rejects_source_arm_drift(tmp_path):
+    payload = load_r_reference_output(MBNMADOSE_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["study_arms"][0]["lsmean"] += 0.01
+    mutated = tmp_path / "mbnmadose_arm_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="lsmean"):
+        validate_mbnmadose_semaglutide_polynomial_output(mutated, repo_root=ROOT)
 
 
 def test_survival_hr_reference_validation_rejects_numeric_drift(tmp_path):

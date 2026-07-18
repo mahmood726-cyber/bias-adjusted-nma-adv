@@ -68,7 +68,9 @@ required_artifacts = [
   "ctgov_dose_response_source_check",
   "pubmed_identity_check",
   "dose_response_analysis_artifact",
-  "MBNMAdose_reference_run_before_certification",
+  "single_trial_MBNMAdose_reference_candidate",
+  "additional_multi_trial_MBNMAdose_reference_runs_before_certification",
+  "shared_control_covariance_checks_before_certification",
 ]
 claim_limit = "Validates one source-governed CT.gov dose-response smoke benchmark only; it cannot establish MBNMAdose parity, dose-response NMA superiority, or clinical efficacy claims."
 certification_effect = "none"

@@ -30,6 +30,10 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
         by_id["multiarm_netmeta_gls"].evidence_artifacts
     )
     assert by_id["stan_nuts_multinma_bayesian_nma"].status == "reference_candidate"
+    assert by_id["dose_response_mbnmadose"].status == "reference_candidate"
+    assert "mbnmadose_semaglutide_polynomial_reference.toml" in "\n".join(
+        by_id["dose_response_mbnmadose"].evidence_artifacts
+    )
     assert by_id["component_nma_netmeta"].status == "reference_candidate"
     assert by_id["large_scale_validation"].status == "blocking"
     assert "stan_nuts_cmdstan_preflight.toml" in "\n".join(
@@ -44,9 +48,9 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
     assert summary["global_feature_parity_complete"] is False
     assert summary["status_counts"] == {
         "blocking": 1,
-        "local_implemented": 4,
+        "local_implemented": 3,
         "planned": 2,
-        "reference_candidate": 5,
+        "reference_candidate": 6,
     }
     assert summary["reference_matched_ids"] == []
     assert "stan_nuts_multinma_bayesian_nma" in summary["blocking_ids"]

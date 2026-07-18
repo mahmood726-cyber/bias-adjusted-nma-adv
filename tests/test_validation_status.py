@@ -184,6 +184,7 @@ def test_validation_status_composes_all_current_gates():
             "selection_weight_publication_bias_sensitivity",
             "native_python_guyot_reconstruction_check",
             "source_backed_dose_response_smoke_benchmark",
+            "mbnmadose_source_backed_linear_reference_candidate",
             "aact_ctgov_ingestion_contract",
             "ictrp_pactr_result_source_ingestion_contract",
             "fda_ema_regulatory_review_source_tier_contract",
@@ -274,9 +275,14 @@ def test_validation_status_composes_all_current_gates():
         "who_ictrp_results": 0,
     }
     assert dose_response_coverage["has_source_backed_dose_response_data"] is True
-    assert "MBNMAdose_reference_run_before_certification" in dose_response_coverage[
-        "required_next_artifacts"
-    ]
+    assert (
+        "additional_multi_trial_MBNMAdose_reference_runs_before_certification"
+        in dose_response_coverage["required_next_artifacts"]
+    )
+    assert (
+        "shared_control_covariance_checks_before_certification"
+        in dose_response_coverage["required_next_artifacts"]
+    )
     assert dose_response_coverage["certification_effect"] == "none"
 
     dta_coverage = report["dta_source_coverage"]
@@ -335,9 +341,9 @@ def test_validation_status_composes_all_current_gates():
     assert feature_parity["n_features"] == 12
     assert feature_parity["status_counts"] == {
         "blocking": 1,
-        "local_implemented": 4,
+        "local_implemented": 3,
         "planned": 2,
-        "reference_candidate": 5,
+        "reference_candidate": 6,
     }
     assert feature_parity["reference_matched_ids"] == []
     assert "stan_nuts_multinma_bayesian_nma" in feature_parity["blocking_ids"]
@@ -365,7 +371,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 13,
+        "observed": 14,
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
@@ -489,10 +495,10 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 17
+    assert reference_runs["n_reports"] == 18
     assert reference_runs["status_counts"] == {
         "failed": 4,
-        "passed": 13,
+        "passed": 14,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
@@ -502,6 +508,7 @@ def test_validation_status_composes_all_current_gates():
         "validation/reference_runs/dta_mada_reitsma_midkine_source_output.json",
         "validation/reference_runs/stan_nuts_cmdstan_output.json",
         "validation/reference_runs/dose_response_metafor_polynomial_output.json",
+        "validation/reference_runs/mbnmadose_semaglutide_polynomial_output.json",
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
         "validation/reference_runs/sglt2_ckd_survival_hr_metafor_output.json",
@@ -526,6 +533,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_mada_dta_reitsma_output_validation", "passed"),
         ("r_mada_dta_midkine_source_output_validation", "passed"),
         ("r_metafor_dose_response_polynomial_output_validation", "passed"),
+        ("r_mbnmadose_semaglutide_polynomial_output_validation", "passed"),
         ("r_metafor_sglt2_survival_hr_output_validation", "passed"),
         ("r_metafor_pcsk9_survival_hr_output_validation", "passed"),
         ("r_metafor_sglt2_ckd_survival_hr_output_validation", "passed"),

@@ -50,7 +50,11 @@ def test_dose_response_source_coverage_records_current_allowed_source_data():
         "semaglutide_obesity_dose_response" in item for item in coverage.source_search_summary
     )
     assert (
-        "MBNMAdose_reference_run_before_certification"
+        "additional_multi_trial_MBNMAdose_reference_runs_before_certification"
+        in coverage.required_next_artifacts
+    )
+    assert (
+        "shared_control_covariance_checks_before_certification"
         in coverage.required_next_artifacts
     )
 
@@ -85,7 +89,8 @@ def test_dose_response_source_coverage_summary_is_validation_status_ready():
             "aact_or_registry_result_row_checks_when_used",
             "fda_or_ema_regulatory_review_row_checks_when_used",
             "dose_response_analysis_artifact",
-            "MBNMAdose_reference_run_before_certification",
+            "additional_multi_trial_MBNMAdose_reference_runs_before_certification",
+            "shared_control_covariance_checks_before_certification",
         ],
         "certification_effect": "none",
     }

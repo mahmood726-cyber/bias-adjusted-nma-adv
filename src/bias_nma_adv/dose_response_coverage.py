@@ -133,9 +133,16 @@ class DoseResponseSourceCoverage:
             raise DoseResponseCoverageError(
                 "protocol_registry_rule must state that protocol-only registries cannot supply effects."
             )
-        if "MBNMAdose_reference_run_before_certification" not in self.required_next_artifacts:
+        if (
+            "additional_multi_trial_MBNMAdose_reference_runs_before_certification"
+            not in self.required_next_artifacts
+        ):
             raise DoseResponseCoverageError(
-                "dose-response coverage must require MBNMAdose reference matching before certification."
+                "dose-response coverage must require additional MBNMAdose reference matching before certification."
+            )
+        if "shared_control_covariance_checks_before_certification" not in self.required_next_artifacts:
+            raise DoseResponseCoverageError(
+                "dose-response coverage must require shared-control covariance checks before certification."
             )
         if "No dose-response" not in self.claim_limit:
             raise DoseResponseCoverageError(

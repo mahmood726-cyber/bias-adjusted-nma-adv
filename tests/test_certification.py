@@ -30,6 +30,7 @@ DTA_R_ADAPTER = ROOT / "external" / "r" / "dta_mada_reitsma_fixture.R"
 DTA_SOURCE_R_ADAPTER = ROOT / "external" / "r" / "dta_mada_reitsma_source_table.R"
 DTA_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_dta_mada_adapter.py"
 DOSE_RESPONSE_R_ADAPTER = ROOT / "external" / "r" / "dose_response_metafor_polynomial.R"
+MBNMADOSE_R_ADAPTER = ROOT / "external" / "r" / "mbnmadose_semaglutide_polynomial.R"
 SURVIVAL_HR_R_ADAPTER = ROOT / "external" / "r" / "survival_hr_metafor_pairwise.R"
 CTGOV_HR_NETWORK_R_ADAPTER = ROOT / "external" / "r" / "ctgov_hr_network_netmeta.R"
 COMPONENT_CNMA_R_ADAPTER = ROOT / "external" / "r" / "component_netmeta_cnma_fixture.R"
@@ -108,7 +109,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 4, "passed": 13}
+    assert summary == {"failed": 4, "passed": 14}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -121,6 +122,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_mada_dta_reitsma_output_validation",
         "r_mada_dta_midkine_source_output_validation",
         "r_metafor_dose_response_polynomial_output_validation",
+        "r_mbnmadose_semaglutide_polynomial_output_validation",
         "r_metafor_sglt2_survival_hr_output_validation",
         "r_metafor_pcsk9_survival_hr_output_validation",
         "r_metafor_sglt2_ckd_survival_hr_output_validation",
@@ -271,6 +273,24 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert DOSE_RESPONSE_R_ADAPTER.is_file()
 
+    mbnmadose_reference = by_adapter["r_mbnmadose_semaglutide_polynomial_output_validation"]
+    assert mbnmadose_reference.target_id == "dose_response_mbnmadose"
+    assert mbnmadose_reference.status == "passed"
+    assert mbnmadose_reference.certification_effect == "evidence_candidate"
+    assert mbnmadose_reference.reference_method == (
+        "MBNMAdose common-effect linear polynomial dose-response smoke"
+    )
+    assert mbnmadose_reference.output_artifacts == (
+        "validation/reference_runs/mbnmadose_semaglutide_polynomial_output.json",
+    )
+    assert "posterior mean abs <=" in mbnmadose_reference.tolerance
+    assert "R-hat <=" in mbnmadose_reference.tolerance
+    assert (
+        "validation/dose_response/semaglutide_obesity_dose_response_arms.csv"
+        in mbnmadose_reference.input_artifacts
+    )
+    assert MBNMADOSE_R_ADAPTER.is_file()
+
     sglt2_survival_reference = by_adapter["r_metafor_sglt2_survival_hr_output_validation"]
     assert sglt2_survival_reference.target_id == "reported_hr_survival_metafor_pairwise"
     assert sglt2_survival_reference.status == "passed"
@@ -370,6 +390,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/dta_mada_reitsma_midkine_source_output.json",
         "validation/reference_runs/stan_nuts_cmdstan_output.json",
         "validation/reference_runs/dose_response_metafor_polynomial_output.json",
+        "validation/reference_runs/mbnmadose_semaglutide_polynomial_output.json",
         "validation/reference_runs/sglt2_survival_hr_metafor_output.json",
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
         "validation/reference_runs/sglt2_ckd_survival_hr_metafor_output.json",

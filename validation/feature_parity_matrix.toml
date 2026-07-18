@@ -129,17 +129,21 @@ certification_effect = "none"
 id = "dose_response_mbnmadose"
 domain = "dose_response_nma"
 reference_methods = ["MBNMAdose"]
-status = "local_implemented"
+status = "reference_candidate"
 evidence_artifacts = [
   "validation/dose_response/semaglutide_obesity_dose_response_benchmark.toml",
   "validation/dependency_preflights/tier1_r_dependency_preflight.toml",
+  "validation/dose_response/semaglutide_obesity_dose_response_arms.csv",
+  "external/r/mbnmadose_semaglutide_polynomial.R",
+  "validation/reference_runs/mbnmadose_semaglutide_polynomial_output.json",
+  "validation/reference_runs/mbnmadose_semaglutide_polynomial_reference.toml",
 ]
 required_next_artifacts = [
-  "MBNMAdose_reference_run",
+  "additional_MBNMAdose_reference_runs",
   "multi_trial_dose_response_network",
   "shared_control_covariance_handling",
 ]
-claim_limit = "The source-backed dose-response artifact is a smoke benchmark, not MBNMAdose parity."
+claim_limit = "The source-backed MBNMAdose artifact is a single-trial linear-polynomial reference candidate, not broad MBNMAdose parity."
 certification_effect = "none"
 
 [[features]]
