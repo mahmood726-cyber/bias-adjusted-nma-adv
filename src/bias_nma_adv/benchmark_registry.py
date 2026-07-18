@@ -72,6 +72,13 @@ from bias_nma_adv.survival_benchmark import (
 BENCHMARK_REGISTRY_SCHEMA_VERSION = "source_benchmark_registry/v1"
 CTGOV_CONTINUOUS_SOURCE_CHECK_SCHEMA_VERSION = "ctgov_continuous_source_check/v1"
 Z_975 = 1.959963984540054
+CTGOV_CONTINUOUS_DIFFERENCE_PARAM_TYPES = frozenset(
+    {
+        "Treatment difference",
+        "Mean Difference",
+        "Mean Difference (Final Values)",
+    }
+)
 _NCT_RE = re.compile(r"^NCT\d{8}$")
 _PMID_RE = re.compile(r"^\d+$")
 ALLOWED_SOURCE_POLICIES = {
@@ -657,8 +664,10 @@ def _validate_ctgov_continuous_row(
         raise BenchmarkRegistryError(f"{entry.id}: {study_id} api_url must be a CT.gov API URL.")
     if record.get("result_reference_found") is not True:
         raise BenchmarkRegistryError(f"{entry.id}: {study_id} must verify a linked result PMID.")
-    if "semaglutide 2.4" not in row["treatment"].lower() or "placebo" not in row["comparator"].lower():
-        raise BenchmarkRegistryError(f"{entry.id}: {study_id} expected semaglutide 2.4 mg vs placebo.")
+    if not row["treatment"].strip() or not row["comparator"].strip():
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} treatment labels must not be blank.")
+    if row["treatment"].strip().lower() == row["comparator"].strip().lower():
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} treatment and comparator must differ.")
     if str(record.get("selected_treatment", "")) != row["treatment"]:
         raise BenchmarkRegistryError(f"{entry.id}: {study_id} selected treatment drifted.")
     if str(record.get("selected_comparator", "")) != row["comparator"]:
@@ -666,8 +675,11 @@ def _validate_ctgov_continuous_row(
     group_ids = tuple(str(item) for item in record.get("analysis_group_ids", []))
     if group_ids != (row["treatment_group_id"], row["comparator_group_id"]):
         raise BenchmarkRegistryError(f"{entry.id}: {study_id} CT.gov group IDs drifted.")
-    if row["param_type"] != "Treatment difference" or str(record.get("analysis_param_type", "")) != "Treatment difference":
-        raise BenchmarkRegistryError(f"{entry.id}: {study_id} must use reported treatment differences.")
+    if (
+        row["param_type"] not in CTGOV_CONTINUOUS_DIFFERENCE_PARAM_TYPES
+        or str(record.get("analysis_param_type", "")) not in CTGOV_CONTINUOUS_DIFFERENCE_PARAM_TYPES
+    ):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} must use reported mean/treatment differences.")
     if row["se_source"] != "derived_from_reported_95_ci_using_normal_quantile":
         raise BenchmarkRegistryError(f"{entry.id}: {study_id} SE derivation source drifted.")
 

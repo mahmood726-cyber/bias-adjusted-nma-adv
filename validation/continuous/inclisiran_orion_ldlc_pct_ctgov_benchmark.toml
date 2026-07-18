@@ -1,0 +1,103 @@
+schema_version = "continuous_pairwise_benchmark/v1"
+benchmark_id = "inclisiran_orion_ldlc_pct_ctgov"
+status = "local_pass"
+certification_effect = "none"
+checked_at = "2026-07-18T17:20:00Z"
+source_policy = "clinicaltrials_gov + pubmed_abstract only"
+evidence_mode = "ctgov_reported_adjusted_treatment_difference"
+effect_scale = "mean_difference_percentage_points"
+effects_csv = "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_effects.csv"
+effects_csv_sha256 = "0024e73eb5b339837e1ceb65eeba8543db6f491fa6b819003dc17b8c2b4ae778"
+source_verification_report = "validation/source_checks/inclisiran_orion_ldlc_pct_ctgov_check.json"
+source_verification_report_sha256 = "530e25d4c7c90c3f2d581581658f6b1dbb7af0dbfe1d6650d01be113083ed640"
+n_studies = 3
+limitations = ["CT.gov adjusted least-squares mean differences are used as reported", "different ORION trial populations are pooled only for software validation", "not broad continuous-outcome parity", "not clinical guidance", "does not certify model performance"]
+
+[source_bundle]
+benchmark_id = "inclisiran_orion_ldlc_pct_ctgov"
+manifest_sha256 = "0024e73eb5b339837e1ceb65eeba8543db6f491fa6b819003dc17b8c2b4ae778"
+verification_status = "verified"
+n_records = 3
+source_counts = {clinicaltrials_gov = 3}
+linked_result_pmids = 2
+
+[[study_effects]]
+study_id = "NCT03397121_orion_9"
+study_label = "ORION-9"
+trial = "Trial to Evaluate the Effect of Inclisiran Treatment on Low Density Lipoprotein Cholesterol (LDL-C) in Subjects With Heterozygous Familial Hypercholesterolemia (HeFH)"
+nct_id = "NCT03397121"
+pmid = "32197277"
+source_type = "clinicaltrials_gov"
+source_url = "https://clinicaltrials.gov/study/NCT03397121"
+outcome_id = "ldlc_percent_change_day510"
+outcome_label = "Percent Change in LDL-C From Baseline to Day 510"
+time_frame = "Baseline, Day 510"
+estimand = "final_value_day510"
+comparison = "inclisiran_vs_placebo"
+treatment = "Inclisiran"
+comparator = "Placebo"
+treatment_group_id = "OG000"
+comparator_group_id = "OG001"
+estimate = -49.52
+se = 2.81892934951
+variance = 7.94636267752
+ci_low = -55.04
+ci_high = -43.99
+ci_level = 95
+statistical_method = "ANCOVA"
+param_type = "Mean Difference (Final Values)"
+se_source = "derived_from_reported_95_ci_using_normal_quantile"
+
+[[study_effects]]
+study_id = "NCT03399370_orion_10"
+study_label = "ORION-10"
+trial = "Inclisiran for Participants With Atherosclerotic Cardiovascular Disease and Elevated Low-density Lipoprotein Cholesterol"
+nct_id = "NCT03399370"
+pmid = "32187462"
+source_type = "clinicaltrials_gov"
+source_url = "https://clinicaltrials.gov/study/NCT03399370"
+outcome_id = "ldlc_percent_change_day510"
+outcome_label = "Percent Change in LDL-C From Baseline to Day 510"
+time_frame = "Baseline, Day 510"
+estimand = "final_value_day510"
+comparison = "inclisiran_vs_placebo"
+treatment = "Inclisiran"
+comparator = "Placebo"
+treatment_group_id = "OG000"
+comparator_group_id = "OG001"
+estimate = -57.64
+se = 1.64033626401
+variance = 2.69070305904
+ci_low = -60.86
+ci_high = -54.43
+ci_level = 95
+statistical_method = "ANCOVA"
+param_type = "Mean Difference (Final Values)"
+se_source = "derived_from_reported_95_ci_using_normal_quantile"
+
+[[study_effects]]
+study_id = "NCT03400800_orion_11"
+study_label = "ORION-11"
+trial = "Inclisiran for Subjects With ASCVD or ASCVD-Risk Equivalents and Elevated Low-density Lipoprotein Cholesterol"
+nct_id = "NCT03400800"
+pmid = "32187462"
+source_type = "clinicaltrials_gov"
+source_url = "https://clinicaltrials.gov/study/NCT03400800"
+outcome_id = "ldlc_percent_change_day510"
+outcome_label = "Percent Change in LDL-C From Baseline to Day 510"
+time_frame = "Baseline, Day 510"
+estimand = "final_value_day510"
+comparison = "inclisiran_vs_placebo"
+treatment = "Inclisiran"
+comparator = "Placebo"
+treatment_group_id = "OG000"
+comparator_group_id = "OG001"
+estimate = -53.5
+se = 1.6097234566
+variance = 2.59120960672
+ci_low = -56.66
+ci_high = -50.35
+ci_level = 95
+statistical_method = "ANCOVA"
+param_type = "Mean Difference (Final Values)"
+se_source = "derived_from_reported_95_ci_using_normal_quantile"

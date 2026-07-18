@@ -36,17 +36,17 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "pactr_protocol",
         "who_ictrp_protocol",
     ]
-    assert atlas["n_benchmarks"] == 37
-    assert atlas["n_benchmark_study_effects"] == 205
+    assert atlas["n_benchmarks"] == 38
+    assert atlas["n_benchmark_study_effects"] == 208
     assert atlas["n_tau2_positive_benchmarks"] == 22
-    assert atlas["n_unique_study_ids"] == 182
-    assert atlas["n_unique_nct_ids"] == 147
-    assert atlas["n_unique_pmids"] == 142
+    assert atlas["n_unique_study_ids"] == 185
+    assert atlas["n_unique_nct_ids"] == 150
+    assert atlas["n_unique_pmids"] == 144
     assert atlas["domain_counts"] == {
         "arm_count_binary_closed_loop_network": 1,
         "binary_pairwise_meta": 1,
         "component_nma": 1,
-        "continuous_pairwise_meta": 1,
+        "continuous_pairwise_meta": 2,
         "cross_design_nma": 1,
         "diagnostic_test_accuracy": 1,
         "dose_response_pairwise": 1,
@@ -57,7 +57,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "ctgov_arm_level_binary_counts": 1,
         "ctgov_component_lsmean": 1,
         "ctgov_dose_response_lsmean": 1,
-        "ctgov_reported_adjusted_treatment_difference": 1,
+        "ctgov_reported_adjusted_treatment_difference": 2,
         "open_access_jats_table_2x2": 1,
         "pubmed_abstract_event_counts": 1,
         "reported_hr_clinicaltrials_gov_results": 1,
@@ -67,7 +67,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
     assert atlas["source_check_scope_counts"] == {
         "clinicaltrials_gov_arm_level_binary_counts": 2,
         "clinicaltrials_gov_component_lsmean": 1,
-        "clinicaltrials_gov_continuous_treatment_difference": 4,
+        "clinicaltrials_gov_continuous_treatment_difference": 7,
         "clinicaltrials_gov_dose_response_lsmean": 1,
         "clinicaltrials_gov_reported_hr_analysis": 10,
         "identity_and_reachability": 276,
@@ -80,7 +80,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "pubmed_abstract_reported_hr_tokens": 134,
     }
     assert atlas["source_type_counts"] == {
-        "clinicaltrials_gov": 156,
+        "clinicaltrials_gov": 159,
         "open_access_paper": 11,
         "pubmed_abstract": 284,
     }
@@ -133,6 +133,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "pah_clinical_worsening_reported_hr",
         "colorectal_refractory_os_reported_hr",
         "semaglutide_step_bodyweight_pct_ctgov",
+        "inclisiran_orion_ldlc_pct_ctgov",
     }.issubset(benchmark_ids)
     assert {item["certification_effect"] for item in atlas["benchmarks"]} == {"none"}
     assert {item["has_positive_tau2"] for item in atlas["benchmarks"]} == {False, True}
@@ -175,7 +176,7 @@ def test_real_benchmark_atlas_artifact_regenerates(tmp_path):
             "--root",
             str(ROOT),
             "--checked-at",
-            "2026-07-18T16:45:00Z",
+            "2026-07-18T17:20:00Z",
             "--output",
             str(output),
         ],
@@ -196,16 +197,16 @@ def test_real_benchmark_atlas_summary_is_validation_status_ready():
     assert summarize_real_benchmark_atlas(atlas) == {
         "schema_version": REAL_BENCHMARK_ATLAS_SCHEMA_VERSION,
         "status": "passed",
-        "n_benchmarks": 37,
-        "n_benchmark_study_effects": 205,
+        "n_benchmarks": 38,
+        "n_benchmark_study_effects": 208,
         "n_tau2_positive_benchmarks": 22,
-        "n_unique_nct_ids": 147,
-        "n_unique_pmids": 142,
+        "n_unique_nct_ids": 150,
+        "n_unique_pmids": 144,
         "domain_counts": {
             "arm_count_binary_closed_loop_network": 1,
             "binary_pairwise_meta": 1,
             "component_nma": 1,
-            "continuous_pairwise_meta": 1,
+            "continuous_pairwise_meta": 2,
             "cross_design_nma": 1,
             "diagnostic_test_accuracy": 1,
             "dose_response_pairwise": 1,
@@ -213,7 +214,7 @@ def test_real_benchmark_atlas_summary_is_validation_status_ready():
             "reported_survival_hr_pairwise": 29,
         },
         "source_type_counts": {
-            "clinicaltrials_gov": 156,
+            "clinicaltrials_gov": 159,
             "open_access_paper": 11,
             "pubmed_abstract": 284,
         },

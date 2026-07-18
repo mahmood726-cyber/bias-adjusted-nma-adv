@@ -152,27 +152,28 @@ def validate_pairwise_metafor_continuous_output(
     )
     if output["schema_version"] != "metafor_continuous_source/v1":
         raise RReferenceValidationError("pairwise continuous schema_version mismatch.")
-    if output["benchmark_id"] != "semaglutide_step_bodyweight_pct_ctgov":
-        raise RReferenceValidationError("pairwise continuous benchmark_id mismatch.")
     if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract only":
         raise RReferenceValidationError("pairwise continuous source_policy mismatch.")
     if output["effect_scale"] != "mean_difference_percentage_points":
         raise RReferenceValidationError("pairwise continuous effect_scale mismatch.")
-    if output["contrast"] != "semaglutide_2_4_mg_vs_placebo":
-        raise RReferenceValidationError("pairwise continuous contrast mismatch.")
     if output["reference_method"] != "metafor::rma.uni and meta::metagen continuous mean-difference":
         raise RReferenceValidationError("pairwise continuous reference_method mismatch.")
     _require_package_versions(output["package_versions"], {"R", "metafor", "meta", "jsonlite"})
 
-    benchmark = _load_toml(
-        root / "validation" / "continuous" / "semaglutide_step_bodyweight_pct_ctgov_benchmark.toml"
-    )
+    benchmark = _load_continuous_benchmark_by_id(root, str(output["benchmark_id"]))
     if benchmark["schema_version"] != "continuous_pairwise_benchmark/v1":
         raise RReferenceValidationError("continuous benchmark schema_version mismatch.")
     if benchmark["benchmark_id"] != output["benchmark_id"]:
         raise RReferenceValidationError("continuous benchmark_id does not match R output.")
+    if benchmark["source_policy"] != output["source_policy"]:
+        raise RReferenceValidationError("continuous benchmark source_policy does not match R output.")
+    if benchmark["effect_scale"] != output["effect_scale"]:
+        raise RReferenceValidationError("continuous benchmark effect_scale does not match R output.")
     effects_csv = root / str(benchmark["effects_csv"])
     expected_rows = _load_simple_effect_rows(effects_csv)
+    expected_contrasts = {str(row["comparison"]) for row in expected_rows.values()}
+    if len(expected_contrasts) != 1 or output["contrast"] not in expected_contrasts:
+        raise RReferenceValidationError("pairwise continuous contrast mismatch.")
     source_check_path = root / str(benchmark["source_verification_report"])
     source_check = json.loads(source_check_path.read_text(encoding="utf-8"))
     if source_check.get("verification_status") != "verified":
@@ -296,7 +297,7 @@ def validate_pairwise_metafor_continuous_output(
     )
 
     limitations = [str(item).lower() for item in output["limitations"]]
-    if not any("different step populations" in item for item in limitations):
+    if not any("software validation" in item for item in limitations):
         raise RReferenceValidationError("pairwise continuous output must preserve population limitation.")
     if not any("not broad pairwise feature parity" in item for item in limitations):
         raise RReferenceValidationError("pairwise continuous output must preserve broad-parity limitation.")
@@ -305,7 +306,7 @@ def validate_pairwise_metafor_continuous_output(
 
     return {
         "schema_version": "r_reference_validation/v1",
-        "target_id": "pairwise_metafor_continuous_semaglutide",
+        "target_id": _continuous_target_id(str(output["benchmark_id"])),
         "status": "passed",
         "certification_effect": "evidence_candidate",
         "reference_method": "metafor::rma.uni and meta::metagen continuous mean-difference",
@@ -324,14 +325,34 @@ def validate_pairwise_metafor_continuous_output(
         "max_abs_difference": max_abs_diff,
         "tolerance": tolerance,
         "source_policy_note": (
-            "This validates one CT.gov-backed semaglutide STEP continuous "
-            "mean-difference benchmark against metafor and meta. The numeric "
-            "effects are CT.gov reported adjusted treatment differences with "
-            "linked result-publication PMIDs; this is not broad continuous "
-            "outcome parity, clinical guidance, regulatory evidence, or HTA "
-            "certification."
+            f"This validates CT.gov-backed continuous mean-difference benchmark "
+            f"{output['benchmark_id']} against metafor and meta. The numeric effects "
+            "are CT.gov reported adjusted treatment differences with linked "
+            "result-publication PMIDs; this is not broad continuous outcome parity, "
+            "clinical guidance, regulatory evidence, or HTA certification."
         ),
     }
+
+
+def _load_continuous_benchmark_by_id(root: Path, benchmark_id: str) -> dict[str, Any]:
+    matches: list[dict[str, Any]] = []
+    for path in sorted((root / "validation" / "continuous").glob("*_benchmark.toml")):
+        payload = _load_toml(path)
+        if str(payload.get("benchmark_id", "")) == benchmark_id:
+            matches.append(payload)
+    if len(matches) != 1:
+        raise RReferenceValidationError(
+            f"expected one continuous benchmark with id {benchmark_id!r}, found {len(matches)}."
+        )
+    return matches[0]
+
+
+def _continuous_target_id(benchmark_id: str) -> str:
+    if benchmark_id == "semaglutide_step_bodyweight_pct_ctgov":
+        return "pairwise_metafor_continuous_semaglutide"
+    if benchmark_id == "inclisiran_orion_ldlc_pct_ctgov":
+        return "pairwise_metafor_continuous_inclisiran"
+    return "pairwise_metafor_continuous_source"
 
 
 def validate_pairwise_metafor_gosh_output(

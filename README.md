@@ -86,7 +86,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/ingestion/`: Proof-carrying extracted-effect bundles. These are model-ingestion evidence contracts only and carry `certification_effect = "none"`.
 - `validation/real_benchmark_atlas.json`: Generated coverage atlas over the registered real-data benchmark artifacts. It records current source-backed coverage and explicit non-claims; it is not certification evidence.
 - `validation/survival/`: Source-backed survival HR benchmark manifests and effects CSVs; current entries verify reported HR tokens from PubMed abstracts and support narrow `metafor` fixed-effect reported-HR checks. KM reconstruction remains non-certifying and requires OA figure provenance before any real KM artifact can enter validation.
-- `validation/continuous/`: Source-backed CT.gov continuous-outcome benchmark artifacts, currently the STEP semaglutide adjusted body-weight treatment-difference fixture with narrow `metafor`/`meta` validation.
+- `validation/continuous/`: Source-backed CT.gov continuous-outcome benchmark artifacts, currently the STEP semaglutide body-weight and ORION inclisiran LDL-C adjusted treatment-difference fixtures with narrow `metafor`/`meta` validation.
 - `validation/dose_response/`: Source-backed semaglutide dose-response manifest, effects CSV, and generated local benchmark artifact from ClinicalTrials.gov results plus PubMed identity verification.
 - `validation/component/`: Source-backed sitagliptin/pioglitazone component-NMA manifest and generated local benchmark artifact from ClinicalTrials.gov LS mean results plus PubMed identity verification.
 - `validation/dta/`: Source-backed open-access diagnostic test accuracy 2x2 manifest, CSV, and generated local benchmark artifact for the Midkine ELISA cancer diagnostic table.
@@ -116,6 +116,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/verify_ctgov_hr_network.py`: Regenerates CT.gov reported-HR source snapshots for network benchmark manifests.
 - `scripts/write_ctgov_hr_network_benchmark.py`: Writes the deterministic CT.gov reported-HR network benchmark artifact from a verified CT.gov source snapshot.
 - `scripts/build_semaglutide_step_continuous_ctgov.py`: Builds the source-backed CT.gov STEP continuous body-weight treatment-difference fixture and its source-check payload.
+- `scripts/build_inclisiran_orion_continuous_ctgov.py`: Builds the source-backed CT.gov ORION continuous LDL-C treatment-difference fixture and its source-check payload.
 - `scripts/verify_dose_response_sources.py`: Regenerates live CT.gov/PubMed source checks for the source-backed dose-response manifest and exits nonzero on failed verification.
 - `scripts/write_dose_response_benchmark.py`: Writes the deterministic non-certifying dose-response smoke benchmark from a verified source check.
 - `scripts/verify_component_sources.py`: Regenerates live CT.gov/PubMed source checks for the source-backed component-NMA manifest and exits nonzero on failed verification.

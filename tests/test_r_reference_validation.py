@@ -45,6 +45,9 @@ PREDICTION_INTERVAL_OUTPUT = (
 CONTINUOUS_OUTPUT = (
     ROOT / "validation" / "reference_runs" / "semaglutide_step_continuous_metafor_output.json"
 )
+INCLISIRAN_CONTINUOUS_OUTPUT = (
+    ROOT / "validation" / "reference_runs" / "inclisiran_orion_continuous_metafor_output.json"
+)
 MULTINMA_OUTPUT = ROOT / "validation" / "reference_runs" / "multinma_sglt2_binary_nma_output.json"
 MULTIARM_OUTPUT = ROOT / "validation" / "reference_runs" / "multiarm_netmeta_output.json"
 DTA_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_output.json"
@@ -158,6 +161,26 @@ def test_pairwise_continuous_metafor_output_matches_source_backed_ctgov_rows():
         "validated_components"
     ]
     assert "meta_metagen_common_and_random_summaries" in summary["validated_components"]
+    assert "not broad continuous outcome parity" in summary["source_policy_note"]
+
+
+def test_pairwise_continuous_inclisiran_metafor_output_matches_ctgov_rows():
+    summary = validate_pairwise_metafor_continuous_output(
+        INCLISIRAN_CONTINUOUS_OUTPUT,
+        repo_root=ROOT,
+        tolerance=2e-5,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "pairwise_metafor_continuous_inclisiran"
+    assert summary["benchmark_id"] == "inclisiran_orion_ldlc_pct_ctgov"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["max_abs_difference"] <= 2e-5
+    assert "source_backed_ctgov_continuous_mean_difference_rows" in summary[
+        "validated_components"
+    ]
+    assert "inclisiran_orion_ldlc_pct_ctgov" in summary["source_policy_note"]
     assert "not broad continuous outcome parity" in summary["source_policy_note"]
 
 

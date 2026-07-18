@@ -1,0 +1,28 @@
+schema_version = "reference_run/v1"
+target_id = "pairwise_metafor_meta"
+adapter_id = "r_metafor_continuous_inclisiran_orion_output_validation"
+reference_method = "metafor::rma.uni and meta::metagen continuous mean-difference"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-18T17:20:00Z"
+command = ["Rscript", "--vanilla", "external/r/metafor_continuous_inclisiran_orion.R", "--benchmark-id", "inclisiran_orion_ldlc_pct_ctgov", "--effects", "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_effects.csv", "--output", "validation/reference_runs/inclisiran_orion_continuous_metafor_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", meta = "8.5.0", jsonlite = "2.0.0"}
+input_artifacts = ["validation/continuous/inclisiran_orion_ldlc_pct_ctgov_effects.csv", "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_benchmark.toml", "validation/source_checks/inclisiran_orion_ldlc_pct_ctgov_check.json", "scripts/build_inclisiran_orion_continuous_ctgov.py", "external/r/metafor_continuous_inclisiran_orion.R"]
+output_artifacts = ["validation/reference_runs/inclisiran_orion_continuous_metafor_output.json"]
+tolerance = "absolute <= 2e-05 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_ctgov_continuous_mean_difference_rows", "ci_to_standard_error_transformation", "fixed_effect_mean_difference", "dl_random_effect_mean_difference", "pm_random_effect_mean_difference", "reml_random_effect_mean_difference", "meta_metagen_common_and_random_summaries", "metafor_qe_convention_preserved", "continuous_limitation_preserved"]
+max_abs_difference = 1.1686929166643267e-05
+notes = ["This validates a CT.gov-backed ORION inclisiran LDL-C continuous mean-difference benchmark against metafor and meta. The numeric effects are CT.gov reported adjusted least-squares mean differences with linked result-publication PMIDs; this is not broad continuous outcome parity, clinical guidance, regulatory evidence, or HTA certification."]
+
+[input_sha256]
+"validation/continuous/inclisiran_orion_ldlc_pct_ctgov_effects.csv" = "0024e73eb5b339837e1ceb65eeba8543db6f491fa6b819003dc17b8c2b4ae778"
+"validation/continuous/inclisiran_orion_ldlc_pct_ctgov_benchmark.toml" = "13189280870528e4ef4594aa3fb2e60ff272483fe3762a788a725833d180f865"
+"validation/source_checks/inclisiran_orion_ldlc_pct_ctgov_check.json" = "530e25d4c7c90c3f2d581581658f6b1dbb7af0dbfe1d6650d01be113083ed640"
+"scripts/build_inclisiran_orion_continuous_ctgov.py" = "25a0cf808252d29b4c9da745f8273e26aca32bbb86eec305f7ea937deb460f6a"
+"external/r/metafor_continuous_inclisiran_orion.R" = "bbee6fc3533d20f6338147692c55d24ac8cb278709f61eb8a34df8eac394ee09"
+
+[output_sha256]
+"validation/reference_runs/inclisiran_orion_continuous_metafor_output.json" = "e0f810f871de35a75fe1bd2cbec26b9116036a7dfc2d666a2947d9ce2bc086cc"

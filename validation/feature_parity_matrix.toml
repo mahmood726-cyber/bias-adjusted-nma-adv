@@ -33,11 +33,18 @@ evidence_artifacts = [
   "external/r/metafor_continuous_semaglutide_step.R",
   "validation/reference_runs/semaglutide_step_continuous_metafor_output.json",
   "validation/reference_runs/semaglutide_step_continuous_metafor_reference.toml",
+  "scripts/build_inclisiran_orion_continuous_ctgov.py",
+  "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_effects.csv",
+  "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_benchmark.toml",
+  "validation/source_checks/inclisiran_orion_ldlc_pct_ctgov_check.json",
+  "external/r/metafor_continuous_inclisiran_orion.R",
+  "validation/reference_runs/inclisiran_orion_continuous_metafor_output.json",
+  "validation/reference_runs/inclisiran_orion_continuous_metafor_reference.toml",
 ]
 required_next_artifacts = [
-  "broader_continuous_outcome_reference_cases",
+  "continuous_edge_cases_zero_tau_and_positive_tau_across_more_domains",
 ]
-claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, a CT.gov continuous mean-difference case, a reported-HR prediction-interval convention check, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
+claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, two CT.gov continuous mean-difference cases in obesity and lipid domains, a reported-HR prediction-interval convention check, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
 certification_effect = "none"
 
 [[features]]

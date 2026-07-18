@@ -624,6 +624,29 @@ required_limitations = [
 ]
 
 [[benchmarks]]
+id = "inclisiran_orion_ldlc_pct_ctgov"
+domain = "continuous_pairwise_meta"
+artifact_path = "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_benchmark.toml"
+artifact_sha256 = "13189280870528e4ef4594aa3fb2e60ff272483fe3762a788a725833d180f865"
+artifact_schema_version = "continuous_pairwise_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract only"
+evidence_mode = "ctgov_reported_adjusted_treatment_difference"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 3
+source_manifests = ["validation/continuous/inclisiran_orion_ldlc_pct_ctgov_effects.csv"]
+source_manifest_sha256 = { "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_effects.csv" = "0024e73eb5b339837e1ceb65eeba8543db6f491fa6b819003dc17b8c2b4ae778" }
+source_checks = ["validation/source_checks/inclisiran_orion_ldlc_pct_ctgov_check.json"]
+source_check_sha256 = { "validation/source_checks/inclisiran_orion_ldlc_pct_ctgov_check.json" = "530e25d4c7c90c3f2d581581658f6b1dbb7af0dbfe1d6650d01be113083ed640" }
+required_limitations = [
+  "CT.gov adjusted least-squares mean differences are used as reported",
+  "different ORION trial populations are pooled only for software validation",
+  "not broad continuous-outcome parity",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
 id = "cll_pfs_reported_hr"
 domain = "reported_survival_hr_pairwise"
 artifact_path = "validation/survival/cll_pfs_reported_hr_benchmark.toml"

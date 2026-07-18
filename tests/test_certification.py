@@ -27,6 +27,9 @@ SPARSE_BINARY_R_ADAPTER = ROOT / "external" / "r" / "metafor_sparse_binary_psori
 PREDICTION_INTERVAL_R_ADAPTER = (
     ROOT / "external" / "r" / "metafor_prediction_interval_breast.R"
 )
+INCLISIRAN_CONTINUOUS_R_ADAPTER = (
+    ROOT / "external" / "r" / "metafor_continuous_inclisiran_orion.R"
+)
 PAIRWISE_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_reference_adapters.py"
 MULTINMA_R_ADAPTER = ROOT / "external" / "r" / "multinma_sglt2_binary_nma.R"
 MULTIARM_R_ADAPTER = ROOT / "external" / "r" / "multiarm_netmeta_fixture.R"
@@ -128,7 +131,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 5, "passed": 22}
+    assert summary == {"failed": 5, "passed": 23}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -138,6 +141,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_metafor_sparse_binary_psoriasis_output_validation",
         "r_metafor_prediction_interval_breast_output_validation",
         "r_metafor_continuous_semaglutide_step_output_validation",
+        "r_metafor_continuous_inclisiran_orion_output_validation",
         "r_multinma_sglt2_binary_nma_output_validation",
         "r_netmeta_multiarm_preflight",
         "r_netmeta_multiarm_output_validation",
@@ -288,6 +292,25 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert "local HKSJ floor checked" in prediction_interval_reference.tolerance
     assert PREDICTION_INTERVAL_R_ADAPTER.is_file()
+
+    inclisiran_continuous_reference = by_adapter[
+        "r_metafor_continuous_inclisiran_orion_output_validation"
+    ]
+    assert inclisiran_continuous_reference.target_id == "pairwise_metafor_meta"
+    assert inclisiran_continuous_reference.status == "passed"
+    assert inclisiran_continuous_reference.certification_effect == "evidence_candidate"
+    assert inclisiran_continuous_reference.reference_method == (
+        "metafor::rma.uni and meta::metagen continuous mean-difference"
+    )
+    assert inclisiran_continuous_reference.output_artifacts == (
+        "validation/reference_runs/inclisiran_orion_continuous_metafor_output.json",
+    )
+    assert (
+        "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_benchmark.toml"
+        in inclisiran_continuous_reference.input_artifacts
+    )
+    assert "absolute <= 2e-05" in inclisiran_continuous_reference.tolerance
+    assert INCLISIRAN_CONTINUOUS_R_ADAPTER.is_file()
 
     tau2_crosscheck_reference = by_adapter["r_metafor_tau2_crosscheck_source_output_validation"]
     assert tau2_crosscheck_reference.target_id == "pairwise_metafor_tau2_crosscheck_source"
@@ -563,6 +586,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json",
         "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_output.json",
         "validation/reference_runs/semaglutide_step_continuous_metafor_output.json",
+        "validation/reference_runs/inclisiran_orion_continuous_metafor_output.json",
         "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",
