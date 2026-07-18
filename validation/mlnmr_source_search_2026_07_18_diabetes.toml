@@ -1,0 +1,49 @@
+schema_version = "mlnmr_source_search/v1"
+checked_at = "2026-07-18"
+status = "no_admissible_real_mlnmr_domain_found"
+purpose = "Targeted audit of open-access diabetes IPD-NMA candidates for real ML-NMR validation under the project source boundary."
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+required_admissible_components = [
+  "public randomized-trial IPD rows with treatment, outcome, covariates, and source identity",
+  "source-bound aggregate covariate distributions for at least one connected aggregate study",
+  "shared treatment/outcome/estimand mapping between IPD and aggregate studies",
+  "NCT, PMID, DOI, or open-access article identity validation",
+  "covariate-overlap diagnostics",
+  "multinma ML-NMR reference output before certification",
+]
+search_limit = "This audit records one high-value diabetes IPD-NMA candidate. It is a boundary decision, not proof that no admissible dataset exists globally."
+
+[[searches]]
+source = "pubmed_doi_lookup"
+query = "10.1371/journal.pmed.1004553"
+result = "PubMed ESearch returned PMID 40193407 for the DOI."
+
+[[searches]]
+source = "crossref_open_access_metadata"
+query = "10.1371/journal.pmed.1004553"
+result = "Crossref confirms PLOS Medicine article identity, CC BY 4.0 license metadata, and an abstract describing IPD from 34 glucose-lowering therapy trials."
+
+[[searches]]
+source = "open_access_article_data_availability_review"
+query = "Frailty in randomized controlled trials of glucose-lowering therapies for type 2 diabetes data availability Vivli"
+result = "The article is open access, but row-level participant data are controlled-access through sponsor/Vivli application workflows, not public model-ready IPD rows."
+
+[[candidates]]
+id = "plos_medicine_t2d_frailty_ipd_nma_vivli"
+name = "Frailty in randomized controlled trials of glucose-lowering therapies for type 2 diabetes"
+source_kind = "pubmed_open_access_paper_controlled_ipd"
+pmid = "40193407"
+doi = "10.1371/journal.pmed.1004553"
+urls = [
+  "https://pubmed.ncbi.nlm.nih.gov/40193407/",
+  "https://doi.org/10.1371/journal.pmed.1004553",
+  "https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1004553",
+]
+eligibility = "excluded"
+exclusion_reason = "This is a strong methodological lead because it is an open-access IPD meta-analysis/NMA over 34 type 2 diabetes trials, but row-level trial IPD are not public. Controlled-access sponsor/Vivli data-sharing workflows, remote secure analysis, and aggregate article outputs are insufficient for source-backed public ML-NMR validation in this repository."
+usable_for = "method design and source-bound exclusion evidence only"
+
+[[candidate_policy]]
+candidate_class = "controlled_access_ipd_platform"
+eligibility = "excluded_from_model_ready_mlnmr_effects_under_current_boundary"
+reason = "Requester-only, sponsor-approved, credentialed, or secure-portal IPD can inform future manual discovery, but cannot count as public trial IPD rows under the current AACT/ClinicalTrials.gov, PubMed abstract, open-access paper, public numeric ICTRP/PACTR, and public FDA/EMA source boundary."

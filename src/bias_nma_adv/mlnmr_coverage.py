@@ -29,6 +29,9 @@ class MLNMRSourceCoverage:
     allowed_evidence_sources: tuple[str, ...]
     protocol_only_sources: tuple[str, ...]
     protocol_registry_rule: str
+    formal_source_boundary_decision: str
+    formal_source_boundary_reason: str
+    formal_decision_artifacts: tuple[str, ...]
     registered_benchmark_ids: tuple[str, ...]
     registered_source_counts: dict[str, int]
     required_source_components: tuple[str, ...]
@@ -49,6 +52,9 @@ class MLNMRSourceCoverage:
             "allowed_evidence_sources",
             "protocol_only_sources",
             "protocol_registry_rule",
+            "formal_source_boundary_decision",
+            "formal_source_boundary_reason",
+            "formal_decision_artifacts",
             "registered_benchmark_ids",
             "registered_source_counts",
             "required_source_components",
@@ -73,6 +79,11 @@ class MLNMRSourceCoverage:
             allowed_evidence_sources=tuple(str(item) for item in raw["allowed_evidence_sources"]),
             protocol_only_sources=tuple(str(item) for item in raw["protocol_only_sources"]),
             protocol_registry_rule=str(raw["protocol_registry_rule"]),
+            formal_source_boundary_decision=str(raw["formal_source_boundary_decision"]),
+            formal_source_boundary_reason=str(raw["formal_source_boundary_reason"]),
+            formal_decision_artifacts=tuple(
+                str(item) for item in raw["formal_decision_artifacts"]
+            ),
             registered_benchmark_ids=tuple(str(item) for item in raw["registered_benchmark_ids"]),
             registered_source_counts={
                 str(key): int(value) for key, value in raw["registered_source_counts"].items()
@@ -140,8 +151,47 @@ class MLNMRSourceCoverage:
                 )
         if "cannot supply" not in self.protocol_registry_rule:
             raise MLNMRCoverageError("ML-NMR protocol registry rule must block model-ready effects.")
+        allowed_formal_decisions = {
+            "no_formal_out_of_scope_decision",
+            "real_mlnmr_domain_formally_out_of_scope_under_current_public_source_boundary",
+        }
+        if self.formal_source_boundary_decision not in allowed_formal_decisions:
+            raise MLNMRCoverageError(
+                "ML-NMR formal_source_boundary_decision is unsupported."
+            )
+        formal_text = (
+            f"{self.formal_source_boundary_decision} "
+            f"{self.formal_source_boundary_reason}"
+        ).lower()
+        if (
+            self.formal_source_boundary_decision
+            == "real_mlnmr_domain_formally_out_of_scope_under_current_public_source_boundary"
+        ):
+            for term in ("public", "ipd", "does not certify", "feature parity"):
+                if term not in formal_text:
+                    raise MLNMRCoverageError(
+                        "formal ML-NMR source-boundary decisions must preserve public-IPD, non-certification, and feature-parity limits."
+                    )
+            if not self.formal_decision_artifacts:
+                raise MLNMRCoverageError(
+                    "formal ML-NMR source-boundary decisions require supporting artifacts."
+                )
+        elif self.formal_decision_artifacts:
+            raise MLNMRCoverageError(
+                "formal_decision_artifacts require a formal source-boundary decision."
+            )
         if "No ML-NMR" not in self.claim_limit:
             raise MLNMRCoverageError("ML-NMR claim_limit must block unsupported ML-NMR claims.")
+
+    def large_scale_domain_exclusions(self) -> dict[str, str]:
+        """Return non-certifying real-domain exclusions for large-scale summaries."""
+
+        if (
+            self.formal_source_boundary_decision
+            == "real_mlnmr_domain_formally_out_of_scope_under_current_public_source_boundary"
+        ):
+            return {"mlnmr": self.formal_source_boundary_reason}
+        return {}
 
 
 def load_mlnmr_source_coverage(path: str | Path) -> MLNMRSourceCoverage:
@@ -159,6 +209,12 @@ def summarize_mlnmr_source_coverage(coverage: MLNMRSourceCoverage) -> dict[str, 
         "registered_benchmark_ids": list(coverage.registered_benchmark_ids),
         "registered_source_counts": dict(sorted(coverage.registered_source_counts.items())),
         "has_source_backed_mlnmr_data": bool(coverage.registered_benchmark_ids),
+        "formal_source_boundary_decision": coverage.formal_source_boundary_decision,
+        "formal_source_boundary_reason": coverage.formal_source_boundary_reason,
+        "formal_decision_artifacts": list(coverage.formal_decision_artifacts),
+        "has_formal_source_boundary_exclusion": bool(
+            coverage.large_scale_domain_exclusions()
+        ),
         "required_source_components": list(coverage.required_source_components),
         "excluded_source_patterns": list(coverage.excluded_source_patterns),
         "required_next_artifacts": list(coverage.required_next_artifacts),

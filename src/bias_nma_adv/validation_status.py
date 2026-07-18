@@ -257,6 +257,9 @@ def build_validation_status(
                 simulation_matrix=simulation_matrix,
                 reference_reports=reports,
                 simulation_report=simulation_full_report,
+                formal_required_domain_exclusions=(
+                    mlnmr_coverage.large_scale_domain_exclusions()
+                ),
             ),
         },
         "reversal_yardstick": {

@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import tomllib
-from typing import Any
+from typing import Any, Mapping
 
 from bias_nma_adv.certification import ReferenceRunReport
 from bias_nma_adv.simulation_matrix import SimulationMatrix
@@ -160,10 +160,15 @@ def summarize_large_scale_validation(
     simulation_matrix: SimulationMatrix,
     reference_reports: list[ReferenceRunReport],
     simulation_report: dict[str, Any] | None = None,
+    formal_required_domain_exclusions: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Summarize current dynamic evidence against large-scale thresholds."""
 
     thresholds = gate.thresholds
+    requested_domain_exclusions = {
+        str(domain): str(reason)
+        for domain, reason in (formal_required_domain_exclusions or {}).items()
+    }
     validation_simulation_jobs = 0
     current_sim_iterations = 0
     simulation_evidence_status = "absent"
@@ -177,7 +182,15 @@ def summarize_large_scale_validation(
         report for report in reference_reports if report.status == "passed"
     ]
     current_domains = set(real_benchmark_atlas["domain_counts"])
-    missing_domains = sorted(set(thresholds.required_real_domains) - current_domains)
+    required_domains = set(thresholds.required_real_domains)
+    eligible_domain_exclusions = {
+        domain: reason
+        for domain, reason in requested_domain_exclusions.items()
+        if domain in required_domains and domain not in current_domains
+    }
+    missing_domains = sorted(
+        required_domains - current_domains - set(eligible_domain_exclusions)
+    )
     checks = {
         "source_backed_benchmarks": (
             int(real_benchmark_atlas["n_benchmarks"]),
@@ -214,6 +227,8 @@ def summarize_large_scale_validation(
     ]
     if missing_domains:
         failed_checks.append("required_real_domains")
+    if eligible_domain_exclusions:
+        failed_checks.append("formally_excluded_required_real_domains")
     status = "large_scale_validated" if not failed_checks else "partial_not_large_scale"
     return {
         "schema_version": LARGE_SCALE_VALIDATION_SCHEMA_VERSION,
@@ -225,6 +240,9 @@ def summarize_large_scale_validation(
             for name, (observed, required) in checks.items()
         },
         "missing_required_real_domains": missing_domains,
+        "formally_excluded_required_real_domains": dict(
+            sorted(eligible_domain_exclusions.items())
+        ),
         "failed_checks": failed_checks,
         "simulation_counting_rule": (
             "Only passed full jobs from a validated simulation report count toward "

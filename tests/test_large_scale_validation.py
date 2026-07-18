@@ -10,6 +10,7 @@ from bias_nma_adv.large_scale_validation import (
     load_large_scale_validation_gate,
     summarize_large_scale_validation,
 )
+from bias_nma_adv.mlnmr_coverage import load_mlnmr_source_coverage
 from bias_nma_adv.real_benchmark_atlas import build_real_benchmark_atlas
 from bias_nma_adv.simulation_matrix import validate_simulation_matrix
 from bias_nma_adv.simulation_matrix import (
@@ -33,6 +34,9 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         load_simulation_matrix_report(ROOT / "validation" / "simulation_full_report.json"),
         matrix,
     )
+    mlnmr_coverage = load_mlnmr_source_coverage(
+        ROOT / "validation" / "mlnmr_source_coverage.toml"
+    )
     reports = load_reference_run_reports(ROOT / "validation" / "reference_runs")
 
     summary = summarize_large_scale_validation(
@@ -41,6 +45,9 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
         simulation_matrix=matrix,
         reference_reports=reports,
         simulation_report=simulation_report,
+        formal_required_domain_exclusions=(
+            mlnmr_coverage.large_scale_domain_exclusions()
+        ),
     )
 
     assert summary["schema_version"] == LARGE_SCALE_VALIDATION_SCHEMA_VERSION
@@ -85,12 +92,44 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
     assert "diagnostic_test_accuracy" not in summary["missing_required_real_domains"]
     assert "component_nma" not in summary["missing_required_real_domains"]
     assert "cross_design_nma" not in summary["missing_required_real_domains"]
-    assert summary["missing_required_real_domains"] == ["mlnmr"]
+    assert summary["missing_required_real_domains"] == []
+    assert set(summary["formally_excluded_required_real_domains"]) == {"mlnmr"}
+    assert "does not certify" in summary[
+        "formally_excluded_required_real_domains"
+    ]["mlnmr"]
     assert "source_backed_benchmarks" not in summary["failed_checks"]
     assert "benchmark_study_effects" not in summary["failed_checks"]
     assert "unique_nct_ids" not in summary["failed_checks"]
-    assert summary["failed_checks"] == ["required_real_domains"]
+    assert summary["failed_checks"] == [
+        "formally_excluded_required_real_domains"
+    ]
     assert summary["certification_effect"] == "none"
+
+
+def test_large_scale_validation_without_formal_exclusion_reports_mlnmr_missing():
+    gate = load_large_scale_validation_gate(GATE)
+    atlas = build_real_benchmark_atlas(ROOT, checked_at="2026-07-16T00:00:00Z")
+    matrix = validate_simulation_matrix(
+        ROOT / "validation" / "simulation_matrix.toml",
+        grand_benchmark_plan_path=ROOT / "validation" / "grand_benchmark_plan.toml",
+    )
+    simulation_report = validate_simulation_matrix_report(
+        load_simulation_matrix_report(ROOT / "validation" / "simulation_full_report.json"),
+        matrix,
+    )
+    reports = load_reference_run_reports(ROOT / "validation" / "reference_runs")
+
+    summary = summarize_large_scale_validation(
+        gate,
+        real_benchmark_atlas=atlas,
+        simulation_matrix=matrix,
+        reference_reports=reports,
+        simulation_report=simulation_report,
+    )
+
+    assert summary["missing_required_real_domains"] == ["mlnmr"]
+    assert summary["formally_excluded_required_real_domains"] == {}
+    assert summary["failed_checks"] == ["required_real_domains"]
 
 
 def test_large_scale_validation_gate_rejects_static_completion_claim():

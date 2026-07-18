@@ -326,6 +326,17 @@ def test_validation_status_composes_all_current_gates():
         "who_ictrp_results": 0,
     }
     assert mlnmr_coverage["has_source_backed_mlnmr_data"] is False
+    assert mlnmr_coverage["formal_source_boundary_decision"] == (
+        "real_mlnmr_domain_formally_out_of_scope_under_current_public_source_boundary"
+    )
+    assert "does not certify" in mlnmr_coverage["formal_source_boundary_reason"]
+    assert "feature parity" in mlnmr_coverage["formal_source_boundary_reason"]
+    assert mlnmr_coverage["formal_decision_artifacts"] == [
+        "validation/mlnmr_source_search_2026_07_17.toml",
+        "validation/mlnmr_source_search_2026_07_18.toml",
+        "validation/mlnmr_source_search_2026_07_18_diabetes.toml",
+    ]
+    assert mlnmr_coverage["has_formal_source_boundary_exclusion"] is True
     assert "public_trial_ipd_rows" in mlnmr_coverage["required_source_components"]
     assert "multinma_mlnmr_reference_run_before_certification" in mlnmr_coverage[
         "required_source_components"
@@ -394,8 +405,14 @@ def test_validation_status_composes_all_current_gates():
     assert "diagnostic_test_accuracy" not in large_scale["missing_required_real_domains"]
     assert "component_nma" not in large_scale["missing_required_real_domains"]
     assert "cross_design_nma" not in large_scale["missing_required_real_domains"]
-    assert large_scale["missing_required_real_domains"] == ["mlnmr"]
-    assert large_scale["failed_checks"] == ["required_real_domains"]
+    assert large_scale["missing_required_real_domains"] == []
+    assert set(large_scale["formally_excluded_required_real_domains"]) == {"mlnmr"}
+    assert "does not certify" in large_scale[
+        "formally_excluded_required_real_domains"
+    ]["mlnmr"]
+    assert large_scale["failed_checks"] == [
+        "formally_excluded_required_real_domains"
+    ]
     assert large_scale["global_large_scale_validation_complete"] is False
     assert large_scale["certification_effect"] == "none"
 

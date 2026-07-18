@@ -16,6 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 COVERAGE = ROOT / "validation" / "mlnmr_source_coverage.toml"
 SOURCE_SEARCH = ROOT / "validation" / "mlnmr_source_search_2026_07_17.toml"
 SOURCE_SEARCH_FOLLOWUP = ROOT / "validation" / "mlnmr_source_search_2026_07_18.toml"
+SOURCE_SEARCH_DIABETES = (
+    ROOT / "validation" / "mlnmr_source_search_2026_07_18_diabetes.toml"
+)
 
 
 def test_mlnmr_source_coverage_records_current_real_data_blocker():
@@ -61,6 +64,17 @@ def test_mlnmr_source_coverage_records_current_real_data_blocker():
     assert "synthetic" in exclusions
     assert "pseudo-ipd" in exclusions
     assert "survey" in exclusions
+    assert coverage.formal_source_boundary_decision == (
+        "real_mlnmr_domain_formally_out_of_scope_under_current_public_source_boundary"
+    )
+    assert coverage.large_scale_domain_exclusions() == {
+        "mlnmr": coverage.formal_source_boundary_reason
+    }
+    assert "does not certify" in coverage.formal_source_boundary_reason
+    assert "feature parity" in coverage.formal_source_boundary_reason
+    assert "validation/mlnmr_source_search_2026_07_18_diabetes.toml" in (
+        coverage.formal_decision_artifacts
+    )
 
 
 def test_mlnmr_source_coverage_summary_is_validation_status_ready():
@@ -83,6 +97,14 @@ def test_mlnmr_source_coverage_summary_is_validation_status_ready():
             "who_ictrp_results": 0,
         },
         "has_source_backed_mlnmr_data": False,
+        "formal_source_boundary_decision": "real_mlnmr_domain_formally_out_of_scope_under_current_public_source_boundary",
+        "formal_source_boundary_reason": "Bounded searches found no public row-level randomized-trial IPD plus connected aggregate covariate network. Controlled-access Vivli or sponsor IPD, simulated package IPD, pseudo-IPD, and single-trial leads remain excluded; this does not certify ML-NMR, does not count as feature parity, and does not enable clinical population-adjustment claims.",
+        "formal_decision_artifacts": [
+            "validation/mlnmr_source_search_2026_07_17.toml",
+            "validation/mlnmr_source_search_2026_07_18.toml",
+            "validation/mlnmr_source_search_2026_07_18_diabetes.toml",
+        ],
+        "has_formal_source_boundary_exclusion": True,
         "required_source_components": [
             "public_trial_ipd_rows",
             "source_bound_aggregate_covariate_distribution",
@@ -131,6 +153,11 @@ def test_mlnmr_source_coverage_rejects_pseudo_ipd_shortcuts_and_premature_certif
     raw = _coverage_to_mapping(load_mlnmr_source_coverage(COVERAGE))
     raw["certification_effect"] = "production_certified"
     with pytest.raises(MLNMRCoverageError, match="cannot certify"):
+        MLNMRSourceCoverage.from_mapping(raw)
+
+    raw = _coverage_to_mapping(load_mlnmr_source_coverage(COVERAGE))
+    raw["formal_source_boundary_reason"] = "Excluded for convenience."
+    with pytest.raises(MLNMRCoverageError, match="formal ML-NMR"):
         MLNMRSourceCoverage.from_mapping(raw)
 
 
@@ -185,6 +212,25 @@ def test_mlnmr_followup_source_search_excludes_single_trial_ipd_leads():
     assert "aggregate covariate" in reasons
 
 
+def test_mlnmr_diabetes_source_search_excludes_controlled_access_ipd():
+    with SOURCE_SEARCH_DIABETES.open("rb") as handle:
+        audit = tomllib.load(handle)
+
+    assert audit["schema_version"] == "mlnmr_source_search/v1"
+    assert audit["checked_at"] == "2026-07-18"
+    assert audit["status"] == "no_admissible_real_mlnmr_domain_found"
+
+    candidates = {candidate["id"]: candidate for candidate in audit["candidates"]}
+    diabetes = candidates["plos_medicine_t2d_frailty_ipd_nma_vivli"]
+    assert diabetes["pmid"] == "40193407"
+    assert diabetes["doi"] == "10.1371/journal.pmed.1004553"
+    assert diabetes["eligibility"] == "excluded"
+    reason = diabetes["exclusion_reason"].lower()
+    assert "open-access ipd meta-analysis/nma" in reason
+    assert "row-level trial ipd are not public" in reason
+    assert "controlled-access" in reason
+
+
 def _coverage_to_mapping(coverage: MLNMRSourceCoverage) -> dict[str, object]:
     return {
         "schema_version": MLNMR_SOURCE_COVERAGE_SCHEMA_VERSION,
@@ -196,6 +242,9 @@ def _coverage_to_mapping(coverage: MLNMRSourceCoverage) -> dict[str, object]:
         "allowed_evidence_sources": list(coverage.allowed_evidence_sources),
         "protocol_only_sources": list(coverage.protocol_only_sources),
         "protocol_registry_rule": coverage.protocol_registry_rule,
+        "formal_source_boundary_decision": coverage.formal_source_boundary_decision,
+        "formal_source_boundary_reason": coverage.formal_source_boundary_reason,
+        "formal_decision_artifacts": list(coverage.formal_decision_artifacts),
         "registered_benchmark_ids": list(coverage.registered_benchmark_ids),
         "registered_source_counts": dict(coverage.registered_source_counts),
         "required_source_components": list(coverage.required_source_components),

@@ -7,6 +7,13 @@ purpose = "Machine-readable gate for whether ML-NMR has source-backed public tri
 allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
 protocol_only_sources = ["other_trial_registry_protocol", "pactr_protocol", "who_ictrp_protocol"]
 protocol_registry_rule = "Protocol-only ICTRP, PACTR, and other registry rows cannot supply ML-NMR model-ready IPD, aggregate covariate distributions, or treatment effects; downloaded registry result rows and public FDA/EMA regulatory review rows may supply effects only when public numeric text is source-bound."
+formal_source_boundary_decision = "real_mlnmr_domain_formally_out_of_scope_under_current_public_source_boundary"
+formal_source_boundary_reason = "Bounded searches found no public row-level randomized-trial IPD plus connected aggregate covariate network. Controlled-access Vivli or sponsor IPD, simulated package IPD, pseudo-IPD, and single-trial leads remain excluded; this does not certify ML-NMR, does not count as feature parity, and does not enable clinical population-adjustment claims."
+formal_decision_artifacts = [
+  "validation/mlnmr_source_search_2026_07_17.toml",
+  "validation/mlnmr_source_search_2026_07_18.toml",
+  "validation/mlnmr_source_search_2026_07_18_diabetes.toml",
+]
 registered_benchmark_ids = []
 registered_source_counts = {aact_clinicaltrials_gov = 0, clinicaltrials_gov = 0, ema_epar = 0, fda_review = 0, open_access_paper = 0, pactr_results = 0, pubmed_abstract = 0, who_ictrp_results = 0}
 required_source_components = [
@@ -27,6 +34,7 @@ excluded_source_patterns = [
 source_search_summary = [
   "The 2026-07-17 bounded local and web source search is recorded in validation/mlnmr_source_search_2026_07_17.toml and found no admissible public trial IPD plus aggregate covariate NMA dataset under the allowed source boundary.",
   "The 2026-07-18 follow-up audit is recorded in validation/mlnmr_source_search_2026_07_18.toml. It verified NCT00950248/PMID 32784117 as a legitimate single-trial public-source lead, but excluded it because it is not a connected IPD-plus-aggregate ML-NMR network.",
+  "The 2026-07-18 diabetes IPD-NMA audit is recorded in validation/mlnmr_source_search_2026_07_18_diabetes.toml. It verifies PMID 40193407 / DOI 10.1371/journal.pmed.1004553 as an open-access IPD meta-analysis/NMA lead, but excludes it because row-level trial IPD are controlled-access rather than public model-ready rows.",
   "advanced-nma-pooling has reusable ML-NMR and multinma adapter infrastructure, but its example ML-NMR rows use synthetic study IDs and no source-backed NCT, PMID, DOI, or open-access article identity.",
   "Public multinma plaque-psoriasis and NDMM examples are useful for adapter design, but available public examples use simulated/synthetic IPD or reconstructed survival inputs and cannot clear real ML-NMR validation.",
   "Protocol-only ICTRP and PACTR records remain admissible for registered-outcome anchors and completeness denominators, not for ML-NMR model-ready IPD rows, aggregate covariate distributions, or treatment effects.",

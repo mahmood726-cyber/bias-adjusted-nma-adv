@@ -117,6 +117,8 @@ evidence_artifacts = [
   "validation/dependency_preflights/tier1_r_dependency_preflight.toml",
   "validation/mlnmr_source_search_2026_07_17.toml",
   "validation/mlnmr_source_search_2026_07_18.toml",
+  "validation/mlnmr_source_search_2026_07_18_diabetes.toml",
+  "validation/mlnmr_source_coverage.toml",
 ]
 required_next_artifacts = [
   "public_ipd_or_aggregate_covariate_fixture",
@@ -225,12 +227,13 @@ evidence_artifacts = [
   "validation/mlnmr_source_coverage.toml",
   "validation/mlnmr_source_search_2026_07_17.toml",
   "validation/mlnmr_source_search_2026_07_18.toml",
+  "validation/mlnmr_source_search_2026_07_18_diabetes.toml",
   "validation/validation_status.json",
 ]
 required_next_artifacts = [
-  "source_backed_real_mlnmr_domain_or_formal_out_of_scope_decision",
+  "admissible_public_trial_ipd_if_mlnmr_reopened",
   "broad_feature_family_reference_matching_promotions",
   "externally_reproducible_reference_candidate_artifact_bundle",
 ]
-claim_limit = "Most breadth thresholds are now met, but large-scale validation remains partial because the real ML-NMR domain is missing and feature families are not broad-reference-matched."
+claim_limit = "Most breadth thresholds are met and ML-NMR has a formal public-source exclusion, but large-scale validation remains partial because the exclusion is not evidence and feature families are not broad-reference-matched."
 certification_effect = "none"
