@@ -1,0 +1,32 @@
+schema_version = "reference_run/v1"
+target_id = "pairwise_metafor_tau2_crosscheck_source"
+adapter_id = "r_metafor_tau2_crosscheck_source_output_validation"
+reference_method = "metafor::rma.uni FE/DL/PM/REML tau2 cross-check"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-18T15:30:00Z"
+command = ["Rscript", "--vanilla", "external/r/metafor_tau2_crosscheck_survival.R", "--benchmark", "sglt2_hf_reported_hr=validation/survival/sglt2_hf_reported_hr_effects.csv", "--benchmark", "glp1_mace_reported_hr=validation/survival/glp1_mace_reported_hr_effects.csv", "--benchmark", "lipid_cv_outcomes_reported_hr=validation/survival/lipid_cv_outcomes_reported_hr_effects.csv", "--benchmark", "hcc_os_reported_hr=validation/survival/hcc_os_reported_hr_effects.csv", "--output", "validation/reference_runs/metafor_tau2_crosscheck_survival_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", jsonlite = "2.0.0"}
+input_artifacts = ["validation/survival/sglt2_hf_reported_hr_effects.csv", "validation/survival/glp1_mace_reported_hr_effects.csv", "validation/survival/lipid_cv_outcomes_reported_hr_effects.csv", "validation/survival/hcc_os_reported_hr_effects.csv", "validation/survival/sglt2_hf_reported_hr_benchmark.toml", "validation/survival/glp1_mace_reported_hr_benchmark.toml", "validation/survival/lipid_cv_outcomes_reported_hr_benchmark.toml", "validation/survival/hcc_os_reported_hr_benchmark.toml", "external/r/metafor_tau2_crosscheck_survival.R"]
+output_artifacts = ["validation/reference_runs/metafor_tau2_crosscheck_survival_output.json"]
+tolerance = "absolute <= 0.005 for primary fields; I2 percentage allowed <= 0.05 due optimizer tolerance"
+skip_reason = ""
+validated_components = ["source_backed_reported_hr_rows", "fe_dl_pm_reml_estimates", "tau2_estimator_cross_check", "q_i2_h2_summary_alignment", "optimizer_parity_limitation_preserved"]
+max_abs_difference = 0.017542957603761344
+notes = ["This validates FE/DL/PM/REML output on several source-backed reported-HR benchmarks. It is not broad optimizer stress parity, clinical guidance, regulatory evidence, or HTA certification."]
+
+[input_sha256]
+"validation/survival/sglt2_hf_reported_hr_effects.csv" = "3471e46ecb8bedd787b9009167f39a8029b62b9ce202fd8a0a37de2787ce106e"
+"validation/survival/glp1_mace_reported_hr_effects.csv" = "8402f5a83f6aa4edd9a02bace953f2d195df47d9240d790f88cc5940954d7a4a"
+"validation/survival/lipid_cv_outcomes_reported_hr_effects.csv" = "0f03fdc2e68c8f62793eb3db6f1a60dd9fd6522e2d6dd79fe88591e9b2cb70f6"
+"validation/survival/hcc_os_reported_hr_effects.csv" = "116d608a49ba5acb127ebcb7be415aaafa92214a346f5814ef348b2116b109af"
+"validation/survival/sglt2_hf_reported_hr_benchmark.toml" = "2ceaaecf37edf85f7f449665f2bccbd394d2c973bf087d577251868c1cfb8618"
+"validation/survival/glp1_mace_reported_hr_benchmark.toml" = "b9a5fb37e0e7483cf9ec58b6396ca10efbe90ca43c8ce30b7a59a728cc357288"
+"validation/survival/lipid_cv_outcomes_reported_hr_benchmark.toml" = "2f5abae96768a878b2fd7472f8031b2e3fcbc8c85b7895df91f6f6022443b131"
+"validation/survival/hcc_os_reported_hr_benchmark.toml" = "09d03c72c5f368e0ca4e889d7a96708b1a482bd21cee3fedce92a8be532d3b34"
+"external/r/metafor_tau2_crosscheck_survival.R" = "5b9d0b1a1974cfcbfa6fab7b0b35c03b6860eb4d41355fe6108641d25a5b01b7"
+
+[output_sha256]
+"validation/reference_runs/metafor_tau2_crosscheck_survival_output.json" = "c3a59f8aad4f92532d2753463ef9fa763e94febd1424f6511e18bbe81a737124"

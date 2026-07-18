@@ -201,6 +201,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "pairwise_metafor_tau2_crosscheck_source"
+domain = "numerical_stability"
+module = "src/bias_nma_adv/pairwise.py"
+reference_method = "metafor::rma.uni FE/DL/PM/REML tau2 cross-check"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed reported-HR study rows from allowed public sources",
+  "validate local FE, DerSimonian-Laird, Paule-Mandel, and REML pairwise summaries against metafor::rma.uni outputs across multiple real benchmarks",
+  "preserve the limitation that this is a tau2 cross-check candidate, not broad optimizer stress parity or clinical certification",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "survival_km_oa_ipd_reconstruction"
 domain = "survival_km_reconstruction"
 module = "planned:survival_km"

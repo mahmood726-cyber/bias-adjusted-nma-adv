@@ -16,6 +16,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_dta_mada_reitsma_output,
     validate_dta_mada_source_table_output,
     validate_mbnmadose_semaglutide_polynomial_output,
+    validate_metafor_tau2_crosscheck_output,
     validate_multinma_sglt2_binary_nma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_gosh_output,
@@ -46,6 +47,9 @@ PUBLICATION_BIAS_REGTEST_OUTPUT = (
 )
 PUBLICATION_BIAS_TRIMFILL_OUTPUT = (
     ROOT / "validation" / "reference_runs" / "publication_bias_glp1_metafor_trimfill_output.json"
+)
+TAU2_CROSSCHECK_OUTPUT = (
+    ROOT / "validation" / "reference_runs" / "metafor_tau2_crosscheck_survival_output.json"
 )
 COMPONENT_CNMA_OUTPUT = ROOT / "validation" / "reference_runs" / "component_netmeta_cnma_output.json"
 CROSSNMA_COMPAT_OUTPUT = ROOT / "validation" / "reference_runs" / "crossnma_sglt2_compatibility_output.json"
@@ -80,6 +84,25 @@ def test_pairwise_metafor_gosh_output_matches_source_backed_subset_space():
     assert summary["max_abs_difference"] < 1e-12
     assert "all_nonempty_subset_enumeration" in summary["validated_components"]
     assert "not an outlier-removal rule" in summary["source_policy_note"]
+
+
+def test_metafor_tau2_crosscheck_matches_source_backed_survival_benchmarks():
+    summary = validate_metafor_tau2_crosscheck_output(TAU2_CROSSCHECK_OUTPUT, repo_root=ROOT)
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "pairwise_metafor_tau2_crosscheck_source"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == "metafor::rma.uni FE/DL/PM/REML tau2 cross-check"
+    assert set(summary["benchmark_ids"]) == {
+        "sglt2_hf_reported_hr",
+        "glp1_mace_reported_hr",
+        "lipid_cv_outcomes_reported_hr",
+        "hcc_os_reported_hr",
+    }
+    assert summary["max_abs_difference"] <= 0.05
+    assert "tau2_estimator_cross_check" in summary["validated_components"]
+    assert "not broad optimizer stress parity" in summary["source_policy_note"]
 
 
 def test_multinma_sglt2_binary_nma_output_matches_source_backed_reference():

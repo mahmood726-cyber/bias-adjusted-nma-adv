@@ -1284,6 +1284,158 @@ def validate_survival_hr_metafor_pairwise_output(
     }
 
 
+def validate_metafor_tau2_crosscheck_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 5e-3,
+) -> dict[str, Any]:
+    """Validate source-backed ``metafor`` FE/DL/PM/REML cross-check output."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "source_policy",
+            "reference_method",
+            "package_versions",
+            "benchmarks",
+        },
+        label="metafor tau2 cross-check output",
+    )
+    if output["schema_version"] != "metafor_tau2_crosscheck/v1":
+        raise RReferenceValidationError("metafor tau2 cross-check schema_version mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("metafor tau2 cross-check source_policy mismatch.")
+    if output["reference_method"] != "metafor::rma.uni FE/DL/PM/REML tau2 cross-check":
+        raise RReferenceValidationError("metafor tau2 cross-check reference_method mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "jsonlite"})
+
+    benchmarks = output["benchmarks"]
+    if not isinstance(benchmarks, list) or len(benchmarks) < 3:
+        raise RReferenceValidationError("metafor tau2 cross-check requires at least three benchmarks.")
+
+    max_abs_diff = 0.0
+    benchmark_ids: list[str] = []
+    for benchmark in benchmarks:
+        _require_keys(
+            benchmark,
+            {
+                "benchmark_id",
+                "effects_path",
+                "evidence_mode",
+                "effect_scale",
+                "study_effects",
+                "methods",
+                "limitations",
+            },
+            label="metafor tau2 benchmark",
+        )
+        benchmark_id = str(benchmark["benchmark_id"])
+        benchmark_ids.append(benchmark_id)
+        if benchmark["evidence_mode"] != "reported_hr_pubmed_abstract":
+            raise RReferenceValidationError(f"{benchmark_id}: evidence_mode mismatch.")
+        if benchmark["effect_scale"] != "log_hr":
+            raise RReferenceValidationError(f"{benchmark_id}: effect_scale must be log_hr.")
+        _survival_hr_benchmark_path(root, benchmark_id)
+
+        expected_effects = _load_simple_effect_rows(root / str(benchmark["effects_path"]))
+        benchmark_effects = {
+            str(effect["study_id"]): effect
+            for effect in _load_toml(_survival_hr_benchmark_path(root, benchmark_id))["study_effects"]
+        }
+        output_effects = {
+            str(effect["study_id"]): effect
+            for effect in benchmark["study_effects"]
+        }
+        if set(expected_effects) != set(output_effects):
+            raise RReferenceValidationError(f"{benchmark_id}: output effect rows do not match CSV.")
+        if set(expected_effects) != set(benchmark_effects):
+            raise RReferenceValidationError(f"{benchmark_id}: CSV effect rows do not match benchmark.")
+
+        ordered_effects: list[float] = []
+        ordered_variances: list[float] = []
+        for study_id, expected in expected_effects.items():
+            observed = output_effects[study_id]
+            benchmark_row = benchmark_effects[study_id]
+            for field in ("nct_id", "pmid"):
+                if str(observed[field]) != str(expected[field]):
+                    raise RReferenceValidationError(f"{benchmark_id}/{study_id}: {field} mismatch.")
+                if str(benchmark_row[field]) != str(expected[field]):
+                    raise RReferenceValidationError(
+                        f"{benchmark_id}/{study_id}: benchmark {field} mismatch."
+                    )
+            for field in ("estimate", "se", "variance"):
+                max_abs_diff = max(
+                    max_abs_diff,
+                    _assert_close(
+                        f"{benchmark_id}/{study_id} {field}",
+                        observed[field],
+                        expected[field],
+                        tolerance,
+                    ),
+                    _assert_close(
+                        f"{benchmark_id}/{study_id} benchmark {field}",
+                        benchmark_row[field],
+                        expected[field],
+                        tolerance,
+                    ),
+                )
+            ordered_effects.append(float(expected["estimate"]))
+            ordered_variances.append(float(expected["variance"]))
+
+        methods = benchmark["methods"]
+        if not isinstance(methods, list):
+            raise RReferenceValidationError(f"{benchmark_id}: methods must be a list.")
+        by_method = {str(item.get("method", "")): item for item in methods}
+        if set(by_method) != {"FE", "DL", "PM", "REML"}:
+            raise RReferenceValidationError(f"{benchmark_id}: FE/DL/PM/REML methods required.")
+        for method, observed in by_method.items():
+            fit = fit_pairwise_meta(ordered_effects, ordered_variances, method=method)
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_pairwise_model_summary(
+                    f"{benchmark_id} {method}",
+                    observed,
+                    fit,
+                    expected_method=method,
+                    expected_k=len(ordered_effects),
+                    tolerance=tolerance,
+                ),
+            )
+
+        limitations = [str(item).lower() for item in benchmark["limitations"]]
+        if not any("not broad optimizer parity" in item for item in limitations):
+            raise RReferenceValidationError(f"{benchmark_id}: broad optimizer limitation missing.")
+        if not any("does not certify" in item for item in limitations):
+            raise RReferenceValidationError(f"{benchmark_id}: certification limitation missing.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "pairwise_metafor_tau2_crosscheck_source",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor::rma.uni FE/DL/PM/REML tau2 cross-check",
+        "benchmark_ids": benchmark_ids,
+        "validated_components": [
+            "source_backed_reported_hr_rows",
+            "fe_dl_pm_reml_estimates",
+            "tau2_estimator_cross_check",
+            "q_i2_h2_summary_alignment",
+            "optimizer_parity_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates FE/DL/PM/REML output on several source-backed "
+            "reported-HR benchmarks. It is not broad optimizer stress parity, "
+            "clinical guidance, regulatory evidence, or HTA certification."
+        ),
+    }
+
+
 def validate_ctgov_hr_network_netmeta_output(
     output_path: str | Path,
     *,
@@ -2598,6 +2750,58 @@ def _assert_fixed_effect_model_summary(
     )
 
 
+def _assert_pairwise_model_summary(
+    label: str,
+    observed: dict[str, Any],
+    fit: Any,
+    *,
+    expected_method: str,
+    expected_k: int,
+    tolerance: float,
+) -> float:
+    _require_keys(
+        observed,
+        {
+            "method",
+            "k",
+            "estimate",
+            "se",
+            "ci_low",
+            "ci_high",
+            "tau2",
+            "q",
+            "df",
+            "q_p_value",
+            "i2",
+            "h2",
+        },
+        label=label,
+    )
+    if str(observed["method"]) != expected_method:
+        raise RReferenceValidationError(f"{label} method mismatch.")
+    if int(observed["k"]) != expected_k:
+        raise RReferenceValidationError(f"{label} k mismatch.")
+    if int(observed["df"]) != int(fit.df):
+        raise RReferenceValidationError(f"{label} df mismatch.")
+    q = float(fit.q)
+    df = int(fit.df)
+    q_p_value = 1.0 if df <= 0 else float(scipy.stats.chi2.sf(q, df))
+    expected_i2 = 0.0 if q <= 0.0 or df <= 0 else max(0.0, 100.0 * (q - df) / q)
+    expected_h2 = 1.0 if df <= 0 else q / df
+    i2_tolerance = max(tolerance, 0.05)
+    return max(
+        _assert_close(f"{label} estimate", observed["estimate"], fit.estimate, tolerance),
+        _assert_close(f"{label} se", observed["se"], fit.se, tolerance),
+        _assert_close(f"{label} ci_low", observed["ci_low"], fit.ci_low, tolerance),
+        _assert_close(f"{label} ci_high", observed["ci_high"], fit.ci_high, tolerance),
+        _assert_close(f"{label} tau2", observed["tau2"], fit.tau2, tolerance),
+        _assert_close(f"{label} q", observed["q"], q, tolerance),
+        _assert_close(f"{label} q_p_value", observed["q_p_value"], q_p_value, tolerance),
+        _assert_close(f"{label} i2", observed["i2"], expected_i2, i2_tolerance),
+        _assert_close(f"{label} h2", observed["h2"], expected_h2, tolerance),
+    )
+
+
 def _require_keys(raw: dict[str, Any], required: set[str], *, label: str) -> None:
     missing = sorted(required - set(raw))
     if missing:
@@ -2838,6 +3042,13 @@ def _survival_hr_benchmark_path(root: Path, benchmark_id: str) -> Path:
     try:
         return paths[benchmark_id]
     except KeyError as exc:
+        if any(part in benchmark_id for part in ("..", "/", "\\")):
+            raise RReferenceValidationError(
+                f"unsupported survival HR benchmark_id '{benchmark_id}'."
+            ) from exc
+        candidate = root / "validation" / "survival" / f"{benchmark_id}_benchmark.toml"
+        if candidate.is_file():
+            return candidate
         raise RReferenceValidationError(
             f"unsupported survival HR benchmark_id '{benchmark_id}'."
         ) from exc

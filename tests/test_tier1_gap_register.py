@@ -227,6 +227,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["numerical_stability"].implemented_capabilities
     )
     assert (
+        "metafor_source_backed_tau2_crosscheck_reference_candidate"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
         "ctgov_sparse_design_bias_guard"
         in by_id["numerical_stability"].implemented_capabilities
     )
@@ -351,6 +355,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "pairwise_sparse_dominant_study_stress_report",
                 "pairwise_reml_local_minimum_profile_diagnostic",
                 "pairwise_optimizer_stress_matrix",
+                "metafor_source_backed_tau2_crosscheck_reference_candidate",
                 "mixed_measure_outcome_fail_closed",
                 "nma_dropped_study_warning_counts",
                 "nma_tau_method_result_reporting",

@@ -218,6 +218,7 @@ def test_validation_status_composes_all_current_gates():
             "pairwise_sparse_dominant_study_stress_report",
             "pairwise_reml_local_minimum_profile_diagnostic",
             "pairwise_optimizer_stress_matrix",
+            "metafor_source_backed_tau2_crosscheck_reference_candidate",
             "mixed_measure_outcome_fail_closed",
             "nma_dropped_study_warning_counts",
             "nma_tau_method_result_reporting",
@@ -387,7 +388,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 18,
+        "observed": 19,
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
@@ -517,10 +518,10 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 23
+    assert reference_runs["n_reports"] == 24
     assert reference_runs["status_counts"] == {
         "failed": 5,
-        "passed": 18,
+        "passed": 19,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
@@ -538,6 +539,7 @@ def test_validation_status_composes_all_current_gates():
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
         "validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json",
         "validation/reference_runs/publication_bias_glp1_metafor_trimfill_output.json",
+        "validation/reference_runs/metafor_tau2_crosscheck_survival_output.json",
         "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
         "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_output.json",
         "validation/reference_runs/component_netmeta_cnma_output.json",
@@ -567,6 +569,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_netmeta_t2d_ctgov_hr_network_output_validation", "passed"),
         ("r_metafor_publication_bias_regtest_output_validation", "passed"),
         ("r_metafor_publication_bias_trimfill_output_validation", "passed"),
+        ("r_metafor_tau2_crosscheck_source_output_validation", "passed"),
         ("r_netmeta_psoriasis_ctgov_binary_network_output_validation", "passed"),
         ("r_netmeta_psoriasis_netsplit_output_validation", "passed"),
         ("r_netmeta_component_cnma_output_validation", "passed"),

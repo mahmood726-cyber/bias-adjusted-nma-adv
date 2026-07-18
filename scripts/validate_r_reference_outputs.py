@@ -25,6 +25,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     validate_dta_mada_reitsma_output,
     validate_dta_mada_source_table_output,
     validate_mbnmadose_semaglutide_polynomial_output,
+    validate_metafor_tau2_crosscheck_output,
     validate_multinma_sglt2_binary_nma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_gosh_output,
@@ -70,6 +71,8 @@ PUBLICATION_BIAS_TRIMFILL_OUTPUT = Path(
 PUBLICATION_BIAS_TRIMFILL_REPORT = Path(
     "validation/reference_runs/publication_bias_glp1_metafor_trimfill_reference.toml"
 )
+TAU2_CROSSCHECK_OUTPUT = Path("validation/reference_runs/metafor_tau2_crosscheck_survival_output.json")
+TAU2_CROSSCHECK_REPORT = Path("validation/reference_runs/metafor_tau2_crosscheck_survival_reference.toml")
 CTGOV_BINARY_NETSPLIT_OUTPUT = Path(
     "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_output.json"
 )
@@ -127,6 +130,9 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=PUBLICATION_BIAS_TRIMFILL_REPORT,
     )
+    parser.add_argument("--tau2-crosscheck-output", type=Path, default=TAU2_CROSSCHECK_OUTPUT)
+    parser.add_argument("--tau2-crosscheck-report", type=Path, default=TAU2_CROSSCHECK_REPORT)
+    parser.add_argument("--tau2-crosscheck-tolerance", type=float, default=5e-3)
     parser.add_argument(
         "--ctgov-binary-netsplit-output",
         type=Path,
@@ -223,6 +229,12 @@ def main(argv: list[str] | None = None) -> int:
             publication_bias_trimfill_output,
             repo_root=root,
             tolerance=args.tolerance,
+        )
+        tau2_crosscheck_output = _resolve(root, args.tau2_crosscheck_output)
+        tau2_crosscheck_summary = validate_metafor_tau2_crosscheck_output(
+            tau2_crosscheck_output,
+            repo_root=root,
+            tolerance=args.tau2_crosscheck_tolerance,
         )
         ctgov_binary_netsplit_output = _resolve(root, args.ctgov_binary_netsplit_output)
         ctgov_binary_netsplit_summary = validate_ctgov_binary_network_netsplit_output(
@@ -370,6 +382,16 @@ def main(argv: list[str] | None = None) -> int:
             ),
         )
         _write_report(
+            _resolve(root, args.tau2_crosscheck_report),
+            _tau2_crosscheck_report(
+                root=root,
+                output_path=tau2_crosscheck_output,
+                summary=tau2_crosscheck_summary,
+                checked_at=args.checked_at,
+                tolerance=args.tau2_crosscheck_tolerance,
+            ),
+        )
+        _write_report(
             _resolve(root, args.ctgov_binary_netsplit_report),
             _ctgov_binary_netsplit_report(
                 root=root,
@@ -410,6 +432,7 @@ def main(argv: list[str] | None = None) -> int:
         f"{args.sglt2_survival_report}, "
         f"{args.pcsk9_survival_report}, {args.ctgov_hr_network_report}, "
         f"{args.publication_bias_regtest_report}, {args.publication_bias_trimfill_report}, "
+        f"{args.tau2_crosscheck_report}, "
         f"{args.ctgov_binary_netsplit_report}, "
         f"{args.component_report}, "
         f"{args.crossnma_compat_report}"
@@ -1108,6 +1131,79 @@ def _publication_bias_trimfill_report(
         "validated_components": summary["validated_components"],
         "max_abs_difference": float(summary["max_abs_difference"]),
         "notes": [summary["source_policy_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _tau2_crosscheck_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+    tolerance: float,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    benchmark_effects = [
+        Path("validation/survival/sglt2_hf_reported_hr_effects.csv"),
+        Path("validation/survival/glp1_mace_reported_hr_effects.csv"),
+        Path("validation/survival/lipid_cv_outcomes_reported_hr_effects.csv"),
+        Path("validation/survival/hcc_os_reported_hr_effects.csv"),
+    ]
+    benchmark_reports = [
+        Path("validation/survival/sglt2_hf_reported_hr_benchmark.toml"),
+        Path("validation/survival/glp1_mace_reported_hr_benchmark.toml"),
+        Path("validation/survival/lipid_cv_outcomes_reported_hr_benchmark.toml"),
+        Path("validation/survival/hcc_os_reported_hr_benchmark.toml"),
+    ]
+    input_artifacts = [
+        *benchmark_effects,
+        *benchmark_reports,
+        Path("external/r/metafor_tau2_crosscheck_survival.R"),
+    ]
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "pairwise_metafor_tau2_crosscheck_source",
+        "adapter_id": "r_metafor_tau2_crosscheck_source_output_validation",
+        "reference_method": summary["reference_method"],
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/metafor_tau2_crosscheck_survival.R",
+            "--benchmark",
+            "sglt2_hf_reported_hr=validation/survival/sglt2_hf_reported_hr_effects.csv",
+            "--benchmark",
+            "glp1_mace_reported_hr=validation/survival/glp1_mace_reported_hr_effects.csv",
+            "--benchmark",
+            "lipid_cv_outcomes_reported_hr=validation/survival/lipid_cv_outcomes_reported_hr_effects.csv",
+            "--benchmark",
+            "hcc_os_reported_hr=validation/survival/hcc_os_reported_hr_effects.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": (
+            f"absolute <= {tolerance:g} for primary fields; "
+            "I2 percentage allowed <= 0.05 due optimizer tolerance"
+        ),
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
+        "benchmark_ids": list(summary["benchmark_ids"]),
         "input_sha256": {
             path.as_posix(): sha256_file(root / path)
             for path in input_artifacts
