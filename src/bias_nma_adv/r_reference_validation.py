@@ -1590,6 +1590,237 @@ def validate_metafor_tau2_crosscheck_output(
     }
 
 
+def validate_pairwise_metafor_prediction_interval_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-4,
+) -> dict[str, Any]:
+    """Validate a source-backed ``metafor`` prediction-interval artifact."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "effects_path",
+            "reference_method",
+            "package_versions",
+            "study_effects",
+            "metafor",
+            "limitations",
+        },
+        label="metafor prediction-interval output",
+    )
+    if output["schema_version"] != "metafor_prediction_interval_source/v1":
+        raise RReferenceValidationError("metafor prediction-interval schema_version mismatch.")
+    if output["benchmark_id"] != "breast_adjuvant_idfs_reported_hr":
+        raise RReferenceValidationError("metafor prediction-interval benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("metafor prediction-interval source_policy mismatch.")
+    if output["effect_scale"] != "log_hr":
+        raise RReferenceValidationError("metafor prediction-interval effect_scale must be log_hr.")
+    if output["reference_method"] != "metafor::predict REML/KNHA reported-HR prediction interval":
+        raise RReferenceValidationError("metafor prediction-interval reference_method mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "jsonlite"})
+
+    benchmark_id = str(output["benchmark_id"])
+    effects_relpath = Path(str(output["effects_path"]))
+    if effects_relpath.is_absolute() or ".." in effects_relpath.parts:
+        raise RReferenceValidationError("metafor prediction-interval effects_path must be repo-relative.")
+    expected_effects = _load_simple_effect_rows(root / effects_relpath)
+    benchmark = _load_toml(_survival_hr_benchmark_path(root, benchmark_id))
+    benchmark_effects = {
+        str(effect["study_id"]): effect
+        for effect in benchmark["study_effects"]
+    }
+    output_effects = {
+        str(effect["study_id"]): effect
+        for effect in output["study_effects"]
+    }
+    if set(expected_effects) != set(output_effects):
+        raise RReferenceValidationError("metafor prediction-interval output effects do not match CSV.")
+    if set(expected_effects) != set(benchmark_effects):
+        raise RReferenceValidationError("metafor prediction-interval CSV effects do not match benchmark.")
+
+    max_abs_diff = 0.0
+    ordered_effects: list[float] = []
+    ordered_variances: list[float] = []
+    for study_id, expected in expected_effects.items():
+        observed = output_effects[study_id]
+        benchmark_row = benchmark_effects[study_id]
+        for field in ("nct_id", "pmid"):
+            if str(observed[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: prediction-interval {field} mismatch.")
+            if str(benchmark_row[field]) != str(expected[field]):
+                raise RReferenceValidationError(
+                    f"{study_id}: prediction-interval benchmark {field} mismatch."
+                )
+        for field in ("estimate", "se", "variance"):
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{study_id} prediction-interval {field}",
+                    observed[field],
+                    expected[field],
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{study_id} prediction-interval benchmark {field}",
+                    benchmark_row[field],
+                    expected[field],
+                    tolerance,
+                ),
+            )
+        ordered_effects.append(float(expected["estimate"]))
+        ordered_variances.append(float(expected["variance"]))
+
+    model_config = benchmark["model_config"]
+    if model_config.get("pairwise_prediction_interval") is not True:
+        raise RReferenceValidationError("benchmark must request a pairwise prediction interval.")
+    if model_config.get("pairwise_prediction_interval_df") != "k_minus_1":
+        raise RReferenceValidationError("benchmark prediction-interval df convention mismatch.")
+
+    models = output["metafor"]
+    _require_keys(
+        models,
+        {
+            "reml_default",
+            "reml_knha_unfloored",
+            "prediction_default",
+            "prediction_knha_unfloored",
+        },
+        label="metafor prediction-interval model output",
+    )
+    fit_default = fit_pairwise_meta(
+        ordered_effects,
+        ordered_variances,
+        method="REML",
+        hksj=False,
+        prediction_interval=True,
+    )
+    fit_knha_unfloored = fit_pairwise_meta(
+        ordered_effects,
+        ordered_variances,
+        method="REML",
+        hksj=True,
+        hksj_floor=False,
+        prediction_interval=True,
+    )
+    fit_knha_floored = fit_pairwise_meta(
+        ordered_effects,
+        ordered_variances,
+        method="REML",
+        hksj=True,
+        hksj_floor=True,
+        prediction_interval=True,
+    )
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_pairwise_model_summary(
+            "prediction-interval REML default",
+            models["reml_default"],
+            fit_default,
+            expected_method="REML",
+            expected_k=len(ordered_effects),
+            tolerance=tolerance,
+        ),
+        _assert_pairwise_model_summary(
+            "prediction-interval REML KNHA unfloored",
+            models["reml_knha_unfloored"],
+            fit_knha_unfloored,
+            expected_method="REML",
+            expected_k=len(ordered_effects),
+            tolerance=tolerance,
+        ),
+        _assert_prediction_summary(
+            "prediction-interval KNHA unfloored",
+            models["prediction_knha_unfloored"],
+            fit_knha_unfloored,
+            tolerance=tolerance,
+        ),
+    )
+    if models["prediction_default"]["pi_dist"] != "norm":
+        raise RReferenceValidationError("metafor default prediction interval must record pi_dist=norm.")
+    if models["prediction_knha_unfloored"]["pi_dist"] != "t":
+        raise RReferenceValidationError("metafor KNHA prediction interval must record pi_dist=t.")
+    if float(models["reml_knha_unfloored"]["hksj_q_factor"]) >= 1.0:
+        raise RReferenceValidationError("prediction-interval fixture must exercise the unfloored KNHA case.")
+    if fit_knha_floored.hksj_q_factor != 1.0:
+        raise RReferenceValidationError("local prediction-interval HKSJ floor must remain active.")
+
+    expected_floored = benchmark["candidate"]["pairwise_reml_hksj"]
+    for field in ("estimate", "se", "ci_low", "ci_high", "tau2", "q"):
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"prediction-interval floored benchmark {field}",
+                getattr(fit_knha_floored, field),
+                expected_floored[field],
+                tolerance,
+            ),
+        )
+    if fit_knha_floored.prediction_interval is None:
+        raise RReferenceValidationError("local floored prediction interval missing.")
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_close(
+            "prediction-interval floored benchmark pi_low",
+            fit_knha_floored.prediction_interval[0],
+            expected_floored["pi_low"],
+            tolerance,
+        ),
+        _assert_close(
+            "prediction-interval floored benchmark pi_high",
+            fit_knha_floored.prediction_interval[1],
+            expected_floored["pi_high"],
+            tolerance,
+        ),
+    )
+    if fit_knha_floored.prediction_interval[0] > float(models["prediction_knha_unfloored"]["pi_low"]):
+        raise RReferenceValidationError("floored prediction interval must not narrow the lower bound.")
+    if fit_knha_floored.prediction_interval[1] < float(models["prediction_knha_unfloored"]["pi_high"]):
+        raise RReferenceValidationError("floored prediction interval must not narrow the upper bound.")
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("unfloored q factor" in item for item in limitations):
+        raise RReferenceValidationError("prediction-interval output must disclose unfloored q factor.")
+    if not any("not survival nma parity" in item for item in limitations):
+        raise RReferenceValidationError("prediction-interval output must preserve survival-NMA limitation.")
+    if not any("tier-one superiority" in item for item in limitations):
+        raise RReferenceValidationError("prediction-interval output must preserve superiority limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "pairwise_metafor_prediction_interval_breast",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor::predict REML/KNHA reported-HR prediction interval",
+        "benchmark_id": benchmark_id,
+        "validated_components": [
+            "source_backed_reported_hr_rows",
+            "metafor_reml_default_summary",
+            "metafor_knha_unfloored_prediction_interval",
+            "local_hksj_floor_prediction_interval",
+            "prediction_interval_df_convention",
+            "survival_nma_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates one source-backed reported-HR prediction-interval "
+            "case against metafor KNHA and separately verifies the local "
+            "HKSJ floor convention. It is not survival NMA parity, clinical "
+            "guidance, regulatory evidence, HTA certification, or tier-one "
+            "superiority."
+        ),
+    }
+
+
 def validate_ctgov_hr_network_netmeta_output(
     output_path: str | Path,
     *,
@@ -3076,6 +3307,33 @@ def _assert_pairwise_model_summary(
         _assert_close(f"{label} q_p_value", observed["q_p_value"], q_p_value, tolerance),
         _assert_close(f"{label} i2", observed["i2"], expected_i2, i2_tolerance),
         _assert_close(f"{label} h2", observed["h2"], expected_h2, tolerance),
+    )
+
+
+def _assert_prediction_summary(
+    label: str,
+    observed: dict[str, Any],
+    fit: Any,
+    *,
+    tolerance: float,
+) -> float:
+    _require_keys(
+        observed,
+        {"pred", "se", "ci_low", "ci_high", "pi_low", "pi_high", "pi_se", "pi_dist"},
+        label=label,
+    )
+    if fit.prediction_interval is None:
+        raise RReferenceValidationError(f"{label}: local prediction interval missing.")
+    pi_low, pi_high = fit.prediction_interval
+    expected_pi_se = math.sqrt(max(fit.se * fit.se + fit.tau2, 0.0))
+    return max(
+        _assert_close(f"{label} pred", observed["pred"], fit.estimate, tolerance),
+        _assert_close(f"{label} se", observed["se"], fit.se, tolerance),
+        _assert_close(f"{label} ci_low", observed["ci_low"], fit.ci_low, tolerance),
+        _assert_close(f"{label} ci_high", observed["ci_high"], fit.ci_high, tolerance),
+        _assert_close(f"{label} pi_low", observed["pi_low"], pi_low, tolerance),
+        _assert_close(f"{label} pi_high", observed["pi_high"], pi_high, tolerance),
+        _assert_close(f"{label} pi_se", observed["pi_se"], expected_pi_se, tolerance),
     )
 
 

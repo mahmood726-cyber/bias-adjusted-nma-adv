@@ -21,6 +21,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_gosh_output,
     validate_pairwise_metafor_meta_output,
+    validate_pairwise_metafor_prediction_interval_output,
     validate_pairwise_metafor_sparse_binary_output,
     validate_publication_bias_metafor_regtest_output,
     validate_publication_bias_metafor_trimfill_output,
@@ -33,6 +34,12 @@ PAIRWISE_OUTPUT = ROOT / "validation" / "reference_runs" / "pairwise_metafor_met
 GOSH_OUTPUT = ROOT / "validation" / "reference_runs" / "sglt2_hf_metafor_gosh_output.json"
 SPARSE_BINARY_OUTPUT = (
     ROOT / "validation" / "reference_runs" / "psoriasis_sparse_binary_metafor_output.json"
+)
+PREDICTION_INTERVAL_OUTPUT = (
+    ROOT
+    / "validation"
+    / "reference_runs"
+    / "breast_adjuvant_idfs_prediction_interval_metafor_output.json"
 )
 MULTINMA_OUTPUT = ROOT / "validation" / "reference_runs" / "multinma_sglt2_binary_nma_output.json"
 MULTIARM_OUTPUT = ROOT / "validation" / "reference_runs" / "multiarm_netmeta_output.json"
@@ -107,6 +114,25 @@ def test_pairwise_sparse_binary_metafor_output_matches_source_backed_counts():
     assert summary["max_abs_difference"] < 1e-12
     assert "source_backed_low_control_event_count_rows" in summary["validated_components"]
     assert "zero-event parity" in summary["source_policy_note"]
+
+
+def test_pairwise_prediction_interval_metafor_output_matches_source_backed_hr_rows():
+    summary = validate_pairwise_metafor_prediction_interval_output(
+        PREDICTION_INTERVAL_OUTPUT,
+        repo_root=ROOT,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "pairwise_metafor_prediction_interval_breast"
+    assert summary["benchmark_id"] == "breast_adjuvant_idfs_reported_hr"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == (
+        "metafor::predict REML/KNHA reported-HR prediction interval"
+    )
+    assert summary["max_abs_difference"] <= 1e-4
+    assert "metafor_knha_unfloored_prediction_interval" in summary["validated_components"]
+    assert "local HKSJ floor convention" in summary["source_policy_note"]
 
 
 def test_metafor_tau2_crosscheck_matches_source_backed_survival_benchmarks():

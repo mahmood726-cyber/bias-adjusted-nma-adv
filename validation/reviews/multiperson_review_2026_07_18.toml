@@ -44,8 +44,9 @@ scope = [
   "docs/tier1_benchmark.md",
 ]
 findings = [
-  "Twenty passed reference-run artifacts now support narrow evidence-candidate comparisons against metafor, meta, netmeta, multinma, CmdStan/NUTS, MBNMAdose, and mada.",
+  "Twenty-one passed reference-run artifacts now support narrow evidence-candidate comparisons against metafor, meta, netmeta, multinma, CmdStan/NUTS, MBNMAdose, and mada.",
   "The latest pairwise addition covers one source-backed CT.gov/PubMed low-control-event psoriasis binary contrast against metafor while preserving zero-event and Mantel-Haenszel limitations.",
+  "The latest prediction-interval addition covers one source-backed reported-HR benchmark against metafor KNHA while preserving the local HKSJ floor disclosure.",
   "The feature-family ledger still has no broad reference_matched feature family; all candidate runs remain scoped smoke or narrow reference candidates.",
   "Large-scale breadth thresholds are met, but global large-scale validation remains incomplete because ML-NMR is formally source-excluded rather than validated and broad feature-family matching is absent."
 ]

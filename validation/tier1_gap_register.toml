@@ -66,6 +66,7 @@ implemented_capabilities = [
   "source_backed_closed_loop_binary_network_benchmark",
   "netmeta_source_backed_closed_loop_reference_candidate",
   "metafor_sparse_binary_source_backed_reference_candidate",
+  "metafor_prediction_interval_source_backed_reference_candidate",
 ]
 required_evidence_artifacts = [
   "implemented_capability_contract_tests",

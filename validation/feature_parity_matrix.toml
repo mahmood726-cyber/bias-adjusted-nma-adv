@@ -23,12 +23,14 @@ evidence_artifacts = [
   "validation/reference_runs/psoriasis_etanercept_placebo_sparse_binary_events.csv",
   "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json",
   "validation/reference_runs/psoriasis_sparse_binary_metafor_reference.toml",
+  "external/r/metafor_prediction_interval_breast.R",
+  "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_output.json",
+  "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_reference.toml",
 ]
 required_next_artifacts = [
   "continuous_outcome_reference_cases",
-  "prediction_interval_reference_cases",
 ]
-claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
+claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, a reported-HR prediction-interval convention check, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
 certification_effect = "none"
 
 [[features]]

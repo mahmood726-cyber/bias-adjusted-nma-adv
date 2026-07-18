@@ -30,6 +30,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_gosh_output,
     validate_pairwise_metafor_meta_output,
+    validate_pairwise_metafor_prediction_interval_output,
     validate_pairwise_metafor_sparse_binary_output,
     validate_publication_bias_metafor_regtest_output,
     validate_publication_bias_metafor_trimfill_output,
@@ -47,6 +48,12 @@ PAIRWISE_SPARSE_BINARY_OUTPUT = Path(
 )
 PAIRWISE_SPARSE_BINARY_REPORT = Path(
     "validation/reference_runs/psoriasis_sparse_binary_metafor_reference.toml"
+)
+PAIRWISE_PREDICTION_INTERVAL_OUTPUT = Path(
+    "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_output.json"
+)
+PAIRWISE_PREDICTION_INTERVAL_REPORT = Path(
+    "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_reference.toml"
 )
 MULTINMA_OUTPUT = Path("validation/reference_runs/multinma_sglt2_binary_nma_output.json")
 MULTINMA_REPORT = Path("validation/reference_runs/multinma_sglt2_binary_nma_reference.toml")
@@ -109,6 +116,17 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=PAIRWISE_SPARSE_BINARY_REPORT,
     )
+    parser.add_argument(
+        "--pairwise-prediction-interval-output",
+        type=Path,
+        default=PAIRWISE_PREDICTION_INTERVAL_OUTPUT,
+    )
+    parser.add_argument(
+        "--pairwise-prediction-interval-report",
+        type=Path,
+        default=PAIRWISE_PREDICTION_INTERVAL_REPORT,
+    )
+    parser.add_argument("--pairwise-prediction-interval-tolerance", type=float, default=1e-4)
     parser.add_argument("--multinma-output", type=Path, default=MULTINMA_OUTPUT)
     parser.add_argument("--multinma-report", type=Path, default=MULTINMA_REPORT)
     parser.add_argument("--multiarm-output", type=Path, default=MULTIARM_OUTPUT)
@@ -191,6 +209,17 @@ def main(argv: list[str] | None = None) -> int:
             pairwise_sparse_binary_output,
             repo_root=root,
             tolerance=args.tolerance,
+        )
+        pairwise_prediction_interval_output = _resolve(
+            root,
+            args.pairwise_prediction_interval_output,
+        )
+        pairwise_prediction_interval_summary = (
+            validate_pairwise_metafor_prediction_interval_output(
+                pairwise_prediction_interval_output,
+                repo_root=root,
+                tolerance=args.pairwise_prediction_interval_tolerance,
+            )
         )
         multinma_output = _resolve(root, args.multinma_output)
         multinma_summary = validate_multinma_sglt2_binary_nma_output(
@@ -305,6 +334,16 @@ def main(argv: list[str] | None = None) -> int:
                 summary=pairwise_sparse_binary_summary,
                 checked_at=args.checked_at,
                 tolerance=args.tolerance,
+            ),
+        )
+        _write_report(
+            _resolve(root, args.pairwise_prediction_interval_report),
+            _pairwise_prediction_interval_report(
+                root=root,
+                output_path=pairwise_prediction_interval_output,
+                summary=pairwise_prediction_interval_summary,
+                checked_at=args.checked_at,
+                tolerance=args.pairwise_prediction_interval_tolerance,
             ),
         )
         _write_report(
@@ -461,6 +500,7 @@ def main(argv: list[str] | None = None) -> int:
         "R reference output validation passed: "
         f"{args.pairwise_report}, {args.pairwise_gosh_report}, "
         f"{args.pairwise_sparse_binary_report}, "
+        f"{args.pairwise_prediction_interval_report}, "
         f"{args.multinma_report}, {args.multiarm_report}, {args.dta_report}, "
         f"{args.dta_source_report}, {args.dose_response_report}, {args.mbnmadose_report}, "
         f"{args.sglt2_survival_report}, "
@@ -620,6 +660,61 @@ def _pairwise_sparse_binary_report(
         "input_artifacts": [path.as_posix() for path in input_artifacts],
         "output_artifacts": [output_path.relative_to(root).as_posix()],
         "tolerance": f"absolute <= {tolerance:g} for validated components",
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _pairwise_prediction_interval_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+    tolerance: float,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    input_artifacts = [
+        Path("validation/survival/breast_adjuvant_idfs_reported_hr_effects.csv"),
+        Path("validation/survival/breast_adjuvant_idfs_reported_hr_benchmark.toml"),
+        Path("validation/source_checks/breast_adjuvant_idfs_reported_hr_tokens.json"),
+        Path("validation/source_checks/breast_adjuvant_idfs_reported_hr_source_check.json"),
+        Path("external/r/metafor_prediction_interval_breast.R"),
+    ]
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "pairwise_metafor_meta",
+        "adapter_id": "r_metafor_prediction_interval_breast_output_validation",
+        "reference_method": summary["reference_method"],
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/metafor_prediction_interval_breast.R",
+            "--benchmark-id",
+            summary["benchmark_id"],
+            "--effects",
+            "validation/survival/breast_adjuvant_idfs_reported_hr_effects.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": f"absolute <= {tolerance:g}; local HKSJ floor checked against benchmark",
         "skip_reason": "",
         "validated_components": summary["validated_components"],
         "max_abs_difference": float(summary["max_abs_difference"]),

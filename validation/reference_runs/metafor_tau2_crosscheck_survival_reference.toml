@@ -4,7 +4,7 @@ adapter_id = "r_metafor_tau2_crosscheck_source_output_validation"
 reference_method = "metafor::rma.uni FE/DL/PM/REML tau2 cross-check"
 status = "passed"
 certification_effect = "evidence_candidate"
-checked_at = "2026-07-18T16:00:00Z"
+checked_at = "2026-07-18T16:30:00Z"
 command = ["Rscript", "--vanilla", "external/r/metafor_tau2_crosscheck_survival.R", "--benchmark", "sglt2_hf_reported_hr=validation/survival/sglt2_hf_reported_hr_effects.csv", "--benchmark", "glp1_mace_reported_hr=validation/survival/glp1_mace_reported_hr_effects.csv", "--benchmark", "lipid_cv_outcomes_reported_hr=validation/survival/lipid_cv_outcomes_reported_hr_effects.csv", "--benchmark", "hcc_os_reported_hr=validation/survival/hcc_os_reported_hr_effects.csv", "--output", "validation/reference_runs/metafor_tau2_crosscheck_survival_output.json"]
 executable = "Rscript"
 executable_found = true

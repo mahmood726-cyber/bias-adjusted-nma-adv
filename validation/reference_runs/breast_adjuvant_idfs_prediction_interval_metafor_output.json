@@ -1,0 +1,113 @@
+{
+  "schema_version": "metafor_prediction_interval_source/v1",
+  "benchmark_id": "breast_adjuvant_idfs_reported_hr",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+  "effect_scale": "log_hr",
+  "effects_path": "validation/survival/breast_adjuvant_idfs_reported_hr_effects.csv",
+  "reference_method": "metafor::predict REML/KNHA reported-HR prediction interval",
+  "package_versions": {
+    "R": "4.6.0",
+    "metafor": "5.0.1",
+    "jsonlite": "2.0.0"
+  },
+  "study_effects": [
+    {
+      "study_id": "KATHERINE",
+      "nct_id": "NCT01772472",
+      "pmid": 30516102,
+      "estimate": -0.693147180559945,
+      "se": 0.12635983138901,
+      "variance": 0.0159668069886589
+    },
+    {
+      "study_id": "monarchE",
+      "nct_id": "NCT03155997",
+      "pmid": 32954927,
+      "estimate": -0.287682072451781,
+      "se": 0.11180178166233,
+      "variance": 0.0124996383828713
+    },
+    {
+      "study_id": "OlympiA",
+      "nct_id": "NCT02032823",
+      "pmid": 34081848,
+      "estimate": -0.544727175441672,
+      "se": 0.176826509575534,
+      "variance": 0.0312676144886662
+    },
+    {
+      "study_id": "APHINITY",
+      "nct_id": "NCT01358877",
+      "pmid": 28581356,
+      "estimate": -0.210721031315653,
+      "se": 0.106000785534632,
+      "variance": 0.011236166533959
+    },
+    {
+      "study_id": "ExteNET",
+      "nct_id": "NCT00878709",
+      "pmid": 26874901,
+      "estimate": -0.400477566597125,
+      "se": 0.152767220676566,
+      "variance": 0.0233378237132426
+    }
+  ],
+  "metafor": {
+    "reml_default": {
+      "method": "REML",
+      "k": 5,
+      "estimate": -0.413173684481998,
+      "se": 0.0930718256479154,
+      "ci_low": -0.595591110727303,
+      "ci_high": -0.230756258236692,
+      "tau2": 0.0256105224095259,
+      "q": 3.71844421182311,
+      "q_p_value": 0.445449003440121,
+      "df": 4,
+      "i2": 0,
+      "h2": 0.929611052955778,
+      "hksj_q_factor": 1
+    },
+    "reml_knha_unfloored": {
+      "method": "REML",
+      "k": 5,
+      "estimate": -0.413173684481998,
+      "se": 0.0897364474292244,
+      "ci_low": -0.662322004704707,
+      "ci_high": -0.164025364259288,
+      "tau2": 0.0256105224095259,
+      "q": 3.71844421182311,
+      "q_p_value": 0.445449003440121,
+      "df": 4,
+      "i2": 0,
+      "h2": 0.929611052955778,
+      "hksj_q_factor": 0.929611052955778
+    },
+    "prediction_default": {
+      "pred": -0.413173684481998,
+      "se": 0.0930718256479154,
+      "ci_low": -0.595591110727303,
+      "ci_high": -0.230756258236692,
+      "pi_low": -0.77602060070235,
+      "pi_high": -0.0503267682616453,
+      "pi_se": 0.185129379459236,
+      "pi_dist": "norm"
+    },
+    "prediction_knha_unfloored": {
+      "pred": -0.413173684481998,
+      "se": 0.0897364474292244,
+      "ci_low": -0.662322004704707,
+      "ci_high": -0.164025364259288,
+      "pi_low": -0.922582531109724,
+      "pi_high": 0.0962351621457289,
+      "pi_se": 0.183475209242949,
+      "pi_dist": "t"
+    }
+  },
+  "limitations": [
+    "Reported PubMed abstract HR tokens are verified, but Kaplan-Meier curves are not digitized.",
+    "This validates one reported-HR pairwise prediction-interval convention only; it is not survival NMA parity.",
+    "metafor KNHA prediction intervals use the unfloored q factor; the Python artifact applies a conservative HKSJ floor.",
+    "This does not certify clinical reporting, regulatory reporting, HTA reporting, or tier-one superiority."
+  ]
+}
