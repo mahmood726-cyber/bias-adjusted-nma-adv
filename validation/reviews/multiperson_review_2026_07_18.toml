@@ -1,0 +1,100 @@
+schema_version = "multiperson_review/v1"
+checked_at = "2026-07-18"
+certification_effect = "none"
+source_policy = "AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance for effect evidence; protocol-only registry rows remain metadata sources for registered-primary-outcome anchors and completeness denominators"
+required_review_rounds = [
+  "source_boundary_review",
+  "statistical_methods_review",
+  "implementation_contract_review",
+  "claims_governance_review",
+]
+thread_limit_note = "Fresh sub-agent spawning was constrained by the active thread limit; this ledger records role-separated local review and existing-agent findings and must not be described as independent external reproduction."
+
+[[rounds]]
+id = "source_boundary_review"
+reviewer = "clinical registry and source-governance reviewer"
+status = "actioned"
+scope = [
+  "src/bias_nma_adv/evidence_sources.py",
+  "src/bias_nma_adv/source_type_policy.toml",
+  "src/bias_nma_adv/ingestion.py",
+  "validation/mlnmr_source_coverage.toml",
+  "validation/mlnmr_source_search_2026_07_18_diabetes.toml",
+]
+findings = [
+  "The source boundary now admits public numeric ICTRP/PACTR result rows, FDA review rows, and EMA EPAR rows as effect sources only when source-bound numeric result text is present.",
+  "Protocol-only ICTRP, PACTR, and other registry rows remain barred from model-ready effects but are available for registered-primary-outcome anchors and completeness denominators.",
+  "The ML-NMR audit found no admissible public row-level trial IPD plus connected aggregate-covariate fixture; controlled-access sponsor or Vivli IPD remains excluded."
+]
+actions = [
+  "Kept the protocol-only registry path separate from proof-carrying extracted effects.",
+  "Recorded a formal ML-NMR public-source boundary decision and supporting search artifacts without treating it as validation evidence.",
+  "Verified that the validation-status source policy exposes CT.gov/AACT, PubMed abstracts, open-access papers, ICTRP/PACTR numeric result rows, FDA reviews, and EMA EPARs."
+]
+next_gate = "Add an admissible public-source ML-NMR fixture only if public trial IPD rows and aggregate covariate summaries can be source-bound under this boundary."
+
+[[rounds]]
+id = "statistical_methods_review"
+reviewer = "frequentist, Bayesian, and diagnostic-methods reviewer"
+status = "tracked_next_gate"
+scope = [
+  "validation/feature_parity_matrix.toml",
+  "validation/reference_runs",
+  "validation/large_scale_validation.toml",
+  "docs/tier1_benchmark.md",
+]
+findings = [
+  "Fourteen passed reference-run artifacts now support narrow evidence-candidate comparisons against metafor, meta, netmeta, multinma, CmdStan/NUTS, MBNMAdose, and mada.",
+  "The feature-family ledger still has no broad reference_matched feature family; all candidate runs remain scoped smoke or narrow reference candidates.",
+  "Large-scale breadth thresholds are met, but global large-scale validation remains incomplete because ML-NMR is formally source-excluded rather than validated and broad feature-family matching is absent."
+]
+actions = [
+  "Kept all reference-run outputs at certification_effect = evidence_candidate rather than production or tier-one parity evidence.",
+  "Preserved feature-parity statuses as reference_candidate, local_implemented, planned, or blocking where appropriate.",
+  "Kept the large-scale gate status partial_not_large_scale despite passing count thresholds."
+]
+next_gate = "Promote no feature family until multiple source-backed cases, reference versions, hashes, tolerances, and discriminating edge cases support the promotion."
+
+[[rounds]]
+id = "implementation_contract_review"
+reviewer = "implementation and regression-safety reviewer"
+status = "actioned"
+scope = [
+  "src/bias_nma_adv/validation_status.py",
+  "tests/test_validation_status.py",
+  "tests/test_improvement_review.py",
+  "tests/test_review_ledger.py",
+]
+findings = [
+  "The unified validation-status builder was still pinned to specific 2026-07-15 review filenames, which risked hiding newer review artifacts.",
+  "Review ledgers are process-control artifacts and must remain non-certifying even when all current milestone rounds pass.",
+  "The repository should continue to surface stale or incomplete review state through tests rather than release prose."
+]
+actions = [
+  "Changed validation-status review selection to use the newest dated matching TOML artifact.",
+  "Added a 2026-07-18 multiperson review ledger and updated tests to target the latest ledger.",
+  "Kept all review ledger summaries at certification_effect = none."
+]
+next_gate = "Keep future review artifacts dated and machine-readable so validation status follows the newest review without a code edit."
+
+[[rounds]]
+id = "claims_governance_review"
+reviewer = "claims and release-governance reviewer"
+status = "tracked_next_gate"
+scope = [
+  "validation/tier1_gap_register.toml",
+  "validation/feature_parity_matrix.toml",
+  "validation/large_scale_validation.toml",
+  "docs/tier1_benchmark.md",
+]
+findings = [
+  "The current repository can claim strong provenance, source-bound benchmarks, and narrow reference candidates, but not that tier-one methods have been beaten.",
+  "No module is Production Certified, no clinical or HTA reporting is enabled, and no review artifact supplies certification evidence.",
+  "World-class ambition remains valid as a development target only if blockers and claim limits remain visible."
+]
+actions = [
+  "Preserved claim limits in feature-parity and large-scale validation artifacts.",
+  "Recorded remaining blockers in review artifacts instead of treating a green test count as completion.",
+  "Kept historical panel feedback classified as planning and audit material rather than clinical or regulatory evidence."
+]
+next_gate = "Require broad reference matching, source-bound validation, external reproduction, and simulation validation before any superiority or production claim."

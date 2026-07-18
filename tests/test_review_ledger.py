@@ -14,7 +14,7 @@ from bias_nma_adv.review_ledger import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LEDGER = ROOT / "validation" / "reviews" / "multiperson_review_2026_07_15.toml"
+LEDGER = ROOT / "validation" / "reviews" / "multiperson_review_2026_07_18.toml"
 
 
 def test_multiperson_review_ledger_covers_required_rounds():
@@ -35,7 +35,7 @@ def test_review_ledger_summary_is_validation_status_ready():
 
     assert summary == {
         "schema_version": MULTIPERSON_REVIEW_SCHEMA_VERSION,
-        "checked_at": "2026-07-17",
+        "checked_at": "2026-07-18",
         "n_rounds": 4,
         "round_ids": [
             "source_boundary_review",

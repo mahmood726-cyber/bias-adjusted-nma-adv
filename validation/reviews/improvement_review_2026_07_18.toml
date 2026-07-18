@@ -1,0 +1,122 @@
+schema_version = "improvement_review/v1"
+checked_at = "2026-07-18"
+certification_effect = "none"
+overall_status = "passed_current_milestone_with_global_goal_blockers"
+goal_statement = "Build toward a world-class evidence-synthesis platform that can beat tier-one workflows under the source limits of AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance, with protocol-only registry rows used for metadata only."
+thread_limit_note = "Fresh sub-agent spawning was constrained by the active thread limit; this ledger records a local role review and must not be represented as independent external reproduction."
+source_boundary = "Effect evidence from AACT/ClinicalTrials.gov records, PubMed abstracts, open-access papers, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows with numeric per-trial provenance; protocol-only ICTRP, PACTR, and other registry rows cannot supply model-ready effects but can supply registered-primary-outcome anchors and completeness denominators."
+global_goal_complete = false
+
+[[rounds]]
+id = "statistical_tier1_blocker_review"
+reviewer = "statistical methods reviewer"
+status = "passed_current_milestone"
+scope = [
+  "src/bias_nma_adv/node_splitting.py",
+  "validation/feature_parity_matrix.toml",
+  "validation/reference_runs",
+  "validation/large_scale_validation.toml",
+  "validation/mlnmr_source_coverage.toml",
+  "validation/reviews/multiperson_review_2026_07_18.toml",
+]
+findings = [
+  "The platform now has narrow source-backed reference candidates across pairwise meta-analysis, frequentist NMA, Bayesian NMA, dose-response, component NMA, DTA, and reported-HR survival pooling.",
+  "The large-scale breadth counts exceed current benchmark, study-effect, NCT, PMID, simulation-job, simulation-iteration, positive-tau2, and passed-reference-run thresholds.",
+  "The global statistical goal remains blocked because no feature family is broadly reference_matched and ML-NMR has a formal public-source exclusion rather than validation evidence.",
+  "Reference-matched Stan/NUTS exists only as a narrow candidate artifact and cannot support broad Bayesian or multinma parity."
+]
+actions = [
+  "Kept reference candidates scoped and non-certifying in the feature-parity matrix.",
+  "Kept large_scale_validation at partial_not_large_scale when formal ML-NMR exclusion is present.",
+  "Recorded heatmap-ready GLS contribution matrices as local implementation progress, not CINeMA, ROB-MEN, or netheat parity.",
+  "Added this latest improvement review so blocker status reflects the current branch instead of a stale review path."
+]
+remaining_blockers = [
+  "Promote at least one feature family only after multiple source-backed reference cases cover ordinary, sparse, heterogeneous, and edge-case inputs.",
+  "Find an admissible public trial-IPD ML-NMR fixture or keep ML-NMR excluded from large-scale real-domain completion.",
+  "Add broader external reference artifacts for node splitting, netheat-like contribution displays, ROB-MEN/CINeMA mapping, and publication-bias methods."
+]
+verdict = "passed_current_milestone_not_global_goal"
+
+[[rounds]]
+id = "source_boundary_review"
+reviewer = "source governance reviewer"
+status = "passed_current_milestone"
+scope = [
+  "src/bias_nma_adv/source_type_policy.toml",
+  "src/bias_nma_adv/evidence_sources.py",
+  "src/bias_nma_adv/ingestion.py",
+  "validation/benchmark_registry.toml",
+  "validation/mlnmr_source_search_2026_07_18_diabetes.toml",
+]
+findings = [
+  "FDA reviews and EMA EPARs are included as public regulatory review effect sources only for source-bound numeric per-trial rows.",
+  "ICTRP and PACTR can supply model-ready effects only through public numeric result rows; protocol-only rows are restricted to metadata, primary-outcome anchors, and denominator ledgers.",
+  "Dose-response and DTA source coverage artifacts include the expanded allowed source set while preserving zero counts for unused source types."
+]
+actions = [
+  "Verified the source-type policy and ingestion tests cover public numeric registry rows, regulatory review rows, and protocol-only registry ledgers.",
+  "Kept the benchmark registry source boundary aligned with the source-type policy.",
+  "Recorded the diabetes ML-NMR open-access paper audit as excluded because row-level IPD are controlled access."
+]
+remaining_blockers = [
+  "Add real FDA/EMA or ICTRP/PACTR numeric result-row benchmarks only after public source text and identifiers pass proof-carrying validation.",
+  "Add open-access full-table extraction artifacts beyond existing source-check smoke cases.",
+  "Do not count protocol-only registry records as effect evidence."
+]
+verdict = "passed_current_milestone_not_global_goal"
+
+[[rounds]]
+id = "html_delivery_regression_review"
+reviewer = "HTML delivery reviewer"
+status = "passed_current_milestone"
+scope = [
+  "validation/html_delivery_contract.toml",
+  "src/bias_nma_adv/html_delivery_contract.py",
+  "docs/tier1_benchmark.md",
+]
+findings = [
+  "HTML dashboards can present generated validation artifacts, source ledgers, and heatmap-ready contribution matrices without replacing statistical engines.",
+  "HTML-only delivery remains blocked for statistical estimation, source verification, reference adapters, and certification gates.",
+  "The current changes are backend governance artifacts and do not add a dashboard surface, so UI E2E testing is not triggered."
+]
+actions = [
+  "Kept HTML delivery limitations visible through the validation-status report.",
+  "Preserved backend-required status for estimation and reference-adapter capabilities.",
+  "Documented heatmap-ready contribution outputs as data that a future HTML dashboard may render read-only."
+]
+remaining_blockers = [
+  "Add a tested E2E UI contract before shipping any HTML dashboard.",
+  "Render only generated artifacts in HTML unless a tested backend performs computation.",
+  "Do not treat HTML conversion as equivalent to model validation."
+]
+verdict = "passed_current_milestone_not_global_goal"
+
+[[rounds]]
+id = "implementation_polish_review"
+reviewer = "implementation polish reviewer"
+status = "passed_current_milestone"
+scope = [
+  "src/bias_nma_adv/validation_status.py",
+  "tests/test_validation_status.py",
+  "tests/test_improvement_review.py",
+  "tests/test_review_ledger.py",
+  "tests/test_publication_bias_diagnostics.py",
+  "docs/tier1_benchmark.md",
+]
+findings = [
+  "Hardcoded review filenames in validation status would make future review updates easy to forget.",
+  "The existing review validators correctly block certification language, but tests need to point at the latest review artifacts.",
+  "The progress checkpoint and public branch should be refreshed after each reviewed milestone."
+]
+actions = [
+  "Changed validation status to select the newest multiperson and improvement review files by deterministic filename ordering.",
+  "Added latest-review tests for both review ledgers and validation-status exposure.",
+  "Updated documentation references from the 2026-07-15 ledgers to the 2026-07-18 ledgers."
+]
+remaining_blockers = [
+  "Run focused review-ledger tests, validation-status tests, full suite, benchmark registry validation, Sentinel, and CI after this change.",
+  "Keep PROGRESS.md refreshed locally after the commit because the global goal remains active.",
+  "Push and verify GitHub Actions before treating this milestone as closed."
+]
+verdict = "passed_current_milestone_not_global_goal"

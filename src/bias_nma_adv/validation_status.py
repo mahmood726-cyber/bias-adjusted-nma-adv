@@ -111,11 +111,14 @@ def build_validation_status(
     proof_effect_bundle_path = (
         root / "validation" / "ingestion" / "sglt2_hf_reported_hr_proof_effects.json"
     )
-    review_ledger_path = (
-        root / "validation" / "reviews" / "multiperson_review_2026_07_15.toml"
+    review_dir = root / "validation" / "reviews"
+    review_ledger_path = _latest_matching_file(
+        review_dir,
+        "multiperson_review_*.toml",
     )
-    improvement_review_path = (
-        root / "validation" / "reviews" / "improvement_review_2026_07_15.toml"
+    improvement_review_path = _latest_matching_file(
+        review_dir,
+        "improvement_review_*.toml",
     )
     reference_targets_path = root / "validation" / "reference_targets.toml"
     reference_runs_path = root / "validation" / "reference_runs"
@@ -367,6 +370,15 @@ def _relpath(path: Path, root: Path) -> str:
         return path.resolve().relative_to(root).as_posix()
     except ValueError:
         return path.as_posix()
+
+
+def _latest_matching_file(directory: Path, pattern: str) -> Path:
+    matches = sorted(directory.glob(pattern))
+    if not matches:
+        raise FileNotFoundError(
+            f"validation review directory {directory} has no files matching {pattern}."
+        )
+    return matches[-1]
 
 
 def _utc_now() -> str:

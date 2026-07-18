@@ -481,7 +481,7 @@ def test_validation_status_composes_all_current_gates():
 
     multiperson_review = report["multiperson_review"]
     assert multiperson_review["ledger"] == (
-        "validation/reviews/multiperson_review_2026_07_15.toml"
+        "validation/reviews/multiperson_review_2026_07_18.toml"
     )
     assert multiperson_review["schema_version"] == "multiperson_review/v1"
     assert multiperson_review["n_rounds"] == 4
@@ -493,7 +493,7 @@ def test_validation_status_composes_all_current_gates():
 
     improvement_review = report["improvement_review"]
     assert improvement_review["ledger"] == (
-        "validation/reviews/improvement_review_2026_07_15.toml"
+        "validation/reviews/improvement_review_2026_07_18.toml"
     )
     assert improvement_review["schema_version"] == "improvement_review/v1"
     assert improvement_review["overall_status"] == (

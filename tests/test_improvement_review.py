@@ -15,7 +15,7 @@ from bias_nma_adv.improvement_review import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REVIEW = ROOT / "validation" / "reviews" / "improvement_review_2026_07_15.toml"
+REVIEW = ROOT / "validation" / "reviews" / "improvement_review_2026_07_18.toml"
 
 
 def test_improvement_review_passes_current_milestone_but_not_global_goal():
@@ -47,7 +47,7 @@ def test_improvement_review_summary_is_validation_status_ready():
 
     assert summary == {
         "schema_version": IMPROVEMENT_REVIEW_SCHEMA_VERSION,
-        "checked_at": "2026-07-17",
+        "checked_at": "2026-07-18",
         "overall_status": ALLOWED_OVERALL_STATUS,
         "n_rounds": 4,
         "round_ids": [
