@@ -353,8 +353,8 @@ def test_validation_status_composes_all_current_gates():
     assert feature_parity["n_features"] == 12
     assert feature_parity["status_counts"] == {
         "blocking": 1,
-        "local_implemented": 3,
-        "planned": 2,
+        "local_implemented": 4,
+        "planned": 1,
         "reference_candidate": 6,
     }
     assert feature_parity["reference_matched_ids"] == []

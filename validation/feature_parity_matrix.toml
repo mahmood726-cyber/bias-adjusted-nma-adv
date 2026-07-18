@@ -59,14 +59,18 @@ certification_effect = "none"
 id = "netheat_contribution_visualization"
 domain = "evidence_contribution"
 reference_methods = ["netmeta", "CINeMA", "ROB-MEN"]
-status = "planned"
-evidence_artifacts = []
+status = "local_implemented"
+evidence_artifacts = [
+  "src/bias_nma_adv/multiarm.py",
+  "tests/test_multiarm.py",
+  "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml",
+]
 required_next_artifacts = [
   "netheat_reference_outputs",
   "cinema_contribution_mapping",
   "robmen_missing_evidence_mapping",
 ]
-claim_limit = "Contribution matrices do not provide netheat, CINeMA, or ROB-MEN parity yet."
+claim_limit = "Local heatmap-ready absolute GLS contribution matrices exist, but they are not netheat, CINeMA, ROB-MEN, or evidence-certainty parity."
 certification_effect = "none"
 
 [[features]]
