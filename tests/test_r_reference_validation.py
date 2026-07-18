@@ -10,6 +10,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_component_netmeta_cnma_output,
     validate_crossnma_sglt2_compatibility_output,
     validate_ctgov_binary_network_netmeta_output,
+    validate_ctgov_binary_network_netsplit_output,
     validate_ctgov_hr_network_netmeta_output,
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
@@ -44,6 +45,9 @@ COMPONENT_CNMA_OUTPUT = ROOT / "validation" / "reference_runs" / "component_netm
 CROSSNMA_COMPAT_OUTPUT = ROOT / "validation" / "reference_runs" / "crossnma_sglt2_compatibility_output.json"
 CTGOV_BINARY_NETWORK_OUTPUT = (
     ROOT / "validation" / "reference_runs" / "psoriasis_pasi90_ctgov_binary_network_netmeta_output.json"
+)
+CTGOV_BINARY_NETSPLIT_OUTPUT = (
+    ROOT / "validation" / "reference_runs" / "psoriasis_pasi90_ctgov_binary_network_netsplit_output.json"
 )
 
 
@@ -218,6 +222,23 @@ def test_ctgov_binary_network_netmeta_output_matches_source_backed_closed_loop_n
     assert "not broad netmeta parity" in summary["source_policy_note"]
 
 
+def test_ctgov_binary_network_netsplit_output_matches_source_backed_closed_loop_network():
+    summary = validate_ctgov_binary_network_netsplit_output(
+        CTGOV_BINARY_NETSPLIT_OUTPUT,
+        repo_root=ROOT,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "node_splitting_netmeta_netsplit_psoriasis"
+    assert summary["benchmark_id"] == "psoriasis_pasi90_ctgov_binary_network"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == "netmeta::netsplit back-calculation SIDE"
+    assert summary["max_abs_difference"] < 1e-12
+    assert "direct_indirect_difference_arithmetic" in summary["validated_components"]
+    assert "not broad inconsistency parity" in summary["source_policy_note"]
+
+
 def test_component_netmeta_cnma_output_matches_local_additive_component_core():
     summary = validate_component_netmeta_cnma_output(COMPONENT_CNMA_OUTPUT, repo_root=ROOT)
 
@@ -377,6 +398,17 @@ def test_ctgov_binary_network_netmeta_validation_rejects_numeric_drift(tmp_path)
 
     with pytest.raises(RReferenceValidationError, match="etanercept CT.gov binary netmeta common estimate"):
         validate_ctgov_binary_network_netmeta_output(mutated, repo_root=ROOT)
+
+
+def test_ctgov_binary_network_netsplit_validation_rejects_numeric_drift(tmp_path):
+    payload = load_r_reference_output(CTGOV_BINARY_NETSPLIT_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["splits"][0]["difference"] += 0.01
+    mutated = tmp_path / "ctgov_binary_netsplit_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="difference identity"):
+        validate_ctgov_binary_network_netsplit_output(mutated, repo_root=ROOT)
 
 
 def test_component_netmeta_cnma_validation_rejects_numeric_drift(tmp_path):

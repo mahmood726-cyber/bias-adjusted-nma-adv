@@ -69,6 +69,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "netmeta_netsplit_source_backed_inconsistency_reference_candidate"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "egger_small_study_effect_diagnostic"
         in by_id["feature_completeness"].implemented_capabilities
     )
@@ -301,6 +305,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "pairwise_exhaustive_gosh_subset_diagnostic",
             "bounded_trim_and_fill_sensitivity_screen",
             "fixed_effect_node_splitting_smoke_diagnostics",
+            "netmeta_netsplit_source_backed_inconsistency_reference_candidate",
             "egger_small_study_effect_diagnostic",
             "metafor_regtest_source_backed_publication_bias_reference_candidate",
             "selection_weight_publication_bias_sensitivity",

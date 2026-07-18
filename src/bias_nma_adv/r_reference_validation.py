@@ -1356,6 +1356,242 @@ def validate_ctgov_binary_network_netmeta_output(
     }
 
 
+def validate_ctgov_binary_network_netsplit_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``netmeta::netsplit`` output for the source-backed CT.gov binary network."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "method",
+            "reference_treatment",
+            "package_versions",
+            "arm_rows",
+            "n_splits",
+            "n_estimable_splits",
+            "splits",
+            "limitations",
+        },
+        label="CT.gov binary netsplit output",
+    )
+    if output["schema_version"] != "netmeta_netsplit_source/v1":
+        raise RReferenceValidationError("CT.gov binary netsplit schema_version mismatch.")
+    if output["benchmark_id"] != "psoriasis_pasi90_ctgov_binary_network":
+        raise RReferenceValidationError("CT.gov binary netsplit benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("CT.gov binary netsplit source_policy mismatch.")
+    if output["effect_scale"] != "log_or":
+        raise RReferenceValidationError("CT.gov binary netsplit must use log_or scale.")
+    if output["method"] != "netmeta::netsplit back-calculation SIDE":
+        raise RReferenceValidationError("CT.gov binary netsplit method mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "netmeta", "meta", "jsonlite"})
+
+    artifact = _load_toml(
+        root / "validation" / "networks" / "psoriasis_pasi90_ctgov_binary_network_benchmark.toml"
+    )
+    if output["reference_treatment"] != artifact["reference_treatment"]:
+        raise RReferenceValidationError("CT.gov binary netsplit reference_treatment mismatch.")
+    if int(artifact["closed_loop_cycle_rank"]) <= 0:
+        raise RReferenceValidationError("CT.gov binary netsplit benchmark is not closed-loop.")
+
+    arms_path = root / "validation" / "reference_runs" / "psoriasis_pasi90_ctgov_binary_network_arms.csv"
+    _validate_ctgov_binary_reference_input_csv(arms_path, artifact)
+    expected_arms = _load_ctgov_binary_arm_rows(arms_path)
+    observed_arms = _ctgov_binary_arm_rows_from_output(output["arm_rows"])
+    if observed_arms != expected_arms:
+        raise RReferenceValidationError("CT.gov binary netsplit arm rows do not match source-backed CSV.")
+
+    netmeta_output = load_r_reference_output(
+        root / "validation" / "reference_runs" / "psoriasis_pasi90_ctgov_binary_network_netmeta_output.json"
+    )
+    fixture = _single_fixture(netmeta_output["fixtures"], "psoriasis_pasi90_ctgov_binary_network")
+    reference_treatment = str(output["reference_treatment"])
+    network_effects = {
+        reference_treatment: {"estimate": 0.0, "se": 0.0},
+        **{
+            treatment: {
+                "estimate": float(values["estimate"]),
+                "se": float(values["se"]),
+            }
+            for treatment, values in fixture["common"].items()
+        },
+    }
+
+    splits = output["splits"]
+    if not isinstance(splits, list) or len(splits) != int(output["n_splits"]):
+        raise RReferenceValidationError("CT.gov binary netsplit split count mismatch.")
+    estimable_count = sum(1 for row in splits if bool(row.get("estimable")))
+    if estimable_count != int(output["n_estimable_splits"]):
+        raise RReferenceValidationError("CT.gov binary netsplit estimable count mismatch.")
+    if estimable_count < 1:
+        raise RReferenceValidationError("CT.gov binary netsplit must contain estimable SIDE rows.")
+
+    max_abs_diff = 0.0
+    arm_rows_by_study = _group_ctgov_binary_arms_by_study(expected_arms)
+    for split in splits:
+        _require_keys(
+            split,
+            {
+                "comparison",
+                "k",
+                "direct_evidence_proportion",
+                "nma_estimate",
+                "nma_se",
+                "direct_estimate",
+                "direct_se",
+                "indirect_estimate",
+                "indirect_se",
+                "difference",
+                "difference_se",
+                "z_value",
+                "p_value",
+                "estimable",
+            },
+            label="CT.gov binary netsplit row",
+        )
+        comparison = str(split["comparison"])
+        treatment_a, treatment_b = _parse_netmeta_comparison(comparison)
+        if treatment_a not in network_effects or treatment_b not in network_effects:
+            raise RReferenceValidationError(f"{comparison}: treatment missing from netmeta output.")
+
+        expected_nma = (
+            network_effects[treatment_a]["estimate"] - network_effects[treatment_b]["estimate"]
+        )
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(f"{comparison} netsplit NMA estimate", split["nma_estimate"], expected_nma, tolerance),
+        )
+        if treatment_b == reference_treatment:
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{comparison} netsplit NMA reference SE",
+                    split["nma_se"],
+                    network_effects[treatment_a]["se"],
+                    tolerance,
+                ),
+            )
+
+        direct = _direct_fixed_log_or_from_arms(
+            arm_rows_by_study,
+            treatment_a=treatment_a,
+            treatment_b=treatment_b,
+        )
+        if int(split["k"]) != direct["k"]:
+            raise RReferenceValidationError(f"{comparison}: netsplit direct-k mismatch.")
+        if direct["k"] > 0:
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{comparison} netsplit direct estimate",
+                    split["direct_estimate"],
+                    direct["estimate"],
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{comparison} netsplit direct SE",
+                    split["direct_se"],
+                    direct["se"],
+                    tolerance,
+                ),
+            )
+        else:
+            _assert_null(f"{comparison} netsplit direct estimate", split["direct_estimate"])
+            _assert_null(f"{comparison} netsplit direct SE", split["direct_se"])
+
+        if bool(split["estimable"]):
+            for field in ("indirect_estimate", "indirect_se", "difference", "difference_se", "z_value", "p_value"):
+                if split[field] is None:
+                    raise RReferenceValidationError(f"{comparison}: estimable netsplit field {field} is null.")
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{comparison} netsplit difference identity",
+                    split["difference"],
+                    float(split["direct_estimate"]) - float(split["indirect_estimate"]),
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{comparison} netsplit difference SE identity",
+                    split["difference_se"],
+                    math.sqrt(float(split["direct_se"]) ** 2 + float(split["indirect_se"]) ** 2),
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{comparison} netsplit z identity",
+                    split["z_value"],
+                    float(split["difference"]) / float(split["difference_se"]),
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{comparison} netsplit p-value identity",
+                    split["p_value"],
+                    math.erfc(abs(float(split["z_value"])) / math.sqrt(2.0)),
+                    tolerance,
+                ),
+            )
+        elif direct["k"] == 0:
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{comparison} netsplit indirect-only estimate",
+                    split["indirect_estimate"],
+                    split["nma_estimate"],
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{comparison} netsplit indirect-only SE",
+                    split["indirect_se"],
+                    split["nma_se"],
+                    tolerance,
+                ),
+            )
+            for field in ("difference", "difference_se", "z_value", "p_value"):
+                _assert_null(f"{comparison} netsplit {field}", split[field])
+        else:
+            for field in ("indirect_estimate", "indirect_se", "difference", "difference_se", "z_value", "p_value"):
+                _assert_null(f"{comparison} netsplit {field}", split[field])
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not broad node-splitting parity" in item for item in limitations):
+        raise RReferenceValidationError("CT.gov binary netsplit must preserve broad-parity limitation.")
+    if not any("does not certify" in item for item in limitations):
+        raise RReferenceValidationError("CT.gov binary netsplit must preserve non-certification limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "node_splitting_netmeta_netsplit_psoriasis",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "netmeta::netsplit back-calculation SIDE",
+        "benchmark_id": artifact["benchmark_id"],
+        "validated_components": [
+            "source_backed_arm_count_rows",
+            "netmeta_netsplit_side_rows",
+            "direct_fixed_effect_log_or_recalculation",
+            "network_effect_orientation_against_netmeta",
+            "direct_indirect_difference_arithmetic",
+            "broad_node_splitting_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates one CT.gov/PubMed psoriasis network against netmeta::netsplit "
+            "SIDE output. It is not broad inconsistency parity, clinical guidance, or HTA certification."
+        ),
+    }
+
+
 def validate_publication_bias_metafor_regtest_output(
     output_path: str | Path,
     *,
@@ -1963,6 +2199,84 @@ def _validate_ctgov_binary_reference_input_csv(path: Path, artifact: dict[str, A
             raise RReferenceValidationError(f"CT.gov binary netmeta input CSV count mismatch for {key}.")
 
 
+def _load_ctgov_binary_arm_rows(path: Path) -> tuple[dict[str, Any], ...]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    return tuple(_coerce_ctgov_binary_arm_row(row) for row in rows)
+
+
+def _ctgov_binary_arm_rows_from_output(raw_rows: Any) -> tuple[dict[str, Any], ...]:
+    if not isinstance(raw_rows, list):
+        raise RReferenceValidationError("CT.gov binary netsplit arm_rows must be a list.")
+    return tuple(_coerce_ctgov_binary_arm_row(row) for row in raw_rows)
+
+
+def _coerce_ctgov_binary_arm_row(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "fixture_id": str(row["fixture_id"]),
+        "study": str(row["study"]),
+        "treatment": str(row["treatment"]),
+        "events": int(row["events"]),
+        "n": int(row["n"]),
+    }
+
+
+def _group_ctgov_binary_arms_by_study(
+    rows: tuple[dict[str, Any], ...],
+) -> dict[str, dict[str, dict[str, Any]]]:
+    grouped: dict[str, dict[str, dict[str, Any]]] = {}
+    for row in rows:
+        grouped.setdefault(row["study"], {})[row["treatment"]] = row
+    return grouped
+
+
+def _parse_netmeta_comparison(comparison: str) -> tuple[str, str]:
+    parts = comparison.split(":")
+    if len(parts) != 2 or not all(part.strip() for part in parts):
+        raise RReferenceValidationError(f"malformed netmeta comparison: {comparison!r}.")
+    return parts[0], parts[1]
+
+
+def _direct_fixed_log_or_from_arms(
+    arms_by_study: dict[str, dict[str, dict[str, Any]]],
+    *,
+    treatment_a: str,
+    treatment_b: str,
+) -> dict[str, float | int | None]:
+    effects: list[float] = []
+    variances: list[float] = []
+    for study_arms in arms_by_study.values():
+        arm_a = study_arms.get(treatment_a)
+        arm_b = study_arms.get(treatment_b)
+        if arm_a is None or arm_b is None:
+            continue
+        effect = _log_odds_from_arm_row(arm_a) - _log_odds_from_arm_row(arm_b)
+        variance = (
+            1.0 / arm_a["events"]
+            + 1.0 / (arm_a["n"] - arm_a["events"])
+            + 1.0 / arm_b["events"]
+            + 1.0 / (arm_b["n"] - arm_b["events"])
+        )
+        effects.append(effect)
+        variances.append(variance)
+    if not effects:
+        return {"k": 0, "estimate": None, "se": None}
+    weights = [1.0 / variance for variance in variances]
+    weight_sum = sum(weights)
+    estimate = sum(weight * effect for weight, effect in zip(weights, effects, strict=True)) / weight_sum
+    se = math.sqrt(1.0 / weight_sum)
+    return {"k": len(effects), "estimate": estimate, "se": se}
+
+
+def _log_odds_from_arm_row(row: dict[str, Any]) -> float:
+    events = int(row["events"])
+    n = int(row["n"])
+    nonevents = n - events
+    if events <= 0 or nonevents <= 0:
+        raise RReferenceValidationError("CT.gov binary netsplit arm counts require 0 < events < n.")
+    return math.log(events / nonevents)
+
+
 def _assert_close(label: str, observed: Any, expected: Any, tolerance: float) -> float:
     observed_float = float(observed)
     expected_float = float(expected)
@@ -1972,6 +2286,11 @@ def _assert_close(label: str, observed: Any, expected: Any, tolerance: float) ->
             f"{label} differs by {difference:.6g}, exceeding tolerance {tolerance:.6g}."
         )
     return difference
+
+
+def _assert_null(label: str, observed: Any) -> None:
+    if observed is not None:
+        raise RReferenceValidationError(f"{label} must be null.")
 
 
 def _assert_many_close(checks: dict[str, tuple[Any, Any]], tolerance: float) -> float:

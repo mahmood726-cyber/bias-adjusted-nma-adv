@@ -136,6 +136,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "node_splitting_netmeta_netsplit_psoriasis"
+domain = "inconsistency"
+module = "src/bias_nma_adv/node_splitting.py"
+reference_method = "netmeta::netsplit back-calculation SIDE"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed CT.gov/PubMed psoriasis PASI 90 arm-count rows",
+  "recalculate direct fixed-effect log-OR estimates from 2x2 arm counts and preserve netmeta network-effect orientation",
+  "match netmeta::netsplit direct-vs-indirect SIDE rows while preserving the limitation that one network is not broad node-splitting parity",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "publication_bias_metafor_regtest_smoke"
 domain = "publication_bias"
 module = "src/bias_nma_adv/publication_bias.py"

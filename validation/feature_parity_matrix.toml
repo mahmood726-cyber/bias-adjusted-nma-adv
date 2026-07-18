@@ -46,13 +46,19 @@ certification_effect = "none"
 id = "node_splitting_inconsistency"
 domain = "inconsistency"
 reference_methods = ["netmeta", "multinma"]
-status = "local_implemented"
-evidence_artifacts = ["src/bias_nma_adv/node_splitting.py"]
+status = "reference_candidate"
+evidence_artifacts = [
+  "src/bias_nma_adv/node_splitting.py",
+  "external/r/netmeta_netsplit_psoriasis.R",
+  "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_output.json",
+  "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_reference.toml",
+  "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml",
+]
 required_next_artifacts = [
   "reference_matched_node_splitting_outputs",
   "source_backed_closed_loop_networks_with_estimable_indirect_splits",
 ]
-claim_limit = "Local node splitting is a smoke diagnostic, not reference-matched inconsistency parity."
+claim_limit = "Local smoke diagnostics plus one source-backed netmeta::netsplit SIDE reference candidate exist, but this is not broad node-splitting, inconsistency, netheat, or multinma parity."
 certification_effect = "none"
 
 [[features]]

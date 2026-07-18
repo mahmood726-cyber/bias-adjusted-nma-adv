@@ -30,6 +30,10 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
         by_id["multiarm_netmeta_gls"].evidence_artifacts
     )
     assert by_id["stan_nuts_multinma_bayesian_nma"].status == "reference_candidate"
+    assert by_id["node_splitting_inconsistency"].status == "reference_candidate"
+    assert "psoriasis_pasi90_ctgov_binary_network_netsplit_reference.toml" in "\n".join(
+        by_id["node_splitting_inconsistency"].evidence_artifacts
+    )
     assert by_id["netheat_contribution_visualization"].status == "local_implemented"
     assert "psoriasis_pasi90_ctgov_binary_network_benchmark.toml" in "\n".join(
         by_id["netheat_contribution_visualization"].evidence_artifacts
@@ -63,9 +67,9 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
     assert summary["global_feature_parity_complete"] is False
     assert summary["status_counts"] == {
         "blocking": 1,
-        "local_implemented": 3,
+        "local_implemented": 2,
         "planned": 1,
-        "reference_candidate": 7,
+        "reference_candidate": 8,
     }
     assert summary["reference_matched_ids"] == []
     assert "stan_nuts_multinma_bayesian_nma" in summary["blocking_ids"]

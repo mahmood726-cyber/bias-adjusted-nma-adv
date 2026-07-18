@@ -20,6 +20,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     validate_component_netmeta_cnma_output,
     validate_crossnma_sglt2_compatibility_output,
     validate_ctgov_hr_network_netmeta_output,
+    validate_ctgov_binary_network_netsplit_output,
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
     validate_dta_mada_source_table_output,
@@ -59,6 +60,12 @@ PUBLICATION_BIAS_REGTEST_OUTPUT = Path(
 PUBLICATION_BIAS_REGTEST_REPORT = Path(
     "validation/reference_runs/publication_bias_t2d_ctgov_regtest_reference.toml"
 )
+CTGOV_BINARY_NETSPLIT_OUTPUT = Path(
+    "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_output.json"
+)
+CTGOV_BINARY_NETSPLIT_REPORT = Path(
+    "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_reference.toml"
+)
 COMPONENT_OUTPUT = Path("validation/reference_runs/component_netmeta_cnma_output.json")
 COMPONENT_REPORT = Path("validation/reference_runs/component_netmeta_cnma_reference.toml")
 CROSSNMA_COMPAT_OUTPUT = Path("validation/reference_runs/crossnma_sglt2_compatibility_output.json")
@@ -97,6 +104,16 @@ def main(argv: list[str] | None = None) -> int:
         "--publication-bias-regtest-report",
         type=Path,
         default=PUBLICATION_BIAS_REGTEST_REPORT,
+    )
+    parser.add_argument(
+        "--ctgov-binary-netsplit-output",
+        type=Path,
+        default=CTGOV_BINARY_NETSPLIT_OUTPUT,
+    )
+    parser.add_argument(
+        "--ctgov-binary-netsplit-report",
+        type=Path,
+        default=CTGOV_BINARY_NETSPLIT_REPORT,
     )
     parser.add_argument("--component-output", type=Path, default=COMPONENT_OUTPUT)
     parser.add_argument("--component-report", type=Path, default=COMPONENT_REPORT)
@@ -170,6 +187,12 @@ def main(argv: list[str] | None = None) -> int:
         publication_bias_regtest_output = _resolve(root, args.publication_bias_regtest_output)
         publication_bias_regtest_summary = validate_publication_bias_metafor_regtest_output(
             publication_bias_regtest_output,
+            repo_root=root,
+            tolerance=args.tolerance,
+        )
+        ctgov_binary_netsplit_output = _resolve(root, args.ctgov_binary_netsplit_output)
+        ctgov_binary_netsplit_summary = validate_ctgov_binary_network_netsplit_output(
+            ctgov_binary_netsplit_output,
             repo_root=root,
             tolerance=args.tolerance,
         )
@@ -293,6 +316,16 @@ def main(argv: list[str] | None = None) -> int:
             ),
         )
         _write_report(
+            _resolve(root, args.ctgov_binary_netsplit_report),
+            _ctgov_binary_netsplit_report(
+                root=root,
+                output_path=ctgov_binary_netsplit_output,
+                summary=ctgov_binary_netsplit_summary,
+                checked_at=args.checked_at,
+                tolerance=args.tolerance,
+            ),
+        )
+        _write_report(
             _resolve(root, args.component_report),
             _component_report(
                 root=root,
@@ -321,7 +354,8 @@ def main(argv: list[str] | None = None) -> int:
         f"{args.dta_source_report}, {args.dose_response_report}, {args.mbnmadose_report}, "
         f"{args.sglt2_survival_report}, "
         f"{args.pcsk9_survival_report}, {args.ctgov_hr_network_report}, "
-        f"{args.publication_bias_regtest_report}, {args.component_report}, "
+        f"{args.publication_bias_regtest_report}, {args.ctgov_binary_netsplit_report}, "
+        f"{args.component_report}, "
         f"{args.crossnma_compat_report}"
     )
     return 0
@@ -897,6 +931,64 @@ def _publication_bias_regtest_report(
             "validation/networks/t2d_mace_ctgov_hr_network_effects.csv",
             "--output",
             output_path.relative_to(root).as_posix(),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": f"absolute <= {tolerance:g} for validated components",
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _ctgov_binary_netsplit_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+    tolerance: float,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    input_artifacts = [
+        Path("validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_arms.csv"),
+        Path("validation/networks/psoriasis_pasi90_ctgov_binary_network.toml"),
+        Path("validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml"),
+        Path("validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json"),
+        Path("validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json"),
+        Path("external/r/netmeta_netsplit_psoriasis.R"),
+    ]
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "node_splitting_netmeta_netsplit_psoriasis",
+        "adapter_id": "r_netmeta_psoriasis_netsplit_output_validation",
+        "reference_method": summary["reference_method"],
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/netmeta_netsplit_psoriasis.R",
+            "--benchmark-id",
+            summary["benchmark_id"],
+            "--arms",
+            "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_arms.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+            "--reference",
+            "placebo",
         ],
         "executable": "Rscript",
         "executable_found": True,

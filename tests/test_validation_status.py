@@ -180,6 +180,7 @@ def test_validation_status_composes_all_current_gates():
             "pairwise_exhaustive_gosh_subset_diagnostic",
             "bounded_trim_and_fill_sensitivity_screen",
             "fixed_effect_node_splitting_smoke_diagnostics",
+            "netmeta_netsplit_source_backed_inconsistency_reference_candidate",
             "egger_small_study_effect_diagnostic",
             "metafor_regtest_source_backed_publication_bias_reference_candidate",
             "selection_weight_publication_bias_sensitivity",
@@ -354,9 +355,9 @@ def test_validation_status_composes_all_current_gates():
     assert feature_parity["n_features"] == 12
     assert feature_parity["status_counts"] == {
         "blocking": 1,
-        "local_implemented": 3,
+        "local_implemented": 2,
         "planned": 1,
-        "reference_candidate": 7,
+        "reference_candidate": 8,
     }
     assert feature_parity["reference_matched_ids"] == []
     assert "stan_nuts_multinma_bayesian_nma" in feature_parity["blocking_ids"]
@@ -384,7 +385,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 15,
+        "observed": 16,
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
@@ -514,10 +515,10 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 20
+    assert reference_runs["n_reports"] == 21
     assert reference_runs["status_counts"] == {
         "failed": 5,
-        "passed": 15,
+        "passed": 16,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
@@ -534,6 +535,7 @@ def test_validation_status_composes_all_current_gates():
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
         "validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json",
         "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
+        "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_output.json",
         "validation/reference_runs/component_netmeta_cnma_output.json",
     }
     assert {item["certification_effect"] for item in reference_runs["reports"]} == {
@@ -560,6 +562,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_netmeta_t2d_ctgov_hr_network_output_validation", "passed"),
         ("r_metafor_publication_bias_regtest_output_validation", "passed"),
         ("r_netmeta_psoriasis_ctgov_binary_network_output_validation", "passed"),
+        ("r_netmeta_psoriasis_netsplit_output_validation", "passed"),
         ("r_netmeta_component_cnma_output_validation", "passed"),
         ("r_crossnma_sglt2_compatibility_preflight", "failed"),
         ("python_cmdstan_nuts_preflight", "failed"),

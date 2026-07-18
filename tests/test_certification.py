@@ -36,6 +36,7 @@ CTGOV_HR_NETWORK_R_ADAPTER = ROOT / "external" / "r" / "ctgov_hr_network_netmeta
 PUBLICATION_BIAS_REGTEST_R_ADAPTER = (
     ROOT / "external" / "r" / "publication_bias_metafor_regtest.R"
 )
+NETSPLIT_R_ADAPTER = ROOT / "external" / "r" / "netmeta_netsplit_psoriasis.R"
 COMPONENT_CNMA_R_ADAPTER = ROOT / "external" / "r" / "component_netmeta_cnma_fixture.R"
 CROSSNMA_COMPAT_R_ADAPTER = ROOT / "external" / "r" / "crossnma_sglt2_compatibility_preflight.R"
 STAN_MODEL = ROOT / "external" / "stan" / "standard_binary_nma.stan"
@@ -57,6 +58,7 @@ def test_reference_targets_registry_is_valid():
         "certainty_cinema_robmen",
         "dta_bivariate_hsroc_reference",
         "dta_source_table_mada_reitsma_smoke",
+        "node_splitting_netmeta_netsplit_psoriasis",
         "publication_bias_metafor_regtest_smoke",
         "pairwise_metafor_meta",
         "reported_hr_survival_metafor_pairwise",
@@ -114,7 +116,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 5, "passed": 15}
+    assert summary == {"failed": 5, "passed": 16}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -134,6 +136,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_netmeta_t2d_ctgov_hr_network_output_validation",
         "r_metafor_publication_bias_regtest_output_validation",
         "r_netmeta_psoriasis_ctgov_binary_network_output_validation",
+        "r_netmeta_psoriasis_netsplit_output_validation",
         "r_netmeta_component_cnma_output_validation",
         "r_crossnma_sglt2_compatibility_preflight",
         "python_cmdstan_nuts_preflight",
@@ -390,6 +393,21 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     assert "absolute <= 1e-06" in ctgov_binary_network_reference.tolerance
     assert MULTIARM_R_ADAPTER.is_file()
 
+    netsplit_reference = by_adapter["r_netmeta_psoriasis_netsplit_output_validation"]
+    assert netsplit_reference.target_id == "node_splitting_netmeta_netsplit_psoriasis"
+    assert netsplit_reference.status == "passed"
+    assert netsplit_reference.certification_effect == "evidence_candidate"
+    assert netsplit_reference.reference_method == "netmeta::netsplit back-calculation SIDE"
+    assert netsplit_reference.output_artifacts == (
+        "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_output.json",
+    )
+    assert (
+        "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml"
+        in netsplit_reference.input_artifacts
+    )
+    assert "absolute <= 1e-06" in netsplit_reference.tolerance
+    assert NETSPLIT_R_ADAPTER.is_file()
+
     component_reference = by_adapter["r_netmeta_component_cnma_output_validation"]
     assert component_reference.target_id == "component_nma_netmeta_cnma"
     assert component_reference.status == "passed"
@@ -443,6 +461,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
         "validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json",
         "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
+        "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_output.json",
         "validation/reference_runs/component_netmeta_cnma_output.json",
     }
 
