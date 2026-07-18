@@ -9,6 +9,8 @@ from pathlib import Path
 import tomllib
 from typing import Any
 
+import scipy.stats
+
 from bias_nma_adv.component_nma import fit_additive_component_nma
 from bias_nma_adv.dta import fit_bivariate_dta_reml
 
@@ -1354,6 +1356,146 @@ def validate_ctgov_binary_network_netmeta_output(
     }
 
 
+def validate_publication_bias_metafor_regtest_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``metafor::regtest`` output on a source-backed CT.gov HR benchmark."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "package_versions",
+            "study_effects",
+            "metafor",
+            "limitations",
+        },
+        label="publication-bias metafor regtest output",
+    )
+    if output["schema_version"] != "publication_bias_metafor_regtest/v1":
+        raise RReferenceValidationError("publication-bias regtest schema_version mismatch.")
+    if output["benchmark_id"] != "t2d_mace_ctgov_hr_network":
+        raise RReferenceValidationError("publication-bias regtest benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov reported result rows only":
+        raise RReferenceValidationError("publication-bias regtest source_policy mismatch.")
+    if output["effect_scale"] != "log_hr":
+        raise RReferenceValidationError("publication-bias regtest effect_scale mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "jsonlite"})
+
+    benchmark = _load_toml(
+        root / "validation" / "networks" / "t2d_mace_ctgov_hr_network_benchmark.toml"
+    )
+    if int(benchmark["n_studies"]) < 10:
+        raise RReferenceValidationError("publication-bias regtest benchmark needs at least 10 studies.")
+    expected_csv = _load_simple_effect_rows(
+        root / "validation" / "networks" / "t2d_mace_ctgov_hr_network_effects.csv"
+    )
+    expected_benchmark = {
+        str(effect["study_id"]): effect for effect in benchmark["study_effects"]
+    }
+    observed = {str(effect["study_id"]): effect for effect in output["study_effects"]}
+    if set(observed) != set(expected_csv) or set(observed) != set(expected_benchmark):
+        raise RReferenceValidationError("publication-bias regtest study rows do not match CT.gov benchmark.")
+
+    max_abs_diff = 0.0
+    for study_id, expected in expected_csv.items():
+        observed_row = observed[study_id]
+        benchmark_row = expected_benchmark[study_id]
+        if str(observed_row["nct_id"]) != str(expected["nct_id"]):
+            raise RReferenceValidationError(f"{study_id}: publication-bias regtest NCT mismatch.")
+        if str(benchmark_row["nct_id"]) != str(expected["nct_id"]):
+            raise RReferenceValidationError(f"{study_id}: publication-bias benchmark CSV NCT mismatch.")
+        for field in ("estimate", "se", "variance"):
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{study_id} publication-bias regtest {field}",
+                    observed_row[field],
+                    expected[field],
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{study_id} publication-bias benchmark {field}",
+                    benchmark_row[field],
+                    expected[field],
+                    tolerance,
+                ),
+            )
+
+    fit = _weighted_lm_effect_on_se(expected_csv.values())
+    egger = output["metafor"]["egger_lm_sei"]
+    _require_keys(
+        egger,
+        {
+            "model",
+            "predictor",
+            "k",
+            "statistic",
+            "p_value",
+            "degrees_of_freedom",
+            "intercept",
+            "slope",
+            "intercept_se",
+            "slope_se",
+        },
+        label="publication-bias metafor egger_lm_sei",
+    )
+    if egger["model"] != "lm" or egger["predictor"] != "sei":
+        raise RReferenceValidationError("publication-bias regtest must use model='lm', predictor='sei'.")
+    if int(egger["k"]) != len(expected_csv):
+        raise RReferenceValidationError("publication-bias regtest k mismatch.")
+    if int(egger["degrees_of_freedom"]) != fit["df"]:
+        raise RReferenceValidationError("publication-bias regtest df mismatch.")
+    for field in ("intercept", "slope", "intercept_se", "slope_se", "statistic", "p_value"):
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                f"publication-bias regtest {field}",
+                egger[field],
+                fit[field],
+                tolerance,
+            ),
+        )
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not proof of publication bias" in item for item in limitations):
+        raise RReferenceValidationError("publication-bias regtest must preserve diagnostic limitation.")
+    if not any("narrow evidence_candidate" in item for item in limitations):
+        raise RReferenceValidationError("publication-bias regtest must preserve narrow-candidate limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "publication_bias_metafor_regtest_smoke",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor::regtest small-study-effect diagnostic",
+        "benchmark_id": "t2d_mace_ctgov_hr_network",
+        "validated_components": [
+            "source_backed_ctgov_hr_rows",
+            "metafor_regtest_lm_sei_intercept_and_slope",
+            "metafor_regtest_standard_errors",
+            "metafor_regtest_p_value",
+            "diagnostic_not_publication_bias_proof_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates one source-backed CT.gov reported-HR small-study-effect "
+            "diagnostic against metafor::regtest. It is not trim-and-fill, "
+            "selection-model, ROB-MEN, broad publication-bias parity, clinical, or "
+            "HTA certification."
+        ),
+    }
+
+
 def validate_component_netmeta_cnma_output(
     output_path: str | Path,
     *,
@@ -1677,6 +1819,20 @@ def _load_cross_design_effect_rows(path: Path) -> dict[str, dict[str, Any]]:
     return {str(row["study_id"]): row for row in rows}
 
 
+def _load_simple_effect_rows(path: Path) -> dict[str, dict[str, Any]]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    parsed: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        parsed[str(row["study_id"])] = {
+            **row,
+            "estimate": float(row["estimate"]),
+            "se": float(row["se"]),
+            "variance": float(row["variance"]),
+        }
+    return parsed
+
+
 def _load_dose_response_arm_rows(path: Path) -> dict[tuple[str, str, float], dict[str, Any]]:
     with path.open("r", encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -1712,6 +1868,47 @@ def _weighted_linear_arm_reference(rows: list[dict[str, Any]]) -> dict[str, floa
         "slope": (s0 * sxy - s1 * sy) / denom,
         "intercept_se": math.sqrt(s2 / denom),
         "slope_se": math.sqrt(s0 / denom),
+    }
+
+
+def _weighted_lm_effect_on_se(rows: Any) -> dict[str, float]:
+    values = list(rows)
+    if len(values) < 3:
+        raise RReferenceValidationError("weighted linear regtest needs at least 3 rows.")
+    weights = [1.0 / float(row["variance"]) for row in values]
+    x_values = [float(row["se"]) for row in values]
+    y_values = [float(row["estimate"]) for row in values]
+    s0 = sum(weights)
+    sx = sum(weight * x for weight, x in zip(weights, x_values, strict=True))
+    sy = sum(weight * y for weight, y in zip(weights, y_values, strict=True))
+    sxx = sum(weight * x * x for weight, x in zip(weights, x_values, strict=True))
+    sxy = sum(
+        weight * x * y
+        for weight, x, y in zip(weights, x_values, y_values, strict=True)
+    )
+    denom = s0 * sxx - sx * sx
+    if denom <= 0.0:
+        raise RReferenceValidationError("publication-bias regtest design is singular.")
+    intercept = (sy * sxx - sx * sxy) / denom
+    slope = (s0 * sxy - sx * sy) / denom
+    residual_sum = sum(
+        weight * (y - intercept - slope * x) ** 2
+        for weight, x, y in zip(weights, x_values, y_values, strict=True)
+    )
+    df = len(values) - 2
+    sigma2 = residual_sum / df
+    intercept_se = math.sqrt(sigma2 * sxx / denom)
+    slope_se = math.sqrt(sigma2 * s0 / denom)
+    statistic = slope / slope_se
+    p_value = float(2.0 * scipy.stats.t.sf(abs(statistic), df))
+    return {
+        "intercept": intercept,
+        "slope": slope,
+        "intercept_se": intercept_se,
+        "slope_se": slope_se,
+        "statistic": statistic,
+        "p_value": p_value,
+        "df": float(df),
     }
 
 

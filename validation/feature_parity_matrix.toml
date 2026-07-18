@@ -77,14 +77,20 @@ certification_effect = "none"
 id = "publication_bias_adjustments"
 domain = "publication_bias"
 reference_methods = ["metafor", "meta", "ROB-MEN"]
-status = "local_implemented"
-evidence_artifacts = ["src/bias_nma_adv/publication_bias.py"]
+status = "reference_candidate"
+evidence_artifacts = [
+  "src/bias_nma_adv/publication_bias.py",
+  "external/r/publication_bias_metafor_regtest.R",
+  "validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json",
+  "validation/reference_runs/publication_bias_t2d_ctgov_regtest_reference.toml",
+  "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
+]
 required_next_artifacts = [
   "trim_and_fill_reference_matching",
   "selection_model_reference_matching",
   "robmen_reference_cases",
 ]
-claim_limit = "Local screens are sensitivity diagnostics, not reference-matched publication-bias adjustment parity."
+claim_limit = "Local screens plus one source-backed metafor::regtest small-study diagnostic reference candidate exist, but this is not trim-and-fill, selection-model, ROB-MEN, or broad publication-bias parity."
 certification_effect = "none"
 
 [[features]]

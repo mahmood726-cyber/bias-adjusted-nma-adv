@@ -73,6 +73,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "metafor_regtest_source_backed_publication_bias_reference_candidate"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "selection_weight_publication_bias_sensitivity"
         in by_id["feature_completeness"].implemented_capabilities
     )
@@ -298,6 +302,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "bounded_trim_and_fill_sensitivity_screen",
             "fixed_effect_node_splitting_smoke_diagnostics",
             "egger_small_study_effect_diagnostic",
+            "metafor_regtest_source_backed_publication_bias_reference_candidate",
             "selection_weight_publication_bias_sensitivity",
             "native_python_guyot_reconstruction_check",
             "source_backed_dose_response_smoke_benchmark",

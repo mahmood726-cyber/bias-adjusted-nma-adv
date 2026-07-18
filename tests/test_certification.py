@@ -33,6 +33,9 @@ DOSE_RESPONSE_R_ADAPTER = ROOT / "external" / "r" / "dose_response_metafor_polyn
 MBNMADOSE_R_ADAPTER = ROOT / "external" / "r" / "mbnmadose_semaglutide_polynomial.R"
 SURVIVAL_HR_R_ADAPTER = ROOT / "external" / "r" / "survival_hr_metafor_pairwise.R"
 CTGOV_HR_NETWORK_R_ADAPTER = ROOT / "external" / "r" / "ctgov_hr_network_netmeta.R"
+PUBLICATION_BIAS_REGTEST_R_ADAPTER = (
+    ROOT / "external" / "r" / "publication_bias_metafor_regtest.R"
+)
 COMPONENT_CNMA_R_ADAPTER = ROOT / "external" / "r" / "component_netmeta_cnma_fixture.R"
 CROSSNMA_COMPAT_R_ADAPTER = ROOT / "external" / "r" / "crossnma_sglt2_compatibility_preflight.R"
 STAN_MODEL = ROOT / "external" / "stan" / "standard_binary_nma.stan"
@@ -54,6 +57,7 @@ def test_reference_targets_registry_is_valid():
         "certainty_cinema_robmen",
         "dta_bivariate_hsroc_reference",
         "dta_source_table_mada_reitsma_smoke",
+        "publication_bias_metafor_regtest_smoke",
         "pairwise_metafor_meta",
         "reported_hr_survival_metafor_pairwise",
         "ctgov_hr_network_netmeta_star",
@@ -110,7 +114,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 5, "passed": 14}
+    assert summary == {"failed": 5, "passed": 15}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -128,6 +132,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_metafor_pcsk9_survival_hr_output_validation",
         "r_metafor_sglt2_ckd_survival_hr_output_validation",
         "r_netmeta_t2d_ctgov_hr_network_output_validation",
+        "r_metafor_publication_bias_regtest_output_validation",
         "r_netmeta_psoriasis_ctgov_binary_network_output_validation",
         "r_netmeta_component_cnma_output_validation",
         "r_crossnma_sglt2_compatibility_preflight",
@@ -345,6 +350,27 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert CTGOV_HR_NETWORK_R_ADAPTER.is_file()
 
+    publication_bias_regtest_reference = by_adapter[
+        "r_metafor_publication_bias_regtest_output_validation"
+    ]
+    assert publication_bias_regtest_reference.target_id == (
+        "publication_bias_metafor_regtest_smoke"
+    )
+    assert publication_bias_regtest_reference.status == "passed"
+    assert publication_bias_regtest_reference.certification_effect == "evidence_candidate"
+    assert publication_bias_regtest_reference.reference_method == (
+        "metafor::regtest small-study-effect diagnostic"
+    )
+    assert publication_bias_regtest_reference.output_artifacts == (
+        "validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json",
+    )
+    assert (
+        "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml"
+        in publication_bias_regtest_reference.input_artifacts
+    )
+    assert "absolute <= 1e-06" in publication_bias_regtest_reference.tolerance
+    assert PUBLICATION_BIAS_REGTEST_R_ADAPTER.is_file()
+
     ctgov_binary_network_reference = by_adapter[
         "r_netmeta_psoriasis_ctgov_binary_network_output_validation"
     ]
@@ -415,6 +441,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/pcsk9_survival_hr_metafor_output.json",
         "validation/reference_runs/sglt2_ckd_survival_hr_metafor_output.json",
         "validation/reference_runs/t2d_ctgov_hr_network_netmeta_output.json",
+        "validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json",
         "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netmeta_output.json",
         "validation/reference_runs/component_netmeta_cnma_output.json",
     }

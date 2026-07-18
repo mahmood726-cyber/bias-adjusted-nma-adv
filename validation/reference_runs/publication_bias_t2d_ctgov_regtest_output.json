@@ -1,0 +1,103 @@
+{
+  "schema_version": "publication_bias_metafor_regtest/v1",
+  "benchmark_id": "t2d_mace_ctgov_hr_network",
+  "source_policy": "clinicaltrials_gov reported result rows only",
+  "effect_scale": "log_hr",
+  "package_versions": {
+    "R": "4.6.0",
+    "metafor": "5.0.1",
+    "jsonlite": "2.0.0"
+  },
+  "study_effects": [
+    {
+      "study_id": "TECOS",
+      "nct_id": "NCT00790205",
+      "estimate": -0.0202027073175195,
+      "se": 0.054595663348671,
+      "variance": 0.00298068645648142
+    },
+    {
+      "study_id": "CANVAS",
+      "nct_id": "NCT01032629",
+      "estimate": -0.0725706928348354,
+      "se": 0.0922950746695492,
+      "variance": 0.00851838080825766
+    },
+    {
+      "study_id": "EMPA-REG-OUTCOME",
+      "nct_id": "NCT01131676",
+      "estimate": -0.150822889734584,
+      "se": 0.0742500268439173,
+      "variance": 0.00551306648632244
+    },
+    {
+      "study_id": "EXSCEL",
+      "nct_id": "NCT01144338",
+      "estimate": -0.0943106794712413,
+      "se": 0.0479383450187642,
+      "variance": 0.00229808492313808
+    },
+    {
+      "study_id": "REWIND",
+      "nct_id": "NCT01394952",
+      "estimate": -0.127833371509885,
+      "se": 0.0575704450305313,
+      "variance": 0.00331435614101342
+    },
+    {
+      "study_id": "CARMELINA",
+      "nct_id": "NCT01897532",
+      "estimate": 0.0198026272961797,
+      "se": 0.0697812733354402,
+      "variance": 0.00486942610831542
+    },
+    {
+      "study_id": "VERTIS-CV",
+      "nct_id": "NCT01986881",
+      "estimate": -0.0304592074847086,
+      "se": 0.0696012240141627,
+      "variance": 0.00484433038426966
+    },
+    {
+      "study_id": "CREDENCE",
+      "nct_id": "NCT02065791",
+      "estimate": -0.22314355131421,
+      "se": 0.0890792573138832,
+      "variance": 0.00793511408359302
+    },
+    {
+      "study_id": "HARMONY-Outcomes",
+      "nct_id": "NCT02465515",
+      "estimate": -0.2484613592985,
+      "se": 0.0715069173120385,
+      "variance": 0.00511323922347071
+    },
+    {
+      "study_id": "PIONEER-6",
+      "nct_id": "NCT03914326",
+      "estimate": -0.150822889734584,
+      "se": 0.0562619444422871,
+      "variance": 0.003165406392427
+    }
+  ],
+  "metafor": {
+    "egger_lm_sei": {
+      "model": "lm",
+      "predictor": "sei",
+      "k": 10,
+      "statistic_name": "t",
+      "statistic": -0.63406580884181,
+      "p_value": 0.543737957620125,
+      "degrees_of_freedom": 8,
+      "intercept": -0.0202484223825696,
+      "slope": -1.31011007138801,
+      "intercept_se": 0.132808785061441,
+      "slope_se": 2.06620520002658
+    }
+  },
+  "limitations": [
+    "This is a small-study-effect diagnostic, not proof of publication bias.",
+    "The source-backed benchmark is a CT.gov reported-HR star network, not a full publication-bias workflow.",
+    "This output is a narrow evidence_candidate and does not establish broad metafor publication-bias parity."
+  ]
+}

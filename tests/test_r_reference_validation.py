@@ -18,6 +18,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_multinma_sglt2_binary_nma_output,
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_meta_output,
+    validate_publication_bias_metafor_regtest_output,
     validate_survival_hr_metafor_pairwise_output,
 )
 
@@ -36,6 +37,9 @@ SGLT2_CKD_SURVIVAL_OUTPUT = (
     ROOT / "validation" / "reference_runs" / "sglt2_ckd_survival_hr_metafor_output.json"
 )
 CTGOV_HR_NETWORK_OUTPUT = ROOT / "validation" / "reference_runs" / "t2d_ctgov_hr_network_netmeta_output.json"
+PUBLICATION_BIAS_REGTEST_OUTPUT = (
+    ROOT / "validation" / "reference_runs" / "publication_bias_t2d_ctgov_regtest_output.json"
+)
 COMPONENT_CNMA_OUTPUT = ROOT / "validation" / "reference_runs" / "component_netmeta_cnma_output.json"
 CROSSNMA_COMPAT_OUTPUT = ROOT / "validation" / "reference_runs" / "crossnma_sglt2_compatibility_output.json"
 CTGOV_BINARY_NETWORK_OUTPUT = (
@@ -178,6 +182,23 @@ def test_ctgov_hr_network_netmeta_output_matches_source_backed_star_network():
     assert summary["max_abs_difference"] < 1e-10
     assert "star_network_limitation_preserved" in summary["validated_components"]
     assert "not closed-loop inconsistency" in summary["source_policy_note"]
+
+
+def test_publication_bias_metafor_regtest_matches_source_backed_ctgov_hr_rows():
+    summary = validate_publication_bias_metafor_regtest_output(
+        PUBLICATION_BIAS_REGTEST_OUTPUT,
+        repo_root=ROOT,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "publication_bias_metafor_regtest_smoke"
+    assert summary["benchmark_id"] == "t2d_mace_ctgov_hr_network"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == "metafor::regtest small-study-effect diagnostic"
+    assert summary["max_abs_difference"] < 1e-12
+    assert "metafor_regtest_p_value" in summary["validated_components"]
+    assert "not trim-and-fill" in summary["source_policy_note"]
 
 
 def test_ctgov_binary_network_netmeta_output_matches_source_backed_closed_loop_network():
@@ -334,6 +355,17 @@ def test_ctgov_hr_network_netmeta_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="GLP-1 RA netmeta common estimate"):
         validate_ctgov_hr_network_netmeta_output(mutated, repo_root=ROOT)
+
+
+def test_publication_bias_regtest_validation_rejects_numeric_drift(tmp_path):
+    payload = load_r_reference_output(PUBLICATION_BIAS_REGTEST_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["metafor"]["egger_lm_sei"]["slope"] += 0.01
+    mutated = tmp_path / "publication_bias_regtest_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="regtest slope"):
+        validate_publication_bias_metafor_regtest_output(mutated, repo_root=ROOT)
 
 
 def test_ctgov_binary_network_netmeta_validation_rejects_numeric_drift(tmp_path):

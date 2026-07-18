@@ -1,0 +1,28 @@
+schema_version = "reference_run/v1"
+target_id = "publication_bias_metafor_regtest_smoke"
+adapter_id = "r_metafor_publication_bias_regtest_output_validation"
+reference_method = "metafor::regtest small-study-effect diagnostic"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-18T13:30:00Z"
+command = ["Rscript", "--vanilla", "external/r/publication_bias_metafor_regtest.R", "--benchmark-id", "t2d_mace_ctgov_hr_network", "--effects", "validation/networks/t2d_mace_ctgov_hr_network_effects.csv", "--output", "validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", jsonlite = "2.0.0"}
+input_artifacts = ["validation/networks/t2d_mace_ctgov_hr_network_effects.csv", "validation/networks/t2d_mace_ctgov_hrs.toml", "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml", "validation/source_checks/t2d_mace_ctgov_hr_network_check.json", "external/r/publication_bias_metafor_regtest.R"]
+output_artifacts = ["validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_ctgov_hr_rows", "metafor_regtest_lm_sei_intercept_and_slope", "metafor_regtest_standard_errors", "metafor_regtest_p_value", "diagnostic_not_publication_bias_proof_limitation_preserved"]
+max_abs_difference = 9.1038288019262836e-15
+notes = ["This validates one source-backed CT.gov reported-HR small-study-effect diagnostic against metafor::regtest. It is not trim-and-fill, selection-model, ROB-MEN, broad publication-bias parity, clinical, or HTA certification."]
+
+[input_sha256]
+"validation/networks/t2d_mace_ctgov_hr_network_effects.csv" = "3196dad0677615ee7a41e01a9166c52773daa89e82e0e492f3d4ea760795e05f"
+"validation/networks/t2d_mace_ctgov_hrs.toml" = "d74c2278b6513a09a0c0a170c33e830a0e68d3a2199f288a500c1255f39bec87"
+"validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml" = "f29606cdaca0b734c13e212af46ce4d86b0aa50a8446f326fc6f2a0077a6d6da"
+"validation/source_checks/t2d_mace_ctgov_hr_network_check.json" = "023487eba94d1164011b2492dab6a82acb5f20191fb75f0fd3b63fe8da676e02"
+"external/r/publication_bias_metafor_regtest.R" = "d527a24f5a2c87fb38dc9d79ae765784eeff61d371c419467dcbe441abdf2602"
+
+[output_sha256]
+"validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json" = "1ea3f49839b2853a618a2cb73c016db6cb06f4829a5c05797764cc65f47f6111"

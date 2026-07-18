@@ -136,6 +136,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "publication_bias_metafor_regtest_smoke"
+domain = "publication_bias"
+module = "src/bias_nma_adv/publication_bias.py"
+reference_method = "metafor::regtest small-study-effect diagnostic"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed CT.gov reported-HR rows from the T2D MACE benchmark",
+  "match metafor::regtest model='lm', predictor='sei' coefficients, standard errors, statistic, p-value, and df",
+  "preserve the limitation that this is a small-study-effect diagnostic, not publication-bias proof, trim-and-fill, ROB-MEN, or broad publication-bias parity",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "pairwise_metafor_meta"
 domain = "pairwise_meta_analysis"
 module = "src/bias_nma_adv/pairwise.py"
