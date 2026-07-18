@@ -1,7 +1,7 @@
 <!-- sentinel:skip-file -->
 # Real Meta-Analysis Benchmarks
 
-Checked: 2026-07-17
+Checked: 2026-07-18
 
 This document records source-backed real-data benchmarks. These benchmarks are validation evidence only when the tests and generated artifacts pass; they are not superiority claims.
 
@@ -30,7 +30,7 @@ Net-new work in this repository is the NMA-oriented source contract: PubMed abst
 
 The 2026-07-15 Wasserstein inspection found extracted-summary patterns such as `text_hr_pair_fallback` with warnings that the curve-derived HR diverged and the pipeline used the text HR. The KM reconstruction policy now blocks those fallback methods and warning terms before any OA KM artifact can enter validation.
 
-The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 36 benchmark artifacts, 201 study-effect rows, 143 unique NCT IDs, and 138 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
+The generated coverage atlas `validation/real_benchmark_atlas.json` summarizes the current registered real-data benchmark surface: 37 benchmark artifacts, 205 study-effect rows, 147 unique NCT IDs, and 142 unique PMIDs. It is a coverage and governance artifact only; it does not certify tier-one parity, clinical superiority, KM reconstruction accuracy, dose-response NMA parity, cross-design parity, component-NMA parity, broad closed-loop inconsistency performance, or production use.
 
 ## Benchmark 1: SGLT2 Inhibitors In Heart Failure
 
@@ -298,7 +298,7 @@ The following source-backed PubMed abstract reported-HR families were added to b
 | `pah_clinical_worsening_reported_hr` | Pulmonary hypertension clinical worsening or morbidity/mortality | 4 | Source-verified HR rows; endpoint wording differs across trials and is not a clinical class-effect claim |
 | `colorectal_refractory_os_reported_hr` | Refractory metastatic colorectal cancer overall survival | 3 | Positive `tau2`; source-verified OS HR rows from public PubMed abstracts |
 
-These additions move the coverage atlas to 36 registered source-backed benchmarks, 201 study-effect rows, 143 unique NCT IDs, and 138 unique PMIDs. They clear the current benchmark-count, study-effect-row, NCT, PMID, tau-positive, reference-report, and full-simulation thresholds in `validation/large_scale_validation.toml`, but the large-scale validation gate remains partial because no admissible real ML-NMR benchmark has been registered.
+These additions, together with the STEP continuous CT.gov benchmark below, move the coverage atlas to 37 registered source-backed benchmarks, 205 study-effect rows, 147 unique NCT IDs, and 142 unique PMIDs. They clear the current benchmark-count, study-effect-row, NCT, PMID, tau-positive, reference-report, and full-simulation thresholds in `validation/large_scale_validation.toml`, but the large-scale validation gate remains partial because no admissible real ML-NMR benchmark has been registered.
 
 ## Benchmark 6: Recurrent PARP Inhibitors And Ovarian Cancer PFS
 
@@ -487,6 +487,36 @@ Limitations:
 - no `crossnma` model is run for this fixture because doing so would require an unsupported effect-scale transformation or incompatible estimand pooling;
 - the artifact is not broad `crossnma` parity and cannot support clinical or HTA decision claims.
 
+## Benchmark 11: Semaglutide STEP Continuous Body-Weight Change
+
+Continuous CT.gov effects CSV: `validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv`
+
+Continuous source snapshot: `validation/source_checks/semaglutide_step_bodyweight_pct_ctgov_check.json`
+
+Continuous benchmark artifact: `validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml`
+
+External `metafor`/`meta` reference output: `validation/reference_runs/semaglutide_step_continuous_metafor_reference.toml` validates `validation/reference_runs/semaglutide_step_continuous_metafor_output.json`.
+
+Trials: STEP 1 (`NCT03548935`, PMID 33567185), STEP 2 (`NCT03552757`, PMID 33667417), STEP 3 (`NCT03611582`, PMID 33625476), and STEP 6 (`NCT03811574`, PMID 35131037).
+
+Outcome: CT.gov-reported adjusted treatment difference for percent body-weight change at week 68, semaglutide 2.4 mg versus placebo.
+
+Scale currently tested: mean difference in percentage points, using the CT.gov treatment-difference estimate and deriving SE from the reported 95% confidence interval.
+
+Current tests:
+
+- verify the CT.gov analysis row, group IDs, treatment/comparator labels, treatment-difference parameter type, and 95% CI fields before computing SE;
+- require linked result PMIDs to be present in the public CT.gov reference list;
+- pin the extracted continuous effect CSV and source-check JSON in `validation/benchmark_registry.toml`;
+- validate fixed-effect, DL, Paule-Mandel, REML, and `meta::metagen` summaries against local R output.
+
+Limitations:
+
+- this is a four-study continuous pairwise software-validation fixture, not a clinical obesity treatment recommendation;
+- STEP populations and estimands differ, so the rows are not presented as a harmonized clinical estimand;
+- the benchmark uses CT.gov adjusted treatment differences as reported and does not extract full open-access paper tables;
+- this closes the immediate no-continuous-reference-case gap but remains only a narrow `metafor`/`meta` candidate, not broad pairwise feature parity.
+
 ## Static-Vs-Dynamic Hardcode Disclosure
 
 | Item | Static or dynamic | Evidence source | Disclosure |
@@ -507,6 +537,7 @@ Limitations:
 | CT.gov/PubMed component-NMA smoke benchmark | Dynamic computation | `scripts/verify_component_sources.py`, `scripts/write_component_benchmark.py`, `validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml`, and `tests/test_component_benchmark.py` | Verifies one factorial CT.gov/PubMed component benchmark and recomputes additive WLS contrasts; same-trial covariance and broad CNMA parity remain blocked |
 | PubMed cross-design routing benchmark | Dynamic computation | `scripts/verify_cross_design_sources.py`, `scripts/write_cross_design_benchmark.py`, `validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml`, and `tests/test_cross_design_benchmark.py` | Verifies four PubMed abstract reported-HR rows and recomputes separated RCT/NRS summaries; combined borrowing, sparse hierarchical shrinkage, and broad `crossnma` parity remain blocked |
 | Crossnma compatibility preflight | Dynamic R package load plus static source-row validation | `external/r/crossnma_sglt2_compatibility_preflight.R`, `validation/cross_design/sglt2_rct_nrs_cross_design_effects.csv`, and `validation/reference_runs/crossnma_sglt2_compatibility_preflight.toml` | Loads `crossnma` and blocks model execution for the current source-backed log-HR fixture; not reference matching |
+| CT.gov continuous STEP benchmark | Dynamic CT.gov API extraction plus local R reference validation | `scripts/build_semaglutide_step_continuous_ctgov.py`, `validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml`, and `validation/reference_runs/semaglutide_step_continuous_metafor_reference.toml` | Verifies four CT.gov adjusted treatment-difference rows, derives SE from reported 95% CIs, and validates narrow `metafor`/`meta` continuous pooling; not broad continuous-outcome parity |
 | Proof-carrying extracted effect | Static contract plus unit fixtures | `bias_nma_adv.ingestion.ProofCarryingEffectRecord` | Blocks model-ready extracted effects unless source provenance, source snippet, uncertainty, and effect-scale sanity checks pass |
 | Registry/regulatory/protocol boundary | Static source-policy contract plus unit fixtures | `bias_nma_adv.source_type_policy`, `bias_nma_adv.evidence_sources`, `bias_nma_adv.ingestion`, and source-boundary tests | Allows AACT/ClinicalTrials.gov, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows as effect sources when numeric per-trial provenance is present; rejects protocol-only registry records as model-ready effects while allowing metadata ledgers |
 | Real benchmark coverage atlas | Dynamic registry-derived summary | `validation/real_benchmark_atlas.json`, `scripts/write_real_benchmark_atlas.py`, and `tests/test_real_benchmark_atlas.py` | Summarizes registered real-data benchmark coverage and explicit non-claims; not tier-one parity or clinical evidence certification |

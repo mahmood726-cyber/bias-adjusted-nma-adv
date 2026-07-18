@@ -48,7 +48,7 @@ def test_validation_status_composes_all_current_gates():
 
     source_registry = report["source_benchmark_registry"]
     assert source_registry["registry"] == "validation/benchmark_registry.toml"
-    assert source_registry["n_benchmarks"] == 36
+    assert source_registry["n_benchmarks"] == 37
     assert source_registry["certification_effect"] == "none"
     source_benchmark_ids = set(source_registry["benchmark_ids"])
     assert len(source_benchmark_ids) == source_registry["n_benchmarks"]
@@ -89,6 +89,7 @@ def test_validation_status_composes_all_current_gates():
         "secondary_cv_prevention_mace_reported_hr",
         "pah_clinical_worsening_reported_hr",
         "colorectal_refractory_os_reported_hr",
+        "semaglutide_step_bodyweight_pct_ctgov",
     }.issubset(source_benchmark_ids)
 
     grand_plan = report["grand_benchmark_plan"]
@@ -108,15 +109,16 @@ def test_validation_status_composes_all_current_gates():
     assert real_atlas["atlas"] == "validation/real_benchmark_atlas.json"
     assert real_atlas["schema_version"] == "real_benchmark_atlas/v1"
     assert real_atlas["status"] == "passed"
-    assert real_atlas["n_benchmarks"] == 36
-    assert real_atlas["n_benchmark_study_effects"] == 201
+    assert real_atlas["n_benchmarks"] == 37
+    assert real_atlas["n_benchmark_study_effects"] == 205
     assert real_atlas["n_tau2_positive_benchmarks"] == 22
-    assert real_atlas["n_unique_nct_ids"] == 143
-    assert real_atlas["n_unique_pmids"] == 138
+    assert real_atlas["n_unique_nct_ids"] == 147
+    assert real_atlas["n_unique_pmids"] == 142
     assert real_atlas["domain_counts"] == {
         "arm_count_binary_closed_loop_network": 1,
         "binary_pairwise_meta": 1,
         "component_nma": 1,
+        "continuous_pairwise_meta": 1,
         "cross_design_nma": 1,
         "diagnostic_test_accuracy": 1,
         "dose_response_pairwise": 1,
@@ -124,7 +126,7 @@ def test_validation_status_composes_all_current_gates():
         "reported_survival_hr_pairwise": 29,
     }
     assert real_atlas["source_type_counts"] == {
-        "clinicaltrials_gov": 152,
+        "clinicaltrials_gov": 156,
         "open_access_paper": 11,
         "pubmed_abstract": 284,
     }
@@ -211,6 +213,7 @@ def test_validation_status_composes_all_current_gates():
             "netmeta_source_backed_closed_loop_reference_candidate",
             "metafor_sparse_binary_source_backed_reference_candidate",
             "metafor_prediction_interval_source_backed_reference_candidate",
+            "metafor_continuous_source_backed_reference_candidate",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -374,23 +377,23 @@ def test_validation_status_composes_all_current_gates():
     assert large_scale["schema_version"] == "large_scale_validation/v1"
     assert large_scale["status"] == "partial_not_large_scale"
     assert large_scale["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 36,
+        "observed": 37,
         "required": 20,
     }
     assert large_scale["dynamic_counts"]["benchmark_study_effects"] == {
-        "observed": 201,
+        "observed": 205,
         "required": 200,
     }
     assert large_scale["dynamic_counts"]["unique_nct_ids"] == {
-        "observed": 143,
+        "observed": 147,
         "required": 100,
     }
     assert large_scale["dynamic_counts"]["unique_pmids"] == {
-        "observed": 138,
+        "observed": 142,
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 21,
+        "observed": 22,
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
@@ -520,16 +523,17 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 26
+    assert reference_runs["n_reports"] == 27
     assert reference_runs["status_counts"] == {
         "failed": 5,
-        "passed": 21,
+        "passed": 22,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
         "validation/reference_runs/sglt2_hf_metafor_gosh_output.json",
         "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json",
         "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_output.json",
+        "validation/reference_runs/semaglutide_step_continuous_metafor_output.json",
         "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",
@@ -561,6 +565,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_metafor_gosh_sglt2_output_validation", "passed"),
         ("r_metafor_sparse_binary_psoriasis_output_validation", "passed"),
         ("r_metafor_prediction_interval_breast_output_validation", "passed"),
+        ("r_metafor_continuous_semaglutide_step_output_validation", "passed"),
         ("r_multinma_sglt2_binary_nma_output_validation", "passed"),
         ("r_netmeta_multiarm_preflight", "failed"),
         ("r_netmeta_multiarm_output_validation", "passed"),
@@ -609,8 +614,8 @@ def test_write_validation_status_script_outputs_machine_readable_json(tmp_path):
     assert payload["status"] == "passed"
     assert payload["checked_at"] == "2026-07-15T00:00:00Z"
     assert payload["clinical_hta_reporting_enabled"] is False
-    assert payload["source_benchmark_registry"]["n_benchmarks"] == 36
-    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 201
+    assert payload["source_benchmark_registry"]["n_benchmarks"] == 37
+    assert payload["real_benchmark_atlas"]["n_benchmark_study_effects"] == 205
     assert payload["tier1_gap_register"]["status_counts"] == {"blocking": 3}
     assert payload["html_delivery_contract"]["status_counts"] == {
         "allowed": 2,

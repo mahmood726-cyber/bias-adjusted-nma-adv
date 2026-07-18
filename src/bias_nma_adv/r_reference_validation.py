@@ -123,6 +123,217 @@ def validate_pairwise_metafor_meta_output(
     }
 
 
+def validate_pairwise_metafor_continuous_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-5,
+) -> dict[str, Any]:
+    """Validate source-backed continuous mean-difference ``metafor`` output."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "contrast",
+            "reference_method",
+            "package_versions",
+            "study_effects",
+            "metafor",
+            "meta",
+            "limitations",
+        },
+        label="pairwise continuous R output",
+    )
+    if output["schema_version"] != "metafor_continuous_source/v1":
+        raise RReferenceValidationError("pairwise continuous schema_version mismatch.")
+    if output["benchmark_id"] != "semaglutide_step_bodyweight_pct_ctgov":
+        raise RReferenceValidationError("pairwise continuous benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract only":
+        raise RReferenceValidationError("pairwise continuous source_policy mismatch.")
+    if output["effect_scale"] != "mean_difference_percentage_points":
+        raise RReferenceValidationError("pairwise continuous effect_scale mismatch.")
+    if output["contrast"] != "semaglutide_2_4_mg_vs_placebo":
+        raise RReferenceValidationError("pairwise continuous contrast mismatch.")
+    if output["reference_method"] != "metafor::rma.uni and meta::metagen continuous mean-difference":
+        raise RReferenceValidationError("pairwise continuous reference_method mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "meta", "jsonlite"})
+
+    benchmark = _load_toml(
+        root / "validation" / "continuous" / "semaglutide_step_bodyweight_pct_ctgov_benchmark.toml"
+    )
+    if benchmark["schema_version"] != "continuous_pairwise_benchmark/v1":
+        raise RReferenceValidationError("continuous benchmark schema_version mismatch.")
+    if benchmark["benchmark_id"] != output["benchmark_id"]:
+        raise RReferenceValidationError("continuous benchmark_id does not match R output.")
+    effects_csv = root / str(benchmark["effects_csv"])
+    expected_rows = _load_simple_effect_rows(effects_csv)
+    source_check_path = root / str(benchmark["source_verification_report"])
+    source_check = json.loads(source_check_path.read_text(encoding="utf-8"))
+    if source_check.get("verification_status") != "verified":
+        raise RReferenceValidationError("continuous CT.gov source check is not verified.")
+    source_ids = {str(item["study_id"]) for item in source_check["records"]}
+    if source_ids != set(expected_rows):
+        raise RReferenceValidationError("continuous source check records do not match effect CSV.")
+
+    observed_rows = {
+        str(effect["study_id"]): effect
+        for effect in output["study_effects"]
+    }
+    if set(observed_rows) != set(expected_rows):
+        raise RReferenceValidationError("pairwise continuous output studies do not match CSV.")
+
+    ordered_effects: list[float] = []
+    ordered_variances: list[float] = []
+    max_abs_diff = 0.0
+    for study_id in sorted(expected_rows):
+        expected = expected_rows[study_id]
+        observed = observed_rows[study_id]
+        for field in (
+            "study_label",
+            "trial",
+            "nct_id",
+            "pmid",
+            "source_type",
+            "outcome_id",
+            "outcome_label",
+            "estimand",
+            "comparison",
+            "treatment",
+            "comparator",
+            "treatment_group_id",
+            "comparator_group_id",
+            "statistical_method",
+            "param_type",
+        ):
+            if str(observed[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: pairwise continuous {field} mismatch.")
+        if str(expected["source_type"]) != "clinicaltrials_gov":
+            raise RReferenceValidationError(f"{study_id}: continuous effect source_type must be clinicaltrials_gov.")
+        if not str(expected["nct_id"]).startswith("NCT"):
+            raise RReferenceValidationError(f"{study_id}: malformed NCT ID.")
+        if not str(expected["pmid"]).isdigit():
+            raise RReferenceValidationError(f"{study_id}: malformed PMID.")
+        ci_se = (float(expected["ci_high"]) - float(expected["ci_low"])) / (2.0 * 1.959963984540054)
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(f"{study_id} continuous estimate", observed["estimate"], expected["estimate"], tolerance),
+            _assert_close(f"{study_id} continuous se", observed["se"], expected["se"], tolerance),
+            _assert_close(f"{study_id} continuous variance", observed["variance"], expected["variance"], tolerance),
+            _assert_close(f"{study_id} continuous ci_low", observed["ci_low"], float(expected["ci_low"]), tolerance),
+            _assert_close(f"{study_id} continuous ci_high", observed["ci_high"], float(expected["ci_high"]), tolerance),
+            _assert_close(f"{study_id} continuous ci-derived se", expected["se"], ci_se, tolerance),
+        )
+        ordered_effects.append(float(expected["estimate"]))
+        ordered_variances.append(float(expected["variance"]))
+
+    models = output["metafor"]
+    expected_models = {
+        "fixed_effect": "FE",
+        "dl_random_effect": "DL",
+        "pm_random_effect": "PM",
+        "reml_random_effect": "REML",
+    }
+    if set(models) != set(expected_models):
+        raise RReferenceValidationError("pairwise continuous metafor model set mismatch.")
+    for model_id, method in expected_models.items():
+        fit = fit_pairwise_meta(ordered_effects, ordered_variances, method=method)
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_pairwise_model_summary(
+                f"pairwise continuous {method}",
+                models[model_id],
+                fit,
+                expected_method=method,
+                expected_k=len(ordered_effects),
+                tolerance=tolerance,
+            ),
+        )
+        if "qe" not in models[model_id]:
+            raise RReferenceValidationError(f"pairwise continuous {method} missing metafor QE.")
+
+    meta = output["meta"]
+    _require_keys(
+        meta,
+        {
+            "method",
+            "k",
+            "common_estimate",
+            "common_se",
+            "common_ci_low",
+            "common_ci_high",
+            "random_estimate",
+            "random_se",
+            "random_ci_low",
+            "random_ci_high",
+            "tau2",
+            "q",
+            "df",
+            "i2",
+        },
+        label="pairwise continuous meta summary",
+    )
+    if meta["method"] != "meta::metagen REML":
+        raise RReferenceValidationError("pairwise continuous meta method mismatch.")
+    fixed = fit_pairwise_meta(ordered_effects, ordered_variances, method="FE")
+    reml = fit_pairwise_meta(ordered_effects, ordered_variances, method="REML")
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_close("meta common estimate", meta["common_estimate"], fixed.estimate, tolerance),
+        _assert_close("meta common se", meta["common_se"], fixed.se, tolerance),
+        _assert_close("meta common ci_low", meta["common_ci_low"], fixed.ci_low, tolerance),
+        _assert_close("meta common ci_high", meta["common_ci_high"], fixed.ci_high, tolerance),
+        _assert_close("meta random estimate", meta["random_estimate"], reml.estimate, tolerance),
+        _assert_close("meta random se", meta["random_se"], reml.se, tolerance),
+        _assert_close("meta random ci_low", meta["random_ci_low"], reml.ci_low, tolerance),
+        _assert_close("meta random ci_high", meta["random_ci_high"], reml.ci_high, tolerance),
+        _assert_close("meta random tau2", meta["tau2"], reml.tau2, tolerance),
+    )
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("different step populations" in item for item in limitations):
+        raise RReferenceValidationError("pairwise continuous output must preserve population limitation.")
+    if not any("not broad pairwise feature parity" in item for item in limitations):
+        raise RReferenceValidationError("pairwise continuous output must preserve broad-parity limitation.")
+    if not any("hta reporting" in item for item in limitations):
+        raise RReferenceValidationError("pairwise continuous output must preserve certification limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "pairwise_metafor_continuous_semaglutide",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor::rma.uni and meta::metagen continuous mean-difference",
+        "benchmark_id": output["benchmark_id"],
+        "validated_components": [
+            "source_backed_ctgov_continuous_mean_difference_rows",
+            "ci_to_standard_error_transformation",
+            "fixed_effect_mean_difference",
+            "dl_random_effect_mean_difference",
+            "pm_random_effect_mean_difference",
+            "reml_random_effect_mean_difference",
+            "meta_metagen_common_and_random_summaries",
+            "metafor_qe_convention_preserved",
+            "continuous_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates one CT.gov-backed semaglutide STEP continuous "
+            "mean-difference benchmark against metafor and meta. The numeric "
+            "effects are CT.gov reported adjusted treatment differences with "
+            "linked result-publication PMIDs; this is not broad continuous "
+            "outcome parity, clinical guidance, regulatory evidence, or HTA "
+            "certification."
+        ),
+    }
+
+
 def validate_pairwise_metafor_gosh_output(
     output_path: str | Path,
     *,

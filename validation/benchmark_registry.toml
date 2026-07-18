@@ -601,6 +601,29 @@ required_limitations = [
 ]
 
 [[benchmarks]]
+id = "semaglutide_step_bodyweight_pct_ctgov"
+domain = "continuous_pairwise_meta"
+artifact_path = "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml"
+artifact_sha256 = "6c10c2d367634f8555bfcd192f3ffeafca8c67f618957ed1d65f988dc4d7c8ed"
+artifact_schema_version = "continuous_pairwise_benchmark/v1"
+artifact_status = "local_pass"
+source_policy = "clinicaltrials_gov + pubmed_abstract only"
+evidence_mode = "ctgov_reported_adjusted_treatment_difference"
+certification_effect = "none"
+certification_scope = "local_source_verified_only"
+n_studies = 4
+source_manifests = ["validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv"]
+source_manifest_sha256 = { "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv" = "5659a0c8a74033d8c7a2e9b4fec49dc4ab0ecff3bb39b855da68898d75986745" }
+source_checks = ["validation/source_checks/semaglutide_step_bodyweight_pct_ctgov_check.json"]
+source_check_sha256 = { "validation/source_checks/semaglutide_step_bodyweight_pct_ctgov_check.json" = "d621abb05c837b3e01f363702827f19809252a15e6825f279f3e941615405270" }
+required_limitations = [
+  "CT.gov adjusted treatment differences are used as reported",
+  "different STEP populations are pooled only for software validation",
+  "not broad continuous-outcome parity",
+  "does not certify model performance",
+]
+
+[[benchmarks]]
 id = "cll_pfs_reported_hr"
 domain = "reported_survival_hr_pairwise"
 artifact_path = "validation/survival/cll_pfs_reported_hr_benchmark.toml"

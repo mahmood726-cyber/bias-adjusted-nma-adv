@@ -128,7 +128,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 5, "passed": 21}
+    assert summary == {"failed": 5, "passed": 22}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -137,6 +137,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_metafor_gosh_sglt2_output_validation",
         "r_metafor_sparse_binary_psoriasis_output_validation",
         "r_metafor_prediction_interval_breast_output_validation",
+        "r_metafor_continuous_semaglutide_step_output_validation",
         "r_multinma_sglt2_binary_nma_output_validation",
         "r_netmeta_multiarm_preflight",
         "r_netmeta_multiarm_output_validation",
@@ -561,6 +562,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/sglt2_hf_metafor_gosh_output.json",
         "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json",
         "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_output.json",
+        "validation/reference_runs/semaglutide_step_continuous_metafor_output.json",
         "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",

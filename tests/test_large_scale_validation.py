@@ -54,23 +54,23 @@ def test_large_scale_validation_gate_reports_partial_current_evidence():
     assert summary["status"] == "partial_not_large_scale"
     assert summary["global_large_scale_validation_complete"] is False
     assert summary["dynamic_counts"]["source_backed_benchmarks"] == {
-        "observed": 36,
+        "observed": 37,
         "required": 20,
     }
     assert summary["dynamic_counts"]["benchmark_study_effects"] == {
-        "observed": 201,
+        "observed": 205,
         "required": 200,
     }
     assert summary["dynamic_counts"]["unique_nct_ids"] == {
-        "observed": 143,
+        "observed": 147,
         "required": 100,
     }
     assert summary["dynamic_counts"]["unique_pmids"] == {
-        "observed": 138,
+        "observed": 142,
         "required": 50,
     }
     assert summary["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 21,
+        "observed": 22,
         "required": 10,
     }
     assert summary["dynamic_counts"]["tau2_positive_benchmarks"] == {

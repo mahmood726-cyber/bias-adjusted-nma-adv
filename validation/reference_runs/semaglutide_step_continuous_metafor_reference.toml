@@ -1,0 +1,28 @@
+schema_version = "reference_run/v1"
+target_id = "pairwise_metafor_meta"
+adapter_id = "r_metafor_continuous_semaglutide_step_output_validation"
+reference_method = "metafor::rma.uni and meta::metagen continuous mean-difference"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-18T16:45:00Z"
+command = ["Rscript", "--vanilla", "external/r/metafor_continuous_semaglutide_step.R", "--benchmark-id", "semaglutide_step_bodyweight_pct_ctgov", "--effects", "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv", "--output", "validation/reference_runs/semaglutide_step_continuous_metafor_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", meta = "8.5.0", jsonlite = "2.0.0"}
+input_artifacts = ["validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv", "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml", "validation/source_checks/semaglutide_step_bodyweight_pct_ctgov_check.json", "scripts/build_semaglutide_step_continuous_ctgov.py", "external/r/metafor_continuous_semaglutide_step.R"]
+output_artifacts = ["validation/reference_runs/semaglutide_step_continuous_metafor_output.json"]
+tolerance = "absolute <= 1e-05 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_ctgov_continuous_mean_difference_rows", "ci_to_standard_error_transformation", "fixed_effect_mean_difference", "dl_random_effect_mean_difference", "pm_random_effect_mean_difference", "reml_random_effect_mean_difference", "meta_metagen_common_and_random_summaries", "metafor_qe_convention_preserved", "continuous_limitation_preserved"]
+max_abs_difference = 7.2195112217343649e-06
+notes = ["This validates one CT.gov-backed semaglutide STEP continuous mean-difference benchmark against metafor and meta. The numeric effects are CT.gov reported adjusted treatment differences with linked result-publication PMIDs; this is not broad continuous outcome parity, clinical guidance, regulatory evidence, or HTA certification."]
+
+[input_sha256]
+"validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv" = "5659a0c8a74033d8c7a2e9b4fec49dc4ab0ecff3bb39b855da68898d75986745"
+"validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml" = "6c10c2d367634f8555bfcd192f3ffeafca8c67f618957ed1d65f988dc4d7c8ed"
+"validation/source_checks/semaglutide_step_bodyweight_pct_ctgov_check.json" = "d621abb05c837b3e01f363702827f19809252a15e6825f279f3e941615405270"
+"scripts/build_semaglutide_step_continuous_ctgov.py" = "66d5e9cd6091bb0b70bc0dd0eeb5cf22f0afad4da477b37f1cc20c54a49d0d85"
+"external/r/metafor_continuous_semaglutide_step.R" = "160a2e892d5494fbb4223a4eeb0b82a00e2d1a21c8d2a47e26fb75beb7b21017"
+
+[output_sha256]
+"validation/reference_runs/semaglutide_step_continuous_metafor_output.json" = "1d74ac249fbacec189874244d17e0b9d53f367c551507d5895f95260bbadb0ec"

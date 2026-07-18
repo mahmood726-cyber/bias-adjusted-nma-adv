@@ -187,6 +187,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "metafor_continuous_source_backed_reference_candidate"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "reference_matched_optimizer_stress_matrix"
         in by_id["numerical_stability"].missing_capabilities
     )
@@ -356,6 +360,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "netmeta_source_backed_closed_loop_reference_candidate",
             "metafor_sparse_binary_source_backed_reference_candidate",
             "metafor_prediction_interval_source_backed_reference_candidate",
+            "metafor_continuous_source_backed_reference_candidate",
         ],
             "numerical_stability": [
                 "positive_definite_covariance_fail_closed_policy",

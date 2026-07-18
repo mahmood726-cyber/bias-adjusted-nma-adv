@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import csv
 from dataclasses import dataclass
 import json
+import math
 from pathlib import Path
+import re
 import string
 import tomllib
 from typing import Any
+from urllib.parse import urlparse
 
 from bias_nma_adv.ctgov_hr_network import (
     CTGOV_HR_NETWORK_VERIFICATION_SCHEMA_VERSION,
@@ -66,6 +70,10 @@ from bias_nma_adv.survival_benchmark import (
 
 
 BENCHMARK_REGISTRY_SCHEMA_VERSION = "source_benchmark_registry/v1"
+CTGOV_CONTINUOUS_SOURCE_CHECK_SCHEMA_VERSION = "ctgov_continuous_source_check/v1"
+Z_975 = 1.959963984540054
+_NCT_RE = re.compile(r"^NCT\d{8}$")
+_PMID_RE = re.compile(r"^\d+$")
 ALLOWED_SOURCE_POLICIES = {
     "clinicaltrials_gov + pubmed_abstract only",
     "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
@@ -81,6 +89,7 @@ SUPPORTED_SOURCE_CHECK_SCHEMA_VERSIONS = {
     DTA_VERIFICATION_SCHEMA_VERSION,
     COMPONENT_VERIFICATION_SCHEMA_VERSION,
     CROSS_DESIGN_HR_VERIFICATION_SCHEMA_VERSION,
+    CTGOV_CONTINUOUS_SOURCE_CHECK_SCHEMA_VERSION,
 }
 
 
@@ -291,6 +300,7 @@ def discover_source_backed_benchmark_artifacts(repo_root: str | Path) -> tuple[s
         *sorted((root / "validation" / "survival").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "networks").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "dose_response").glob("*_benchmark.toml")),
+        *sorted((root / "validation" / "continuous").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "component").glob("*_source_benchmark.toml")),
         *sorted((root / "validation" / "cross_design").glob("*_benchmark.toml")),
         *sorted((root / "validation" / "dta").glob("*_benchmark.toml")),
@@ -381,6 +391,8 @@ def _validate_source_check_payload(
         elif schema_version == CROSS_DESIGN_HR_VERIFICATION_SCHEMA_VERSION:
             report = CrossDesignHRVerificationReport.from_mapping(source_check)
             _validate_cross_design_reference(entry, report, repo_root=repo_root)
+        elif schema_version == CTGOV_CONTINUOUS_SOURCE_CHECK_SCHEMA_VERSION:
+            _validate_ctgov_continuous_source_check(entry, source_check, repo_root=repo_root)
     except ValidationError as exc:
         raise BenchmarkRegistryError(f"{entry.id}: specialized source-check validation failed: {exc}") from exc
 
@@ -537,6 +549,190 @@ def _validate_cross_design_reference(
     )
     manifest = load_cross_design_manifest(repo_root / report.manifest)
     validate_cross_design_source_bundle(manifest, report)
+
+
+def _validate_ctgov_continuous_source_check(
+    entry: SourceBenchmarkEntry,
+    source_check: dict[str, Any],
+    *,
+    repo_root: Path,
+) -> None:
+    if entry.evidence_mode != "ctgov_reported_adjusted_treatment_difference":
+        raise BenchmarkRegistryError(f"{entry.id}: continuous source-check evidence_mode mismatch.")
+    if len(entry.source_manifests) != 1:
+        raise BenchmarkRegistryError(f"{entry.id}: continuous benchmark must register one CSV source manifest.")
+    if str(source_check.get("source_policy", "")) != entry.source_policy:
+        raise BenchmarkRegistryError(f"{entry.id}: continuous source-check source_policy mismatch.")
+    if str(source_check.get("effect_scale", "")) != "mean_difference_percentage_points":
+        raise BenchmarkRegistryError(f"{entry.id}: continuous source-check effect_scale mismatch.")
+    if str(source_check.get("verification_status", "")) != "verified":
+        raise BenchmarkRegistryError(f"{entry.id}: continuous source-check verification_status must be verified.")
+    records = source_check.get("records")
+    if not isinstance(records, list) or len(records) != entry.n_studies:
+        raise BenchmarkRegistryError(f"{entry.id}: continuous source-check records must match registry n_studies.")
+    if int(source_check.get("n_records", -1)) != len(records):
+        raise BenchmarkRegistryError(f"{entry.id}: continuous source-check n_records mismatch.")
+
+    manifest_rel = entry.source_manifests[0]
+    rows = _read_continuous_effect_rows(repo_root / manifest_rel)
+    if len(rows) != entry.n_studies:
+        raise BenchmarkRegistryError(f"{entry.id}: continuous effect CSV row count does not match registry.")
+    rows_by_study = {row["study_id"]: row for row in rows}
+    if len(rows_by_study) != len(rows):
+        raise BenchmarkRegistryError(f"{entry.id}: continuous effect CSV contains duplicate study IDs.")
+
+    seen_record_ids: set[str] = set()
+    for raw_record in records:
+        if not isinstance(raw_record, dict):
+            raise BenchmarkRegistryError(f"{entry.id}: continuous source-check records must be objects.")
+        study_id = str(raw_record.get("study_id", ""))
+        if not study_id or study_id in seen_record_ids:
+            raise BenchmarkRegistryError(f"{entry.id}: continuous source-check duplicate or empty study_id.")
+        seen_record_ids.add(study_id)
+        row = rows_by_study.get(study_id)
+        if row is None:
+            raise BenchmarkRegistryError(f"{entry.id}: continuous source-check references missing CSV row {study_id!r}.")
+        _validate_ctgov_continuous_row(entry, row, raw_record)
+
+    missing_records = sorted(set(rows_by_study) - seen_record_ids)
+    if missing_records:
+        raise BenchmarkRegistryError(f"{entry.id}: continuous source-check missing rows {missing_records}.")
+
+
+def _read_continuous_effect_rows(path: Path) -> list[dict[str, str]]:
+    required = {
+        "study_id",
+        "nct_id",
+        "pmid",
+        "source_type",
+        "source_url",
+        "outcome_id",
+        "estimand",
+        "comparison",
+        "treatment",
+        "comparator",
+        "treatment_group_id",
+        "comparator_group_id",
+        "estimate",
+        "se",
+        "variance",
+        "ci_low",
+        "ci_high",
+        "ci_level",
+        "statistical_method",
+        "param_type",
+        "se_source",
+    }
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        missing = sorted(required - set(reader.fieldnames or ()))
+        if missing:
+            raise BenchmarkRegistryError(f"{path}: continuous effect CSV missing columns {missing}.")
+        return [dict(row) for row in reader]
+
+
+def _validate_ctgov_continuous_row(
+    entry: SourceBenchmarkEntry,
+    row: dict[str, str],
+    record: dict[str, Any],
+) -> None:
+    study_id = row["study_id"]
+    nct_id = row["nct_id"]
+    pmid = row["pmid"]
+    if not _NCT_RE.match(nct_id):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} malformed NCT ID.")
+    if not _PMID_RE.match(pmid):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} malformed PMID.")
+    if str(record.get("nct_id", "")) != nct_id or str(record.get("pmid", "")) != pmid:
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} source-check NCT/PMID mismatch.")
+    if row["source_type"] != "clinicaltrials_gov" or str(record.get("source_type", "")) != "clinicaltrials_gov":
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} must be sourced from ClinicalTrials.gov.")
+    if str(record.get("evidence_scope", "")) != "clinicaltrials_gov_continuous_treatment_difference":
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} continuous evidence_scope drifted.")
+    if not _url_contains_host_and_id(row["source_url"], "clinicaltrials.gov", nct_id):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} source_url must be a CT.gov study URL.")
+    if not _url_contains_host_and_id(str(record.get("manifest_url", "")), "clinicaltrials.gov", nct_id):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} manifest_url must be a CT.gov study URL.")
+    if not _url_contains_host_and_id(str(record.get("api_url", "")), "clinicaltrials.gov", nct_id):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} api_url must be a CT.gov API URL.")
+    if record.get("result_reference_found") is not True:
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} must verify a linked result PMID.")
+    if "semaglutide 2.4" not in row["treatment"].lower() or "placebo" not in row["comparator"].lower():
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} expected semaglutide 2.4 mg vs placebo.")
+    if str(record.get("selected_treatment", "")) != row["treatment"]:
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} selected treatment drifted.")
+    if str(record.get("selected_comparator", "")) != row["comparator"]:
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} selected comparator drifted.")
+    group_ids = tuple(str(item) for item in record.get("analysis_group_ids", []))
+    if group_ids != (row["treatment_group_id"], row["comparator_group_id"]):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} CT.gov group IDs drifted.")
+    if row["param_type"] != "Treatment difference" or str(record.get("analysis_param_type", "")) != "Treatment difference":
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} must use reported treatment differences.")
+    if row["se_source"] != "derived_from_reported_95_ci_using_normal_quantile":
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} SE derivation source drifted.")
+
+    estimate = _finite_float(row["estimate"], entry=entry.id, study_id=study_id, field="estimate")
+    se = _finite_float(row["se"], entry=entry.id, study_id=study_id, field="se")
+    variance = _finite_float(row["variance"], entry=entry.id, study_id=study_id, field="variance")
+    ci_low = _finite_float(row["ci_low"], entry=entry.id, study_id=study_id, field="ci_low")
+    ci_high = _finite_float(row["ci_high"], entry=entry.id, study_id=study_id, field="ci_high")
+    ci_level = _finite_float(row["ci_level"], entry=entry.id, study_id=study_id, field="ci_level")
+    record_ci_level = _finite_float(
+        record.get("analysis_ci_level"),
+        entry=entry.id,
+        study_id=study_id,
+        field="analysis_ci_level",
+    )
+    if ci_level != 95.0 or record_ci_level != 95.0:
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} must use 95 percent confidence intervals.")
+    if not ci_low < estimate < ci_high:
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} estimate must lie inside the reported CI.")
+    if se <= 0.0 or variance <= 0.0:
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} SE and variance must be positive.")
+    derived_se = (ci_high - ci_low) / (2.0 * Z_975)
+    if not math.isclose(se, derived_se, rel_tol=0.0, abs_tol=5e-10):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} SE no longer matches the CI-derived value.")
+    if not math.isclose(variance, se * se, rel_tol=0.0, abs_tol=5e-10):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} variance no longer equals SE squared.")
+    record_estimate = _finite_float(
+        record.get("analysis_param_value"),
+        entry=entry.id,
+        study_id=study_id,
+        field="analysis_param_value",
+    )
+    record_ci_low = _finite_float(
+        record.get("analysis_ci_lower"),
+        entry=entry.id,
+        study_id=study_id,
+        field="analysis_ci_lower",
+    )
+    record_ci_high = _finite_float(
+        record.get("analysis_ci_upper"),
+        entry=entry.id,
+        study_id=study_id,
+        field="analysis_ci_upper",
+    )
+    if not math.isclose(record_estimate, estimate, rel_tol=0.0, abs_tol=5e-10):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} source-check estimate mismatch.")
+    if not math.isclose(record_ci_low, ci_low, rel_tol=0.0, abs_tol=5e-10):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} source-check lower CI mismatch.")
+    if not math.isclose(record_ci_high, ci_high, rel_tol=0.0, abs_tol=5e-10):
+        raise BenchmarkRegistryError(f"{entry.id}: {study_id} source-check upper CI mismatch.")
+
+
+def _url_contains_host_and_id(url: str, host: str, identifier: str) -> bool:
+    parsed = urlparse(url)
+    return parsed.hostname == host and identifier in parsed.path
+
+
+def _finite_float(value: Any, *, entry: str, study_id: str, field: str) -> float:
+    try:
+        result = float(value)
+    except (TypeError, ValueError) as exc:
+        raise BenchmarkRegistryError(f"{entry}: {study_id} {field} must be numeric.") from exc
+    if not math.isfinite(result):
+        raise BenchmarkRegistryError(f"{entry}: {study_id} {field} must be finite.")
+    return result
 
 
 def _assert_registered_source_manifest_sha(

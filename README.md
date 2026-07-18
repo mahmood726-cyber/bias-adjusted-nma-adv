@@ -77,7 +77,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/portfolio_reuse_sources.toml`: Machine-readable inventory of local portfolio repositories worth inspecting for reusable code patterns. It stores repo names and relative assets only, not local absolute paths.
 - `validation/reference_runs/`: Machine-readable external reference-adapter run reports. Unavailable or failed reports cannot count as certification evidence.
 - `validation/reviews/`: Non-certifying review ledgers recording multiperson review findings, actions, and next gates.
-- `validation/reviews/improvement_review_2026_07_15.toml`: Current improvement-review ledger for tier-one blockers, source boundaries, HTML delivery, and implementation polish. It passes the current milestone but explicitly keeps the global goal incomplete.
+- `validation/reviews/improvement_review_2026_07_18.toml`: Current improvement-review ledger for tier-one blockers, source boundaries, HTML delivery, and implementation polish. It passes the current milestone but explicitly keeps the global goal incomplete.
 - `validation/multiarm/`: Governed multi-arm GLS fixture data and local replay benchmark. These artifacts are algorithmic fixtures, not clinical evidence or `netmeta` certification.
 - `validation/component/`: Algorithmic additive component-NMA contrast fixture plus one source-backed sitagliptin/pioglitazone CT.gov/PubMed factorial smoke benchmark. These artifacts remain non-certifying and do not establish broad `netmeta` CNMA parity.
 - `validation/real_meta/`: Source-backed real meta-analysis fixtures constrained to AACT/ClinicalTrials.gov, PubMed abstracts, open-access papers, rare public result-level ICTRP/PACTR rows, and public FDA/EMA regulatory review rows when numeric per-trial result text is source-bound. Protocol-only registry rows remain metadata only.
@@ -86,12 +86,13 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `validation/ingestion/`: Proof-carrying extracted-effect bundles. These are model-ingestion evidence contracts only and carry `certification_effect = "none"`.
 - `validation/real_benchmark_atlas.json`: Generated coverage atlas over the registered real-data benchmark artifacts. It records current source-backed coverage and explicit non-claims; it is not certification evidence.
 - `validation/survival/`: Source-backed survival HR benchmark manifests and effects CSVs; current entries verify reported HR tokens from PubMed abstracts and support narrow `metafor` fixed-effect reported-HR checks. KM reconstruction remains non-certifying and requires OA figure provenance before any real KM artifact can enter validation.
+- `validation/continuous/`: Source-backed CT.gov continuous-outcome benchmark artifacts, currently the STEP semaglutide adjusted body-weight treatment-difference fixture with narrow `metafor`/`meta` validation.
 - `validation/dose_response/`: Source-backed semaglutide dose-response manifest, effects CSV, and generated local benchmark artifact from ClinicalTrials.gov results plus PubMed identity verification.
 - `validation/component/`: Source-backed sitagliptin/pioglitazone component-NMA manifest and generated local benchmark artifact from ClinicalTrials.gov LS mean results plus PubMed identity verification.
 - `validation/dta/`: Source-backed open-access diagnostic test accuracy 2x2 manifest, CSV, and generated local benchmark artifact for the Midkine ELISA cancer diagnostic table.
 - `validation/networks/`: Source-backed network benchmark manifests, effects CSVs, and generated artifacts, including the CT.gov T2D MACE reported-HR star network with a narrow `netmeta` fixed-effect reference check.
 - `validation/survival/km_reconstruction_policy.toml`: Static OA-only KM reconstruction policy; blocks text-only HR and synthetic-IPD fallbacks from validation evidence.
-- `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; current component-NMA smoke validation uses `netmeta::discomb`, current dose-response smoke validation uses `metafor`, while later targets include `multinma`, `MBNMAdose`, and `crossnma`.
+- `external/r/`: Optional R reference adapters for packages such as `metafor`, `meta`, `netmeta`, and `mada`; current pairwise validation includes binary, continuous, prediction-interval, GOSH, and tau2 cross-check candidates, current component-NMA smoke validation uses `netmeta::discomb`, and current dose-response smoke validation uses `metafor` and `MBNMAdose`.
 - `scripts/preflight_reference_adapters.py`: Regenerates external-adapter preflight reports without treating skipped reference software as a pass.
 - `scripts/preflight_stan_nuts_adapter.py`: Regenerates the non-certifying CmdStan/NUTS preflight report for the committed Stan model source.
 - `scripts/run_stan_nuts_reference.py`: Runs the source-backed SGLT2i CmdStan/NUTS reference candidate and writes both JSON output and a hashed reference-run report. It does not certify `multinma` or broad Bayesian parity.
@@ -114,6 +115,7 @@ The package implements a frequentist contrast-based network meta-analysis model 
 - `scripts/write_survival_hr_benchmark.py`: Writes the deterministic reported-HR pairwise benchmark artifact from a verified survival source snapshot.
 - `scripts/verify_ctgov_hr_network.py`: Regenerates CT.gov reported-HR source snapshots for network benchmark manifests.
 - `scripts/write_ctgov_hr_network_benchmark.py`: Writes the deterministic CT.gov reported-HR network benchmark artifact from a verified CT.gov source snapshot.
+- `scripts/build_semaglutide_step_continuous_ctgov.py`: Builds the source-backed CT.gov STEP continuous body-weight treatment-difference fixture and its source-check payload.
 - `scripts/verify_dose_response_sources.py`: Regenerates live CT.gov/PubMed source checks for the source-backed dose-response manifest and exits nonzero on failed verification.
 - `scripts/write_dose_response_benchmark.py`: Writes the deterministic non-certifying dose-response smoke benchmark from a verified source check.
 - `scripts/verify_component_sources.py`: Regenerates live CT.gov/PubMed source checks for the source-backed component-NMA manifest and exits nonzero on failed verification.

@@ -19,6 +19,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_metafor_tau2_crosscheck_output,
     validate_multinma_sglt2_binary_nma_output,
     validate_multiarm_netmeta_output,
+    validate_pairwise_metafor_continuous_output,
     validate_pairwise_metafor_gosh_output,
     validate_pairwise_metafor_meta_output,
     validate_pairwise_metafor_prediction_interval_output,
@@ -40,6 +41,9 @@ PREDICTION_INTERVAL_OUTPUT = (
     / "validation"
     / "reference_runs"
     / "breast_adjuvant_idfs_prediction_interval_metafor_output.json"
+)
+CONTINUOUS_OUTPUT = (
+    ROOT / "validation" / "reference_runs" / "semaglutide_step_continuous_metafor_output.json"
 )
 MULTINMA_OUTPUT = ROOT / "validation" / "reference_runs" / "multinma_sglt2_binary_nma_output.json"
 MULTIARM_OUTPUT = ROOT / "validation" / "reference_runs" / "multiarm_netmeta_output.json"
@@ -133,6 +137,28 @@ def test_pairwise_prediction_interval_metafor_output_matches_source_backed_hr_ro
     assert summary["max_abs_difference"] <= 1e-4
     assert "metafor_knha_unfloored_prediction_interval" in summary["validated_components"]
     assert "local HKSJ floor convention" in summary["source_policy_note"]
+
+
+def test_pairwise_continuous_metafor_output_matches_source_backed_ctgov_rows():
+    summary = validate_pairwise_metafor_continuous_output(
+        CONTINUOUS_OUTPUT,
+        repo_root=ROOT,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "pairwise_metafor_continuous_semaglutide"
+    assert summary["benchmark_id"] == "semaglutide_step_bodyweight_pct_ctgov"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == (
+        "metafor::rma.uni and meta::metagen continuous mean-difference"
+    )
+    assert summary["max_abs_difference"] <= 1e-5
+    assert "source_backed_ctgov_continuous_mean_difference_rows" in summary[
+        "validated_components"
+    ]
+    assert "meta_metagen_common_and_random_summaries" in summary["validated_components"]
+    assert "not broad continuous outcome parity" in summary["source_policy_note"]
 
 
 def test_metafor_tau2_crosscheck_matches_source_backed_survival_benchmarks():
@@ -397,6 +423,17 @@ def test_pairwise_metafor_gosh_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="GOSH subset estimate"):
         validate_pairwise_metafor_gosh_output(mutated, repo_root=ROOT)
+
+
+def test_pairwise_continuous_reference_validation_rejects_numeric_drift(tmp_path):
+    payload = load_r_reference_output(CONTINUOUS_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["study_effects"][0]["estimate"] += 0.01
+    mutated = tmp_path / "continuous_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="continuous estimate"):
+        validate_pairwise_metafor_continuous_output(mutated, repo_root=ROOT)
 
 
 def test_multinma_reference_validation_rejects_diagnostic_drift(tmp_path):

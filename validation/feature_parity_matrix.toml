@@ -26,11 +26,18 @@ evidence_artifacts = [
   "external/r/metafor_prediction_interval_breast.R",
   "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_output.json",
   "validation/reference_runs/breast_adjuvant_idfs_prediction_interval_metafor_reference.toml",
+  "scripts/build_semaglutide_step_continuous_ctgov.py",
+  "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv",
+  "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml",
+  "validation/source_checks/semaglutide_step_bodyweight_pct_ctgov_check.json",
+  "external/r/metafor_continuous_semaglutide_step.R",
+  "validation/reference_runs/semaglutide_step_continuous_metafor_output.json",
+  "validation/reference_runs/semaglutide_step_continuous_metafor_reference.toml",
 ]
 required_next_artifacts = [
-  "continuous_outcome_reference_cases",
+  "broader_continuous_outcome_reference_cases",
 ]
-claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, a reported-HR prediction-interval convention check, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
+claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, a CT.gov continuous mean-difference case, a reported-HR prediction-interval convention check, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
 certification_effect = "none"
 
 [[features]]

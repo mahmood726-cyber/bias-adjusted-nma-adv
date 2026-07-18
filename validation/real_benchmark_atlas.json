@@ -673,6 +673,33 @@
       "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only"
     },
     {
+      "artifact": "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml",
+      "artifact_schema_version": "continuous_pairwise_benchmark/v1",
+      "artifact_sha256": "6c10c2d367634f8555bfcd192f3ffeafca8c67f618957ed1d65f988dc4d7c8ed",
+      "artifact_status": "local_pass",
+      "certification_effect": "none",
+      "domain": "continuous_pairwise_meta",
+      "effect_scale": "mean_difference_percentage_points",
+      "evidence_mode": "ctgov_reported_adjusted_treatment_difference",
+      "has_positive_tau2": false,
+      "id": "semaglutide_step_bodyweight_pct_ctgov",
+      "n_studies": 4,
+      "n_study_effects": 4,
+      "required_limitations": [
+        "CT.gov adjusted treatment differences are used as reported",
+        "different STEP populations are pooled only for software validation",
+        "not broad continuous-outcome parity",
+        "does not certify model performance"
+      ],
+      "source_checks": [
+        "validation/source_checks/semaglutide_step_bodyweight_pct_ctgov_check.json"
+      ],
+      "source_manifests": [
+        "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv"
+      ],
+      "source_policy": "clinicaltrials_gov + pubmed_abstract only"
+    },
+    {
       "artifact": "validation/survival/cll_pfs_reported_hr_benchmark.toml",
       "artifact_schema_version": "survival_hr_benchmark/v1",
       "artifact_sha256": "1863fac9cdeef26ce38ee3ca268faa522d85c9d906b73e404572d35592e2e0be",
@@ -971,7 +998,7 @@
     }
   ],
   "certification_effect": "none",
-  "checked_at": "2026-07-17T23:35:00Z",
+  "checked_at": "2026-07-18T16:45:00Z",
   "coverage_claim": "This atlas proves only that registered local real-data benchmark artifacts are source-governed and reproducible within their stated scope.",
   "does_not_prove": [
     "tier-one parity",
@@ -985,6 +1012,7 @@
     "arm_count_binary_closed_loop_network": 1,
     "binary_pairwise_meta": 1,
     "component_nma": 1,
+    "continuous_pairwise_meta": 1,
     "cross_design_nma": 1,
     "diagnostic_test_accuracy": 1,
     "dose_response_pairwise": 1,
@@ -995,6 +1023,7 @@
     "log_hr": 31,
     "log_or": 2,
     "logit_sensitivity_and_logit_false_positive_rate": 1,
+    "mean_difference_percentage_points": 1,
     "percentage_point_change_a1c": 1,
     "percentage_point_change_vs_placebo": 1
   },
@@ -1002,18 +1031,19 @@
     "ctgov_arm_level_binary_counts": 1,
     "ctgov_component_lsmean": 1,
     "ctgov_dose_response_lsmean": 1,
+    "ctgov_reported_adjusted_treatment_difference": 1,
     "open_access_jats_table_2x2": 1,
     "pubmed_abstract_event_counts": 1,
     "reported_hr_clinicaltrials_gov_results": 1,
     "reported_hr_pubmed_abstract": 29,
     "reported_hr_pubmed_abstract_cross_design": 1
   },
-  "n_benchmark_study_effects": 201,
-  "n_benchmarks": 36,
+  "n_benchmark_study_effects": 205,
+  "n_benchmarks": 37,
   "n_tau2_positive_benchmarks": 22,
-  "n_unique_nct_ids": 143,
-  "n_unique_pmids": 138,
-  "n_unique_study_ids": 178,
+  "n_unique_nct_ids": 147,
+  "n_unique_pmids": 142,
+  "n_unique_study_ids": 182,
   "protocol_registry_rule": "Protocol-only registry sources may verify registration, planned outcomes, eligibility, and dates, but cannot supply model-ready effects; downloaded ICTRP or PACTR result rows and public FDA/EMA regulatory review rows may supply effects only when public numeric result text is source-bound.",
   "registry": "validation/benchmark_registry.toml",
   "required_next_gates": [
@@ -1028,6 +1058,7 @@
     "component_nma_source_verification/v1": 1,
     "cross_design_hr_verification/v1": 1,
     "ctgov_binary_network_verification/v1": 1,
+    "ctgov_continuous_source_check/v1": 1,
     "ctgov_hr_network_verification/v1": 1,
     "dose_response_source_verification/v1": 1,
     "dta_source_verification/v1": 1,
@@ -1038,6 +1069,7 @@
   "source_check_scope_counts": {
     "clinicaltrials_gov_arm_level_binary_counts": 2,
     "clinicaltrials_gov_component_lsmean": 1,
+    "clinicaltrials_gov_continuous_treatment_difference": 4,
     "clinicaltrials_gov_dose_response_lsmean": 1,
     "clinicaltrials_gov_reported_hr_analysis": 10,
     "identity_and_reachability": 276,
@@ -1051,10 +1083,10 @@
   },
   "source_policy_counts": {
     "clinicaltrials_gov + pubmed_abstract + open_access_paper only": 35,
-    "clinicaltrials_gov + pubmed_abstract only": 1
+    "clinicaltrials_gov + pubmed_abstract only": 2
   },
   "source_type_counts": {
-    "clinicaltrials_gov": 152,
+    "clinicaltrials_gov": 156,
     "open_access_paper": 11,
     "pubmed_abstract": 284
   },

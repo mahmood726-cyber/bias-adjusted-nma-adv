@@ -38,10 +38,19 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
     assert "breast_adjuvant_idfs_prediction_interval_metafor_reference.toml" in "\n".join(
         by_id["pairwise_metafor_meta"].evidence_artifacts
     )
+    assert "semaglutide_step_continuous_metafor_reference.toml" in "\n".join(
+        by_id["pairwise_metafor_meta"].evidence_artifacts
+    )
     assert "sparse_binary_reference_cases" not in (
         by_id["pairwise_metafor_meta"].required_next_artifacts
     )
     assert "prediction_interval_reference_cases" not in (
+        by_id["pairwise_metafor_meta"].required_next_artifacts
+    )
+    assert "continuous_outcome_reference_cases" not in (
+        by_id["pairwise_metafor_meta"].required_next_artifacts
+    )
+    assert "broader_continuous_outcome_reference_cases" in (
         by_id["pairwise_metafor_meta"].required_next_artifacts
     )
     assert "psoriasis_pasi90_ctgov_binary_network_netmeta_reference.toml" in "\n".join(
