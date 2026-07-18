@@ -112,7 +112,7 @@ def test_validation_status_composes_all_current_gates():
     assert real_atlas["status"] == "passed"
     assert real_atlas["n_benchmarks"] == 38
     assert real_atlas["n_benchmark_study_effects"] == 208
-    assert real_atlas["n_tau2_positive_benchmarks"] == 22
+    assert real_atlas["n_tau2_positive_benchmarks"] == 24
     assert real_atlas["n_unique_nct_ids"] == 150
     assert real_atlas["n_unique_pmids"] == 144
     assert real_atlas["domain_counts"] == {
@@ -398,7 +398,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
-        "observed": 22,
+        "observed": 24,
         "required": 1,
     }
     assert large_scale["dynamic_counts"]["simulation_jobs"] == {

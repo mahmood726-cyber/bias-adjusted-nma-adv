@@ -19,9 +19,9 @@ notes = ["This validates one CT.gov-backed semaglutide STEP continuous mean-diff
 
 [input_sha256]
 "validation/continuous/semaglutide_step_bodyweight_pct_ctgov_effects.csv" = "5659a0c8a74033d8c7a2e9b4fec49dc4ab0ecff3bb39b855da68898d75986745"
-"validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml" = "6c10c2d367634f8555bfcd192f3ffeafca8c67f618957ed1d65f988dc4d7c8ed"
+"validation/continuous/semaglutide_step_bodyweight_pct_ctgov_benchmark.toml" = "f298da7c1421de2d35aff319bcb64a9734f4a77a27f38facbfde75812172d1ea"
 "validation/source_checks/semaglutide_step_bodyweight_pct_ctgov_check.json" = "d621abb05c837b3e01f363702827f19809252a15e6825f279f3e941615405270"
-"scripts/build_semaglutide_step_continuous_ctgov.py" = "66d5e9cd6091bb0b70bc0dd0eeb5cf22f0afad4da477b37f1cc20c54a49d0d85"
+"scripts/build_semaglutide_step_continuous_ctgov.py" = "b2af9e897113b0b13f8a302a8b086c7c5206bcf0e9b9de774692bc7d5ae95b77"
 "external/r/metafor_continuous_semaglutide_step.R" = "160a2e892d5494fbb4223a4eeb0b82a00e2d1a21c8d2a47e26fb75beb7b21017"
 
 [output_sha256]

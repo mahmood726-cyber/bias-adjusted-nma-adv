@@ -21,7 +21,7 @@ scope = [
 ]
 findings = [
   "The platform now has narrow source-backed reference candidates across pairwise meta-analysis, frequentist NMA, Bayesian NMA, dose-response, component NMA, DTA, and reported-HR survival pooling.",
-  "The pairwise ledger now includes one source-backed low-control-event sparse binary `metafor::rma.uni` candidate, one reported-HR `metafor::predict` prediction-interval convention check, and two CT.gov continuous `metafor`/`meta` candidates across STEP body-weight and ORION LDL-C domains, but broader continuous and edge-case coverage remains required before broad pairwise feature parity.",
+  "The pairwise ledger now includes one source-backed low-control-event sparse binary `metafor::rma.uni` candidate, one reported-HR `metafor::predict` prediction-interval convention check, and two CT.gov continuous `metafor`/`meta` candidates across STEP body-weight and ORION LDL-C domains with positive local REML tau2 exposed in the artifacts, but broader continuous and edge-case coverage remains required before broad pairwise feature parity.",
   "The large-scale breadth counts exceed current benchmark, study-effect, NCT, PMID, simulation-job, simulation-iteration, positive-tau2, and passed-reference-run thresholds.",
   "The global statistical goal remains blocked because no feature family is broadly reference_matched and ML-NMR has a formal public-source exclusion rather than validation evidence.",
   "Reference-matched Stan/NUTS exists only as a narrow candidate artifact and cannot support broad Bayesian or multinma parity."
@@ -30,7 +30,7 @@ actions = [
   "Kept reference candidates scoped and non-certifying in the feature-parity matrix.",
   "Recorded the sparse-binary candidate as a narrow source-backed pairwise artifact without claiming zero-event, Mantel-Haenszel, or broad sparse-event parity.",
   "Recorded the prediction-interval candidate as a narrow source-backed convention check while preserving the local HKSJ floor disclosure.",
-  "Recorded the CT.gov STEP and ORION continuous candidates as narrow source-backed pairwise artifacts without claiming broad continuous-outcome parity.",
+  "Recorded the CT.gov STEP and ORION continuous candidates as narrow source-backed pairwise artifacts with local positive-REML-tau2 heterogeneity summaries, without claiming broad continuous-outcome parity.",
   "Kept large_scale_validation at partial_not_large_scale when formal ML-NMR exclusion is present.",
   "Recorded heatmap-ready GLS contribution matrices as local implementation progress, not CINeMA, ROB-MEN, or netheat parity.",
   "Added this latest improvement review so blocker status reflects the current branch instead of a stale review path."

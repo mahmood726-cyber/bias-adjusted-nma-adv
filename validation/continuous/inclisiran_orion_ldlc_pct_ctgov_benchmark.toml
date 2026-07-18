@@ -21,6 +21,36 @@ n_records = 3
 source_counts = {clinicaltrials_gov = 3}
 linked_result_pmids = 2
 
+[candidate]
+engine = "bias_nma_adv.pairwise.fit_pairwise_meta"
+purpose = "local continuous pairwise software-validation summary only"
+
+[candidate.fixed_effect]
+method = "FE"
+estimate = -54.674730389819707
+se = 1.0639417939181066
+ci_low = -56.760017987546135
+ci_high = -52.58944279209328
+tau2 = 0
+q = 7.1442450910960096
+df = 2
+hksj = false
+hksj_q_factor = 1
+warnings = []
+
+[candidate.random_effect]
+method = "REML"
+estimate = -53.972942705841746
+se = 2.208210892549074
+ci_low = -58.300956525506976
+ci_high = -49.644928886176515
+tau2 = 10.592294400296929
+q = 2.0989229190461636
+df = 2
+hksj = false
+hksj_q_factor = 1
+warnings = []
+
 [[study_effects]]
 study_id = "NCT03397121_orion_9"
 study_label = "ORION-9"

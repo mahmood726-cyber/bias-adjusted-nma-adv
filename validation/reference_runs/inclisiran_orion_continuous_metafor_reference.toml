@@ -19,9 +19,9 @@ notes = ["This validates a CT.gov-backed ORION inclisiran LDL-C continuous mean-
 
 [input_sha256]
 "validation/continuous/inclisiran_orion_ldlc_pct_ctgov_effects.csv" = "0024e73eb5b339837e1ceb65eeba8543db6f491fa6b819003dc17b8c2b4ae778"
-"validation/continuous/inclisiran_orion_ldlc_pct_ctgov_benchmark.toml" = "13189280870528e4ef4594aa3fb2e60ff272483fe3762a788a725833d180f865"
+"validation/continuous/inclisiran_orion_ldlc_pct_ctgov_benchmark.toml" = "db2fd2e7676a6a0d456affd770f7dc7d8d51ef5e05be03b6374595c59aaecfb2"
 "validation/source_checks/inclisiran_orion_ldlc_pct_ctgov_check.json" = "530e25d4c7c90c3f2d581581658f6b1dbb7af0dbfe1d6650d01be113083ed640"
-"scripts/build_inclisiran_orion_continuous_ctgov.py" = "25a0cf808252d29b4c9da745f8273e26aca32bbb86eec305f7ea937deb460f6a"
+"scripts/build_inclisiran_orion_continuous_ctgov.py" = "aaa8b2d08fe2d94ed7d427252e5ec71ed813b96070b91a0655a9d102d85aac7f"
 "external/r/metafor_continuous_inclisiran_orion.R" = "bbee6fc3533d20f6338147692c55d24ac8cb278709f61eb8a34df8eac394ee09"
 
 [output_sha256]

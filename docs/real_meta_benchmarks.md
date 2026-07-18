@@ -300,6 +300,8 @@ The following source-backed PubMed abstract reported-HR families were added to b
 
 These additions, together with the STEP and ORION continuous CT.gov benchmarks below, move the coverage atlas to 38 registered source-backed benchmarks, 208 study-effect rows, 150 unique NCT IDs, and 144 unique PMIDs. They clear the current benchmark-count, study-effect-row, NCT, PMID, tau-positive, reference-report, and full-simulation thresholds in `validation/large_scale_validation.toml`, but the large-scale validation gate remains partial because no admissible real ML-NMR benchmark has been registered.
 
+After exposing local REML summaries in the STEP and ORION continuous benchmark artifacts, the atlas records 24 source-backed benchmarks with positive `tau2`. That count is a heterogeneity-stress coverage signal only; it is not broad continuous-outcome parity or clinical validation.
+
 ## Benchmark 6: Recurrent PARP Inhibitors And Ovarian Cancer PFS
 
 Reported survival HR manifest: `validation/survival/parp_recurrent_ovarian_pfs_reported_hrs.toml`
@@ -510,6 +512,15 @@ Current tests:
 - pin the extracted continuous effect CSV and source-check JSON in `validation/benchmark_registry.toml`;
 - validate fixed-effect, DL, Paule-Mandel, REML, and `meta::metagen` summaries against local R output.
 
+Reference summaries:
+
+| Reference path | Estimate | SE | 95% interval |
+| --- | ---: | ---: | --- |
+| Fixed effect | -9.960191 | 0.311327 | -10.570381 to -9.350001 |
+| REML random effects | -9.977322 | 1.379025 | -12.680162 to -7.274482 |
+
+The local benchmark artifact exposes positive REML `tau2 = 7.0831853581274444` for heterogeneity-stress accounting.
+
 Limitations:
 
 - this is a four-study continuous pairwise software-validation fixture, not a clinical obesity treatment recommendation;
@@ -547,6 +558,8 @@ Reference summaries:
 | Fixed effect | -54.674730 | 1.063942 | -56.760018 to -52.589443 |
 | REML random effects | -53.972943 | 2.208211 | -58.300957 to -49.644929 |
 
+The local benchmark artifact exposes positive REML `tau2 = 10.592294400296929` for heterogeneity-stress accounting.
+
 Limitations:
 
 - this is a three-study continuous pairwise software-validation fixture, not a clinical lipid-treatment recommendation;
@@ -574,7 +587,7 @@ Limitations:
 | CT.gov/PubMed component-NMA smoke benchmark | Dynamic computation | `scripts/verify_component_sources.py`, `scripts/write_component_benchmark.py`, `validation/component/sitagliptin_pioglitazone_component_source_benchmark.toml`, and `tests/test_component_benchmark.py` | Verifies one factorial CT.gov/PubMed component benchmark and recomputes additive WLS contrasts; same-trial covariance and broad CNMA parity remain blocked |
 | PubMed cross-design routing benchmark | Dynamic computation | `scripts/verify_cross_design_sources.py`, `scripts/write_cross_design_benchmark.py`, `validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml`, and `tests/test_cross_design_benchmark.py` | Verifies four PubMed abstract reported-HR rows and recomputes separated RCT/NRS summaries; combined borrowing, sparse hierarchical shrinkage, and broad `crossnma` parity remain blocked |
 | Crossnma compatibility preflight | Dynamic R package load plus static source-row validation | `external/r/crossnma_sglt2_compatibility_preflight.R`, `validation/cross_design/sglt2_rct_nrs_cross_design_effects.csv`, and `validation/reference_runs/crossnma_sglt2_compatibility_preflight.toml` | Loads `crossnma` and blocks model execution for the current source-backed log-HR fixture; not reference matching |
-| CT.gov continuous STEP and ORION benchmarks | Dynamic CT.gov API extraction plus local R reference validation | `scripts/build_semaglutide_step_continuous_ctgov.py`, `scripts/build_inclisiran_orion_continuous_ctgov.py`, `validation/continuous/*_ctgov_benchmark.toml`, and `validation/reference_runs/*_continuous_metafor_reference.toml` | Verifies seven CT.gov adjusted treatment-difference rows, derives SE from reported 95% CIs, and validates narrow `metafor`/`meta` continuous pooling across body-weight and LDL-C domains; not broad continuous-outcome parity |
+| CT.gov continuous STEP and ORION benchmarks | Dynamic CT.gov API extraction plus local R reference validation | `scripts/build_semaglutide_step_continuous_ctgov.py`, `scripts/build_inclisiran_orion_continuous_ctgov.py`, `validation/continuous/*_ctgov_benchmark.toml`, and `validation/reference_runs/*_continuous_metafor_reference.toml` | Verifies seven CT.gov adjusted treatment-difference rows, derives SE from reported 95% CIs, validates narrow `metafor`/`meta` continuous pooling across body-weight and LDL-C domains, and exposes positive local REML `tau2` in both artifacts for heterogeneity-stress accounting; not broad continuous-outcome parity |
 | Proof-carrying extracted effect | Static contract plus unit fixtures | `bias_nma_adv.ingestion.ProofCarryingEffectRecord` | Blocks model-ready extracted effects unless source provenance, source snippet, uncertainty, and effect-scale sanity checks pass |
 | Registry/regulatory/protocol boundary | Static source-policy contract plus unit fixtures | `bias_nma_adv.source_type_policy`, `bias_nma_adv.evidence_sources`, `bias_nma_adv.ingestion`, and source-boundary tests | Allows AACT/ClinicalTrials.gov, public numeric ICTRP/PACTR result rows, and public FDA/EMA regulatory review rows as effect sources when numeric per-trial provenance is present; rejects protocol-only registry records as model-ready effects while allowing metadata ledgers |
 | Real benchmark coverage atlas | Dynamic registry-derived summary | `validation/real_benchmark_atlas.json`, `scripts/write_real_benchmark_atlas.py`, and `tests/test_real_benchmark_atlas.py` | Summarizes registered real-data benchmark coverage and explicit non-claims; not tier-one parity or clinical evidence certification |

@@ -38,7 +38,7 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
     ]
     assert atlas["n_benchmarks"] == 38
     assert atlas["n_benchmark_study_effects"] == 208
-    assert atlas["n_tau2_positive_benchmarks"] == 22
+    assert atlas["n_tau2_positive_benchmarks"] == 24
     assert atlas["n_unique_study_ids"] == 185
     assert atlas["n_unique_nct_ids"] == 150
     assert atlas["n_unique_pmids"] == 144
@@ -164,6 +164,8 @@ def test_real_benchmark_atlas_summarizes_current_source_backed_coverage():
         "hfpef_primary_reported_hr",
         "secondary_cv_prevention_mace_reported_hr",
         "colorectal_refractory_os_reported_hr",
+        "semaglutide_step_bodyweight_pct_ctgov",
+        "inclisiran_orion_ldlc_pct_ctgov",
     }.issubset(positive_tau_ids)
 
 
@@ -199,7 +201,7 @@ def test_real_benchmark_atlas_summary_is_validation_status_ready():
         "status": "passed",
         "n_benchmarks": 38,
         "n_benchmark_study_effects": 208,
-        "n_tau2_positive_benchmarks": 22,
+        "n_tau2_positive_benchmarks": 24,
         "n_unique_nct_ids": 150,
         "n_unique_pmids": 144,
         "domain_counts": {

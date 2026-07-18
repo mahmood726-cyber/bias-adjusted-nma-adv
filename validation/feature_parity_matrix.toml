@@ -42,9 +42,10 @@ evidence_artifacts = [
   "validation/reference_runs/inclisiran_orion_continuous_metafor_reference.toml",
 ]
 required_next_artifacts = [
-  "continuous_edge_cases_zero_tau_and_positive_tau_across_more_domains",
+  "continuous_zero_tau_edge_case_across_additional_domain",
+  "additional_continuous_domains_and_reference_versions",
 ]
-claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, two CT.gov continuous mean-difference cases in obesity and lipid domains, a reported-HR prediction-interval convention check, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
+claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, two CT.gov continuous mean-difference cases in obesity and lipid domains with local positive-REML-tau2 summaries exposed in the benchmark artifacts, a reported-HR prediction-interval convention check, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
 certification_effect = "none"
 
 [[features]]

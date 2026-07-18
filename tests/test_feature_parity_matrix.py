@@ -53,7 +53,13 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
     assert "continuous_outcome_reference_cases" not in (
         by_id["pairwise_metafor_meta"].required_next_artifacts
     )
-    assert "continuous_edge_cases_zero_tau_and_positive_tau_across_more_domains" in (
+    assert "continuous_edge_cases_zero_tau_and_positive_tau_across_more_domains" not in (
+        by_id["pairwise_metafor_meta"].required_next_artifacts
+    )
+    assert "continuous_zero_tau_edge_case_across_additional_domain" in (
+        by_id["pairwise_metafor_meta"].required_next_artifacts
+    )
+    assert "additional_continuous_domains_and_reference_versions" in (
         by_id["pairwise_metafor_meta"].required_next_artifacts
     )
     assert "psoriasis_pasi90_ctgov_binary_network_netmeta_reference.toml" in "\n".join(

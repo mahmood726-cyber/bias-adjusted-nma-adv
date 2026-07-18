@@ -21,6 +21,36 @@ n_records = 4
 source_counts = {clinicaltrials_gov = 4}
 linked_result_pmids = 4
 
+[candidate]
+engine = "bias_nma_adv.pairwise.fit_pairwise_meta"
+purpose = "local continuous pairwise software-validation summary only"
+
+[candidate.fixed_effect]
+method = "FE"
+estimate = -9.9601910563281777
+se = 0.31132699068810521
+ci_low = -10.5703807454921
+ci_high = -9.3500013671642552
+tau2 = 0
+q = 76.475728853862805
+df = 3
+hksj = false
+hksj_q_factor = 1
+warnings = []
+
+[candidate.random_effect]
+method = "REML"
+estimate = -9.9773221326782142
+se = 1.3790254111109217
+ci_low = -12.680162272221162
+ci_high = -7.2744819931352662
+tau2 = 7.0831853581274444
+q = 2.9118444257143299
+df = 3
+hksj = false
+hksj_q_factor = 1
+warnings = []
+
 [[study_effects]]
 study_id = "NCT03548935_step_1"
 study_label = "STEP 1"

@@ -14,8 +14,15 @@ from datetime import UTC, datetime
 import hashlib
 import json
 from pathlib import Path
+import sys
 from typing import Any
 from urllib.request import urlopen
+
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from bias_nma_adv.pairwise import PairwiseMetaResult, fit_pairwise_meta  # noqa: E402
 
 
 Z_975 = 1.959963984540054
@@ -288,6 +295,8 @@ def _benchmark_toml(
     source_check_sha256: str,
     rows: list[dict[str, Any]],
 ) -> str:
+    fixed_effect = _fit_pairwise_summary(rows, method="FE")
+    random_effect = _fit_pairwise_summary(rows, method="REML")
     lines = [
         'schema_version = "continuous_pairwise_benchmark/v1"',
         f'benchmark_id = "{BENCHMARK_ID}"',
@@ -311,6 +320,16 @@ def _benchmark_toml(
         f"n_records = {len(rows)}",
         f"source_counts = {{clinicaltrials_gov = {len(rows)}}}",
         f"linked_result_pmids = {len({row['pmid'] for row in rows})}",
+        "",
+        "[candidate]",
+        'engine = "bias_nma_adv.pairwise.fit_pairwise_meta"',
+        'purpose = "local continuous pairwise software-validation summary only"',
+        "",
+        "[candidate.fixed_effect]",
+        *_pairwise_result_lines(fixed_effect),
+        "",
+        "[candidate.random_effect]",
+        *_pairwise_result_lines(random_effect),
         "",
     ]
     for row in rows:
@@ -348,8 +367,34 @@ def _benchmark_toml(
     return "\n".join(lines)
 
 
+def _fit_pairwise_summary(rows: list[dict[str, Any]], *, method: str) -> PairwiseMetaResult:
+    effects = [float(row["estimate"]) for row in rows]
+    variances = [float(row["variance"]) for row in rows]
+    return fit_pairwise_meta(effects, variances, method=method, hksj=False)
+
+
+def _pairwise_result_lines(result: PairwiseMetaResult) -> list[str]:
+    return [
+        f'method = "{result.method}"',
+        f"estimate = {result.estimate:.17g}",
+        f"se = {result.se:.17g}",
+        f"ci_low = {result.ci_low:.17g}",
+        f"ci_high = {result.ci_high:.17g}",
+        f"tau2 = {result.tau2:.17g}",
+        f"q = {result.q:.17g}",
+        f"df = {result.df}",
+        f"hksj = {str(result.hksj).lower()}",
+        f"hksj_q_factor = {result.hksj_q_factor:.17g}",
+        f"warnings = [{', '.join(_quoted_toml_string(item) for item in result.warnings)}]",
+    ]
+
+
 def _toml_string(value: Any) -> str:
     return str(value).replace("\\", "\\\\").replace('"', '\\"')
+
+
+def _quoted_toml_string(value: Any) -> str:
+    return f'"{_toml_string(value)}"'
 
 
 def _sha256(path: Path) -> str:
