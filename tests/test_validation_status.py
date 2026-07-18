@@ -209,6 +209,7 @@ def test_validation_status_composes_all_current_gates():
             "source_backed_component_smoke_benchmark",
             "source_backed_closed_loop_binary_network_benchmark",
             "netmeta_source_backed_closed_loop_reference_candidate",
+            "metafor_sparse_binary_source_backed_reference_candidate",
         ],
         "numerical_stability": [
             "positive_definite_covariance_fail_closed_policy",
@@ -388,7 +389,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 19,
+        "observed": 20,
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
@@ -518,14 +519,15 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 24
+    assert reference_runs["n_reports"] == 25
     assert reference_runs["status_counts"] == {
         "failed": 5,
-        "passed": 19,
+        "passed": 20,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
         "validation/reference_runs/sglt2_hf_metafor_gosh_output.json",
+        "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json",
         "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",
@@ -555,6 +557,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_metafor_meta_pairwise_preflight", "failed"),
         ("r_metafor_meta_pairwise_output_validation", "passed"),
         ("r_metafor_gosh_sglt2_output_validation", "passed"),
+        ("r_metafor_sparse_binary_psoriasis_output_validation", "passed"),
         ("r_multinma_sglt2_binary_nma_output_validation", "passed"),
         ("r_netmeta_multiarm_preflight", "failed"),
         ("r_netmeta_multiarm_output_validation", "passed"),

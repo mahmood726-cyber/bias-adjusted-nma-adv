@@ -21,6 +21,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_gosh_output,
     validate_pairwise_metafor_meta_output,
+    validate_pairwise_metafor_sparse_binary_output,
     validate_publication_bias_metafor_regtest_output,
     validate_publication_bias_metafor_trimfill_output,
     validate_survival_hr_metafor_pairwise_output,
@@ -30,6 +31,9 @@ from bias_nma_adv.r_reference_validation import (
 ROOT = Path(__file__).resolve().parents[1]
 PAIRWISE_OUTPUT = ROOT / "validation" / "reference_runs" / "pairwise_metafor_meta_output.json"
 GOSH_OUTPUT = ROOT / "validation" / "reference_runs" / "sglt2_hf_metafor_gosh_output.json"
+SPARSE_BINARY_OUTPUT = (
+    ROOT / "validation" / "reference_runs" / "psoriasis_sparse_binary_metafor_output.json"
+)
 MULTINMA_OUTPUT = ROOT / "validation" / "reference_runs" / "multinma_sglt2_binary_nma_output.json"
 MULTIARM_OUTPUT = ROOT / "validation" / "reference_runs" / "multiarm_netmeta_output.json"
 DTA_OUTPUT = ROOT / "validation" / "reference_runs" / "dta_mada_reitsma_output.json"
@@ -84,6 +88,25 @@ def test_pairwise_metafor_gosh_output_matches_source_backed_subset_space():
     assert summary["max_abs_difference"] < 1e-12
     assert "all_nonempty_subset_enumeration" in summary["validated_components"]
     assert "not an outlier-removal rule" in summary["source_policy_note"]
+
+
+def test_pairwise_sparse_binary_metafor_output_matches_source_backed_counts():
+    summary = validate_pairwise_metafor_sparse_binary_output(
+        SPARSE_BINARY_OUTPUT,
+        repo_root=ROOT,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "pairwise_metafor_sparse_binary_psoriasis"
+    assert summary["benchmark_id"] == "psoriasis_pasi90_ctgov_binary_network"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == (
+        "metafor::rma.uni sparse binary count-derived log-OR"
+    )
+    assert summary["max_abs_difference"] < 1e-12
+    assert "source_backed_low_control_event_count_rows" in summary["validated_components"]
+    assert "zero-event parity" in summary["source_policy_note"]
 
 
 def test_metafor_tau2_crosscheck_matches_source_backed_survival_benchmarks():

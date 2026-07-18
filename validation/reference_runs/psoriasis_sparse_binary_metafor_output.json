@@ -1,0 +1,102 @@
+{
+  "schema_version": "metafor_sparse_binary_source/v1",
+  "benchmark_id": "psoriasis_pasi90_ctgov_binary_network",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+  "effect_scale": "log_or",
+  "contrast": "etanercept_vs_placebo",
+  "zero_cell_policy": "no_continuity_correction_zero_cells_fail_closed",
+  "reference_method": "metafor::rma.uni sparse binary count-derived log-OR",
+  "package_versions": {
+    "R": "4.6.0",
+    "metafor": "5.0.1",
+    "meta": "8.5.0",
+    "jsonlite": "2.0.0"
+  },
+  "study_effects": [
+    {
+      "study_id": "FIXTURE",
+      "trial": "Secukinumab compared with etanercept and placebo in plaque psoriasis",
+      "nct_id": "NCT01358578",
+      "pmid": 25007392,
+      "outcome_id": "pasi90_week12",
+      "outcome_label": "PASI 90 response at week 12",
+      "treatment": "etanercept",
+      "comparator": "placebo",
+      "active_events": 67,
+      "active_n": 323,
+      "control_events": 5,
+      "control_n": 324,
+      "yi": 2.81526836526215,
+      "vi": 0.221966419372573,
+      "sei": 0.471133122771657,
+      "_row": "FIXTURE"
+    },
+    {
+      "study_id": "UNCOVER-3",
+      "trial": "Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis",
+      "nct_id": "NCT01646177",
+      "pmid": 26072109,
+      "outcome_id": "pasi90_week12",
+      "outcome_label": "PASI 90 response at week 12",
+      "treatment": "etanercept",
+      "comparator": "placebo",
+      "active_events": 98,
+      "active_n": 382,
+      "control_events": 6,
+      "control_n": 193,
+      "yi": 2.3753423881359,
+      "vi": 0.185739468642771,
+      "sei": 0.430975020903498,
+      "_row": "UNCOVER-3"
+    }
+  ],
+  "metafor": {
+    "fixed_effect": {
+      "method": "FE",
+      "k": 2,
+      "estimate": 2.57576043368178,
+      "se": 0.317996431042481,
+      "ci_low": 1.95249888162624,
+      "ci_high": 3.19902198573731,
+      "tau2": 0,
+      "q": 0.474692348184097,
+      "q_p_value": 0.490836352402188,
+      "df": 1,
+      "i2": 0,
+      "h2": 0.474692348184097
+    },
+    "dl_random_effect": {
+      "method": "DL",
+      "k": 2,
+      "estimate": 2.57576043368178,
+      "se": 0.317996431042481,
+      "ci_low": 1.95249888162624,
+      "ci_high": 3.19902198573731,
+      "tau2": 0,
+      "q": 0.474692348184097,
+      "q_p_value": 0.490836352402188,
+      "df": 1,
+      "i2": 0,
+      "h2": 0.474692348184097
+    },
+    "reml_random_effect": {
+      "method": "REML",
+      "k": 2,
+      "estimate": 2.57576043368178,
+      "se": 0.317996431042481,
+      "ci_low": 1.95249888162624,
+      "ci_high": 3.19902198573731,
+      "tau2": 0,
+      "q": 0.474692348184097,
+      "q_p_value": 0.490836352402188,
+      "df": 1,
+      "i2": 0,
+      "h2": 0.474692348184097
+    }
+  },
+  "limitations": [
+    "This validates one CT.gov/PubMed low-control-event binary pairwise contrast only.",
+    "It is not Mantel-Haenszel parity, zero-event parity, broad sparse-event parity, clinical guidance, regulatory reporting, or HTA certification.",
+    "Zero cells remain fail-closed and require an explicit correction policy before fitting."
+  ]
+}

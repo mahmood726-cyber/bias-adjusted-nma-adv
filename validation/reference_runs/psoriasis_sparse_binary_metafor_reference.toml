@@ -1,0 +1,27 @@
+schema_version = "reference_run/v1"
+target_id = "pairwise_metafor_meta"
+adapter_id = "r_metafor_sparse_binary_psoriasis_output_validation"
+reference_method = "metafor::rma.uni sparse binary count-derived log-OR"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-18T16:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/metafor_sparse_binary_psoriasis.R", "--benchmark-id", "psoriasis_pasi90_ctgov_binary_network", "--events", "validation/reference_runs/psoriasis_etanercept_placebo_sparse_binary_events.csv", "--output", "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", meta = "8.5.0", jsonlite = "2.0.0"}
+input_artifacts = ["validation/reference_runs/psoriasis_etanercept_placebo_sparse_binary_events.csv", "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml", "validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json", "external/r/metafor_sparse_binary_psoriasis.R"]
+output_artifacts = ["validation/reference_runs/psoriasis_sparse_binary_metafor_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_low_control_event_count_rows", "count_to_log_or_transformation", "fixed_effect_log_or", "dl_random_effect_log_or", "reml_random_effect_log_or", "zero_cell_fail_closed_policy_preserved", "sparse_binary_limitation_preserved"]
+max_abs_difference = 5.3290705182007514e-15
+notes = ["This validates one source-backed low-control-event psoriasis etanercept-versus-placebo pairwise contrast against metafor. It is not zero-event parity, Mantel-Haenszel parity, broad sparse-event parity, clinical guidance, regulatory evidence, or HTA certification."]
+
+[input_sha256]
+"validation/reference_runs/psoriasis_etanercept_placebo_sparse_binary_events.csv" = "22b1826f0bab42ee2c598dbd0e5cfc5b6c8a0bc676687e831c7305f3d5b65d05"
+"validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml" = "a0e3cf9cacad5796c04d0b96edcfa84fa2a7d40ba68899b4e6eb0bf1c750baf8"
+"validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json" = "9d4e58991659916af5575fe3485d9453abec768c1c51ccab58da23dd09728b7e"
+"external/r/metafor_sparse_binary_psoriasis.R" = "7addfe5e5d7e4ef2c0386813cdc548d0c9b771ef25e7a98b31cffcb2a8d4709a"
+
+[output_sha256]
+"validation/reference_runs/psoriasis_sparse_binary_metafor_output.json" = "7f70a592a9913074e48e238304013b223abc86bbf703cef14d109aa126315bfb"

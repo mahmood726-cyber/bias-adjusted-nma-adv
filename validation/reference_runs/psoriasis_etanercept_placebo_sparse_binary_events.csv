@@ -1,0 +1,5 @@
+study_id,trial,nct_id,pmid,outcome_id,outcome_label,arm_role,treatment,events,n
+FIXTURE,Secukinumab compared with etanercept and placebo in plaque psoriasis,NCT01358578,25007392,pasi90_week12,PASI 90 response at week 12,active,etanercept,67,323
+FIXTURE,Secukinumab compared with etanercept and placebo in plaque psoriasis,NCT01358578,25007392,pasi90_week12,PASI 90 response at week 12,control,placebo,5,324
+UNCOVER-3,Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis,NCT01646177,26072109,pasi90_week12,PASI 90 response at week 12,active,etanercept,98,382
+UNCOVER-3,Ixekizumab compared with etanercept and placebo in moderate to severe psoriasis,NCT01646177,26072109,pasi90_week12,PASI 90 response at week 12,control,placebo,6,193

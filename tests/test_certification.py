@@ -23,6 +23,7 @@ TARGETS_PATH = ROOT / "validation" / "reference_targets.toml"
 REFERENCE_RUNS_PATH = ROOT / "validation" / "reference_runs"
 PAIRWISE_R_ADAPTER = ROOT / "external" / "r" / "pairwise_metafor_meta.R"
 GOSH_R_ADAPTER = ROOT / "external" / "r" / "metafor_gosh_sglt2.R"
+SPARSE_BINARY_R_ADAPTER = ROOT / "external" / "r" / "metafor_sparse_binary_psoriasis.R"
 PAIRWISE_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_reference_adapters.py"
 MULTINMA_R_ADAPTER = ROOT / "external" / "r" / "multinma_sglt2_binary_nma.R"
 MULTIARM_R_ADAPTER = ROOT / "external" / "r" / "multiarm_netmeta_fixture.R"
@@ -124,13 +125,14 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 5, "passed": 19}
+    assert summary == {"failed": 5, "passed": 20}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
         "r_metafor_meta_pairwise_preflight",
         "r_metafor_meta_pairwise_output_validation",
         "r_metafor_gosh_sglt2_output_validation",
+        "r_metafor_sparse_binary_psoriasis_output_validation",
         "r_multinma_sglt2_binary_nma_output_validation",
         "r_netmeta_multiarm_preflight",
         "r_netmeta_multiarm_output_validation",
@@ -242,6 +244,26 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert "absolute <= 1e-06" in gosh_reference.tolerance
     assert GOSH_R_ADAPTER.is_file()
+
+    sparse_binary_reference = by_adapter["r_metafor_sparse_binary_psoriasis_output_validation"]
+    assert sparse_binary_reference.target_id == "pairwise_metafor_meta"
+    assert sparse_binary_reference.status == "passed"
+    assert sparse_binary_reference.certification_effect == "evidence_candidate"
+    assert sparse_binary_reference.reference_method == (
+        "metafor::rma.uni sparse binary count-derived log-OR"
+    )
+    assert sparse_binary_reference.output_artifacts == (
+        "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json",
+    )
+    assert (
+        "validation/reference_runs/psoriasis_etanercept_placebo_sparse_binary_events.csv"
+        in sparse_binary_reference.input_artifacts
+    )
+    assert "validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml" in (
+        sparse_binary_reference.input_artifacts
+    )
+    assert "absolute <= 1e-06" in sparse_binary_reference.tolerance
+    assert SPARSE_BINARY_R_ADAPTER.is_file()
 
     tau2_crosscheck_reference = by_adapter["r_metafor_tau2_crosscheck_source_output_validation"]
     assert tau2_crosscheck_reference.target_id == "pairwise_metafor_tau2_crosscheck_source"
@@ -514,6 +536,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     assert set(certification_candidate_artifacts(reports)) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
         "validation/reference_runs/sglt2_hf_metafor_gosh_output.json",
+        "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json",
         "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",

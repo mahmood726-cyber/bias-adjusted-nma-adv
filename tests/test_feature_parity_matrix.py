@@ -32,6 +32,12 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
     assert "metafor_tau2_crosscheck_survival_reference.toml" in "\n".join(
         by_id["pairwise_metafor_meta"].evidence_artifacts
     )
+    assert "psoriasis_sparse_binary_metafor_reference.toml" in "\n".join(
+        by_id["pairwise_metafor_meta"].evidence_artifacts
+    )
+    assert "sparse_binary_reference_cases" not in (
+        by_id["pairwise_metafor_meta"].required_next_artifacts
+    )
     assert "psoriasis_pasi90_ctgov_binary_network_netmeta_reference.toml" in "\n".join(
         by_id["multiarm_netmeta_gls"].evidence_artifacts
     )

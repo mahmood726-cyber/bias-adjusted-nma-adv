@@ -30,6 +30,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     validate_multiarm_netmeta_output,
     validate_pairwise_metafor_gosh_output,
     validate_pairwise_metafor_meta_output,
+    validate_pairwise_metafor_sparse_binary_output,
     validate_publication_bias_metafor_regtest_output,
     validate_publication_bias_metafor_trimfill_output,
     validate_survival_hr_metafor_pairwise_output,
@@ -41,6 +42,12 @@ PAIRWISE_OUTPUT = Path("validation/reference_runs/pairwise_metafor_meta_output.j
 PAIRWISE_REPORT = Path("validation/reference_runs/pairwise_metafor_meta_reference.toml")
 PAIRWISE_GOSH_OUTPUT = Path("validation/reference_runs/sglt2_hf_metafor_gosh_output.json")
 PAIRWISE_GOSH_REPORT = Path("validation/reference_runs/sglt2_hf_metafor_gosh_reference.toml")
+PAIRWISE_SPARSE_BINARY_OUTPUT = Path(
+    "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json"
+)
+PAIRWISE_SPARSE_BINARY_REPORT = Path(
+    "validation/reference_runs/psoriasis_sparse_binary_metafor_reference.toml"
+)
 MULTINMA_OUTPUT = Path("validation/reference_runs/multinma_sglt2_binary_nma_output.json")
 MULTINMA_REPORT = Path("validation/reference_runs/multinma_sglt2_binary_nma_reference.toml")
 MULTIARM_OUTPUT = Path("validation/reference_runs/multiarm_netmeta_output.json")
@@ -92,6 +99,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pairwise-report", type=Path, default=PAIRWISE_REPORT)
     parser.add_argument("--pairwise-gosh-output", type=Path, default=PAIRWISE_GOSH_OUTPUT)
     parser.add_argument("--pairwise-gosh-report", type=Path, default=PAIRWISE_GOSH_REPORT)
+    parser.add_argument(
+        "--pairwise-sparse-binary-output",
+        type=Path,
+        default=PAIRWISE_SPARSE_BINARY_OUTPUT,
+    )
+    parser.add_argument(
+        "--pairwise-sparse-binary-report",
+        type=Path,
+        default=PAIRWISE_SPARSE_BINARY_REPORT,
+    )
     parser.add_argument("--multinma-output", type=Path, default=MULTINMA_OUTPUT)
     parser.add_argument("--multinma-report", type=Path, default=MULTINMA_REPORT)
     parser.add_argument("--multiarm-output", type=Path, default=MULTIARM_OUTPUT)
@@ -166,6 +183,12 @@ def main(argv: list[str] | None = None) -> int:
         pairwise_gosh_output = _resolve(root, args.pairwise_gosh_output)
         pairwise_gosh_summary = validate_pairwise_metafor_gosh_output(
             pairwise_gosh_output,
+            repo_root=root,
+            tolerance=args.tolerance,
+        )
+        pairwise_sparse_binary_output = _resolve(root, args.pairwise_sparse_binary_output)
+        pairwise_sparse_binary_summary = validate_pairwise_metafor_sparse_binary_output(
+            pairwise_sparse_binary_output,
             repo_root=root,
             tolerance=args.tolerance,
         )
@@ -270,6 +293,16 @@ def main(argv: list[str] | None = None) -> int:
                 root=root,
                 output_path=pairwise_gosh_output,
                 summary=pairwise_gosh_summary,
+                checked_at=args.checked_at,
+                tolerance=args.tolerance,
+            ),
+        )
+        _write_report(
+            _resolve(root, args.pairwise_sparse_binary_report),
+            _pairwise_sparse_binary_report(
+                root=root,
+                output_path=pairwise_sparse_binary_output,
+                summary=pairwise_sparse_binary_summary,
                 checked_at=args.checked_at,
                 tolerance=args.tolerance,
             ),
@@ -427,6 +460,7 @@ def main(argv: list[str] | None = None) -> int:
     print(
         "R reference output validation passed: "
         f"{args.pairwise_report}, {args.pairwise_gosh_report}, "
+        f"{args.pairwise_sparse_binary_report}, "
         f"{args.multinma_report}, {args.multiarm_report}, {args.dta_report}, "
         f"{args.dta_source_report}, {args.dose_response_report}, {args.mbnmadose_report}, "
         f"{args.sglt2_survival_report}, "
@@ -523,6 +557,60 @@ def _pairwise_gosh_report(
             summary["benchmark_id"],
             "--events",
             "validation/real_meta/sglt2_hf_primary_events.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": f"absolute <= {tolerance:g} for validated components",
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _pairwise_sparse_binary_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+    tolerance: float,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    input_artifacts = [
+        Path("validation/reference_runs/psoriasis_etanercept_placebo_sparse_binary_events.csv"),
+        Path("validation/networks/psoriasis_pasi90_ctgov_binary_network_benchmark.toml"),
+        Path("validation/source_checks/psoriasis_pasi90_ctgov_binary_network_check.json"),
+        Path("external/r/metafor_sparse_binary_psoriasis.R"),
+    ]
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "pairwise_metafor_meta",
+        "adapter_id": "r_metafor_sparse_binary_psoriasis_output_validation",
+        "reference_method": summary["reference_method"],
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/metafor_sparse_binary_psoriasis.R",
+            "--benchmark-id",
+            summary["benchmark_id"],
+            "--events",
+            "validation/reference_runs/psoriasis_etanercept_placebo_sparse_binary_events.csv",
             "--output",
             output_path.relative_to(root).as_posix(),
         ],

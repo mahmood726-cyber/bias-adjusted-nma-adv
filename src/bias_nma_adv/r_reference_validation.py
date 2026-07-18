@@ -284,6 +284,160 @@ def validate_pairwise_metafor_gosh_output(
     }
 
 
+def validate_pairwise_metafor_sparse_binary_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate source-backed sparse binary count-derived ``metafor`` output."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "contrast",
+            "zero_cell_policy",
+            "reference_method",
+            "package_versions",
+            "study_effects",
+            "metafor",
+            "limitations",
+        },
+        label="pairwise sparse binary R output",
+    )
+    if output["schema_version"] != "metafor_sparse_binary_source/v1":
+        raise RReferenceValidationError("pairwise sparse binary schema_version mismatch.")
+    if output["benchmark_id"] != "psoriasis_pasi90_ctgov_binary_network":
+        raise RReferenceValidationError("pairwise sparse binary benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("pairwise sparse binary source_policy mismatch.")
+    if output["effect_scale"] != "log_or":
+        raise RReferenceValidationError("pairwise sparse binary output must use log_or scale.")
+    if output["contrast"] != "etanercept_vs_placebo":
+        raise RReferenceValidationError("pairwise sparse binary contrast mismatch.")
+    if output["zero_cell_policy"] != "no_continuity_correction_zero_cells_fail_closed":
+        raise RReferenceValidationError("pairwise sparse binary zero-cell policy mismatch.")
+    if output["reference_method"] != "metafor::rma.uni sparse binary count-derived log-OR":
+        raise RReferenceValidationError("pairwise sparse binary reference_method mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "meta", "jsonlite"})
+
+    benchmark = _load_toml(
+        root / "validation" / "networks" / "psoriasis_pasi90_ctgov_binary_network_benchmark.toml"
+    )
+    event_rows = _load_sparse_binary_event_rows(
+        root / "validation" / "reference_runs" / "psoriasis_etanercept_placebo_sparse_binary_events.csv"
+    )
+    expected_rows = _expected_sparse_binary_event_rows(
+        benchmark,
+        treatment="etanercept",
+        comparator="placebo",
+    )
+    if event_rows != expected_rows:
+        raise RReferenceValidationError("pairwise sparse binary event CSV does not match benchmark arms.")
+
+    observed_effects = {
+        str(effect["study_id"]): effect
+        for effect in output["study_effects"]
+    }
+    if set(observed_effects) != set(expected_rows):
+        raise RReferenceValidationError("pairwise sparse binary output studies do not match CSV.")
+
+    max_abs_diff = 0.0
+    ordered_effects: list[float] = []
+    ordered_variances: list[float] = []
+    for study_id in sorted(expected_rows):
+        expected = expected_rows[study_id]
+        observed = observed_effects[study_id]
+        effect = _sparse_binary_log_or_row(expected)
+        for field in ("trial", "nct_id", "pmid", "outcome_id", "outcome_label"):
+            if str(observed[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: pairwise sparse binary {field} mismatch.")
+        if str(observed["treatment"]) != "etanercept" or str(observed["comparator"]) != "placebo":
+            raise RReferenceValidationError(f"{study_id}: pairwise sparse binary treatment labels mismatch.")
+        for field in ("active_events", "active_n", "control_events", "control_n"):
+            if int(observed[field]) != int(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: pairwise sparse binary {field} mismatch.")
+        for field, expected_value in (
+            ("yi", effect["estimate"]),
+            ("vi", effect["variance"]),
+            ("sei", effect["se"]),
+        ):
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{study_id} pairwise sparse binary {field}",
+                    observed[field],
+                    expected_value,
+                    tolerance,
+                ),
+            )
+        ordered_effects.append(effect["estimate"])
+        ordered_variances.append(effect["variance"])
+
+    models = output["metafor"]
+    expected_models = {
+        "fixed_effect": "FE",
+        "dl_random_effect": "DL",
+        "reml_random_effect": "REML",
+    }
+    if set(models) != set(expected_models):
+        raise RReferenceValidationError("pairwise sparse binary metafor model set mismatch.")
+    for model_id, method in expected_models.items():
+        fit = fit_pairwise_meta(ordered_effects, ordered_variances, method=method)
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_pairwise_model_summary(
+                f"pairwise sparse binary {method}",
+                models[model_id],
+                fit,
+                expected_method=method,
+                expected_k=len(ordered_effects),
+                tolerance=tolerance,
+            ),
+        )
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not mantel-haenszel parity" in item for item in limitations):
+        raise RReferenceValidationError("pairwise sparse binary output must preserve MH limitation.")
+    if not any("zero cells remain fail-closed" in item for item in limitations):
+        raise RReferenceValidationError("pairwise sparse binary output must preserve zero-cell limitation.")
+    if not any("hta certification" in item for item in limitations):
+        raise RReferenceValidationError("pairwise sparse binary output must preserve certification limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "pairwise_metafor_sparse_binary_psoriasis",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor::rma.uni sparse binary count-derived log-OR",
+        "benchmark_id": "psoriasis_pasi90_ctgov_binary_network",
+        "validated_components": [
+            "source_backed_low_control_event_count_rows",
+            "count_to_log_or_transformation",
+            "fixed_effect_log_or",
+            "dl_random_effect_log_or",
+            "reml_random_effect_log_or",
+            "zero_cell_fail_closed_policy_preserved",
+            "sparse_binary_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates one source-backed low-control-event psoriasis "
+            "etanercept-versus-placebo pairwise contrast against metafor. "
+            "It is not zero-event parity, Mantel-Haenszel parity, broad "
+            "sparse-event parity, clinical guidance, regulatory evidence, "
+            "or HTA certification."
+        ),
+    }
+
+
 def validate_multinma_sglt2_binary_nma_output(
     output_path: str | Path,
     *,
@@ -2601,6 +2755,129 @@ def _load_event_rows(path: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
     return {
         (str(row["study_id"]), str(row["arm_role"]), str(row["treatment"])): row
         for row in rows
+    }
+
+
+def _load_sparse_binary_event_rows(path: Path) -> dict[str, dict[str, Any]]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    if not rows:
+        raise RReferenceValidationError("pairwise sparse binary CSV is empty.")
+    required = {
+        "study_id",
+        "trial",
+        "nct_id",
+        "pmid",
+        "outcome_id",
+        "outcome_label",
+        "arm_role",
+        "treatment",
+        "events",
+        "n",
+    }
+    if set(rows[0]) != required:
+        missing = sorted(required - set(rows[0]))
+        extra = sorted(set(rows[0]) - required)
+        raise RReferenceValidationError(
+            f"pairwise sparse binary CSV schema mismatch; missing={missing}, extra={extra}."
+        )
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        grouped.setdefault(str(row["study_id"]), []).append(row)
+
+    parsed: dict[str, dict[str, Any]] = {}
+    for study_id, study_rows in grouped.items():
+        active = [row for row in study_rows if row["arm_role"] == "active"]
+        control = [row for row in study_rows if row["arm_role"] == "control"]
+        if len(active) != 1 or len(control) != 1:
+            raise RReferenceValidationError(
+                f"{study_id}: sparse binary CSV requires exactly one active and one control row."
+            )
+        active_row = active[0]
+        control_row = control[0]
+        for field in ("trial", "nct_id", "pmid", "outcome_id", "outcome_label"):
+            if str(active_row[field]) != str(control_row[field]):
+                raise RReferenceValidationError(
+                    f"{study_id}: sparse binary CSV active/control {field} mismatch."
+                )
+        parsed[study_id] = {
+            "study_id": study_id,
+            "trial": str(active_row["trial"]),
+            "nct_id": str(active_row["nct_id"]),
+            "pmid": str(active_row["pmid"]),
+            "outcome_id": str(active_row["outcome_id"]),
+            "outcome_label": str(active_row["outcome_label"]),
+            "treatment": str(active_row["treatment"]),
+            "comparator": str(control_row["treatment"]),
+            "active_events": int(active_row["events"]),
+            "active_n": int(active_row["n"]),
+            "control_events": int(control_row["events"]),
+            "control_n": int(control_row["n"]),
+        }
+    return parsed
+
+
+def _expected_sparse_binary_event_rows(
+    benchmark: dict[str, Any],
+    *,
+    treatment: str,
+    comparator: str,
+) -> dict[str, dict[str, Any]]:
+    grouped: dict[str, dict[str, dict[str, Any]]] = {}
+    for arm in benchmark["arm_counts"]:
+        grouped.setdefault(str(arm["study_id"]), {})[str(arm["treatment"])] = arm
+
+    expected: dict[str, dict[str, Any]] = {}
+    for study_id, arms in grouped.items():
+        if treatment not in arms or comparator not in arms:
+            continue
+        active = arms[treatment]
+        control = arms[comparator]
+        for field in ("trial", "nct_id", "pmid", "outcome_id", "outcome_label"):
+            if str(active[field]) != str(control[field]):
+                raise RReferenceValidationError(
+                    f"{study_id}: sparse binary benchmark active/control {field} mismatch."
+                )
+        expected[study_id] = {
+            "study_id": study_id,
+            "trial": str(active["trial"]),
+            "nct_id": str(active["nct_id"]),
+            "pmid": str(active["pmid"]),
+            "outcome_id": str(active["outcome_id"]),
+            "outcome_label": str(active["outcome_label"]),
+            "treatment": treatment,
+            "comparator": comparator,
+            "active_events": int(active["events"]),
+            "active_n": int(active["n"]),
+            "control_events": int(control["events"]),
+            "control_n": int(control["n"]),
+        }
+    if len(expected) < 2:
+        raise RReferenceValidationError("sparse binary benchmark requires at least two paired studies.")
+    return expected
+
+
+def _sparse_binary_log_or_row(row: dict[str, Any]) -> dict[str, float]:
+    active_events = int(row["active_events"])
+    active_non_events = int(row["active_n"]) - active_events
+    control_events = int(row["control_events"])
+    control_non_events = int(row["control_n"]) - control_events
+    cells = (active_events, active_non_events, control_events, control_non_events)
+    if any(cell <= 0 for cell in cells):
+        raise RReferenceValidationError(
+            "sparse binary row has a zero cell; explicit correction policy required."
+        )
+    estimate = math.log((active_events / active_non_events) / (control_events / control_non_events))
+    variance = (
+        1.0 / active_events
+        + 1.0 / active_non_events
+        + 1.0 / control_events
+        + 1.0 / control_non_events
+    )
+    return {
+        "estimate": estimate,
+        "variance": variance,
+        "se": math.sqrt(variance),
     }
 
 

@@ -19,13 +19,16 @@ evidence_artifacts = [
   "external/r/metafor_tau2_crosscheck_survival.R",
   "validation/reference_runs/metafor_tau2_crosscheck_survival_output.json",
   "validation/reference_runs/metafor_tau2_crosscheck_survival_reference.toml",
+  "external/r/metafor_sparse_binary_psoriasis.R",
+  "validation/reference_runs/psoriasis_etanercept_placebo_sparse_binary_events.csv",
+  "validation/reference_runs/psoriasis_sparse_binary_metafor_output.json",
+  "validation/reference_runs/psoriasis_sparse_binary_metafor_reference.toml",
 ]
 required_next_artifacts = [
   "continuous_outcome_reference_cases",
-  "sparse_binary_reference_cases",
   "prediction_interval_reference_cases",
 ]
-claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
+claim_limit = "This includes narrow source-backed metafor/meta pooling, metafor::gosh subset-space, a low-control-event sparse binary count-derived log-OR case, and metafor FE/DL/PM/REML tau2 cross-check reference candidates, not broad pairwise feature parity."
 certification_effect = "none"
 
 [[features]]
