@@ -24,7 +24,7 @@ missing_capabilities = [
   "mature_multi_arm_design_checks",
   "reference_matched_publication_bias_adjustments",
   "reference_matched_trim_and_fill_sensitivity",
-  "redescending_robust_fraud_containment_core",
+  "reference_matched_redescending_robust_fraud_containment_core",
 ]
 implemented_capabilities = [
   "multiarm_prefit_design_diagnostic",
@@ -59,6 +59,7 @@ implemented_capabilities = [
   "rapidmeta_app_index_fail_closed_adapter_contract",
   "evalue_and_binary_fragility_sensitivity",
   "pairwise_redescending_outlier_sensitivity",
+  "nma_default_off_redescending_outlier_sensitivity_core",
   "feature_parity_matrix_gate",
   "component_nma_additive_core_with_estimability_checks",
   "netmeta_discomb_component_reference_adapter",
@@ -75,7 +76,7 @@ required_evidence_artifacts = [
   "source_backed_real_network_examples",
   "failure_mode_tests_for_sparse_or_disconnected_networks",
 ]
-claim_limit = "Blocks feature-parity and superiority claims until implemented diagnostics are reference matched or deliberately documented as conservative substitutes. The current rob_weight path is analyst-driven quality weighting, not redescending fraud containment."
+claim_limit = "Blocks feature-parity and superiority claims until implemented diagnostics are reference matched or deliberately documented as conservative substitutes. The current rob_weight path is analyst-driven quality weighting; the default-off redescending NMA path is a sensitivity refit and still lacks reference-matched fraud-containment evidence."
 certification_effect = "none"
 
 [[gaps]]

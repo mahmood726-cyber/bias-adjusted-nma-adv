@@ -48,6 +48,7 @@ findings = [
   "The latest pairwise addition covers one source-backed CT.gov/PubMed low-control-event psoriasis binary contrast against metafor while preserving zero-event and Mantel-Haenszel limitations.",
   "The latest prediction-interval addition covers one source-backed reported-HR benchmark against metafor KNHA while preserving the local HKSJ floor disclosure.",
   "The latest continuous-outcome additions cover CT.gov STEP body-weight and ORION LDL-C adjusted treatment-difference fixtures against metafor and meta, expose positive local REML tau2 in both benchmark artifacts, and preserve the broad pairwise parity blocker.",
+  "The local NMA engine now has a default-off redescending contrast-sensitivity refit that reports downweighted contrasts, but it remains a local sensitivity screen rather than reference-matched fraud-containment parity.",
   "The feature-family ledger still has no broad reference_matched feature family; all candidate runs remain scoped smoke or narrow reference candidates.",
   "Large-scale breadth thresholds are met, but global large-scale validation remains incomplete because ML-NMR is formally source-excluded rather than validated and broad feature-family matching is absent."
 ]

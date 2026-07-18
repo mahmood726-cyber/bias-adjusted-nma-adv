@@ -271,6 +271,48 @@ def test_sponsor_bias_is_default_off_and_opt_in_fail_closed():
     assert adjusted_fit.target_population == "enriched_as_randomised"
 
 
+def test_redescending_outlier_sensitivity_is_default_off_and_reported_when_enabled():
+    dataset = EvidenceDataset()
+    for study_id, effect in (("S1", 0.10), ("S2", 0.12), ("S_OUTLIER", 2.00)):
+        dataset.add_study(study_id, "rct")
+        dataset.add_arm(study_id, "control", "A", 100)
+        dataset.add_arm(study_id, "active", "B", 100)
+        dataset.add_outcome_ad(study_id, "control", "O1", "continuous", 0.0, se=0.05)
+        dataset.add_outcome_ad(study_id, "active", "O1", "continuous", effect, se=0.05)
+
+    default_fit = AdvancedBiasAdjustedNMAPooler(
+        hksj=False,
+        random_effects=False,
+    ).fit(dataset, "O1", reference_treatment="A")
+    robust_fit = AdvancedBiasAdjustedNMAPooler(
+        hksj=False,
+        random_effects=False,
+        robust_outlier_sensitivity=True,
+        redescending_tuning_constant=1.0,
+    ).fit(dataset, "O1", reference_treatment="A")
+
+    assert default_fit.redescending_sensitivity_active is False
+    assert default_fit.redescending_contrast_weights == {}
+    assert robust_fit.redescending_sensitivity_active is True
+    assert robust_fit.redescending_iterations >= 1
+    assert robust_fit.treatment_effects["B"] < default_fit.treatment_effects["B"]
+    outlier_weights = {
+        label: weight
+        for label, weight in robust_fit.redescending_contrast_weights.items()
+        if label.startswith("S_OUTLIER:")
+    }
+    assert outlier_weights
+    assert max(outlier_weights.values()) < 0.05
+    assert any("default-off sensitivity" in warning for warning in robust_fit.warnings)
+
+
+def test_redescending_outlier_sensitivity_rejects_invalid_configuration():
+    with pytest.raises(ValueError, match="redescending_tuning_constant"):
+        AdvancedBiasAdjustedNMAPooler(redescending_tuning_constant=0.0)
+    with pytest.raises(ValueError, match="redescending_max_iter"):
+        AdvancedBiasAdjustedNMAPooler(redescending_max_iter=0)
+
+
 def test_indirectness_flag_names_estimand_without_default_numeric_penalty():
     dataset = EvidenceDataset()
     dataset.add_study("S1", "rct", indirectness="run-in enrichment")

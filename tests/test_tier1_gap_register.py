@@ -30,6 +30,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     assert "reference_matched_node_splitting" in by_id["feature_completeness"].missing_capabilities
     assert (
         "redescending_robust_fraud_containment_core"
+        not in by_id["feature_completeness"].missing_capabilities
+    )
+    assert (
+        "reference_matched_redescending_robust_fraud_containment_core"
         in by_id["feature_completeness"].missing_capabilities
     )
     assert (
@@ -152,6 +156,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
     )
     assert (
         "pairwise_redescending_outlier_sensitivity"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
+        "nma_default_off_redescending_outlier_sensitivity_core"
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
@@ -352,6 +360,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "rapidmeta_app_index_fail_closed_adapter_contract",
             "evalue_and_binary_fragility_sensitivity",
             "pairwise_redescending_outlier_sensitivity",
+            "nma_default_off_redescending_outlier_sensitivity_core",
             "feature_parity_matrix_gate",
             "component_nma_additive_core_with_estimability_checks",
             "netmeta_discomb_component_reference_adapter",

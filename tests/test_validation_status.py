@@ -206,6 +206,7 @@ def test_validation_status_composes_all_current_gates():
             "rapidmeta_app_index_fail_closed_adapter_contract",
             "evalue_and_binary_fragility_sensitivity",
             "pairwise_redescending_outlier_sensitivity",
+            "nma_default_off_redescending_outlier_sensitivity_core",
             "feature_parity_matrix_gate",
             "component_nma_additive_core_with_estimability_checks",
             "netmeta_discomb_component_reference_adapter",

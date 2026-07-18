@@ -39,6 +39,10 @@ class AdvancedNMAFitResult:
     weight_sensitivity_stds: dict[str, float] = field(default_factory=dict)
     exact_binomial_active: bool = False
     target_population: str = "enriched_as_randomised"
+    redescending_sensitivity_active: bool = False
+    redescending_iterations: int = 0
+    redescending_tuning_constant: float | None = None
+    redescending_contrast_weights: dict[str, float] = field(default_factory=dict)
     warnings: tuple[str, ...] = field(default_factory=tuple)
 
     def contrast(
@@ -131,6 +135,16 @@ class _StudyBlock:
     active_n: tuple[int, ...]
 
 
+@dataclass(frozen=True)
+class _RedescendingRefit:
+    beta: np.ndarray
+    cov: np.ndarray
+    m: np.ndarray
+    weights: dict[str, float]
+    iterations: int
+    warnings: tuple[str, ...]
+
+
 class AdvancedBiasAdjustedNMAPooler:
     """Frequentist advanced bias-adjusted NMA pooling engine."""
 
@@ -149,6 +163,10 @@ class AdvancedBiasAdjustedNMAPooler:
         sponsor_auditor: RegistrySponsorAuditor | None = None,
         apply_indirectness: bool = False,
         target_population: str = "enriched_as_randomised",
+        robust_outlier_sensitivity: bool = False,
+        redescending_tuning_constant: float = 4.685,
+        redescending_max_iter: int = 25,
+        redescending_tol: float = 1e-8,
     ):
         if hksj_df not in {"studies", "contrasts"}:
             raise ValueError("hksj_df must be 'studies' or 'contrasts'.")
@@ -164,6 +182,12 @@ class AdvancedBiasAdjustedNMAPooler:
             raise ValueError(
                 "target_population must be 'enriched_as_randomised' or 'unselected_target'."
             )
+        if redescending_tuning_constant <= 0.0 or not math.isfinite(redescending_tuning_constant):
+            raise ValueError("redescending_tuning_constant must be finite and > 0.")
+        if redescending_max_iter < 1:
+            raise ValueError("redescending_max_iter must be >= 1.")
+        if redescending_tol <= 0.0 or not math.isfinite(redescending_tol):
+            raise ValueError("redescending_tol must be finite and > 0.")
         self.hksj = hksj
         self.hksj_df = hksj_df
         self.down_weight = down_weight
@@ -177,6 +201,10 @@ class AdvancedBiasAdjustedNMAPooler:
         self.sponsor_auditor = sponsor_auditor
         self.apply_indirectness = apply_indirectness
         self.target_population = target_population
+        self.robust_outlier_sensitivity = robust_outlier_sensitivity
+        self.redescending_tuning_constant = float(redescending_tuning_constant)
+        self.redescending_max_iter = int(redescending_max_iter)
+        self.redescending_tol = float(redescending_tol)
 
     def fit(
         self,
@@ -190,6 +218,10 @@ class AdvancedBiasAdjustedNMAPooler:
         cov_names = covariates or []
         warnings_list: list[str] = []
         measure_type = dataset.measure_type_for_outcome(outcome_id)
+
+        redescending_sensitivity_active = False
+        redescending_iterations = 0
+        redescending_contrast_weights: dict[str, float] = {}
 
         # 1. Assemble study blocks
         blocks, n_studies_dropped = self._build_study_blocks(
@@ -408,6 +440,27 @@ class AdvancedBiasAdjustedNMAPooler:
                 self.variance_type, self.bias_prior_mean
             )
 
+            if self.robust_outlier_sensitivity:
+                redescending = self._redescending_gls_refit(
+                    y,
+                    x,
+                    m,
+                    param_names,
+                    blocks,
+                    bias_prior_sd,
+                    self.treatment_shrinkage_lambda,
+                    treatment_centralities,
+                    beta,
+                    cov,
+                )
+                beta = redescending.beta
+                cov = redescending.cov
+                m = redescending.m
+                redescending_sensitivity_active = True
+                redescending_iterations = redescending.iterations
+                redescending_contrast_weights = redescending.weights
+                warnings_list.extend(redescending.warnings)
+
             # Kenward-Roger Style Covariance Correction
             if self.random_effects and y.shape[0] > x.shape[1]:
                 try:
@@ -576,6 +629,14 @@ class AdvancedBiasAdjustedNMAPooler:
             weight_sensitivity_stds=weight_sensitivity_stds,
             exact_binomial_active=use_exact,
             target_population=self.target_population,
+            redescending_sensitivity_active=redescending_sensitivity_active,
+            redescending_iterations=redescending_iterations,
+            redescending_tuning_constant=(
+                self.redescending_tuning_constant
+                if redescending_sensitivity_active
+                else None
+            ),
+            redescending_contrast_weights=redescending_contrast_weights,
             warnings=tuple(warnings_list)
         )
 
@@ -713,6 +774,94 @@ class AdvancedBiasAdjustedNMAPooler:
                 active_n=tuple(arm["n"] for arm in nonbaseline)
             ))
         return blocks, n_studies_dropped
+
+    def _redescending_gls_refit(
+        self,
+        y: np.ndarray,
+        x: np.ndarray,
+        m: np.ndarray,
+        param_names: tuple[str, ...],
+        blocks: list[_StudyBlock],
+        bias_prior_sd: float,
+        treatment_shrinkage_lambda: float,
+        treatment_centralities: dict[str, float],
+        initial_beta: np.ndarray,
+        initial_cov: np.ndarray,
+    ) -> _RedescendingRefit:
+        beta = initial_beta.copy()
+        cov = initial_cov.copy()
+        working_m = m.copy()
+        contrast_scale = np.sqrt(np.clip(np.diag(m), 1e-12, None))
+        labels = _contrast_labels(blocks)
+        weights = np.ones(y.shape[0], dtype=float)
+        warnings: list[str] = [
+            "Redescending outlier sensitivity is a default-off sensitivity refit, "
+            "not a primary estimator or certification claim."
+        ]
+
+        for iteration in range(1, self.redescending_max_iter + 1):
+            residuals = y - x @ beta
+            pooled_residual_scale = (
+                float(np.std(residuals, ddof=1)) if residuals.size > 1 else 0.0
+            )
+            residual_scale = np.maximum(contrast_scale, max(pooled_residual_scale, 1e-12))
+            standardized = residuals / residual_scale
+            weights = _tukey_biweight_weights(
+                standardized,
+                self.redescending_tuning_constant,
+            )
+            if float(np.sum(weights)) <= 0.0:
+                warnings.append(
+                    "All contrasts redescended to zero weight; retained the unweighted GLS fit."
+                )
+                return _RedescendingRefit(
+                    beta=initial_beta,
+                    cov=initial_cov,
+                    m=m,
+                    weights={label: 1.0 for label in labels},
+                    iterations=iteration,
+                    warnings=tuple(warnings),
+                )
+
+            bounded_weights = np.clip(weights, 1e-6, 1.0)
+            scaler = np.diag(1.0 / np.sqrt(bounded_weights))
+            working_m = scaler @ m @ scaler
+            updated_beta, updated_cov = self._estimate_gls_with_shrinkage_coupled_raw(
+                y,
+                x,
+                working_m,
+                param_names,
+                blocks,
+                bias_prior_sd,
+                treatment_shrinkage_lambda,
+                treatment_centralities,
+                self.variance_type,
+                self.bias_prior_mean,
+            )
+            if float(np.linalg.norm(updated_beta - beta, ord=np.inf)) <= self.redescending_tol:
+                beta = updated_beta
+                cov = updated_cov
+                break
+            beta = updated_beta
+            cov = updated_cov
+        else:
+            iteration = self.redescending_max_iter
+            warnings.append("Redescending outlier sensitivity reached maximum iterations.")
+
+        n_downweighted = int(np.sum(weights < 0.5))
+        if n_downweighted:
+            warnings.append(
+                f"Redescending outlier sensitivity downweighted {n_downweighted}/"
+                f"{len(weights)} contrasts below 0.5."
+            )
+        return _RedescendingRefit(
+            beta=beta,
+            cov=cov,
+            m=working_m,
+            weights={label: float(weight) for label, weight in zip(labels, weights, strict=True)},
+            iterations=iteration,
+            warnings=tuple(warnings),
+        )
 
     @staticmethod
     def _arm_measure_and_variance(
@@ -1127,3 +1276,24 @@ class AdvancedBiasAdjustedNMAPooler:
 def _append_warning(warnings_list: list[str] | None, message: str) -> None:
     if warnings_list is not None:
         warnings_list.append(message)
+
+
+def _tukey_biweight_weights(
+    standardized_residuals: np.ndarray,
+    tuning_constant: float,
+) -> np.ndarray:
+    scaled = standardized_residuals / tuning_constant
+    weights = np.square(1.0 - np.square(scaled))
+    weights[np.abs(scaled) >= 1.0] = 0.0
+    return weights
+
+
+def _contrast_labels(blocks: list[_StudyBlock]) -> list[str]:
+    labels: list[str] = []
+    for block in blocks:
+        for idx, (plus, minus) in enumerate(
+            zip(block.trt_plus, block.trt_minus, strict=True),
+            start=1,
+        ):
+            labels.append(f"{block.study_id}:{idx}:{plus}_vs_{minus}")
+    return labels
