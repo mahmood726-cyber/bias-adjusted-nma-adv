@@ -92,14 +92,18 @@ evidence_artifacts = [
   "external/r/publication_bias_metafor_regtest.R",
   "validation/reference_runs/publication_bias_t2d_ctgov_regtest_output.json",
   "validation/reference_runs/publication_bias_t2d_ctgov_regtest_reference.toml",
+  "external/r/publication_bias_metafor_trimfill_glp1.R",
+  "validation/reference_runs/publication_bias_glp1_metafor_trimfill_output.json",
+  "validation/reference_runs/publication_bias_glp1_metafor_trimfill_reference.toml",
   "validation/networks/t2d_mace_ctgov_hr_network_benchmark.toml",
+  "validation/survival/glp1_mace_reported_hr_benchmark.toml",
 ]
 required_next_artifacts = [
-  "trim_and_fill_reference_matching",
+  "additional_trim_and_fill_reference_matching",
   "selection_model_reference_matching",
   "robmen_reference_cases",
 ]
-claim_limit = "Local screens plus one source-backed metafor::regtest small-study diagnostic reference candidate exist, but this is not trim-and-fill, selection-model, ROB-MEN, or broad publication-bias parity."
+claim_limit = "Local screens plus source-backed metafor::regtest and metafor::trimfill reference candidates exist, but this is not selection-model, ROB-MEN, or broad publication-bias parity."
 certification_effect = "none"
 
 [[features]]

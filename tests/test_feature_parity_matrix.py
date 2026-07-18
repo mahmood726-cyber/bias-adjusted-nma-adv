@@ -49,6 +49,9 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
     assert "publication_bias_t2d_ctgov_regtest_reference.toml" in "\n".join(
         by_id["publication_bias_adjustments"].evidence_artifacts
     )
+    assert "publication_bias_glp1_metafor_trimfill_reference.toml" in "\n".join(
+        by_id["publication_bias_adjustments"].evidence_artifacts
+    )
     assert by_id["component_nma_netmeta"].status == "reference_candidate"
     assert by_id["cross_design_crossnma"].status == "local_implemented"
     assert "crossnma_sglt2_compatibility_preflight.toml" in "\n".join(

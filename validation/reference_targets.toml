@@ -162,6 +162,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "publication_bias_metafor_trimfill_glp1"
+domain = "publication_bias"
+module = "src/bias_nma_adv/pairwise.py"
+reference_method = "metafor::trimfill fixed-effect reported-HR sensitivity"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed GLP-1 MACE reported-HR rows from PubMed/ClinicalTrials.gov manifests",
+  "validate observed and adjusted fixed-effect summaries from metafor::trimfill output rows",
+  "preserve the limitation that trim-and-fill is sensitivity analysis, not publication-bias proof, ROB-MEN parity, or clinical certification",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "pairwise_metafor_meta"
 domain = "pairwise_meta_analysis"
 module = "src/bias_nma_adv/pairwise.py"

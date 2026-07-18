@@ -1894,6 +1894,247 @@ def validate_publication_bias_metafor_regtest_output(
     }
 
 
+def validate_publication_bias_metafor_trimfill_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``metafor::trimfill`` output on a source-backed reported-HR benchmark."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "evidence_mode",
+            "effect_scale",
+            "method",
+            "package_versions",
+            "study_effects",
+            "observed",
+            "trimfill",
+            "filled_rows",
+            "limitations",
+        },
+        label="publication-bias metafor trimfill output",
+    )
+    if output["schema_version"] != "publication_bias_metafor_trimfill/v1":
+        raise RReferenceValidationError("publication-bias trimfill schema_version mismatch.")
+    if output["benchmark_id"] != "glp1_mace_reported_hr":
+        raise RReferenceValidationError("publication-bias trimfill benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("publication-bias trimfill source_policy mismatch.")
+    if output["evidence_mode"] != "reported_hr_pubmed_abstract":
+        raise RReferenceValidationError("publication-bias trimfill evidence_mode mismatch.")
+    if output["effect_scale"] != "log_hr":
+        raise RReferenceValidationError("publication-bias trimfill effect_scale mismatch.")
+    if output["method"] != "metafor::trimfill rma.uni fixed-effect":
+        raise RReferenceValidationError("publication-bias trimfill method mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "jsonlite"})
+
+    benchmark = _load_toml(
+        root / "validation" / "survival" / "glp1_mace_reported_hr_benchmark.toml"
+    )
+    if int(benchmark["n_studies"]) < 8:
+        raise RReferenceValidationError("publication-bias trimfill benchmark needs at least 8 studies.")
+    expected_csv = _load_simple_effect_rows(
+        root / "validation" / "survival" / "glp1_mace_reported_hr_effects.csv"
+    )
+    expected_benchmark = {
+        str(effect["study_id"]): effect for effect in benchmark["study_effects"]
+    }
+    observed = {str(effect["study_id"]): effect for effect in output["study_effects"]}
+    if set(observed) != set(expected_csv) or set(observed) != set(expected_benchmark):
+        raise RReferenceValidationError("publication-bias trimfill study rows do not match benchmark.")
+
+    max_abs_diff = 0.0
+    ordered_effects: list[float] = []
+    ordered_variances: list[float] = []
+    ordered_study_ids: list[str] = []
+    for row in output["study_effects"]:
+        study_id = str(row["study_id"])
+        expected = expected_csv[study_id]
+        benchmark_row = expected_benchmark[study_id]
+        if str(row["nct_id"]) != str(expected["nct_id"]):
+            raise RReferenceValidationError(f"{study_id}: publication-bias trimfill NCT mismatch.")
+        if str(row["pmid"]) != str(expected["pmid"]):
+            raise RReferenceValidationError(f"{study_id}: publication-bias trimfill PMID mismatch.")
+        if str(benchmark_row["nct_id"]) != str(expected["nct_id"]):
+            raise RReferenceValidationError(f"{study_id}: publication-bias benchmark CSV NCT mismatch.")
+        for field in ("estimate", "se", "variance"):
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{study_id} publication-bias trimfill {field}",
+                    row[field],
+                    expected[field],
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{study_id} publication-bias benchmark {field}",
+                    benchmark_row[field],
+                    expected[field],
+                    tolerance,
+                ),
+            )
+        ordered_study_ids.append(study_id)
+        ordered_effects.append(float(expected["estimate"]))
+        ordered_variances.append(float(expected["variance"]))
+
+    observed_fit = fit_pairwise_meta(ordered_effects, ordered_variances, method="FE")
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_fixed_effect_model_summary(
+            "publication-bias trimfill observed",
+            output["observed"],
+            observed_fit,
+            expected_k=len(ordered_effects),
+            tolerance=tolerance,
+        ),
+    )
+
+    trimfill = output["trimfill"]
+    _require_keys(
+        trimfill,
+        {
+            "k0",
+            "se_k0",
+            "side",
+            "estimator",
+            "p_k0",
+            "k",
+            "estimate",
+            "se",
+            "ci_low",
+            "ci_high",
+            "q",
+            "df",
+            "q_p_value",
+            "i2",
+            "h2",
+            "tau2",
+        },
+        label="publication-bias metafor trimfill summary",
+    )
+    if int(trimfill["k0"]) < 0:
+        raise RReferenceValidationError("publication-bias trimfill k0 must be non-negative.")
+    if str(trimfill["side"]) not in {"left", "right"}:
+        raise RReferenceValidationError("publication-bias trimfill side mismatch.")
+    if str(trimfill["estimator"]) != "L0":
+        raise RReferenceValidationError("publication-bias trimfill estimator mismatch.")
+    p_k0 = str(trimfill["p_k0"])
+    if p_k0 != "NA":
+        _assert_close("publication-bias trimfill p_k0", trimfill["p_k0"], trimfill["p_k0"], 0.0)
+
+    filled_rows = output["filled_rows"]
+    if len(filled_rows) != int(trimfill["k"]):
+        raise RReferenceValidationError("publication-bias trimfill filled row count mismatch.")
+    imputed_rows = [row for row in filled_rows if bool(row["imputed"])]
+    if len(imputed_rows) != int(trimfill["k0"]):
+        raise RReferenceValidationError("publication-bias trimfill imputed row count mismatch.")
+    if len(filled_rows) != len(ordered_effects) + int(trimfill["k0"]):
+        raise RReferenceValidationError("publication-bias trimfill k accounting mismatch.")
+
+    filled_effects: list[float] = []
+    filled_variances: list[float] = []
+    for index, row in enumerate(filled_rows, start=1):
+        _require_keys(
+            row,
+            {"row_index_one_based", "label", "imputed", "yi", "vi", "sei"},
+            label="publication-bias trimfill filled row",
+        )
+        if int(row["row_index_one_based"]) != index:
+            raise RReferenceValidationError("publication-bias trimfill filled row index mismatch.")
+        yi = float(row["yi"])
+        vi = float(row["vi"])
+        if vi <= 0.0:
+            raise RReferenceValidationError("publication-bias trimfill filled row variance must be positive.")
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(
+                "publication-bias trimfill filled row sei",
+                row["sei"],
+                math.sqrt(vi),
+                tolerance,
+            ),
+        )
+        if index <= len(ordered_effects):
+            if bool(row["imputed"]):
+                raise RReferenceValidationError("observed trimfill rows must not be flagged imputed.")
+            if str(row["label"]) != ordered_study_ids[index - 1]:
+                raise RReferenceValidationError("publication-bias trimfill observed label mismatch.")
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    "publication-bias trimfill observed filled yi",
+                    yi,
+                    ordered_effects[index - 1],
+                    tolerance,
+                ),
+                _assert_close(
+                    "publication-bias trimfill observed filled vi",
+                    vi,
+                    ordered_variances[index - 1],
+                    tolerance,
+                ),
+            )
+        else:
+            if not bool(row["imputed"]):
+                raise RReferenceValidationError("filled trimfill rows must be flagged imputed.")
+            if not str(row["label"]).startswith("Filled "):
+                raise RReferenceValidationError("publication-bias trimfill imputed label mismatch.")
+        filled_effects.append(yi)
+        filled_variances.append(vi)
+
+    adjusted_fit = fit_pairwise_meta(filled_effects, filled_variances, method="FE")
+    max_abs_diff = max(
+        max_abs_diff,
+        _assert_fixed_effect_model_summary(
+            "publication-bias trimfill adjusted",
+            trimfill,
+            adjusted_fit,
+            expected_k=len(filled_effects),
+            tolerance=tolerance,
+        ),
+    )
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("sensitivity analysis" in item for item in limitations):
+        raise RReferenceValidationError("publication-bias trimfill must preserve sensitivity limitation.")
+    if not any("not broad publication-bias parity" in item for item in limitations):
+        raise RReferenceValidationError("publication-bias trimfill must preserve broad-parity limitation.")
+    if not any("does not certify" in item for item in limitations):
+        raise RReferenceValidationError("publication-bias trimfill must preserve non-certification limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "publication_bias_metafor_trimfill_glp1",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor::trimfill fixed-effect reported-HR sensitivity",
+        "benchmark_id": "glp1_mace_reported_hr",
+        "validated_components": [
+            "source_backed_glp1_hr_rows",
+            "observed_fixed_effect_model_summary",
+            "trimfill_imputed_row_accounting",
+            "trimfill_adjusted_fixed_effect_summary",
+            "sensitivity_not_publication_bias_proof_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates one source-backed GLP-1 reported-HR trim-and-fill "
+            "sensitivity output from metafor::trimfill. It does not rederive the "
+            "Duval-Tweedie k0 search locally and is not publication-bias proof, "
+            "ROB-MEN parity, clinical guidance, or HTA certification."
+        ),
+    }
+
+
 def validate_component_netmeta_cnma_output(
     output_path: str | Path,
     *,
@@ -2308,6 +2549,53 @@ def _weighted_lm_effect_on_se(rows: Any) -> dict[str, float]:
         "p_value": p_value,
         "df": float(df),
     }
+
+
+def _assert_fixed_effect_model_summary(
+    label: str,
+    observed: dict[str, Any],
+    fit: Any,
+    *,
+    expected_k: int,
+    tolerance: float,
+) -> float:
+    _require_keys(
+        observed,
+        {
+            "k",
+            "estimate",
+            "se",
+            "ci_low",
+            "ci_high",
+            "q",
+            "df",
+            "q_p_value",
+            "i2",
+            "h2",
+            "tau2",
+        },
+        label=label,
+    )
+    if int(observed["k"]) != expected_k:
+        raise RReferenceValidationError(f"{label} k mismatch.")
+    if int(observed["df"]) != int(fit.df):
+        raise RReferenceValidationError(f"{label} df mismatch.")
+    q = float(fit.q)
+    df = int(fit.df)
+    q_p_value = 1.0 if df <= 0 else float(scipy.stats.chi2.sf(q, df))
+    expected_i2 = 0.0 if q <= 0.0 or df <= 0 else max(0.0, 100.0 * (q - df) / q)
+    expected_h2 = 1.0 if df <= 0 else q / df
+    return max(
+        _assert_close(f"{label} estimate", observed["estimate"], fit.estimate, tolerance),
+        _assert_close(f"{label} se", observed["se"], fit.se, tolerance),
+        _assert_close(f"{label} ci_low", observed["ci_low"], fit.ci_low, tolerance),
+        _assert_close(f"{label} ci_high", observed["ci_high"], fit.ci_high, tolerance),
+        _assert_close(f"{label} q", observed["q"], q, tolerance),
+        _assert_close(f"{label} q_p_value", observed["q_p_value"], q_p_value, tolerance),
+        _assert_close(f"{label} i2", observed["i2"], expected_i2, tolerance),
+        _assert_close(f"{label} h2", observed["h2"], expected_h2, tolerance),
+        _assert_close(f"{label} tau2", observed["tau2"], 0.0, tolerance),
+    )
 
 
 def _require_keys(raw: dict[str, Any], required: set[str], *, label: str) -> None:

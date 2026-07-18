@@ -30,6 +30,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     validate_pairwise_metafor_gosh_output,
     validate_pairwise_metafor_meta_output,
     validate_publication_bias_metafor_regtest_output,
+    validate_publication_bias_metafor_trimfill_output,
     validate_survival_hr_metafor_pairwise_output,
 )
 from bias_nma_adv.real_meta import sha256_file  # noqa: E402
@@ -62,6 +63,12 @@ PUBLICATION_BIAS_REGTEST_OUTPUT = Path(
 )
 PUBLICATION_BIAS_REGTEST_REPORT = Path(
     "validation/reference_runs/publication_bias_t2d_ctgov_regtest_reference.toml"
+)
+PUBLICATION_BIAS_TRIMFILL_OUTPUT = Path(
+    "validation/reference_runs/publication_bias_glp1_metafor_trimfill_output.json"
+)
+PUBLICATION_BIAS_TRIMFILL_REPORT = Path(
+    "validation/reference_runs/publication_bias_glp1_metafor_trimfill_reference.toml"
 )
 CTGOV_BINARY_NETSPLIT_OUTPUT = Path(
     "validation/reference_runs/psoriasis_pasi90_ctgov_binary_network_netsplit_output.json"
@@ -109,6 +116,16 @@ def main(argv: list[str] | None = None) -> int:
         "--publication-bias-regtest-report",
         type=Path,
         default=PUBLICATION_BIAS_REGTEST_REPORT,
+    )
+    parser.add_argument(
+        "--publication-bias-trimfill-output",
+        type=Path,
+        default=PUBLICATION_BIAS_TRIMFILL_OUTPUT,
+    )
+    parser.add_argument(
+        "--publication-bias-trimfill-report",
+        type=Path,
+        default=PUBLICATION_BIAS_TRIMFILL_REPORT,
     )
     parser.add_argument(
         "--ctgov-binary-netsplit-output",
@@ -198,6 +215,12 @@ def main(argv: list[str] | None = None) -> int:
         publication_bias_regtest_output = _resolve(root, args.publication_bias_regtest_output)
         publication_bias_regtest_summary = validate_publication_bias_metafor_regtest_output(
             publication_bias_regtest_output,
+            repo_root=root,
+            tolerance=args.tolerance,
+        )
+        publication_bias_trimfill_output = _resolve(root, args.publication_bias_trimfill_output)
+        publication_bias_trimfill_summary = validate_publication_bias_metafor_trimfill_output(
+            publication_bias_trimfill_output,
             repo_root=root,
             tolerance=args.tolerance,
         )
@@ -337,6 +360,16 @@ def main(argv: list[str] | None = None) -> int:
             ),
         )
         _write_report(
+            _resolve(root, args.publication_bias_trimfill_report),
+            _publication_bias_trimfill_report(
+                root=root,
+                output_path=publication_bias_trimfill_output,
+                summary=publication_bias_trimfill_summary,
+                checked_at=args.checked_at,
+                tolerance=args.tolerance,
+            ),
+        )
+        _write_report(
             _resolve(root, args.ctgov_binary_netsplit_report),
             _ctgov_binary_netsplit_report(
                 root=root,
@@ -376,7 +409,8 @@ def main(argv: list[str] | None = None) -> int:
         f"{args.dta_source_report}, {args.dose_response_report}, {args.mbnmadose_report}, "
         f"{args.sglt2_survival_report}, "
         f"{args.pcsk9_survival_report}, {args.ctgov_hr_network_report}, "
-        f"{args.publication_bias_regtest_report}, {args.ctgov_binary_netsplit_report}, "
+        f"{args.publication_bias_regtest_report}, {args.publication_bias_trimfill_report}, "
+        f"{args.ctgov_binary_netsplit_report}, "
         f"{args.component_report}, "
         f"{args.crossnma_compat_report}"
     )
@@ -1005,6 +1039,62 @@ def _publication_bias_regtest_report(
             summary["benchmark_id"],
             "--effects",
             "validation/networks/t2d_mace_ctgov_hr_network_effects.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": f"absolute <= {tolerance:g} for validated components",
+        "skip_reason": "",
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [summary["source_policy_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _publication_bias_trimfill_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+    tolerance: float,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    input_artifacts = [
+        Path("validation/survival/glp1_mace_reported_hr_effects.csv"),
+        Path("validation/survival/glp1_mace_reported_hrs.toml"),
+        Path("validation/survival/glp1_mace_reported_hr_benchmark.toml"),
+        Path("validation/source_checks/glp1_mace_reported_hr_tokens.json"),
+        Path("validation/source_checks/glp1_mace_reported_hr_source_check.json"),
+        Path("external/r/publication_bias_metafor_trimfill_glp1.R"),
+    ]
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "publication_bias_metafor_trimfill_glp1",
+        "adapter_id": "r_metafor_publication_bias_trimfill_output_validation",
+        "reference_method": summary["reference_method"],
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/publication_bias_metafor_trimfill_glp1.R",
+            "--benchmark-id",
+            summary["benchmark_id"],
+            "--effects",
+            "validation/survival/glp1_mace_reported_hr_effects.csv",
             "--output",
             output_path.relative_to(root).as_posix(),
         ],

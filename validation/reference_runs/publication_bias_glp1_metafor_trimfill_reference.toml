@@ -1,0 +1,29 @@
+schema_version = "reference_run/v1"
+target_id = "publication_bias_metafor_trimfill_glp1"
+adapter_id = "r_metafor_publication_bias_trimfill_output_validation"
+reference_method = "metafor::trimfill fixed-effect reported-HR sensitivity"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-18T15:00:00Z"
+command = ["Rscript", "--vanilla", "external/r/publication_bias_metafor_trimfill_glp1.R", "--benchmark-id", "glp1_mace_reported_hr", "--effects", "validation/survival/glp1_mace_reported_hr_effects.csv", "--output", "validation/reference_runs/publication_bias_glp1_metafor_trimfill_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", jsonlite = "2.0.0"}
+input_artifacts = ["validation/survival/glp1_mace_reported_hr_effects.csv", "validation/survival/glp1_mace_reported_hrs.toml", "validation/survival/glp1_mace_reported_hr_benchmark.toml", "validation/source_checks/glp1_mace_reported_hr_tokens.json", "validation/source_checks/glp1_mace_reported_hr_source_check.json", "external/r/publication_bias_metafor_trimfill_glp1.R"]
+output_artifacts = ["validation/reference_runs/publication_bias_glp1_metafor_trimfill_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_glp1_hr_rows", "observed_fixed_effect_model_summary", "trimfill_imputed_row_accounting", "trimfill_adjusted_fixed_effect_summary", "sensitivity_not_publication_bias_proof_limitation_preserved"]
+max_abs_difference = 1.9895196601282805e-13
+notes = ["This validates one source-backed GLP-1 reported-HR trim-and-fill sensitivity output from metafor::trimfill. It does not rederive the Duval-Tweedie k0 search locally and is not publication-bias proof, ROB-MEN parity, clinical guidance, or HTA certification."]
+
+[input_sha256]
+"validation/survival/glp1_mace_reported_hr_effects.csv" = "8402f5a83f6aa4edd9a02bace953f2d195df47d9240d790f88cc5940954d7a4a"
+"validation/survival/glp1_mace_reported_hrs.toml" = "245708066956be01b7a8459479a1b607a89f8ce45606deb58a774e8f2c5a02b4"
+"validation/survival/glp1_mace_reported_hr_benchmark.toml" = "b9a5fb37e0e7483cf9ec58b6396ca10efbe90ca43c8ce30b7a59a728cc357288"
+"validation/source_checks/glp1_mace_reported_hr_tokens.json" = "ed57a4c3321ba1664206633743cb63d874fee4a6c1947c5949df48b80c91cb97"
+"validation/source_checks/glp1_mace_reported_hr_source_check.json" = "9c98e601499859d98f02dfe0413eb829fa6b605ae94fc0a7156055bfa4cab95c"
+"external/r/publication_bias_metafor_trimfill_glp1.R" = "91f3a6da180377b48e5fa0e40f8f8100686119e9175655710eb4435dfc33458d"
+
+[output_sha256]
+"validation/reference_runs/publication_bias_glp1_metafor_trimfill_output.json" = "942c05420cc6166def50f88c97b67e74caf31672af13ff5dfdbc4236c3cd6799"

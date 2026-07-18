@@ -1,0 +1,197 @@
+{
+  "schema_version": "publication_bias_metafor_trimfill/v1",
+  "benchmark_id": "glp1_mace_reported_hr",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+  "evidence_mode": "reported_hr_pubmed_abstract",
+  "effect_scale": "log_hr",
+  "method": "metafor::trimfill rma.uni fixed-effect",
+  "package_versions": {
+    "R": "4.6.0",
+    "metafor": "5.0.1",
+    "jsonlite": "2.0.0"
+  },
+  "study_effects": [
+    {
+      "study_id": "ELIXA",
+      "nct_id": "NCT01147250",
+      "pmid": 26630143,
+      "estimate": 0.0198026272961797,
+      "se": 0.0697812733354402,
+      "variance": 0.00486942610831542
+    },
+    {
+      "study_id": "LEADER",
+      "nct_id": "NCT01179048",
+      "pmid": 27295427,
+      "estimate": -0.139262067333508,
+      "se": 0.0556138157469638,
+      "variance": 0.00309289650193724
+    },
+    {
+      "study_id": "SUSTAIN-6",
+      "nct_id": "NCT01720446",
+      "pmid": 27633186,
+      "estimate": -0.301105092783922,
+      "se": 0.125878303108186,
+      "variance": 0.0158453471933963
+    },
+    {
+      "study_id": "EXSCEL",
+      "nct_id": "NCT01144338",
+      "pmid": 28910237,
+      "estimate": -0.0943106794712413,
+      "se": 0.0475339291081973,
+      "variance": 0.00225947441646312
+    },
+    {
+      "study_id": "HARMONY-Outcomes",
+      "nct_id": "NCT02465515",
+      "pmid": 30291013,
+      "estimate": -0.2484613592985,
+      "se": 0.0715069173120385,
+      "variance": 0.00511323922347071
+    },
+    {
+      "study_id": "REWIND",
+      "nct_id": "NCT01394952",
+      "pmid": 31189511,
+      "estimate": -0.127833371509885,
+      "se": 0.0575704450305313,
+      "variance": 0.00331435614101342
+    },
+    {
+      "study_id": "PIONEER-6",
+      "nct_id": "NCT02692716",
+      "pmid": 31185157,
+      "estimate": -0.23572233352107,
+      "se": 0.170023260308578,
+      "variance": 0.0289079090459586
+    },
+    {
+      "study_id": "AMPLITUDE-O",
+      "nct_id": "NCT03496298",
+      "pmid": 34215025,
+      "estimate": -0.3147107448397,
+      "se": 0.117692358161083,
+      "variance": 0.0138514911695165
+    }
+  ],
+  "observed": {
+    "k": 8,
+    "estimate": -0.134113581277383,
+    "se": 0.0247049111171618,
+    "ci_low": -0.182534317308283,
+    "ci_high": -0.0856928452464828,
+    "q": 12.6155836422528,
+    "df": 7,
+    "q_p_value": 0.0820472673222399,
+    "i2": 44.5130705126064,
+    "h2": 1.80222623460755,
+    "tau2": 0
+  },
+  "trimfill": {
+    "k0": 2,
+    "se_k0": 1.96647456688924,
+    "side": "right",
+    "estimator": "L0",
+    "p_k0": "NA",
+    "k": 10,
+    "estimate": -0.11842852345616,
+    "se": 0.0237439602852307,
+    "ci_low": -0.164965830465561,
+    "ci_high": -0.0718912164467584,
+    "q": 17.9061164935061,
+    "df": 9,
+    "q_p_value": 0.0362785098891613,
+    "i2": 49.7378451476958,
+    "h2": 1.98956849927845,
+    "tau2": 0
+  },
+  "filled_rows": [
+    {
+      "row_index_one_based": 1,
+      "label": "ELIXA",
+      "imputed": false,
+      "yi": 0.0198026272961797,
+      "vi": 0.00486942610831542,
+      "sei": 0.0697812733354402
+    },
+    {
+      "row_index_one_based": 2,
+      "label": "LEADER",
+      "imputed": false,
+      "yi": -0.139262067333508,
+      "vi": 0.00309289650193724,
+      "sei": 0.0556138157469638
+    },
+    {
+      "row_index_one_based": 3,
+      "label": "SUSTAIN-6",
+      "imputed": false,
+      "yi": -0.301105092783922,
+      "vi": 0.0158453471933963,
+      "sei": 0.125878303108186
+    },
+    {
+      "row_index_one_based": 4,
+      "label": "EXSCEL",
+      "imputed": false,
+      "yi": -0.0943106794712413,
+      "vi": 0.00225947441646312,
+      "sei": 0.0475339291081973
+    },
+    {
+      "row_index_one_based": 5,
+      "label": "HARMONY-Outcomes",
+      "imputed": false,
+      "yi": -0.2484613592985,
+      "vi": 0.00511323922347071,
+      "sei": 0.0715069173120385
+    },
+    {
+      "row_index_one_based": 6,
+      "label": "REWIND",
+      "imputed": false,
+      "yi": -0.127833371509885,
+      "vi": 0.00331435614101342,
+      "sei": 0.0575704450305313
+    },
+    {
+      "row_index_one_based": 7,
+      "label": "PIONEER-6",
+      "imputed": false,
+      "yi": -0.23572233352107,
+      "vi": 0.0289079090459586,
+      "sei": 0.170023260308578
+    },
+    {
+      "row_index_one_based": 8,
+      "label": "AMPLITUDE-O",
+      "imputed": false,
+      "yi": -0.3147107448397,
+      "vi": 0.0138514911695165,
+      "sei": 0.117692358161083
+    },
+    {
+      "row_index_one_based": 9,
+      "label": "Filled 1",
+      "imputed": true,
+      "yi": 0.0642480458716019,
+      "vi": 0.0158453471933963,
+      "sei": 0.125878303108186
+    },
+    {
+      "row_index_one_based": 10,
+      "label": "Filled 2",
+      "imputed": true,
+      "yi": 0.0778536979273805,
+      "vi": 0.0138514911695165,
+      "sei": 0.117692358161083
+    }
+  ],
+  "limitations": [
+    "Trim-and-fill is a sensitivity analysis, not proof or correction of publication bias.",
+    "This output validates one source-backed GLP-1 MACE reported-HR benchmark, not broad publication-bias parity.",
+    "This output does not certify clinical, regulatory, or HTA reporting."
+  ]
+}

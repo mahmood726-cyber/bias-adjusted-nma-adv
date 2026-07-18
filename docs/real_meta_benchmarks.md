@@ -226,7 +226,8 @@ Limitations:
 - this is an eight-study pairwise class benchmark, not a multi-treatment survival NMA;
 - the public PubMed abstracts provide the reported HR/CI tokens used here, but Kaplan-Meier curves are not digitized;
 - the MACE composite definitions differ across trials, especially ELIXA's inclusion of hospitalization for unstable angina;
-- no external `metafor`, `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference report is attached to this GLP-1 artifact in this checkpoint;
+- `validation/reference_runs/publication_bias_glp1_metafor_trimfill_reference.toml` validates one source-backed `metafor::trimfill` sensitivity output for these rows, but this is not publication-bias proof, ROB-MEN parity, or broad trim-and-fill parity;
+- no external `netmeta`, `multinma`, `MBNMAdose`, or `crossnma` reference report is attached to this GLP-1 artifact in this checkpoint;
 - no clinical, regulatory, or HTA decision claim is made from this local artifact.
 
 ## Benchmark 5: First-Line PARP Inhibitors And Ovarian Cancer PFS
@@ -515,6 +516,7 @@ Limitations:
 | External pairwise reference preflight | Dynamic local environment preflight | `validation/reference_runs/pairwise_metafor_meta_preflight.toml` | Records dependency availability only and has `certification_effect = "none"` |
 | External pairwise reference output | Dynamic local R execution plus Python validation | `validation/reference_runs/pairwise_metafor_meta_output.json`, `validation/reference_runs/pairwise_metafor_meta_reference.toml`, and `src/bias_nma_adv/r_reference_validation.py` | Validates narrow `metafor`/`meta` output parity for study log-OR effects, fixed-effect pooling, REML tau2/Q/df, and documented HKSJ floor differences; not production certification |
 | External pairwise GOSH reference output | Dynamic local R execution plus Python validation | `external/r/metafor_gosh_sglt2.R`, `validation/reference_runs/sglt2_hf_metafor_gosh_output.json`, `validation/reference_runs/sglt2_hf_metafor_gosh_reference.toml`, and `src/bias_nma_adv/r_reference_validation.py` | Validates one source-backed `metafor::gosh` fixed-effect subset-space diagnostic; not broad GOSH visualization parity, outlier removal, or production certification |
+| External trim-and-fill reference output | Dynamic local R execution plus Python validation | `external/r/publication_bias_metafor_trimfill_glp1.R`, `validation/reference_runs/publication_bias_glp1_metafor_trimfill_output.json`, `validation/reference_runs/publication_bias_glp1_metafor_trimfill_reference.toml`, and `src/bias_nma_adv/r_reference_validation.py` | Validates one source-backed GLP-1 `metafor::trimfill` sensitivity output; not broad trim-and-fill parity, publication-bias proof, ROB-MEN parity, or production certification |
 | Candidate frequentist result | Dynamic computation | `AdvancedBiasAdjustedNMAPooler` | Recomputed by tests from the CSV rows |
 | Candidate Bayesian result | Dynamic seeded computation | `BayesianNMAMCMCSampler` with seed 20260715 | Recomputed by tests with tolerance for sampler behavior |
 | Certification status | Static contract | `sglt2_hf_primary_benchmark.toml` | `certification_effect = "none"` until external reference matching exists |

@@ -21,6 +21,7 @@ from bias_nma_adv.r_reference_validation import (
     validate_pairwise_metafor_gosh_output,
     validate_pairwise_metafor_meta_output,
     validate_publication_bias_metafor_regtest_output,
+    validate_publication_bias_metafor_trimfill_output,
     validate_survival_hr_metafor_pairwise_output,
 )
 
@@ -42,6 +43,9 @@ SGLT2_CKD_SURVIVAL_OUTPUT = (
 CTGOV_HR_NETWORK_OUTPUT = ROOT / "validation" / "reference_runs" / "t2d_ctgov_hr_network_netmeta_output.json"
 PUBLICATION_BIAS_REGTEST_OUTPUT = (
     ROOT / "validation" / "reference_runs" / "publication_bias_t2d_ctgov_regtest_output.json"
+)
+PUBLICATION_BIAS_TRIMFILL_OUTPUT = (
+    ROOT / "validation" / "reference_runs" / "publication_bias_glp1_metafor_trimfill_output.json"
 )
 COMPONENT_CNMA_OUTPUT = ROOT / "validation" / "reference_runs" / "component_netmeta_cnma_output.json"
 CROSSNMA_COMPAT_OUTPUT = ROOT / "validation" / "reference_runs" / "crossnma_sglt2_compatibility_output.json"
@@ -219,6 +223,23 @@ def test_publication_bias_metafor_regtest_matches_source_backed_ctgov_hr_rows():
     assert summary["max_abs_difference"] < 1e-12
     assert "metafor_regtest_p_value" in summary["validated_components"]
     assert "not trim-and-fill" in summary["source_policy_note"]
+
+
+def test_publication_bias_metafor_trimfill_matches_source_backed_glp1_hr_rows():
+    summary = validate_publication_bias_metafor_trimfill_output(
+        PUBLICATION_BIAS_TRIMFILL_OUTPUT,
+        repo_root=ROOT,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "publication_bias_metafor_trimfill_glp1"
+    assert summary["benchmark_id"] == "glp1_mace_reported_hr"
+    assert summary["status"] == "passed"
+    assert summary["certification_effect"] == "evidence_candidate"
+    assert summary["reference_method"] == "metafor::trimfill fixed-effect reported-HR sensitivity"
+    assert summary["max_abs_difference"] < 1e-12
+    assert "trimfill_adjusted_fixed_effect_summary" in summary["validated_components"]
+    assert "not publication-bias proof" in summary["source_policy_note"]
 
 
 def test_ctgov_binary_network_netmeta_output_matches_source_backed_closed_loop_network():
@@ -414,6 +435,17 @@ def test_publication_bias_regtest_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="regtest slope"):
         validate_publication_bias_metafor_regtest_output(mutated, repo_root=ROOT)
+
+
+def test_publication_bias_trimfill_validation_rejects_imputed_row_drift(tmp_path):
+    payload = load_r_reference_output(PUBLICATION_BIAS_TRIMFILL_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["filled_rows"][-1]["yi"] += 0.01
+    mutated = tmp_path / "publication_bias_trimfill_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="adjusted estimate"):
+        validate_publication_bias_metafor_trimfill_output(mutated, repo_root=ROOT)
 
 
 def test_ctgov_binary_network_netmeta_validation_rejects_numeric_drift(tmp_path):
