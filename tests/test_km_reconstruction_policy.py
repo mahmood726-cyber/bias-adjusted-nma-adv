@@ -15,6 +15,7 @@ from bias_nma_adv.km_reconstruction import (
     restricted_mean_survival_time,
     screen_km_reconstruction_result,
 )
+from bias_nma_adv.survival import reconstruct_ipd_guyot
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -194,6 +195,44 @@ def test_native_guyot_reconstruction_executes_python_loop_and_reports_fidelity()
     assert result["fidelity"]["schema_version"] == "km_curve_fidelity/v1"
     assert result["fidelity"]["certification_effect"] == "none"
     assert any("OA figure provenance" in warning for warning in result["warnings"])
+
+
+def test_faithful_guyot_core_conserves_population_and_matches_risk_anchors():
+    records = reconstruct_ipd_guyot(
+        [0.0, 5.0, 10.0, 15.0],
+        [1.0, 0.8, 0.6, 0.4],
+        n_risk_times=[0.0, 5.0, 10.0, 15.0],
+        n_risk_values=[200, 150, 100, 50],
+        total_n=200,
+    )
+
+    assert len(records) == 200
+    assert sum(record.event for record in records) == 72
+    assert sum(record.event == 0 for record in records) == 128
+    assert {
+        time: sum(1 for record in records if record.time >= time)
+        for time in (0.0, 5.0, 10.0, 15.0)
+    } == {
+        0.0: 200,
+        5.0: 150,
+        10.0: 100,
+        15.0: 50,
+    }
+
+
+def test_faithful_guyot_reconciles_total_events_without_changing_population():
+    records = reconstruct_ipd_guyot(
+        [0.0, 5.0, 10.0, 15.0],
+        [1.0, 0.8, 0.6, 0.4],
+        n_risk_times=[0.0, 5.0, 10.0, 15.0],
+        n_risk_values=[200, 150, 100, 50],
+        total_n=200,
+        total_events=80,
+    )
+
+    assert len(records) == 200
+    assert sum(record.event for record in records) == 80
+    assert sum(record.event == 0 for record in records) == 120
 
 
 def test_km_curve_metrics_reject_invalid_or_extrapolated_curves():

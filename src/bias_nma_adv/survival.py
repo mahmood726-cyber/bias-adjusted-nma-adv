@@ -57,6 +57,258 @@ def _interpolate_nar(
     return interp.astype(int)
 
 
+def _pava_decreasing(values: List[float]) -> np.ndarray:
+    """Pool-adjacent violators projection for a non-increasing sequence."""
+
+    sequence = list(map(float, values))
+    if not sequence:
+        return np.asarray([], dtype=float)
+    # Negate and use the standard increasing-PAVA merge rule.
+    block_values: list[float] = []
+    block_weights: list[float] = []
+    block_starts: list[int] = []
+    for index, value in enumerate((-item for item in sequence)):
+        current_value = float(value)
+        current_weight = 1.0
+        current_start = index
+        while block_values and block_values[-1] >= current_value:
+            previous_value = block_values.pop()
+            previous_weight = block_weights.pop()
+            current_start = block_starts.pop()
+            current_value = (
+                previous_value * previous_weight + current_value * current_weight
+            ) / (previous_weight + current_weight)
+            current_weight += previous_weight
+        block_values.append(current_value)
+        block_weights.append(current_weight)
+        block_starts.append(current_start)
+
+    output = [0.0] * len(sequence)
+    end = len(sequence)
+    for block_index in range(len(block_values) - 1, -1, -1):
+        start = block_starts[block_index]
+        for index in range(start, end):
+            output[index] = -block_values[block_index]
+        end = start
+    return np.asarray(output, dtype=float)
+
+
+def _build_risk_indices(curve_times: List[float], risk_times: List[float]) -> tuple[list[int], list[int]]:
+    """Map number-at-risk anchors to digitized curve intervals."""
+
+    n_times = len(curve_times)
+    lower = [0] * len(risk_times)
+    upper = [0] * len(risk_times)
+    for i, risk_time in enumerate(risk_times):
+        k = 0
+        while k < n_times and curve_times[k] < risk_time - 1e-9:
+            k += 1
+        lower[i] = min(k, n_times - 1)
+    for i in range(len(risk_times)):
+        upper[i] = (
+            max(lower[i + 1] - 1, lower[i])
+            if i < len(risk_times) - 1
+            else n_times - 1
+        )
+    return lower, upper
+
+
+def _guyot_core(
+    curve_times: List[float],
+    survivals: np.ndarray,
+    risk_times: List[float],
+    risk_values: List[int],
+    total_events: Optional[int] = None,
+) -> tuple[list[int], list[int]]:
+    """Iteratively estimate events and censoring while matching risk anchors."""
+
+    lower, upper = _build_risk_indices(curve_times, risk_times)
+    n_intervals = len(risk_values)
+    n_times = len(curve_times)
+    n_censor = [0] * n_intervals
+    n_hat = [risk_values[0] + 1] * (n_times + 1)
+    censored = [0] * n_times
+    events = [0] * n_times
+    km_hat = [1.0] * n_times
+    last_event_index = [0] * n_intervals
+
+    def distribute_censoring(interval_index: int, count: int) -> None:
+        for k in range(lower[interval_index], upper[interval_index] + 1):
+            censored[k] = 0
+        if count <= 0:
+            return
+        start = curve_times[lower[interval_index]]
+        end = curve_times[min(lower[interval_index + 1], n_times - 1)]
+        span = (end - start) or 1.0
+        for censor_index in range(count):
+            censor_time = start + span * (censor_index + 0.5) / count
+            k = lower[interval_index]
+            while k < upper[interval_index] and curve_times[k + 1] <= censor_time + 1e-12:
+                k += 1
+            censored[k] += 1
+
+    for interval_index in range(n_intervals - 1):
+        s_lower = float(survivals[lower[interval_index]]) or 1e-12
+        n_censor[interval_index] = int(
+            round(
+                risk_values[interval_index]
+                * (survivals[lower[interval_index + 1]] / s_lower)
+                - risk_values[interval_index + 1]
+            )
+        )
+        guard = 0
+        while (
+            n_hat[lower[interval_index + 1]] > risk_values[interval_index + 1]
+            or (
+                n_hat[lower[interval_index + 1]] < risk_values[interval_index + 1]
+                and n_censor[interval_index] > 0
+            )
+        ):
+            guard += 1
+            if guard > 5000:
+                break
+            if n_censor[interval_index] <= 0:
+                for k in range(lower[interval_index], upper[interval_index] + 1):
+                    censored[k] = 0
+                n_censor[interval_index] = 0
+            else:
+                distribute_censoring(interval_index, n_censor[interval_index])
+
+            n_hat[lower[interval_index]] = risk_values[interval_index]
+            last = last_event_index[interval_index]
+            for k in range(lower[interval_index], upper[interval_index] + 1):
+                if interval_index == 0 and k == lower[interval_index]:
+                    events[k] = 0
+                    km_hat[k] = 1.0
+                else:
+                    reference_survival = km_hat[last] or 1e-12
+                    events[k] = int(round(n_hat[k] * (1.0 - survivals[k] / reference_survival)))
+                    events[k] = max(0, min(events[k], n_hat[k]))
+                km_hat[k] = (km_hat[last] or 1.0) * (
+                    1.0 - events[k] / (n_hat[k] or 1)
+                )
+                n_hat[k + 1] = max(0, n_hat[k] - events[k] - censored[k])
+                if events[k] != 0:
+                    last = k
+            n_censor[interval_index] += (
+                n_hat[lower[interval_index + 1]] - risk_values[interval_index + 1]
+            )
+            last_event_index[interval_index + 1] = last
+
+    interval_index = n_intervals - 1
+    if n_times - 1 >= lower[interval_index]:
+        n_hat[lower[interval_index]] = risk_values[interval_index]
+        last = last_event_index[interval_index]
+        for k in range(lower[interval_index], n_times):
+            if interval_index == 0 and k == lower[interval_index]:
+                events[k] = 0
+                km_hat[k] = 1.0
+                n_hat[k + 1] = n_hat[k] - censored[k]
+                continue
+            reference_survival = km_hat[last] or 1e-12
+            events[k] = int(round(n_hat[k] * (1.0 - survivals[k] / reference_survival)))
+            events[k] = max(0, min(events[k], n_hat[k]))
+            km_hat[k] = reference_survival * (1.0 - events[k] / (n_hat[k] or 1))
+            censored[k] = max(0, n_hat[k] - events[k]) if k == n_times - 1 else 0
+            n_hat[k + 1] = max(0, n_hat[k] - events[k] - censored[k])
+            if events[k] != 0:
+                last = k
+
+    if total_events is not None and total_events < 0:
+        raise ValueError("total_events must be non-negative when supplied.")
+    return events, censored
+
+
+def _normalize_and_expand(
+    curve_times: List[float],
+    events: List[int],
+    censored: List[int],
+    total_n: int,
+    *,
+    total_events: Optional[int] = None,
+    follow_up: Optional[float] = None,
+    arm: int = 0,
+) -> list[IPDRecord]:
+    """Expand event/censor counts into exactly ``total_n`` IPD records."""
+
+    n_times = len(curve_times)
+    event_counts = list(events)
+    censor_counts = list(censored)
+    remaining = int(total_n)
+    for k in range(n_times):
+        event_counts[k] = max(0, min(int(event_counts[k]), remaining))
+        censor_counts[k] = max(0, min(int(censor_counts[k]), remaining - event_counts[k]))
+        remaining -= event_counts[k] + censor_counts[k]
+    tail_censored = max(0, remaining)
+    tail_time = float(follow_up) if follow_up is not None else float(curve_times[-1])
+
+    if total_events is not None:
+        delta = int(total_events) - sum(event_counts)
+        if delta > 0:
+            guard = 0
+            while delta > 0 and guard < 1000:
+                guard += 1
+                weighted_events = sum(
+                    event_counts[k] for k in range(1, n_times) if censor_counts[k] > 0
+                )
+                if weighted_events <= 0:
+                    break
+                moved = 0
+                for k in range(1, n_times):
+                    if delta <= 0:
+                        break
+                    if censor_counts[k] <= 0:
+                        continue
+                    desired = max(0, int(round(delta * event_counts[k] / weighted_events)))
+                    take = min(desired, censor_counts[k], delta)
+                    censor_counts[k] -= take
+                    event_counts[k] += take
+                    delta -= take
+                    moved += take
+                if moved == 0:
+                    break
+            for k in range(n_times - 1, 0, -1):
+                if delta <= 0:
+                    break
+                take = min(censor_counts[k], delta)
+                censor_counts[k] -= take
+                event_counts[k] += take
+                delta -= take
+            while delta > 0 and tail_censored > 0:
+                tail_censored -= 1
+                event_counts[n_times - 1] += 1
+                delta -= 1
+        elif delta < 0:
+            needed = -delta
+            total_observed_events = sum(event_counts[k] for k in range(1, n_times))
+            for k in range(n_times - 1, 0, -1):
+                if needed <= 0:
+                    break
+                desired = (
+                    min(event_counts[k], int(round((-delta) * event_counts[k] / total_observed_events)))
+                    if total_observed_events > 0
+                    else event_counts[k]
+                )
+                take = min(desired, event_counts[k], needed)
+                event_counts[k] -= take
+                censor_counts[k] += take
+                needed -= take
+            for k in range(n_times - 1, 0, -1):
+                if needed <= 0:
+                    break
+                take = min(event_counts[k], needed)
+                event_counts[k] -= take
+                censor_counts[k] += take
+                needed -= take
+
+    records: list[IPDRecord] = []
+    for k, time in enumerate(curve_times):
+        records.extend(IPDRecord(time=float(time), event=1, arm=arm) for _ in range(event_counts[k]))
+        records.extend(IPDRecord(time=float(time), event=0, arm=arm) for _ in range(censor_counts[k]))
+    records.extend(IPDRecord(time=tail_time, event=0, arm=arm) for _ in range(tail_censored))
+    return records
+
+
 def reconstruct_ipd_guyot(
     times: np.ndarray,
     survivals: np.ndarray,
@@ -64,8 +316,10 @@ def reconstruct_ipd_guyot(
     n_risk_values: Optional[np.ndarray] = None,
     total_n: Optional[int] = None,
     arm: int = 0,
+    total_events: Optional[int] = None,
+    follow_up: Optional[float] = None,
 ) -> List[IPDRecord]:
-    """Reconstruct IPD from a KM curve via the Guyot algorithm.
+    """Reconstruct IPD from a KM curve via a faithful Guyot-style loop.
 
     Parameters
     ----------
@@ -73,79 +327,68 @@ def reconstruct_ipd_guyot(
     n_risk_times, n_risk_values : the at-risk table (times and counts).
     total_n : total patients; defaults to the first at-risk count.
     arm : arm label written onto each record (0/1).
+    total_events : optional source-reported event total to reconcile by swapping
+        censor/event indicators without changing the population size.
+    follow_up : optional administrative censoring time for tail records.
     """
     times = np.asarray(times, dtype=float)
     survivals = np.asarray(survivals, dtype=float)
 
+    if times.shape != survivals.shape:
+        raise ValueError("times and survivals must have the same shape.")
     if times.size == 0:
         return []
 
-    sort_idx = np.argsort(times)
-    times = times[sort_idx]
-    survivals = survivals[sort_idx]
+    points = [
+        (float(time), float(survival))
+        for time, survival in zip(times, survivals)
+        if np.isfinite(time) and np.isfinite(survival)
+    ]
+    points.sort(key=lambda item: item[0])
+    if not points:
+        return []
+    if points[0][0] > 1e-9 or points[0][1] < 1.0 - 1e-9:
+        points.insert(0, (0.0, 1.0))
+    curve_times = [item[0] for item in points]
+    survival_curve = _pava_decreasing(
+        [min(1.0, max(0.0, item[1])) for item in points]
+    )
 
-    # survival must be monotone non-increasing
-    for i in range(1, len(survivals)):
-        if survivals[i] > survivals[i - 1]:
-            survivals[i] = survivals[i - 1]
-
-    explicit_n = total_n is not None
+    if n_risk_times is not None and n_risk_values is not None and len(n_risk_times):
+        risk_order = np.argsort(np.asarray(n_risk_times, dtype=float))
+        risk_times = [float(np.asarray(n_risk_times, dtype=float)[i]) for i in risk_order]
+        risk_values = [int(round(float(np.asarray(n_risk_values, dtype=float)[i]))) for i in risk_order]
+    else:
+        risk_times = []
+        risk_values = []
 
     if total_n is None:
-        if n_risk_values is not None and len(n_risk_values) > 0:
-            total_n = int(n_risk_values[0])
+        if risk_values:
+            total_n = int(risk_values[0])
         else:
             total_n = 100
+    if int(total_n) <= 0:
+        raise ValueError("total_n must be positive.")
+    if not risk_times or risk_times[0] > curve_times[0] + 1e-9:
+        risk_times = [curve_times[0]] + risk_times
+        risk_values = [int(total_n)] + risk_values
 
-    has_nar = (
-        n_risk_times is not None
-        and n_risk_values is not None
-        and len(n_risk_times) >= 2
-        and len(n_risk_values) >= 2
+    events, censored = _guyot_core(
+        curve_times,
+        survival_curve,
+        risk_times,
+        risk_values,
+        total_events=total_events,
     )
-    if has_nar:
-        n_at_risk = _interpolate_nar(n_risk_times, n_risk_values, times, total_n)
-    else:
-        n_at_risk = np.maximum((survivals * total_n).astype(int), 1)
-
-    ipd: List[IPDRecord] = []
-    event_carry = 0.0  # fractional-event accumulator (error diffusion)
-    km_recon = 1.0  # reconstructed survival so far (Guyot recursion anchor)
-    for i in range(1, len(times)):
-        s_curr = survivals[i]
-        n_prev = n_at_risk[i - 1]
-        n_curr = n_at_risk[i] if i < len(n_at_risk) else 1
-        t_prev, t_curr = times[i - 1], times[i]
-
-        if km_recon <= 0 or s_curr <= 0:
-            continue
-
-        cond_prob = 1.0 - (s_curr / km_recon)
-        cond_prob = min(max(cond_prob, 0.0), 1.0)
-        event_carry += n_prev * cond_prob
-        n_events = int(np.floor(event_carry))
-        event_carry -= n_events
-        n_events = max(0, min(n_events, n_prev - 1))
-        
-        if n_prev > 0:
-            km_recon *= 1.0 - n_events / n_prev
-
-        n_censored = max(0, n_prev - n_curr - n_events)
-
-        if n_events > 0:
-            for et in np.linspace(t_prev + 1e-3, t_curr - 2e-3, n_events):
-                ipd.append(IPDRecord(time=float(et), event=1, arm=arm))
-        if n_censored > 0:
-            for ct in np.linspace(t_curr - 1e-3, t_curr - 0.5e-3, n_censored):
-                ipd.append(IPDRecord(time=float(ct), event=0, arm=arm))
-
-    n_remaining = total_n - len(ipd)
-    if n_remaining > 0:
-        final_censored = n_remaining if (has_nar or explicit_n) else min(n_remaining, 10)
-        for _ in range(final_censored):
-            ipd.append(IPDRecord(time=float(times[-1]), event=0, arm=arm))
-
-    return ipd
+    return _normalize_and_expand(
+        curve_times,
+        events,
+        censored,
+        int(total_n),
+        total_events=total_events,
+        follow_up=follow_up,
+        arm=arm,
+    )
 
 
 class SurvivalIPDReconstructor:
