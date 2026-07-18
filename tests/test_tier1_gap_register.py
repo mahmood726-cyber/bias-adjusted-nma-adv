@@ -219,6 +219,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["numerical_stability"].implemented_capabilities
     )
     assert (
+        "crossnma_source_fixture_compatibility_preflight"
+        in by_id["numerical_stability"].implemented_capabilities
+    )
+    assert (
         "source_backed_closed_loop_multiarm_netmeta_reference_candidate"
         in by_id["numerical_stability"].implemented_capabilities
     )
@@ -333,6 +337,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "sponsor_bias_missing_attrition_conservative_policy",
                 "ctgov_sparse_design_bias_guard",
                 "source_backed_cross_design_routing_benchmark",
+                "crossnma_source_fixture_compatibility_preflight",
                 "source_backed_closed_loop_multiarm_netmeta_reference_candidate",
                 "large_scale_validation_evidence_gate",
             ],

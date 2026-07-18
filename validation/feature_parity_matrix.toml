@@ -155,13 +155,17 @@ evidence_artifacts = [
   "validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml",
   "validation/source_checks/sglt2_rct_nrs_cross_design_check.json",
   "validation/dependency_preflights/tier1_r_dependency_preflight.toml",
+  "validation/cross_design/sglt2_rct_nrs_cross_design_effects.csv",
+  "external/r/crossnma_sglt2_compatibility_preflight.R",
+  "validation/reference_runs/crossnma_sglt2_compatibility_output.json",
+  "validation/reference_runs/crossnma_sglt2_compatibility_preflight.toml",
 ]
 required_next_artifacts = [
-  "crossnma_reference_run",
+  "compatible_crossnma_reference_run",
   "design_bias_prior_sensitivity",
-  "compatible_estimand_rct_nrs_public_fixture",
+  "compatible_arm_level_or_continuous_rct_nrs_public_fixture",
 ]
-claim_limit = "A source-backed RCT/NRS routing benchmark exists, but it blocks combined borrowing for estimand mismatch and is not crossnma parity."
+claim_limit = "A source-backed RCT/NRS routing benchmark and crossnma compatibility preflight exist, but the current HR fixture blocks model execution and is not crossnma parity."
 certification_effect = "none"
 
 [[features]]

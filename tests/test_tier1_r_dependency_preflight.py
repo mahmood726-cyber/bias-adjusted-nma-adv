@@ -21,5 +21,7 @@ def test_tier1_r_dependency_preflight_records_package_and_runtime_status():
     assert by_name["rstan"]["load_status"] == "loaded"
     assert by_name["rjags"]["load_status"] == "loaded_with_JAGS_HOME"
     assert by_name["crossnma"]["load_status"] == "loaded_with_JAGS_HOME"
-    assert "source-backed RCT/NRS" in by_name["crossnma"]["runtime_blocker"]
+    assert "compatibility preflight" in by_name["crossnma"]["runtime_blocker"]
+    assert "blocks model execution" in by_name["crossnma"]["runtime_blocker"]
+    assert "compatible arm-level" in by_name["crossnma"]["runtime_blocker"]
     assert "not model validation" in preflight["claim_limit"]

@@ -8,6 +8,7 @@ from bias_nma_adv.r_reference_validation import (
     RReferenceValidationError,
     load_r_reference_output,
     validate_component_netmeta_cnma_output,
+    validate_crossnma_sglt2_compatibility_output,
     validate_ctgov_binary_network_netmeta_output,
     validate_ctgov_hr_network_netmeta_output,
     validate_dose_response_metafor_polynomial_output,
@@ -36,6 +37,7 @@ SGLT2_CKD_SURVIVAL_OUTPUT = (
 )
 CTGOV_HR_NETWORK_OUTPUT = ROOT / "validation" / "reference_runs" / "t2d_ctgov_hr_network_netmeta_output.json"
 COMPONENT_CNMA_OUTPUT = ROOT / "validation" / "reference_runs" / "component_netmeta_cnma_output.json"
+CROSSNMA_COMPAT_OUTPUT = ROOT / "validation" / "reference_runs" / "crossnma_sglt2_compatibility_output.json"
 CTGOV_BINARY_NETWORK_OUTPUT = (
     ROOT / "validation" / "reference_runs" / "psoriasis_pasi90_ctgov_binary_network_netmeta_output.json"
 )
@@ -208,6 +210,22 @@ def test_component_netmeta_cnma_output_matches_local_additive_component_core():
     assert "not source-backed CNMA validation" in summary["source_policy_note"]
 
 
+def test_crossnma_compatibility_preflight_blocks_incompatible_source_fixture():
+    summary = validate_crossnma_sglt2_compatibility_output(
+        CROSSNMA_COMPAT_OUTPUT,
+        repo_root=ROOT,
+    )
+
+    assert summary["schema_version"] == "r_reference_validation/v1"
+    assert summary["target_id"] == "cross_design_crossnma"
+    assert summary["status"] == "failed"
+    assert summary["certification_effect"] == "none"
+    assert summary["benchmark_id"] == "sglt2_rct_nrs_cross_design"
+    assert summary["max_abs_difference"] <= 1e-12
+    assert "log_hr_effect_scale_blocker_preserved" in summary["validated_components"]
+    assert "no crossnma model was run" in summary["skip_reason"]
+
+
 def test_pairwise_reference_validation_rejects_numeric_drift(tmp_path):
     payload = load_r_reference_output(PAIRWISE_OUTPUT)
     payload = copy.deepcopy(payload)
@@ -338,3 +356,14 @@ def test_component_netmeta_cnma_validation_rejects_numeric_drift(tmp_path):
 
     with pytest.raises(RReferenceValidationError, match="component A estimate"):
         validate_component_netmeta_cnma_output(mutated, repo_root=ROOT)
+
+
+def test_crossnma_compatibility_validation_rejects_softened_blocker(tmp_path):
+    payload = load_r_reference_output(CROSSNMA_COMPAT_OUTPUT)
+    payload = copy.deepcopy(payload)
+    payload["crossnma_api"]["crossnma_model_attempted"] = True
+    mutated = tmp_path / "crossnma_compat_drift.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(RReferenceValidationError, match="must not run a model"):
+        validate_crossnma_sglt2_compatibility_output(mutated, repo_root=ROOT)

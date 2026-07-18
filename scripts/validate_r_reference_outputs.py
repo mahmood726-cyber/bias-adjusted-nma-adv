@@ -18,6 +18,7 @@ from bias_nma_adv.r_reference_validation import (  # noqa: E402
     RReferenceValidationError,
     load_r_reference_output,
     validate_component_netmeta_cnma_output,
+    validate_crossnma_sglt2_compatibility_output,
     validate_ctgov_hr_network_netmeta_output,
     validate_dose_response_metafor_polynomial_output,
     validate_dta_mada_reitsma_output,
@@ -53,6 +54,8 @@ CTGOV_HR_NETWORK_OUTPUT = Path("validation/reference_runs/t2d_ctgov_hr_network_n
 CTGOV_HR_NETWORK_REPORT = Path("validation/reference_runs/t2d_ctgov_hr_network_netmeta_reference.toml")
 COMPONENT_OUTPUT = Path("validation/reference_runs/component_netmeta_cnma_output.json")
 COMPONENT_REPORT = Path("validation/reference_runs/component_netmeta_cnma_reference.toml")
+CROSSNMA_COMPAT_OUTPUT = Path("validation/reference_runs/crossnma_sglt2_compatibility_output.json")
+CROSSNMA_COMPAT_REPORT = Path("validation/reference_runs/crossnma_sglt2_compatibility_preflight.toml")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -80,6 +83,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--ctgov-hr-network-report", type=Path, default=CTGOV_HR_NETWORK_REPORT)
     parser.add_argument("--component-output", type=Path, default=COMPONENT_OUTPUT)
     parser.add_argument("--component-report", type=Path, default=COMPONENT_REPORT)
+    parser.add_argument("--crossnma-compat-output", type=Path, default=CROSSNMA_COMPAT_OUTPUT)
+    parser.add_argument("--crossnma-compat-report", type=Path, default=CROSSNMA_COMPAT_REPORT)
     parser.add_argument("--tolerance", type=float, default=1e-6)
     parser.add_argument(
         "--checked-at",
@@ -148,6 +153,12 @@ def main(argv: list[str] | None = None) -> int:
         component_output = _resolve(root, args.component_output)
         component_summary = validate_component_netmeta_cnma_output(
             component_output,
+            repo_root=root,
+            tolerance=args.tolerance,
+        )
+        crossnma_compat_output = _resolve(root, args.crossnma_compat_output)
+        crossnma_compat_summary = validate_crossnma_sglt2_compatibility_output(
+            crossnma_compat_output,
             repo_root=root,
             tolerance=args.tolerance,
         )
@@ -258,6 +269,15 @@ def main(argv: list[str] | None = None) -> int:
                 tolerance=args.tolerance,
             ),
         )
+        _write_report(
+            _resolve(root, args.crossnma_compat_report),
+            _crossnma_compat_report(
+                root=root,
+                output_path=crossnma_compat_output,
+                summary=crossnma_compat_summary,
+                checked_at=args.checked_at,
+            ),
+        )
     except (OSError, RReferenceValidationError, json.JSONDecodeError, tomllib.TOMLDecodeError) as exc:
         print(f"R reference output validation failed: {exc}", file=sys.stderr)
         return 1
@@ -267,7 +287,8 @@ def main(argv: list[str] | None = None) -> int:
         f"{args.pairwise_report}, {args.multinma_report}, {args.multiarm_report}, {args.dta_report}, "
         f"{args.dta_source_report}, {args.dose_response_report}, {args.mbnmadose_report}, "
         f"{args.sglt2_survival_report}, "
-        f"{args.pcsk9_survival_report}, {args.ctgov_hr_network_report}, {args.component_report}"
+        f"{args.pcsk9_survival_report}, {args.ctgov_hr_network_report}, {args.component_report}, "
+        f"{args.crossnma_compat_report}"
     )
     return 0
 
@@ -851,6 +872,60 @@ def _component_report(
         "validated_components": summary["validated_components"],
         "max_abs_difference": float(summary["max_abs_difference"]),
         "notes": [summary["source_policy_note"]],
+        "input_sha256": {
+            path.as_posix(): sha256_file(root / path)
+            for path in input_artifacts
+        },
+        "output_sha256": {
+            output_path.relative_to(root).as_posix(): sha256_file(output_path),
+        },
+    }
+
+
+def _crossnma_compat_report(
+    *,
+    root: Path,
+    output_path: Path,
+    summary: dict[str, Any],
+    checked_at: str,
+) -> dict[str, Any]:
+    output = load_r_reference_output(output_path)
+    input_artifacts = [
+        Path("validation/cross_design/sglt2_rct_nrs_cross_design_effects.csv"),
+        Path("validation/cross_design/sglt2_rct_nrs_cross_design.toml"),
+        Path("validation/cross_design/sglt2_rct_nrs_cross_design_benchmark.toml"),
+        Path("validation/source_checks/sglt2_rct_nrs_cross_design_check.json"),
+        Path("external/r/crossnma_sglt2_compatibility_preflight.R"),
+    ]
+    return {
+        "schema_version": "reference_run/v1",
+        "target_id": "cross_design_crossnma",
+        "adapter_id": "r_crossnma_sglt2_compatibility_preflight",
+        "reference_method": summary["reference_method"],
+        "status": "failed",
+        "certification_effect": "none",
+        "checked_at": checked_at,
+        "command": [
+            "Rscript",
+            "--vanilla",
+            "external/r/crossnma_sglt2_compatibility_preflight.R",
+            "--input",
+            "validation/cross_design/sglt2_rct_nrs_cross_design_effects.csv",
+            "--output",
+            output_path.relative_to(root).as_posix(),
+        ],
+        "executable": "Rscript",
+        "executable_found": True,
+        "package_versions": {str(key): str(value) for key, value in output["package_versions"].items()},
+        "input_artifacts": [path.as_posix() for path in input_artifacts],
+        "output_artifacts": [output_path.relative_to(root).as_posix()],
+        "tolerance": "",
+        "skip_reason": summary["skip_reason"],
+        "validated_components": summary["validated_components"],
+        "max_abs_difference": float(summary["max_abs_difference"]),
+        "notes": [
+            "Expected fail-closed compatibility preflight: no crossnma model is run on incompatible log-HR estimands."
+        ],
         "input_sha256": {
             path.as_posix(): sha256_file(root / path)
             for path in input_artifacts

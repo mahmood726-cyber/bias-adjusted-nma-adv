@@ -1,0 +1,120 @@
+{
+  "schema_version": "crossnma_sglt2_compatibility_preflight/v1",
+  "benchmark_id": "sglt2_rct_nrs_cross_design",
+  "source_policy": "clinicaltrials_gov + pubmed_abstract + open_access_paper only",
+  "evidence_mode": "reported_hr_pubmed_abstract_cross_design",
+  "effect_scale": "log_hr",
+  "package_versions": {
+    "R": "4.6.0",
+    "crossnma": "1.3.1",
+    "rjags": "4.17",
+    "JAGS": "4.3.2",
+    "jsonlite": "2.0.0"
+  },
+  "crossnma_api": {
+    "package_loaded": true,
+    "supported_summary_measures": ["OR", "RR", "MD", "SMD"],
+    "requires_arm_level_binary_or_continuous_data": true,
+    "crossnma_model_attempted": false
+  },
+  "compatibility": {
+    "status": "blocked_incompatible_source_fixture",
+    "combined_borrowing_allowed": false,
+    "effect_scale_supported": false,
+    "observed_effect_scales": "log_hr",
+    "observed_designs": ["nrs", "rct"],
+    "mismatched_fields": {
+      "outcome_id": ["hf_or_cv_death", "hhf_or_death"],
+      "target_population": ["heart_failure_reduced_ejection_fraction", "type_2_diabetes_real_world"],
+      "control_treatment": ["other glucose-lowering drugs", "placebo"],
+      "comparator_class": ["active_non_sglt2_glucose_lowering", "placebo"]
+    },
+    "blocking_reasons": ["effect_scale_log_hr_not_supported_by_crossnma_model", "missing_arm_level_binary_or_continuous_outcomes", "estimand_mismatch:outcome_id,target_population,control_treatment,comparator_class"],
+    "certification_effect": "none"
+  },
+  "study_effects": [
+    {
+      "study_id": "DAPA-HF",
+      "trial": "Dapagliflozin in HFrEF",
+      "design": "rct",
+      "nct_id": "NCT03036124",
+      "pmid": 31535829,
+      "outcome_id": "hf_or_cv_death",
+      "outcome_label": "worsening heart failure or cardiovascular death",
+      "target_population": "heart_failure_reduced_ejection_fraction",
+      "active_treatment": "dapagliflozin",
+      "control_treatment": "placebo",
+      "comparator_class": "placebo",
+      "effect_scale": "log_hr",
+      "reported_hr": 0.74,
+      "ci_lower": 0.65,
+      "ci_upper": 0.85,
+      "estimate": -0.301105092783922,
+      "se": 0.0684359479844302
+    },
+    {
+      "study_id": "EMPEROR-Reduced",
+      "trial": "Empagliflozin in HFrEF",
+      "design": "rct",
+      "nct_id": "NCT03057977",
+      "pmid": 32865377,
+      "outcome_id": "hf_or_cv_death",
+      "outcome_label": "cardiovascular death or hospitalization for heart failure",
+      "target_population": "heart_failure_reduced_ejection_fraction",
+      "active_treatment": "empagliflozin",
+      "control_treatment": "placebo",
+      "comparator_class": "placebo",
+      "effect_scale": "log_hr",
+      "reported_hr": 0.75,
+      "ci_lower": 0.65,
+      "ci_upper": 0.86,
+      "estimate": -0.287682072451781,
+      "se": 0.0714196864243832
+    },
+    {
+      "study_id": "CVD-REAL",
+      "trial": "CVD-REAL",
+      "design": "nrs",
+      "nct_id": "NCT02993614",
+      "pmid": 28522450,
+      "outcome_id": "hhf_or_death",
+      "outcome_label": "hospitalization for heart failure or death",
+      "target_population": "type_2_diabetes_real_world",
+      "active_treatment": "SGLT-2 inhibitor class",
+      "control_treatment": "other glucose-lowering drugs",
+      "comparator_class": "active_non_sglt2_glucose_lowering",
+      "effect_scale": "log_hr",
+      "reported_hr": 0.54,
+      "ci_lower": 0.48,
+      "ci_upper": 0.6,
+      "estimate": -0.616186139423817,
+      "se": 0.0569254213532334
+    },
+    {
+      "study_id": "CVD-REAL-2",
+      "trial": "CVD-REAL 2",
+      "design": "nrs",
+      "nct_id": "NCT02993614",
+      "pmid": 29540325,
+      "outcome_id": "hhf_or_death",
+      "outcome_label": "death or hospitalization for heart failure",
+      "target_population": "type_2_diabetes_real_world",
+      "active_treatment": "SGLT-2 inhibitor class",
+      "control_treatment": "other glucose-lowering drugs",
+      "comparator_class": "active_non_sglt2_glucose_lowering",
+      "effect_scale": "log_hr",
+      "reported_hr": 0.6,
+      "ci_lower": 0.47,
+      "ci_upper": 0.76,
+      "estimate": -0.510825623765991,
+      "se": 0.122600655513844
+    }
+  ],
+  "limitations": [
+    "This is a crossnma compatibility preflight, not crossnma reference matching.",
+    "The source-backed SGLT2 RCT/NRS rows are reported hazard ratios, not crossnma arm-level OR/RR/MD/SMD data.",
+    "RCT and NRS rows have mismatched outcome, population, comparator, and control definitions.",
+    "No crossnma model is run because forcing this fixture into the package would be statistically invalid.",
+    "This is not clinical, regulatory, HTA, or production certification."
+  ]
+}

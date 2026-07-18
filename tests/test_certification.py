@@ -34,6 +34,7 @@ MBNMADOSE_R_ADAPTER = ROOT / "external" / "r" / "mbnmadose_semaglutide_polynomia
 SURVIVAL_HR_R_ADAPTER = ROOT / "external" / "r" / "survival_hr_metafor_pairwise.R"
 CTGOV_HR_NETWORK_R_ADAPTER = ROOT / "external" / "r" / "ctgov_hr_network_netmeta.R"
 COMPONENT_CNMA_R_ADAPTER = ROOT / "external" / "r" / "component_netmeta_cnma_fixture.R"
+CROSSNMA_COMPAT_R_ADAPTER = ROOT / "external" / "r" / "crossnma_sglt2_compatibility_preflight.R"
 STAN_MODEL = ROOT / "external" / "stan" / "standard_binary_nma.stan"
 STAN_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_stan_nuts_adapter.py"
 STAN_REFERENCE_SCRIPT = ROOT / "scripts" / "run_stan_nuts_reference.py"
@@ -109,7 +110,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 4, "passed": 14}
+    assert summary == {"failed": 5, "passed": 14}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
@@ -129,6 +130,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "r_netmeta_t2d_ctgov_hr_network_output_validation",
         "r_netmeta_psoriasis_ctgov_binary_network_output_validation",
         "r_netmeta_component_cnma_output_validation",
+        "r_crossnma_sglt2_compatibility_preflight",
         "python_cmdstan_nuts_preflight",
         "python_cmdstan_nuts_output_validation",
     }
@@ -376,6 +378,24 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
     )
     assert "absolute <= 1e-06" in component_reference.tolerance
     assert COMPONENT_CNMA_R_ADAPTER.is_file()
+
+    crossnma_compat = by_adapter["r_crossnma_sglt2_compatibility_preflight"]
+    assert crossnma_compat.target_id == "cross_design_crossnma"
+    assert crossnma_compat.status == "failed"
+    assert crossnma_compat.certification_effect == "none"
+    assert crossnma_compat.reference_method == (
+        "crossnma compatibility preflight for source-backed SGLT2 RCT/NRS HR rows"
+    )
+    assert crossnma_compat.output_artifacts == (
+        "validation/reference_runs/crossnma_sglt2_compatibility_output.json",
+    )
+    assert crossnma_compat.tolerance == ""
+    assert "no crossnma model was run" in crossnma_compat.skip_reason
+    assert (
+        "validation/cross_design/sglt2_rct_nrs_cross_design_effects.csv"
+        in crossnma_compat.input_artifacts
+    )
+    assert CROSSNMA_COMPAT_R_ADAPTER.is_file()
 
     for report in reports:
         for artifact, expected_sha in report.input_sha256.items():

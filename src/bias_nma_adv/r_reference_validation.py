@@ -1476,6 +1476,167 @@ def validate_component_netmeta_cnma_output(
     }
 
 
+def validate_crossnma_sglt2_compatibility_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-12,
+) -> dict[str, Any]:
+    """Validate the expected fail-closed ``crossnma`` compatibility preflight."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "evidence_mode",
+            "effect_scale",
+            "package_versions",
+            "crossnma_api",
+            "compatibility",
+            "study_effects",
+            "limitations",
+        },
+        label="crossnma SGLT2 compatibility output",
+    )
+    if output["schema_version"] != "crossnma_sglt2_compatibility_preflight/v1":
+        raise RReferenceValidationError("crossnma compatibility schema_version mismatch.")
+    if output["benchmark_id"] != "sglt2_rct_nrs_cross_design":
+        raise RReferenceValidationError("crossnma compatibility benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract + open_access_paper only":
+        raise RReferenceValidationError("crossnma compatibility source_policy mismatch.")
+    if output["evidence_mode"] != "reported_hr_pubmed_abstract_cross_design":
+        raise RReferenceValidationError("crossnma compatibility evidence_mode mismatch.")
+    if output["effect_scale"] != "log_hr":
+        raise RReferenceValidationError("crossnma compatibility effect_scale mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "crossnma", "rjags", "JAGS", "jsonlite"})
+
+    api = output["crossnma_api"]
+    if not bool(api["package_loaded"]):
+        raise RReferenceValidationError("crossnma compatibility package_loaded must be true.")
+    supported = set(_as_list(api["supported_summary_measures"]))
+    if supported != {"OR", "RR", "MD", "SMD"}:
+        raise RReferenceValidationError("crossnma compatibility supported summary measures drifted.")
+    if not bool(api["requires_arm_level_binary_or_continuous_data"]):
+        raise RReferenceValidationError("crossnma compatibility must preserve arm-level data requirement.")
+    if bool(api["crossnma_model_attempted"]):
+        raise RReferenceValidationError("crossnma compatibility must not run a model on incompatible HR rows.")
+
+    compatibility = output["compatibility"]
+    if compatibility["status"] != "blocked_incompatible_source_fixture":
+        raise RReferenceValidationError("crossnma compatibility status mismatch.")
+    if bool(compatibility["combined_borrowing_allowed"]):
+        raise RReferenceValidationError("crossnma compatibility must block combined borrowing.")
+    if bool(compatibility["effect_scale_supported"]):
+        raise RReferenceValidationError("crossnma compatibility must reject log-HR effect scale.")
+    if set(_as_list(compatibility["observed_designs"])) != {"rct", "nrs"}:
+        raise RReferenceValidationError("crossnma compatibility observed designs mismatch.")
+    if set(_as_list(compatibility["observed_effect_scales"])) != {"log_hr"}:
+        raise RReferenceValidationError("crossnma compatibility observed effect scales mismatch.")
+    required_mismatches = {
+        "outcome_id",
+        "target_population",
+        "control_treatment",
+        "comparator_class",
+    }
+    if set(compatibility["mismatched_fields"]) != required_mismatches:
+        raise RReferenceValidationError("crossnma compatibility mismatch fields drifted.")
+    reasons = set(_as_list(compatibility["blocking_reasons"]))
+    if "effect_scale_log_hr_not_supported_by_crossnma_model" not in reasons:
+        raise RReferenceValidationError("crossnma compatibility must preserve log-HR blocker.")
+    if "missing_arm_level_binary_or_continuous_outcomes" not in reasons:
+        raise RReferenceValidationError("crossnma compatibility must preserve arm-data blocker.")
+    if not any(str(reason).startswith("estimand_mismatch:") for reason in reasons):
+        raise RReferenceValidationError("crossnma compatibility must preserve estimand mismatch blocker.")
+    if compatibility["certification_effect"] != "none":
+        raise RReferenceValidationError("crossnma compatibility cannot certify.")
+
+    expected_csv = _load_cross_design_effect_rows(
+        root / "validation" / "cross_design" / "sglt2_rct_nrs_cross_design_effects.csv"
+    )
+    benchmark = _load_toml(
+        root / "validation" / "cross_design" / "sglt2_rct_nrs_cross_design_benchmark.toml"
+    )
+    expected_benchmark = {
+        str(effect["study_id"]): effect for effect in benchmark["study_effects"]
+    }
+    if set(expected_csv) != set(expected_benchmark):
+        raise RReferenceValidationError("crossnma compatibility CSV does not match benchmark studies.")
+    observed = {str(effect["study_id"]): effect for effect in output["study_effects"]}
+    if set(observed) != set(expected_benchmark):
+        raise RReferenceValidationError("crossnma compatibility study rows do not match benchmark.")
+
+    max_abs_diff = 0.0
+    for study_id, expected in expected_benchmark.items():
+        row = observed[study_id]
+        csv_row = expected_csv[study_id]
+        for field in (
+            "trial",
+            "design",
+            "nct_id",
+            "pmid",
+            "outcome_id",
+            "outcome_label",
+            "target_population",
+            "active_treatment",
+            "control_treatment",
+            "comparator_class",
+            "effect_scale",
+        ):
+            if str(row[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: crossnma compatibility {field} mismatch.")
+            if str(csv_row[field]) != str(expected[field]):
+                raise RReferenceValidationError(f"{study_id}: crossnma compatibility CSV {field} mismatch.")
+        for field in ("reported_hr", "ci_lower", "ci_upper", "estimate", "se"):
+            max_abs_diff = max(
+                max_abs_diff,
+                _assert_close(
+                    f"{study_id} crossnma compatibility {field}",
+                    row[field],
+                    expected[field],
+                    tolerance,
+                ),
+                _assert_close(
+                    f"{study_id} crossnma compatibility CSV {field}",
+                    csv_row[field],
+                    expected[field],
+                    tolerance,
+                ),
+            )
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not crossnma reference matching" in item for item in limitations):
+        raise RReferenceValidationError("crossnma compatibility limitation must block reference matching.")
+    if not any("no crossnma model is run" in item for item in limitations):
+        raise RReferenceValidationError("crossnma compatibility limitation must state no model is run.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "cross_design_crossnma",
+        "status": "failed",
+        "certification_effect": "none",
+        "reference_method": "crossnma compatibility preflight for source-backed SGLT2 RCT/NRS HR rows",
+        "benchmark_id": "sglt2_rct_nrs_cross_design",
+        "validated_components": [
+            "crossnma_package_loaded",
+            "source_backed_hr_rows_rechecked",
+            "log_hr_effect_scale_blocker_preserved",
+            "estimand_mismatch_blocker_preserved",
+            "no_invalid_crossnma_model_execution",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "skip_reason": (
+            "crossnma was loaded, but the source-backed SGLT2 RCT/NRS fixture is "
+            "reported-HR contrast data with incompatible estimands; no crossnma "
+            "model was run."
+        ),
+    }
+
+
 def _load_toml(path: Path) -> dict[str, Any]:
     with path.open("rb") as handle:
         return tomllib.load(handle)
@@ -1508,6 +1669,12 @@ def _load_event_rows(path: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
         (str(row["study_id"]), str(row["arm_role"]), str(row["treatment"])): row
         for row in rows
     }
+
+
+def _load_cross_design_effect_rows(path: Path) -> dict[str, dict[str, Any]]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    return {str(row["study_id"]): row for row in rows}
 
 
 def _load_dose_response_arm_rows(path: Path) -> dict[tuple[str, str, float], dict[str, Any]]:

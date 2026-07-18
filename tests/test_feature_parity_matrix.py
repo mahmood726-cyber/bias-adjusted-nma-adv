@@ -35,6 +35,13 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
         by_id["dose_response_mbnmadose"].evidence_artifacts
     )
     assert by_id["component_nma_netmeta"].status == "reference_candidate"
+    assert by_id["cross_design_crossnma"].status == "local_implemented"
+    assert "crossnma_sglt2_compatibility_preflight.toml" in "\n".join(
+        by_id["cross_design_crossnma"].evidence_artifacts
+    )
+    assert "compatible_crossnma_reference_run" in (
+        by_id["cross_design_crossnma"].required_next_artifacts
+    )
     assert by_id["large_scale_validation"].status == "blocking"
     assert "stan_nuts_cmdstan_preflight.toml" in "\n".join(
         by_id["stan_nuts_multinma_bayesian_nma"].evidence_artifacts

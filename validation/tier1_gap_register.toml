@@ -98,6 +98,7 @@ implemented_capabilities = [
   "sponsor_bias_missing_attrition_conservative_policy",
   "ctgov_sparse_design_bias_guard",
   "source_backed_cross_design_routing_benchmark",
+  "crossnma_source_fixture_compatibility_preflight",
   "source_backed_closed_loop_multiarm_netmeta_reference_candidate",
   "large_scale_validation_evidence_gate",
 ]

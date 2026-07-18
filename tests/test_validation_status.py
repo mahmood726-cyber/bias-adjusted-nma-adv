@@ -220,6 +220,7 @@ def test_validation_status_composes_all_current_gates():
             "sponsor_bias_missing_attrition_conservative_policy",
             "ctgov_sparse_design_bias_guard",
             "source_backed_cross_design_routing_benchmark",
+            "crossnma_source_fixture_compatibility_preflight",
             "source_backed_closed_loop_multiarm_netmeta_reference_candidate",
             "large_scale_validation_evidence_gate",
         ],
@@ -495,9 +496,9 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 18
+    assert reference_runs["n_reports"] == 19
     assert reference_runs["status_counts"] == {
-        "failed": 4,
+        "failed": 5,
         "passed": 14,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
@@ -540,6 +541,7 @@ def test_validation_status_composes_all_current_gates():
         ("r_netmeta_t2d_ctgov_hr_network_output_validation", "passed"),
         ("r_netmeta_psoriasis_ctgov_binary_network_output_validation", "passed"),
         ("r_netmeta_component_cnma_output_validation", "passed"),
+        ("r_crossnma_sglt2_compatibility_preflight", "failed"),
         ("python_cmdstan_nuts_preflight", "failed"),
         ("python_cmdstan_nuts_output_validation", "passed"),
     }
