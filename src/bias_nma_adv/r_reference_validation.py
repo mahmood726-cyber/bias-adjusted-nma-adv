@@ -13,6 +13,7 @@ import scipy.stats
 
 from bias_nma_adv.component_nma import fit_additive_component_nma
 from bias_nma_adv.dta import fit_bivariate_dta_reml
+from bias_nma_adv.pairwise import fit_pairwise_meta
 
 
 class RReferenceValidationError(ValueError):
@@ -118,6 +119,167 @@ def validate_pairwise_metafor_meta_output(
         "hksj_note": (
             "metafor KNHA uses the unfloored q factor here; the Python artifact "
             "documents its HKSJ floor and is intentionally wider."
+        ),
+    }
+
+
+def validate_pairwise_metafor_gosh_output(
+    output_path: str | Path,
+    *,
+    repo_root: str | Path,
+    tolerance: float = 1e-6,
+) -> dict[str, Any]:
+    """Validate ``metafor::gosh`` subset output against source-backed pairwise rows."""
+
+    root = Path(repo_root)
+    output = load_r_reference_output(output_path)
+    _require_keys(
+        output,
+        {
+            "schema_version",
+            "benchmark_id",
+            "source_policy",
+            "effect_scale",
+            "method",
+            "package_versions",
+            "study_effects",
+            "n_studies",
+            "n_subsets",
+            "validated_min_subset_size",
+            "subsets",
+            "limitations",
+        },
+        label="pairwise GOSH R output",
+    )
+    if output["schema_version"] != "metafor_gosh_source/v1":
+        raise RReferenceValidationError("pairwise GOSH R output schema_version mismatch.")
+    if output["benchmark_id"] != "sglt2_hf_primary_log_or":
+        raise RReferenceValidationError("pairwise GOSH benchmark_id mismatch.")
+    if output["source_policy"] != "clinicaltrials_gov + pubmed_abstract only":
+        raise RReferenceValidationError("pairwise GOSH source_policy mismatch.")
+    if output["effect_scale"] != "log_or":
+        raise RReferenceValidationError("pairwise GOSH output must use log_or scale.")
+    if output["method"] != "metafor::gosh rma.uni fixed-effect":
+        raise RReferenceValidationError("pairwise GOSH method mismatch.")
+    _require_package_versions(output["package_versions"], {"R", "metafor", "jsonlite"})
+
+    benchmark = _load_toml(root / "validation" / "real_meta" / "sglt2_hf_primary_benchmark.toml")
+    expected_effects = {
+        str(effect["study_id"]): effect for effect in benchmark["study_effects"]
+    }
+    observed_effects = {
+        str(effect["study_id"]): effect for effect in output["study_effects"]
+    }
+    if set(observed_effects) != set(expected_effects):
+        raise RReferenceValidationError("pairwise GOSH study effects do not match benchmark.")
+    ordered_study_ids = [str(effect["study_id"]) for effect in output["study_effects"]]
+    if ordered_study_ids != sorted(ordered_study_ids):
+        raise RReferenceValidationError("pairwise GOSH study effects must be sorted by study_id.")
+    if int(output["n_studies"]) != len(ordered_study_ids):
+        raise RReferenceValidationError("pairwise GOSH n_studies mismatch.")
+    if int(output["validated_min_subset_size"]) != 1:
+        raise RReferenceValidationError("pairwise GOSH validated_min_subset_size mismatch.")
+    expected_subset_count = (2 ** len(ordered_study_ids)) - 1
+    if int(output["n_subsets"]) != expected_subset_count:
+        raise RReferenceValidationError("pairwise GOSH n_subsets mismatch.")
+
+    max_abs_diff = 0.0
+    effects: list[float] = []
+    variances: list[float] = []
+    for study_id in ordered_study_ids:
+        observed = observed_effects[study_id]
+        expected = expected_effects[study_id]
+        if str(observed["nct_id"]) != str(expected["nct_id"]):
+            raise RReferenceValidationError(f"{study_id}: pairwise GOSH NCT ID mismatch.")
+        if str(observed["pmid"]) != str(expected["pmid"]):
+            raise RReferenceValidationError(f"{study_id}: pairwise GOSH PMID mismatch.")
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close(f"{study_id} GOSH yi", observed["yi"], expected["estimate"], tolerance),
+            _assert_close(f"{study_id} GOSH vi", observed["vi"], expected["variance"], tolerance),
+            _assert_close(f"{study_id} GOSH sei", observed["sei"], expected["se"], tolerance),
+        )
+        effects.append(float(expected["estimate"]))
+        variances.append(float(expected["variance"]))
+
+    seen_subsets: set[tuple[int, ...]] = set()
+    for subset in output["subsets"]:
+        _require_keys(
+            subset,
+            {
+                "subset_id",
+                "subset_indices_zero_based",
+                "subset_study_ids",
+                "k",
+                "estimate",
+                "q",
+                "i2",
+                "h2",
+                "tau2",
+                "tau",
+            },
+            label="pairwise GOSH subset row",
+        )
+        indices = _as_int_tuple(subset["subset_indices_zero_based"])
+        if not indices or tuple(sorted(indices)) != indices or len(set(indices)) != len(indices):
+            raise RReferenceValidationError("pairwise GOSH subset indices must be sorted and unique.")
+        if min(indices) < 0 or max(indices) >= len(ordered_study_ids):
+            raise RReferenceValidationError("pairwise GOSH subset index out of range.")
+        if indices in seen_subsets:
+            raise RReferenceValidationError("pairwise GOSH duplicate subset row.")
+        seen_subsets.add(indices)
+        subset_study_ids = tuple(_as_str_list(subset["subset_study_ids"]))
+        expected_study_ids = tuple(ordered_study_ids[index] for index in indices)
+        if subset_study_ids != expected_study_ids:
+            raise RReferenceValidationError("pairwise GOSH subset study IDs mismatch.")
+        if int(subset["k"]) != len(indices):
+            raise RReferenceValidationError("pairwise GOSH subset k mismatch.")
+
+        subset_effects = [effects[index] for index in indices]
+        subset_variances = [variances[index] for index in indices]
+        fit = fit_pairwise_meta(subset_effects, subset_variances, method="FE")
+        q = float(fit.q)
+        df = len(indices) - 1
+        expected_h2 = 1.0 if df <= 0 else q / df
+        expected_i2 = 0.0 if q <= 0.0 or df <= 0 else max(0.0, 100.0 * (q - df) / q)
+        max_abs_diff = max(
+            max_abs_diff,
+            _assert_close("pairwise GOSH subset estimate", subset["estimate"], fit.estimate, tolerance),
+            _assert_close("pairwise GOSH subset Q", subset["q"], q, tolerance),
+            _assert_close("pairwise GOSH subset tau2", subset["tau2"], 0.0, tolerance),
+            _assert_close("pairwise GOSH subset tau", subset["tau"], 0.0, tolerance),
+            _assert_close("pairwise GOSH subset I2", subset["i2"], expected_i2, tolerance),
+            _assert_close("pairwise GOSH subset H2", subset["h2"], expected_h2, tolerance),
+        )
+    if len(seen_subsets) != expected_subset_count:
+        raise RReferenceValidationError("pairwise GOSH subset enumeration is incomplete.")
+
+    limitations = [str(item).lower() for item in output["limitations"]]
+    if not any("not broad metafor gosh" in item for item in limitations):
+        raise RReferenceValidationError("pairwise GOSH output must preserve broad-parity limitation.")
+    if not any("does not certify" in item for item in limitations):
+        raise RReferenceValidationError("pairwise GOSH output must preserve non-certification limitation.")
+
+    return {
+        "schema_version": "r_reference_validation/v1",
+        "target_id": "pairwise_metafor_gosh_sglt2",
+        "status": "passed",
+        "certification_effect": "evidence_candidate",
+        "reference_method": "metafor::gosh fixed-effect subset diagnostic",
+        "benchmark_id": output["benchmark_id"],
+        "validated_components": [
+            "source_backed_pairwise_log_or_rows",
+            "all_nonempty_subset_enumeration",
+            "fixed_effect_subset_estimates",
+            "subset_q_i2_h2_tau_values",
+            "gosh_diagnostic_limitation_preserved",
+        ],
+        "max_abs_difference": max_abs_diff,
+        "tolerance": tolerance,
+        "source_policy_note": (
+            "This validates one source-backed SGLT2i pairwise GOSH subset diagnostic "
+            "against metafor::gosh. It is not an outlier-removal rule, broad GOSH "
+            "visualization parity, clinical guidance, or HTA certification."
         ),
     }
 
@@ -2360,6 +2522,14 @@ def _as_list(value: Any) -> list[Any]:
     if isinstance(value, list):
         return value
     return [value]
+
+
+def _as_int_tuple(value: Any) -> tuple[int, ...]:
+    return tuple(int(item) for item in _as_list(value))
+
+
+def _as_str_list(value: Any) -> list[str]:
+    return [str(item) for item in _as_list(value)]
 
 
 def _survival_hr_benchmark_path(root: Path, benchmark_id: str) -> Path:

@@ -26,6 +26,9 @@ def test_feature_parity_matrix_keeps_broad_parity_incomplete():
 
     by_id = {item.id: item for item in matrix.items}
     assert by_id["pairwise_metafor_meta"].status == "reference_candidate"
+    assert "sglt2_hf_metafor_gosh_reference.toml" in "\n".join(
+        by_id["pairwise_metafor_meta"].evidence_artifacts
+    )
     assert "psoriasis_pasi90_ctgov_binary_network_netmeta_reference.toml" in "\n".join(
         by_id["multiarm_netmeta_gls"].evidence_artifacts
     )

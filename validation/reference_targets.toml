@@ -175,6 +175,19 @@ acceptance_criteria = [
 evidence_artifacts = []
 
 [[targets]]
+id = "pairwise_metafor_gosh_sglt2"
+domain = "outlier_diagnostics"
+module = "src/bias_nma_adv/pairwise.py"
+reference_method = "metafor::gosh fixed-effect subset diagnostic"
+status = "planned"
+acceptance_criteria = [
+  "match source-backed SGLT2i PubMed/ClinicalTrials.gov log-OR study-effect rows",
+  "match all non-empty fixed-effect subset estimates and heterogeneity summaries against metafor::gosh",
+  "preserve the limitation that this smoke check is not broad GOSH parity, an outlier-removal rule, or clinical certification",
+]
+evidence_artifacts = []
+
+[[targets]]
 id = "survival_km_oa_ipd_reconstruction"
 domain = "survival_km_reconstruction"
 module = "planned:survival_km"

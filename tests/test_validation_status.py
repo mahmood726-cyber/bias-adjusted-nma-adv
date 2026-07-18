@@ -178,6 +178,7 @@ def test_validation_status_composes_all_current_gates():
             "multiarm_heatmap_ready_contribution_matrix",
             "pairwise_leave_one_out_outlier_space_diagnostic",
             "pairwise_exhaustive_gosh_subset_diagnostic",
+            "metafor_gosh_source_backed_outlier_space_reference_candidate",
             "bounded_trim_and_fill_sensitivity_screen",
             "fixed_effect_node_splitting_smoke_diagnostics",
             "netmeta_netsplit_source_backed_inconsistency_reference_candidate",
@@ -385,7 +386,7 @@ def test_validation_status_composes_all_current_gates():
         "required": 50,
     }
     assert large_scale["dynamic_counts"]["passed_reference_reports"] == {
-        "observed": 16,
+        "observed": 17,
         "required": 10,
     }
     assert large_scale["dynamic_counts"]["tau2_positive_benchmarks"] == {
@@ -515,13 +516,14 @@ def test_validation_status_composes_all_current_gates():
 
     reference_runs = report["reference_runs"]
     assert reference_runs["directory"] == "validation/reference_runs"
-    assert reference_runs["n_reports"] == 21
+    assert reference_runs["n_reports"] == 22
     assert reference_runs["status_counts"] == {
         "failed": 5,
-        "passed": 16,
+        "passed": 17,
     }
     assert set(reference_runs["certification_candidate_artifacts"]) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
+        "validation/reference_runs/sglt2_hf_metafor_gosh_output.json",
         "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",
@@ -548,6 +550,7 @@ def test_validation_status_composes_all_current_gates():
     } == {
         ("r_metafor_meta_pairwise_preflight", "failed"),
         ("r_metafor_meta_pairwise_output_validation", "passed"),
+        ("r_metafor_gosh_sglt2_output_validation", "passed"),
         ("r_multinma_sglt2_binary_nma_output_validation", "passed"),
         ("r_netmeta_multiarm_preflight", "failed"),
         ("r_netmeta_multiarm_output_validation", "passed"),

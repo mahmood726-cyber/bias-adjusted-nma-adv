@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGETS_PATH = ROOT / "validation" / "reference_targets.toml"
 REFERENCE_RUNS_PATH = ROOT / "validation" / "reference_runs"
 PAIRWISE_R_ADAPTER = ROOT / "external" / "r" / "pairwise_metafor_meta.R"
+GOSH_R_ADAPTER = ROOT / "external" / "r" / "metafor_gosh_sglt2.R"
 PAIRWISE_PREFLIGHT_SCRIPT = ROOT / "scripts" / "preflight_reference_adapters.py"
 MULTINMA_R_ADAPTER = ROOT / "external" / "r" / "multinma_sglt2_binary_nma.R"
 MULTIARM_R_ADAPTER = ROOT / "external" / "r" / "multiarm_netmeta_fixture.R"
@@ -61,6 +62,7 @@ def test_reference_targets_registry_is_valid():
         "node_splitting_netmeta_netsplit_psoriasis",
         "publication_bias_metafor_regtest_smoke",
         "pairwise_metafor_meta",
+        "pairwise_metafor_gosh_sglt2",
         "reported_hr_survival_metafor_pairwise",
         "ctgov_hr_network_netmeta_star",
         "ctgov_binary_network_netmeta_closed_loop",
@@ -116,12 +118,13 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
 
     assert_reference_runs_target_known(targets, reports)
     summary = summarize_reference_run_reports(reports)
-    assert summary == {"failed": 5, "passed": 16}
+    assert summary == {"failed": 5, "passed": 17}
 
     by_adapter = {report.adapter_id: report for report in reports}
     assert set(by_adapter) == {
         "r_metafor_meta_pairwise_preflight",
         "r_metafor_meta_pairwise_output_validation",
+        "r_metafor_gosh_sglt2_output_validation",
         "r_multinma_sglt2_binary_nma_output_validation",
         "r_netmeta_multiarm_preflight",
         "r_netmeta_multiarm_output_validation",
@@ -217,6 +220,20 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
         "validation/reference_runs/pairwise_metafor_meta_output.json",
     )
     assert pairwise_reference.tolerance == "absolute <= 1e-06 for validated components"
+
+    gosh_reference = by_adapter["r_metafor_gosh_sglt2_output_validation"]
+    assert gosh_reference.target_id == "pairwise_metafor_gosh_sglt2"
+    assert gosh_reference.status == "passed"
+    assert gosh_reference.certification_effect == "evidence_candidate"
+    assert gosh_reference.reference_method == "metafor::gosh fixed-effect subset diagnostic"
+    assert gosh_reference.output_artifacts == (
+        "validation/reference_runs/sglt2_hf_metafor_gosh_output.json",
+    )
+    assert "validation/real_meta/sglt2_hf_primary_benchmark.toml" in (
+        gosh_reference.input_artifacts
+    )
+    assert "absolute <= 1e-06" in gosh_reference.tolerance
+    assert GOSH_R_ADAPTER.is_file()
 
     multinma_reference = by_adapter["r_multinma_sglt2_binary_nma_output_validation"]
     assert multinma_reference.target_id == "bayesian_nma_multinma_cmdstan"
@@ -448,6 +465,7 @@ def test_reference_run_reports_are_fail_closed_and_targeted():
             assert sha256_file(ROOT / artifact) == expected_sha
     assert set(certification_candidate_artifacts(reports)) == {
         "validation/reference_runs/pairwise_metafor_meta_output.json",
+        "validation/reference_runs/sglt2_hf_metafor_gosh_output.json",
         "validation/reference_runs/multinma_sglt2_binary_nma_output.json",
         "validation/reference_runs/multiarm_netmeta_output.json",
         "validation/reference_runs/dta_mada_reitsma_output.json",

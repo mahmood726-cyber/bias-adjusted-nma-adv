@@ -1,0 +1,27 @@
+schema_version = "reference_run/v1"
+target_id = "pairwise_metafor_gosh_sglt2"
+adapter_id = "r_metafor_gosh_sglt2_output_validation"
+reference_method = "metafor::gosh fixed-effect subset diagnostic"
+status = "passed"
+certification_effect = "evidence_candidate"
+checked_at = "2026-07-18T14:30:00Z"
+command = ["Rscript", "--vanilla", "external/r/metafor_gosh_sglt2.R", "--benchmark-id", "sglt2_hf_primary_log_or", "--events", "validation/real_meta/sglt2_hf_primary_events.csv", "--output", "validation/reference_runs/sglt2_hf_metafor_gosh_output.json"]
+executable = "Rscript"
+executable_found = true
+package_versions = {R = "4.6.0", metafor = "5.0.1", jsonlite = "2.0.0"}
+input_artifacts = ["validation/real_meta/sglt2_hf_primary_events.csv", "validation/real_meta/sglt2_hf_primary_sources.toml", "validation/real_meta/sglt2_hf_primary_benchmark.toml", "external/r/metafor_gosh_sglt2.R"]
+output_artifacts = ["validation/reference_runs/sglt2_hf_metafor_gosh_output.json"]
+tolerance = "absolute <= 1e-06 for validated components"
+skip_reason = ""
+validated_components = ["source_backed_pairwise_log_or_rows", "all_nonempty_subset_enumeration", "fixed_effect_subset_estimates", "subset_q_i2_h2_tau_values", "gosh_diagnostic_limitation_preserved"]
+max_abs_difference = 3.5527136788005009e-14
+notes = ["This validates one source-backed SGLT2i pairwise GOSH subset diagnostic against metafor::gosh. It is not an outlier-removal rule, broad GOSH visualization parity, clinical guidance, or HTA certification."]
+
+[input_sha256]
+"validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
+"validation/real_meta/sglt2_hf_primary_sources.toml" = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d"
+"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "53144036e8d87aa82c58176828b768c11451f0e6a6061e2e96c86f5a957dd0ba"
+"external/r/metafor_gosh_sglt2.R" = "f4229047ef44f7fd75d9b799e690a217a0ca2c8a9e4c5755441fa32792ae0732"
+
+[output_sha256]
+"validation/reference_runs/sglt2_hf_metafor_gosh_output.json" = "4b0c1ff3b27a80259db4e5a8f8f583be71fecd44638063567da366da01c280ed"

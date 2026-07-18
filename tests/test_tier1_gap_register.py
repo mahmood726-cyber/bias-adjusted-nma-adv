@@ -61,6 +61,10 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["feature_completeness"].implemented_capabilities
     )
     assert (
+        "metafor_gosh_source_backed_outlier_space_reference_candidate"
+        in by_id["feature_completeness"].implemented_capabilities
+    )
+    assert (
         "bounded_trim_and_fill_sensitivity_screen"
         in by_id["feature_completeness"].implemented_capabilities
     )
@@ -303,6 +307,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
             "multiarm_heatmap_ready_contribution_matrix",
             "pairwise_leave_one_out_outlier_space_diagnostic",
             "pairwise_exhaustive_gosh_subset_diagnostic",
+            "metafor_gosh_source_backed_outlier_space_reference_candidate",
             "bounded_trim_and_fill_sensitivity_screen",
             "fixed_effect_node_splitting_smoke_diagnostics",
             "netmeta_netsplit_source_backed_inconsistency_reference_candidate",

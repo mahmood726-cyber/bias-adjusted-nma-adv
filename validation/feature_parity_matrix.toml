@@ -13,13 +13,16 @@ status = "reference_candidate"
 evidence_artifacts = [
   "validation/reference_runs/pairwise_metafor_meta_reference.toml",
   "validation/reference_runs/pairwise_metafor_meta_output.json",
+  "external/r/metafor_gosh_sglt2.R",
+  "validation/reference_runs/sglt2_hf_metafor_gosh_output.json",
+  "validation/reference_runs/sglt2_hf_metafor_gosh_reference.toml",
 ]
 required_next_artifacts = [
   "continuous_outcome_reference_cases",
   "sparse_binary_reference_cases",
   "prediction_interval_reference_cases",
 ]
-claim_limit = "This is a narrow reference candidate, not broad pairwise feature parity."
+claim_limit = "This includes narrow source-backed metafor/meta pooling and metafor::gosh subset-space reference candidates, not broad pairwise feature parity."
 certification_effect = "none"
 
 [[features]]
