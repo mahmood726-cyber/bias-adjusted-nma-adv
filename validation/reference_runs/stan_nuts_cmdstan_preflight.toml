@@ -4,7 +4,7 @@ adapter_id = "python_cmdstan_nuts_preflight"
 reference_method = "CmdStanPy/CmdStan NUTS"
 status = "failed"
 certification_effect = "none"
-checked_at = "2026-07-16T00:00:00Z"
+checked_at = "2026-07-18T00:00:00Z"
 command = ["python", "scripts/preflight_stan_nuts_adapter.py", "--root", ".", "--output", "validation/reference_runs/stan_nuts_cmdstan_preflight.toml"]
 executable = "python"
 executable_found = true
@@ -20,7 +20,7 @@ skip_reason = "CmdStan is available, but this preflight does not execute NUTS. R
 required_diagnostics = ["r_hat", "ess_bulk", "ess_tail", "divergent_transitions", "treedepth_saturation", "mcse", "prior_predictive_checks", "posterior_predictive_checks"]
 
 [input_sha256]
-"external/stan/standard_binary_nma.stan" = "5c392388d2dab8375334f85eb3515ab83d2fbd1130b8adb898ef3ad57981fff8"
+"external/stan/standard_binary_nma.stan" = "536493a9c266ac7c12f2a691fbbbf202611413a607f9cf48eff61720a22e5c75"
 "src/bias_nma_adv/stan_backend.py" = "49f4cba79afd2638fd66e1898dbce281705b340bbdf82c34c58f8f7dc63d7a57"
 "scripts/preflight_stan_nuts_adapter.py" = "b006767442802bff46ff3a2cf5532fce66369a963b9e95c94dcfcca5a17044b7"
 

@@ -6,6 +6,7 @@ data {
   array[N] int<lower=0> n;
   array[N] int<lower=1, upper=S> study;
   array[N] int<lower=1, upper=T> treatment;
+  int<lower=0, upper=1> prior_only;
 }
 
 parameters {
@@ -24,14 +25,18 @@ transformed parameters {
 model {
   mu ~ normal(0, 5);
   d_raw ~ normal(0, 2);
-  for (i in 1:N) {
-    y[i] ~ binomial_logit(n[i], mu[study[i]] + d[treatment[i]]);
+  if (prior_only == 0) {
+    for (i in 1:N) {
+      y[i] ~ binomial_logit(n[i], mu[study[i]] + d[treatment[i]]);
+    }
   }
 }
 
 generated quantities {
   array[N] real log_lik;
+  array[N] int y_rep;
   for (i in 1:N) {
     log_lik[i] = binomial_logit_lpmf(y[i] | n[i], mu[study[i]] + d[treatment[i]]);
+    y_rep[i] = binomial_rng(n[i], inv_logit(mu[study[i]] + d[treatment[i]]));
   }
 }

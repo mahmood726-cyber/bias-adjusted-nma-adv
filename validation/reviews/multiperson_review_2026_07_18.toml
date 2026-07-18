@@ -49,11 +49,13 @@ findings = [
   "The latest prediction-interval addition covers one source-backed reported-HR benchmark against metafor KNHA while preserving the local HKSJ floor disclosure.",
   "The latest continuous-outcome additions cover CT.gov STEP body-weight and ORION LDL-C adjusted treatment-difference fixtures against metafor and meta, expose positive local REML tau2 in both benchmark artifacts, and preserve the broad pairwise parity blocker.",
   "The local NMA engine now has a default-off redescending contrast-sensitivity refit that reports downweighted contrasts, but it remains a local sensitivity screen rather than reference-matched fraud-containment parity.",
+  "The CmdStan/NUTS candidate now includes same-model declared-prior predictive and posterior y_rep summaries for the source-backed SGLT2i arm-count fixture, with R-hat <= 1.01, ESS above threshold, and zero divergences.",
   "The feature-family ledger still has no broad reference_matched feature family; all candidate runs remain scoped smoke or narrow reference candidates.",
   "Large-scale breadth thresholds are met, but global large-scale validation remains incomplete because ML-NMR is formally source-excluded rather than validated and broad feature-family matching is absent."
 ]
 actions = [
   "Kept all reference-run outputs at certification_effect = evidence_candidate rather than production or tier-one parity evidence.",
+  "Recorded the Stan predictive summaries as narrow source-backed candidate evidence while keeping broad Stan/multinma predictive parity blocked.",
   "Preserved feature-parity statuses as reference_candidate, local_implemented, planned, or blocking where appropriate.",
   "Kept the large-scale gate status partial_not_large_scale despite passing count thresholds."
 ]

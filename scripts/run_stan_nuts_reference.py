@@ -76,6 +76,7 @@ def build_stan_data(rows: list[dict[str, str]]) -> tuple[dict[str, Any], dict[st
         "n": [int(row["n"]) for row in rows],
         "study": [study_map[row["study_id"]] for row in rows],
         "treatment": [treatment_map[row["treatment"]] for row in rows],
+        "prior_only": 0,
     }
     active_rows = [row for row in rows if row["arm_role"] == "active"]
     metadata = {
@@ -163,10 +164,63 @@ def summarize_draws(fit: Any, *, max_treedepth: int) -> dict[str, Any]:
             "divergent_transitions": divergent,
             "treedepth_saturation": treedepth_saturation,
             "mcse_mean": mcse_mean,
-            "prior_predictive_checks": "not_run_for_this_reference_candidate",
-            "posterior_predictive_checks": "log_likelihood_exported_only",
+            "prior_predictive_checks": "cmdstan_prior_only_declared_model_summary",
+            "posterior_predictive_checks": "cmdstan_posterior_y_rep_summary",
         },
     }
+
+
+def summarize_predictive_check(
+    *,
+    fit: Any,
+    observed_y: list[int],
+    observed_n: list[int],
+    check_type: str,
+    method: str,
+) -> dict[str, Any]:
+    """Summarize replicated arm counts without storing every draw."""
+
+    y_rep = _generated_quantity_matrix(fit, "y_rep", len(observed_y))
+    observed = np.asarray(observed_y, dtype=float)
+    row_q025 = np.quantile(y_rep, 0.025, axis=0)
+    row_q975 = np.quantile(y_rep, 0.975, axis=0)
+    total_events = np.sum(y_rep, axis=1)
+    observed_total = float(np.sum(observed))
+    p_upper = float(np.mean(total_events >= observed_total))
+    p_lower = float(np.mean(total_events <= observed_total))
+    two_sided_tail_area = min(1.0, 2.0 * min(p_upper, p_lower))
+    total_q025 = float(np.quantile(total_events, 0.025))
+    total_q975 = float(np.quantile(total_events, 0.975))
+
+    return {
+        "check_type": check_type,
+        "method": method,
+        "n_draws": int(y_rep.shape[0]),
+        "n_arms": int(y_rep.shape[1]),
+        "observed_total_events": observed_total,
+        "observed_total_n": int(np.sum(observed_n)),
+        "replicated_total_events_mean": float(np.mean(total_events)),
+        "replicated_total_events_sd": float(np.std(total_events, ddof=1)),
+        "replicated_total_events_q025": total_q025,
+        "replicated_total_events_q975": total_q975,
+        "observed_total_within_95_interval": bool(total_q025 <= observed_total <= total_q975),
+        "tail_area_total_events_two_sided": two_sided_tail_area,
+        "row_level_95_interval_coverage_fraction": float(
+            np.mean((observed >= row_q025) & (observed <= row_q975))
+        ),
+    }
+
+
+def _generated_quantity_matrix(fit: Any, prefix: str, length: int) -> np.ndarray:
+    draws = fit.draws(inc_warmup=False, concat_chains=False)
+    column_names = list(fit.column_names)
+    indices = []
+    for index in range(1, length + 1):
+        column_name = f"{prefix}[{index}]"
+        if column_name not in column_names:
+            raise KeyError(f"Generated quantity column missing from Stan draws: {column_name}")
+        indices.append(column_names.index(column_name))
+    return np.asarray(draws[:, :, indices]).reshape(-1, length)
 
 
 def _arviz_scalar(value: Any, variable: str) -> float:
@@ -204,8 +258,11 @@ def build_output(
     root: Path,
     checked_at: str,
     fit: Any,
+    prior_fit: Any,
     cmdstanpy: Any,
     sampling: dict[str, Any],
+    prior_sampling: dict[str, Any],
+    stan_data: dict[str, Any],
     data_metadata: dict[str, Any],
     tolerance: float,
 ) -> dict[str, Any]:
@@ -238,9 +295,26 @@ def build_output(
             "arviz": arviz_version_string(),
         },
         "sampling": sampling,
+        "prior_sampling": prior_sampling,
         "data": data_metadata,
         "posterior": summary["posterior"],
         "diagnostics": summary["diagnostics"],
+        "predictive_checks": {
+            "prior_predictive": summarize_predictive_check(
+                fit=prior_fit,
+                observed_y=[int(value) for value in stan_data["y"]],
+                observed_n=[int(value) for value in stan_data["n"]],
+                check_type="prior_predictive",
+                method="same_stan_model_prior_only_mode_declared_priors",
+            ),
+            "posterior_predictive": summarize_predictive_check(
+                fit=fit,
+                observed_y=[int(value) for value in stan_data["y"]],
+                observed_n=[int(value) for value in stan_data["n"]],
+                check_type="posterior_predictive",
+                method="same_stan_model_posterior_generated_quantities_y_rep",
+            ),
+        },
         "reference_comparison": {
             "reference_artifact": toml_path(DEFAULT_REFERENCE),
             "reference_method": "metafor fixed-effect log-OR on the same source-backed arm counts",
@@ -255,6 +329,8 @@ def build_output(
             "nuts_sampler_diagnostics",
             "sglt2i_source_backed_log_or_posterior",
             "metafor_fixed_effect_mean_alignment",
+            "stan_prior_predictive_check_declared_priors",
+            "stan_posterior_predictive_check_y_rep",
         ],
         "certification_effect": "evidence_candidate",
         "claim_limit": (
@@ -277,6 +353,8 @@ def write_reference_report(
     seed: int,
     adapt_delta: float,
     max_treedepth: int,
+    prior_iter_warmup: int,
+    prior_iter_sampling: int,
 ) -> None:
     input_paths = [
         DEFAULT_MODEL,
@@ -308,6 +386,10 @@ def write_reference_report(
         str(adapt_delta),
         "--max-treedepth",
         str(max_treedepth),
+        "--prior-iter-warmup",
+        str(prior_iter_warmup),
+        "--prior-iter-sampling",
+        str(prior_iter_sampling),
     ]
 
     lines = [
@@ -333,7 +415,7 @@ def write_reference_report(
         "output_artifacts = [",
         *[f"  {toml_quote(toml_path(path))}," for path in output_paths],
         "]",
-        f'tolerance = {toml_quote("posterior mean absolute difference <= 0.03 vs metafor fixed-effect log-OR; R-hat <= 1.01; bulk/tail ESS >= 400; divergences = 0; treedepth saturation = 0; MCSE <= 0.005")}',
+        f'tolerance = {toml_quote("posterior mean absolute difference <= 0.03 vs metafor fixed-effect log-OR; R-hat <= 1.01; bulk/tail ESS >= 400; divergences = 0; treedepth saturation = 0; MCSE <= 0.005; prior/posterior predictive summaries present")}',
         'skip_reason = ""',
         "",
         "[input_sha256]",
@@ -362,6 +444,8 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=20260716)
     parser.add_argument("--adapt-delta", type=float, default=0.95)
     parser.add_argument("--max-treedepth", type=int, default=10)
+    parser.add_argument("--prior-iter-warmup", type=int, default=250)
+    parser.add_argument("--prior-iter-sampling", type=int, default=500)
     parser.add_argument("--checked-at", default=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"))
     args = parser.parse_args()
 
@@ -386,6 +470,18 @@ def main() -> int:
         max_treedepth=args.max_treedepth,
         show_progress=False,
     )
+    prior_stan_data = dict(stan_data)
+    prior_stan_data["prior_only"] = 1
+    prior_fit = model.sample(
+        data=prior_stan_data,
+        chains=args.chains,
+        iter_warmup=args.prior_iter_warmup,
+        iter_sampling=args.prior_iter_sampling,
+        seed=args.seed + 1,
+        adapt_delta=args.adapt_delta,
+        max_treedepth=args.max_treedepth,
+        show_progress=False,
+    )
     sampling = {
         "chains": args.chains,
         "iter_warmup": args.iter_warmup,
@@ -394,12 +490,24 @@ def main() -> int:
         "adapt_delta": args.adapt_delta,
         "max_treedepth": args.max_treedepth,
     }
+    prior_sampling = {
+        "chains": args.chains,
+        "iter_warmup": args.prior_iter_warmup,
+        "iter_sampling": args.prior_iter_sampling,
+        "seed": args.seed + 1,
+        "adapt_delta": args.adapt_delta,
+        "max_treedepth": args.max_treedepth,
+        "prior_only": True,
+    }
     output = build_output(
         root=root,
         checked_at=args.checked_at,
         fit=fit,
+        prior_fit=prior_fit,
         cmdstanpy=cmdstanpy,
         sampling=sampling,
+        prior_sampling=prior_sampling,
+        stan_data=stan_data,
         data_metadata=data_metadata,
         tolerance=DEFAULT_TOLERANCE,
     )
@@ -424,6 +532,8 @@ def main() -> int:
         seed=args.seed,
         adapt_delta=args.adapt_delta,
         max_treedepth=args.max_treedepth,
+        prior_iter_warmup=args.prior_iter_warmup,
+        prior_iter_sampling=args.prior_iter_sampling,
     )
     print(f"stan nuts reference output written to {output_path}")
     print(f"stan nuts reference report written to {report_path}")

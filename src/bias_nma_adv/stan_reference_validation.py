@@ -47,9 +47,11 @@ def validate_stan_nuts_reference_output(
             "effect_scale",
             "package_versions",
             "sampling",
+            "prior_sampling",
             "data",
             "posterior",
             "diagnostics",
+            "predictive_checks",
             "reference_comparison",
             "validated_components",
             "certification_effect",
@@ -73,12 +75,14 @@ def validate_stan_nuts_reference_output(
     _require_package_versions(output["package_versions"], {"cmdstanpy", "cmdstan", "arviz"})
     _validate_source_rows(output["data"], root)
     _validate_sampling(output["sampling"])
+    _validate_prior_sampling(output["prior_sampling"])
     _validate_diagnostics(
         output["diagnostics"],
         rhat_threshold=rhat_threshold,
         ess_threshold=ess_threshold,
         mcse_threshold=mcse_threshold,
     )
+    _validate_predictive_checks(output["predictive_checks"], expected_n_rows=int(output["data"]["n_rows"]))
     max_abs_difference = _validate_reference_comparison(
         output["reference_comparison"],
         root=root,
@@ -90,6 +94,8 @@ def validate_stan_nuts_reference_output(
         "nuts_sampler_diagnostics",
         "sglt2i_source_backed_log_or_posterior",
         "metafor_fixed_effect_mean_alignment",
+        "stan_prior_predictive_check_declared_priors",
+        "stan_posterior_predictive_check_y_rep",
     }
     components = set(str(item) for item in output["validated_components"])
     missing_components = sorted(required_components - components)
@@ -111,6 +117,12 @@ def validate_stan_nuts_reference_output(
         "ess_bulk": float(output["diagnostics"]["ess_bulk"]),
         "ess_tail": float(output["diagnostics"]["ess_tail"]),
         "mcse_mean": float(output["posterior"]["mcse_mean"]),
+        "prior_predictive_tail_area": float(
+            output["predictive_checks"]["prior_predictive"]["tail_area_total_events_two_sided"]
+        ),
+        "posterior_predictive_tail_area": float(
+            output["predictive_checks"]["posterior_predictive"]["tail_area_total_events_two_sided"]
+        ),
         "claim_limit": output["claim_limit"],
     }
 
@@ -159,6 +171,28 @@ def _validate_sampling(sampling: dict[str, Any]) -> None:
         raise StanReferenceValidationError("Stan/NUTS reference run requires at least 500 post-warmup draws per chain.")
 
 
+def _validate_prior_sampling(sampling: dict[str, Any]) -> None:
+    _require_keys(
+        sampling,
+        {
+            "chains",
+            "iter_warmup",
+            "iter_sampling",
+            "seed",
+            "adapt_delta",
+            "max_treedepth",
+            "prior_only",
+        },
+        label="Stan/NUTS prior sampling",
+    )
+    if sampling["prior_only"] is not True:
+        raise StanReferenceValidationError("Stan/NUTS prior predictive sampling must run in prior_only mode.")
+    if int(sampling["chains"]) < 4:
+        raise StanReferenceValidationError("Stan/NUTS prior predictive run requires at least four chains.")
+    if int(sampling["iter_sampling"]) < 250:
+        raise StanReferenceValidationError("Stan/NUTS prior predictive run requires at least 250 draws per chain.")
+
+
 def _validate_diagnostics(
     diagnostics: dict[str, Any],
     *,
@@ -190,6 +224,77 @@ def _validate_diagnostics(
         raise StanReferenceValidationError("Stan/NUTS reference run has treedepth saturation.")
     if "mcse_mean" in diagnostics and float(diagnostics["mcse_mean"]) > mcse_threshold:
         raise StanReferenceValidationError("Stan/NUTS MCSE exceeds threshold.")
+    if diagnostics.get("prior_predictive_checks") != "cmdstan_prior_only_declared_model_summary":
+        raise StanReferenceValidationError("Stan/NUTS prior predictive diagnostic summary is missing.")
+    if diagnostics.get("posterior_predictive_checks") != "cmdstan_posterior_y_rep_summary":
+        raise StanReferenceValidationError("Stan/NUTS posterior predictive diagnostic summary is missing.")
+
+
+def _validate_predictive_checks(raw: dict[str, Any], *, expected_n_rows: int) -> None:
+    _require_keys(
+        raw,
+        {"prior_predictive", "posterior_predictive"},
+        label="Stan/NUTS predictive checks",
+    )
+    _validate_predictive_check(
+        raw["prior_predictive"],
+        expected_type="prior_predictive",
+        expected_method="same_stan_model_prior_only_mode_declared_priors",
+        expected_n_rows=expected_n_rows,
+    )
+    _validate_predictive_check(
+        raw["posterior_predictive"],
+        expected_type="posterior_predictive",
+        expected_method="same_stan_model_posterior_generated_quantities_y_rep",
+        expected_n_rows=expected_n_rows,
+    )
+
+
+def _validate_predictive_check(
+    raw: dict[str, Any],
+    *,
+    expected_type: str,
+    expected_method: str,
+    expected_n_rows: int,
+) -> None:
+    _require_keys(
+        raw,
+        {
+            "check_type",
+            "method",
+            "n_draws",
+            "n_arms",
+            "observed_total_events",
+            "observed_total_n",
+            "replicated_total_events_mean",
+            "replicated_total_events_sd",
+            "replicated_total_events_q025",
+            "replicated_total_events_q975",
+            "observed_total_within_95_interval",
+            "tail_area_total_events_two_sided",
+            "row_level_95_interval_coverage_fraction",
+        },
+        label=f"Stan/NUTS {expected_type}",
+    )
+    if raw["check_type"] != expected_type:
+        raise StanReferenceValidationError(f"Stan/NUTS predictive check type must be {expected_type}.")
+    if raw["method"] != expected_method:
+        raise StanReferenceValidationError(f"Stan/NUTS {expected_type} method changed unexpectedly.")
+    if int(raw["n_arms"]) != expected_n_rows:
+        raise StanReferenceValidationError(f"Stan/NUTS {expected_type} n_arms does not match source data.")
+    if int(raw["n_draws"]) < 1000:
+        raise StanReferenceValidationError(f"Stan/NUTS {expected_type} has too few replicated draws.")
+    q025 = float(raw["replicated_total_events_q025"])
+    q975 = float(raw["replicated_total_events_q975"])
+    mean = float(raw["replicated_total_events_mean"])
+    tail_area = float(raw["tail_area_total_events_two_sided"])
+    coverage = float(raw["row_level_95_interval_coverage_fraction"])
+    if q025 > mean or mean > q975:
+        raise StanReferenceValidationError(f"Stan/NUTS {expected_type} predictive quantiles are inconsistent.")
+    if not 0.0 <= tail_area <= 1.0:
+        raise StanReferenceValidationError(f"Stan/NUTS {expected_type} tail area is outside [0, 1].")
+    if not 0.0 <= coverage <= 1.0:
+        raise StanReferenceValidationError(f"Stan/NUTS {expected_type} row coverage is outside [0, 1].")
 
 
 def _validate_reference_comparison(

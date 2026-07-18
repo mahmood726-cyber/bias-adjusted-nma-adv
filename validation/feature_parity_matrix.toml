@@ -146,12 +146,11 @@ evidence_artifacts = [
 ]
 required_next_artifacts = [
   "additional_multinma_reference_outputs",
-  "stan_prior_predictive_check_output",
-  "stan_posterior_predictive_check_output",
+  "additional_stan_predictive_check_domains",
   "joint_posterior_ranking_reference_output",
   "mlnmr_reference_example",
 ]
-claim_limit = "A narrow source-backed CmdStan/NUTS candidate exists, but this is not broad Bayesian feature parity or multinma parity."
+claim_limit = "Narrow source-backed CmdStan/NUTS and multinma candidates exist, including one CmdStan prior/posterior predictive-check artifact, but this is not broad Bayesian feature parity, ML-NMR parity, ranking parity, or multinma parity."
 certification_effect = "none"
 
 [[features]]
