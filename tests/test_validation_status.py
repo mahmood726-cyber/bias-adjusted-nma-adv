@@ -248,6 +248,7 @@ def test_validation_status_composes_all_current_gates():
             "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports",
             "source_backed_stan_prior_predictive_check_candidate",
             "source_backed_stan_posterior_predictive_check_candidate",
+            "source_backed_stan_two_treatment_joint_ranking_candidate",
             "source_backed_multinma_sglt2i_reference_candidate",
             "multinma_rstan_rhat_ess_divergence_treedepth_exports",
         ],

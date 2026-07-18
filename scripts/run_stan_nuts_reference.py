@@ -211,6 +211,47 @@ def summarize_predictive_check(
     }
 
 
+def summarize_posterior_ranking(fit: Any) -> dict[str, Any]:
+    """Rank the two treatments per posterior draw while preserving draw dependence."""
+
+    d2 = _draw_column_vector(fit, "d[2]")
+    active_best = float(np.mean(d2 < 0.0))
+    placebo_best = float(np.mean(d2 > 0.0))
+    tie_probability = float(np.mean(d2 == 0.0))
+    return {
+        "method": "rank_placebo_zero_and_sglt2i_d2_per_draw",
+        "ranking_scale": "lower_log_odds_preferred",
+        "preserves_joint_draws": True,
+        "n_draws": int(d2.shape[0]),
+        "active_better_than_placebo_probability": active_best,
+        "tie_probability": tie_probability,
+        "treatments": [
+            {
+                "treatment": "Placebo",
+                "effect_parameter": "d[1] = 0",
+                "rank_1_probability": placebo_best,
+                "rank_2_probability": 1.0 - placebo_best,
+                "sucra_two_treatment": placebo_best,
+            },
+            {
+                "treatment": "SGLT2i",
+                "effect_parameter": "d[2]",
+                "rank_1_probability": active_best,
+                "rank_2_probability": 1.0 - active_best,
+                "sucra_two_treatment": active_best,
+            },
+        ],
+    }
+
+
+def _draw_column_vector(fit: Any, column_name: str) -> np.ndarray:
+    draws = fit.draws(inc_warmup=False, concat_chains=False)
+    column_names = list(fit.column_names)
+    if column_name not in column_names:
+        raise KeyError(f"Stan draw column missing: {column_name}")
+    return np.asarray(draws[:, :, column_names.index(column_name)]).reshape(-1)
+
+
 def _generated_quantity_matrix(fit: Any, prefix: str, length: int) -> np.ndarray:
     draws = fit.draws(inc_warmup=False, concat_chains=False)
     column_names = list(fit.column_names)
@@ -315,6 +356,7 @@ def build_output(
                 method="same_stan_model_posterior_generated_quantities_y_rep",
             ),
         },
+        "posterior_ranking": summarize_posterior_ranking(fit),
         "reference_comparison": {
             "reference_artifact": toml_path(DEFAULT_REFERENCE),
             "reference_method": "metafor fixed-effect log-OR on the same source-backed arm counts",
@@ -331,6 +373,7 @@ def build_output(
             "metafor_fixed_effect_mean_alignment",
             "stan_prior_predictive_check_declared_priors",
             "stan_posterior_predictive_check_y_rep",
+            "stan_joint_posterior_ranking_draw_summary",
         ],
         "certification_effect": "evidence_candidate",
         "claim_limit": (
@@ -415,7 +458,7 @@ def write_reference_report(
         "output_artifacts = [",
         *[f"  {toml_quote(toml_path(path))}," for path in output_paths],
         "]",
-        f'tolerance = {toml_quote("posterior mean absolute difference <= 0.03 vs metafor fixed-effect log-OR; R-hat <= 1.01; bulk/tail ESS >= 400; divergences = 0; treedepth saturation = 0; MCSE <= 0.005; prior/posterior predictive summaries present")}',
+        f'tolerance = {toml_quote("posterior mean absolute difference <= 0.03 vs metafor fixed-effect log-OR; R-hat <= 1.01; bulk/tail ESS >= 400; divergences = 0; treedepth saturation = 0; MCSE <= 0.005; prior/posterior predictive summaries and posterior ranking summary present")}',
         'skip_reason = ""',
         "",
         "[input_sha256]",

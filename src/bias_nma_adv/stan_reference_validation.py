@@ -52,6 +52,7 @@ def validate_stan_nuts_reference_output(
             "posterior",
             "diagnostics",
             "predictive_checks",
+            "posterior_ranking",
             "reference_comparison",
             "validated_components",
             "certification_effect",
@@ -83,6 +84,7 @@ def validate_stan_nuts_reference_output(
         mcse_threshold=mcse_threshold,
     )
     _validate_predictive_checks(output["predictive_checks"], expected_n_rows=int(output["data"]["n_rows"]))
+    _validate_posterior_ranking(output["posterior_ranking"], sampling=output["sampling"])
     max_abs_difference = _validate_reference_comparison(
         output["reference_comparison"],
         root=root,
@@ -96,6 +98,7 @@ def validate_stan_nuts_reference_output(
         "metafor_fixed_effect_mean_alignment",
         "stan_prior_predictive_check_declared_priors",
         "stan_posterior_predictive_check_y_rep",
+        "stan_joint_posterior_ranking_draw_summary",
     }
     components = set(str(item) for item in output["validated_components"])
     missing_components = sorted(required_components - components)
@@ -123,6 +126,8 @@ def validate_stan_nuts_reference_output(
         "posterior_predictive_tail_area": float(
             output["predictive_checks"]["posterior_predictive"]["tail_area_total_events_two_sided"]
         ),
+        "sglt2i_rank1_probability": _rank1_probability(output["posterior_ranking"], "SGLT2i"),
+        "placebo_rank1_probability": _rank1_probability(output["posterior_ranking"], "Placebo"),
         "claim_limit": output["claim_limit"],
     }
 
@@ -295,6 +300,73 @@ def _validate_predictive_check(
         raise StanReferenceValidationError(f"Stan/NUTS {expected_type} tail area is outside [0, 1].")
     if not 0.0 <= coverage <= 1.0:
         raise StanReferenceValidationError(f"Stan/NUTS {expected_type} row coverage is outside [0, 1].")
+
+
+def _validate_posterior_ranking(raw: dict[str, Any], *, sampling: dict[str, Any]) -> None:
+    _require_keys(
+        raw,
+        {
+            "method",
+            "ranking_scale",
+            "preserves_joint_draws",
+            "n_draws",
+            "active_better_than_placebo_probability",
+            "tie_probability",
+            "treatments",
+        },
+        label="Stan/NUTS posterior ranking",
+    )
+    if raw["method"] != "rank_placebo_zero_and_sglt2i_d2_per_draw":
+        raise StanReferenceValidationError("Stan/NUTS posterior ranking method changed unexpectedly.")
+    if raw["ranking_scale"] != "lower_log_odds_preferred":
+        raise StanReferenceValidationError("Stan/NUTS posterior ranking scale changed unexpectedly.")
+    if raw["preserves_joint_draws"] is not True:
+        raise StanReferenceValidationError("Stan/NUTS posterior ranking must preserve joint posterior draws.")
+    expected_draws = int(sampling["chains"]) * int(sampling["iter_sampling"])
+    if int(raw["n_draws"]) != expected_draws:
+        raise StanReferenceValidationError("Stan/NUTS posterior ranking draw count does not match sampling.")
+    active_better = float(raw["active_better_than_placebo_probability"])
+    tie_probability = float(raw["tie_probability"])
+    if not 0.0 <= active_better <= 1.0:
+        raise StanReferenceValidationError("Stan/NUTS active-better ranking probability is outside [0, 1].")
+    if not 0.0 <= tie_probability <= 1.0:
+        raise StanReferenceValidationError("Stan/NUTS tie probability is outside [0, 1].")
+    treatments = raw["treatments"]
+    if not isinstance(treatments, list) or len(treatments) != 2:
+        raise StanReferenceValidationError("Stan/NUTS posterior ranking must contain two treatments.")
+    by_treatment = {str(item.get("treatment")): item for item in treatments}
+    if set(by_treatment) != {"Placebo", "SGLT2i"}:
+        raise StanReferenceValidationError("Stan/NUTS posterior ranking treatment set changed.")
+    for treatment, item in by_treatment.items():
+        _require_keys(
+            item,
+            {
+                "treatment",
+                "effect_parameter",
+                "rank_1_probability",
+                "rank_2_probability",
+                "sucra_two_treatment",
+            },
+            label=f"Stan/NUTS posterior ranking treatment {treatment}",
+        )
+        rank_1 = float(item["rank_1_probability"])
+        rank_2 = float(item["rank_2_probability"])
+        sucra = float(item["sucra_two_treatment"])
+        if not 0.0 <= rank_1 <= 1.0 or not 0.0 <= rank_2 <= 1.0:
+            raise StanReferenceValidationError("Stan/NUTS rank probabilities are outside [0, 1].")
+        if abs((rank_1 + rank_2) - 1.0) > 1e-12:
+            raise StanReferenceValidationError("Stan/NUTS rank probabilities do not sum to one.")
+        if abs(rank_1 - sucra) > 1e-12:
+            raise StanReferenceValidationError("Stan/NUTS two-treatment SUCRA must equal rank-1 probability.")
+    if abs(float(by_treatment["SGLT2i"]["rank_1_probability"]) - active_better) > 1e-12:
+        raise StanReferenceValidationError("Stan/NUTS SGLT2i rank probability is inconsistent.")
+
+
+def _rank1_probability(ranking: dict[str, Any], treatment: str) -> float:
+    for item in ranking["treatments"]:
+        if item["treatment"] == treatment:
+            return float(item["rank_1_probability"])
+    raise StanReferenceValidationError(f"Stan/NUTS posterior ranking missing treatment: {treatment}")
 
 
 def _validate_reference_comparison(

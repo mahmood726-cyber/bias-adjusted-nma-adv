@@ -29,6 +29,8 @@ def test_stan_nuts_reference_output_matches_source_backed_artifact():
     assert summary["mcse_mean"] <= 0.005
     assert 0.0 <= summary["prior_predictive_tail_area"] <= 1.0
     assert 0.0 <= summary["posterior_predictive_tail_area"] <= 1.0
+    assert summary["sglt2i_rank1_probability"] > 0.99
+    assert summary["placebo_rank1_probability"] < 0.01
     assert "not broad feature parity" in summary["claim_limit"]
 
 
@@ -63,4 +65,14 @@ def test_stan_nuts_reference_rejects_missing_predictive_checks(tmp_path):
     mutated.write_text(json.dumps(payload), encoding="utf-8")
 
     with pytest.raises(StanReferenceValidationError, match="predictive_checks"):
+        validate_stan_nuts_reference_output(mutated, repo_root=ROOT)
+
+
+def test_stan_nuts_reference_rejects_ranking_drift(tmp_path):
+    payload = copy.deepcopy(load_stan_reference_output(STAN_OUTPUT))
+    payload["posterior_ranking"]["preserves_joint_draws"] = False
+    mutated = tmp_path / "stan_bad_ranking.json"
+    mutated.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(StanReferenceValidationError, match="joint posterior draws"):
         validate_stan_nuts_reference_output(mutated, repo_root=ROOT)

@@ -4,7 +4,7 @@ adapter_id = "python_cmdstan_nuts_output_validation"
 reference_method = "CmdStanPy/CmdStan NUTS"
 status = "passed"
 certification_effect = "evidence_candidate"
-checked_at = "2026-07-18T00:00:00Z"
+checked_at = "2026-07-18T00:45:00Z"
 command = ["python", "scripts/run_stan_nuts_reference.py", "--root", ".", "--output", "validation/reference_runs/stan_nuts_cmdstan_output.json", "--report", "validation/reference_runs/stan_nuts_cmdstan_reference.toml", "--chains", "4", "--iter-warmup", "500", "--iter-sampling", "1000", "--seed", "20260716", "--adapt-delta", "0.95", "--max-treedepth", "10", "--prior-iter-warmup", "250", "--prior-iter-sampling", "500"]
 executable = "python"
 executable_found = true
@@ -20,7 +20,7 @@ input_artifacts = [
 output_artifacts = [
   "validation/reference_runs/stan_nuts_cmdstan_output.json",
 ]
-tolerance = "posterior mean absolute difference <= 0.03 vs metafor fixed-effect log-OR; R-hat <= 1.01; bulk/tail ESS >= 400; divergences = 0; treedepth saturation = 0; MCSE <= 0.005; prior/posterior predictive summaries present"
+tolerance = "posterior mean absolute difference <= 0.03 vs metafor fixed-effect log-OR; R-hat <= 1.01; bulk/tail ESS >= 400; divergences = 0; treedepth saturation = 0; MCSE <= 0.005; prior/posterior predictive summaries and posterior ranking summary present"
 skip_reason = ""
 
 [input_sha256]
@@ -28,8 +28,8 @@ skip_reason = ""
 "validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
 "validation/real_meta/sglt2_hf_primary_sources.toml" = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d"
 "validation/reference_runs/pairwise_metafor_meta_output.json" = "d38797b7b38d3443278d1365c380d32d5d0a234977c78b5fb9965a61a97d0632"
-"scripts/run_stan_nuts_reference.py" = "c0f5cea80331c2836670b93d7f096d08ba9b38a8aa2c3d9d52d097f37f3fc03b"
-"src/bias_nma_adv/stan_reference_validation.py" = "3537f3e7970d3eb85d36bf31da69beb5de6f3daf585fd056da2e59b8265f00b3"
+"scripts/run_stan_nuts_reference.py" = "58be87632f7ecce3b90094cd6dacf21507fee2f747ee6087a15aaae22804640e"
+"src/bias_nma_adv/stan_reference_validation.py" = "1df6c2bc093f0e14baae03ebab288aa98b8e59cffc6904d6bb1cb2dc15bf93c1"
 
 [output_sha256]
-"validation/reference_runs/stan_nuts_cmdstan_output.json" = "d20260d02e68c2f5ccb85874f2c4d6e1fde14ec69b452534daa25179ee5074fa"
+"validation/reference_runs/stan_nuts_cmdstan_output.json" = "ed99a05749e4f7927db250f7f62b3ec20a4e469a0d3801d600645fa5c43dea87"

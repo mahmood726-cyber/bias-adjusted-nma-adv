@@ -319,11 +319,19 @@ def test_tier1_gap_register_keeps_current_shortcomings_blocking():
         in by_id["bayesian_ecosystem_integration"].implemented_capabilities
     )
     assert (
+        "source_backed_stan_two_treatment_joint_ranking_candidate"
+        in by_id["bayesian_ecosystem_integration"].implemented_capabilities
+    )
+    assert (
         "broad_reference_matched_stan_prior_predictive_checks"
         in by_id["bayesian_ecosystem_integration"].missing_capabilities
     )
     assert (
         "broad_reference_matched_stan_posterior_predictive_checks"
+        in by_id["bayesian_ecosystem_integration"].missing_capabilities
+    )
+    assert (
+        "reference_matched_multi_treatment_joint_posterior_ranking_draws"
         in by_id["bayesian_ecosystem_integration"].missing_capabilities
     )
     assert "multinma" in by_id["bayesian_ecosystem_integration"].tier_one_references
@@ -418,6 +426,7 @@ def test_tier1_gap_register_summary_is_validation_status_ready():
                 "stan_nuts_rhat_ess_divergence_treedepth_mcse_exports",
                 "source_backed_stan_prior_predictive_check_candidate",
                 "source_backed_stan_posterior_predictive_check_candidate",
+                "source_backed_stan_two_treatment_joint_ranking_candidate",
                 "source_backed_multinma_sglt2i_reference_candidate",
                 "multinma_rstan_rhat_ess_divergence_treedepth_exports",
             ],

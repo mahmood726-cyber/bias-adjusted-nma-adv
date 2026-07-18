@@ -25,8 +25,9 @@ findings = [
   "The large-scale breadth counts exceed current benchmark, study-effect, NCT, PMID, simulation-job, simulation-iteration, positive-tau2, and passed-reference-run thresholds.",
   "A default-off NMA-level redescending outlier sensitivity path now exists and reports contrast weights and warnings, but it is not reference-matched fraud-containment evidence.",
   "The source-backed CmdStan/NUTS SGLT2i candidate now includes same-model declared-prior predictive and posterior y_rep summaries in addition to NUTS diagnostics and fixed-effect mean alignment.",
+  "The source-backed CmdStan/NUTS SGLT2i candidate now includes one two-treatment draw-preserving posterior ranking summary.",
   "The global statistical goal remains blocked because no feature family is broadly reference_matched and ML-NMR has a formal public-source exclusion rather than validation evidence.",
-  "Stan/NUTS predictive checks now exist only as narrow candidate artifacts and cannot support broad Bayesian, ML-NMR, ranking, or multinma parity."
+  "Stan/NUTS predictive and ranking checks now exist only as narrow candidate artifacts and cannot support broad Bayesian, ML-NMR, multi-treatment ranking, or multinma parity."
 ]
 actions = [
   "Kept reference candidates scoped and non-certifying in the feature-parity matrix.",
@@ -35,6 +36,7 @@ actions = [
   "Recorded the CT.gov STEP and ORION continuous candidates as narrow source-backed pairwise artifacts with local positive-REML-tau2 heterogeneity summaries, without claiming broad continuous-outcome parity.",
   "Recorded the NMA redescending contrast refit as a default-off local sensitivity capability while keeping reference-matched fraud-containment parity blocked.",
   "Recorded the Stan prior/posterior predictive summaries as source-backed Bayesian candidate evidence while keeping broad predictive-check parity blocked.",
+  "Recorded the Stan ranking summary as source-backed two-treatment candidate evidence while keeping multi-treatment ranking parity blocked.",
   "Kept large_scale_validation at partial_not_large_scale when formal ML-NMR exclusion is present.",
   "Recorded heatmap-ready GLS contribution matrices as local implementation progress, not CINeMA, ROB-MEN, or netheat parity.",
   "Added this latest improvement review so blocker status reflects the current branch instead of a stale review path."

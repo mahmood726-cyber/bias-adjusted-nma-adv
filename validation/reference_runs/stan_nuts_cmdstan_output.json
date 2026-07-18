@@ -1,6 +1,6 @@
 {
   "certification_effect": "evidence_candidate",
-  "checked_at": "2026-07-18T00:00:00Z",
+  "checked_at": "2026-07-18T00:45:00Z",
   "claim_limit": "Narrow CmdStan/NUTS reference candidate only; not broad feature parity, not multinma parity, not clinical or HTA certification.",
   "data": {
     "n_rows": 8,
@@ -75,6 +75,30 @@
     "q975": -0.19807797699999996,
     "sd": 0.036513617849629865
   },
+  "posterior_ranking": {
+    "active_better_than_placebo_probability": 1.0,
+    "method": "rank_placebo_zero_and_sglt2i_d2_per_draw",
+    "n_draws": 4000,
+    "preserves_joint_draws": true,
+    "ranking_scale": "lower_log_odds_preferred",
+    "tie_probability": 0.0,
+    "treatments": [
+      {
+        "effect_parameter": "d[1] = 0",
+        "rank_1_probability": 0.0,
+        "rank_2_probability": 1.0,
+        "sucra_two_treatment": 0.0,
+        "treatment": "Placebo"
+      },
+      {
+        "effect_parameter": "d[2]",
+        "rank_1_probability": 1.0,
+        "rank_2_probability": 0.0,
+        "sucra_two_treatment": 1.0,
+        "treatment": "SGLT2i"
+      }
+    ]
+  },
   "predictive_checks": {
     "posterior_predictive": {
       "check_type": "posterior_predictive",
@@ -142,6 +166,7 @@
     "sglt2i_source_backed_log_or_posterior",
     "metafor_fixed_effect_mean_alignment",
     "stan_prior_predictive_check_declared_priors",
-    "stan_posterior_predictive_check_y_rep"
+    "stan_posterior_predictive_check_y_rep",
+    "stan_joint_posterior_ranking_draw_summary"
   ]
 }
