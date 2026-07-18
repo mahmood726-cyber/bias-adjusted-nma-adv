@@ -1,5 +1,5 @@
 schema_version = "mlnmr_source_coverage/v1"
-checked_at = "2026-07-17"
+checked_at = "2026-07-18"
 status = "missing_source_backed_mlnmr_data"
 model_status = "simulated_reference_only"
 certification_effect = "none"
@@ -26,6 +26,7 @@ excluded_source_patterns = [
 ]
 source_search_summary = [
   "The 2026-07-17 bounded local and web source search is recorded in validation/mlnmr_source_search_2026_07_17.toml and found no admissible public trial IPD plus aggregate covariate NMA dataset under the allowed source boundary.",
+  "The 2026-07-18 follow-up audit is recorded in validation/mlnmr_source_search_2026_07_18.toml. It verified NCT00950248/PMID 32784117 as a legitimate single-trial public-source lead, but excluded it because it is not a connected IPD-plus-aggregate ML-NMR network.",
   "advanced-nma-pooling has reusable ML-NMR and multinma adapter infrastructure, but its example ML-NMR rows use synthetic study IDs and no source-backed NCT, PMID, DOI, or open-access article identity.",
   "Public multinma plaque-psoriasis and NDMM examples are useful for adapter design, but available public examples use simulated/synthetic IPD or reconstructed survival inputs and cannot clear real ML-NMR validation.",
   "Protocol-only ICTRP and PACTR records remain admissible for registered-outcome anchors and completeness denominators, not for ML-NMR model-ready IPD rows, aggregate covariate distributions, or treatment effects.",

@@ -15,6 +15,7 @@ from bias_nma_adv.mlnmr_coverage import (
 ROOT = Path(__file__).resolve().parents[1]
 COVERAGE = ROOT / "validation" / "mlnmr_source_coverage.toml"
 SOURCE_SEARCH = ROOT / "validation" / "mlnmr_source_search_2026_07_17.toml"
+SOURCE_SEARCH_FOLLOWUP = ROOT / "validation" / "mlnmr_source_search_2026_07_18.toml"
 
 
 def test_mlnmr_source_coverage_records_current_real_data_blocker():
@@ -67,7 +68,7 @@ def test_mlnmr_source_coverage_summary_is_validation_status_ready():
 
     assert summary == {
         "schema_version": MLNMR_SOURCE_COVERAGE_SCHEMA_VERSION,
-        "checked_at": "2026-07-17",
+        "checked_at": "2026-07-18",
         "status": "missing_source_backed_mlnmr_data",
         "model_status": "simulated_reference_only",
         "registered_benchmark_ids": [],
@@ -156,6 +157,32 @@ def test_mlnmr_source_search_audit_records_excluded_candidates():
     assert "simulated" in reasons
     assert "nct" in reasons
     assert "pmid" in reasons
+
+
+def test_mlnmr_followup_source_search_excludes_single_trial_ipd_leads():
+    with SOURCE_SEARCH_FOLLOWUP.open("rb") as handle:
+        audit = tomllib.load(handle)
+
+    assert audit["schema_version"] == "mlnmr_source_search/v1"
+    assert audit["checked_at"] == "2026-07-18"
+    assert audit["status"] == "no_admissible_real_mlnmr_domain_found"
+    assert "clinicaltrials_gov" in audit["allowed_evidence_sources"]
+    assert "pubmed_abstract" in audit["allowed_evidence_sources"]
+    assert "open_access_paper" in audit["allowed_evidence_sources"]
+
+    candidates = {candidate["id"]: candidate for candidate in audit["candidates"]}
+    ippoms = candidates["nct00950248_ippoms_single_trial_lead"]
+    assert ippoms["nct_id"] == "NCT00950248"
+    assert ippoms["pmid"] == "32784117"
+    assert ippoms["eligibility"] == "excluded"
+    assert "single completed trial" in ippoms["exclusion_reason"]
+    assert "connected IPD-plus-aggregate treatment network" in ippoms["exclusion_reason"]
+
+    reasons = " ".join(candidate["exclusion_reason"].lower() for candidate in candidates.values())
+    assert "pseudo-ipd" in reasons
+    assert "simulated" in reasons
+    assert "synthetic" in reasons
+    assert "aggregate covariate" in reasons
 
 
 def _coverage_to_mapping(coverage: MLNMRSourceCoverage) -> dict[str, object]:

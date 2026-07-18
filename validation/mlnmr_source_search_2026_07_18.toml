@@ -1,0 +1,87 @@
+schema_version = "mlnmr_source_search/v1"
+checked_at = "2026-07-18"
+status = "no_admissible_real_mlnmr_domain_found"
+purpose = "Follow-up source-search audit for real ML-NMR validation data under the project source boundary."
+allowed_evidence_sources = ["aact_clinicaltrials_gov", "clinicaltrials_gov", "ema_epar", "fda_review", "open_access_paper", "pactr_results", "pubmed_abstract", "who_ictrp_results"]
+required_admissible_components = [
+  "public randomized-trial IPD rows with treatment, outcome, covariates, and source identity",
+  "source-bound aggregate covariate distributions for at least one connected aggregate study",
+  "shared treatment/outcome/estimand mapping between IPD and aggregate studies",
+  "NCT, PMID, DOI, or open-access article identity validation",
+  "covariate-overlap diagnostics",
+  "multinma ML-NMR reference output before certification",
+]
+search_limit = "This audit records candidates found in bounded local portfolio checks plus direct public-source checks. It is an evidence gate, not proof that no admissible dataset exists globally."
+
+[[searches]]
+source = "local_portfolio_search"
+query = "wasserstein worldipd advanced-nma-pooling mlnmr ipd aggregate covariates source-backed NCT PMID DOI"
+result = "Local portfolio repositories contained reusable ML-NMR, survival, transportability, and IPD-discovery infrastructure, but no connected public randomized-trial IPD plus aggregate-covariate NMA dataset with source-bound rows."
+
+[[searches]]
+source = "clinicaltrials_gov_api"
+query = "NCT00950248"
+result = "ClinicalTrials.gov confirms NCT00950248 is a completed interventional IPPoMS trial with results and enrollment 85, but it is a single-trial lead rather than a connected ML-NMR network."
+
+[[searches]]
+source = "pubmed_esummary"
+query = "PMID 32784117"
+result = "PubMed confirms the matching open literature identity: Idebenone does not inhibit disability progression in primary progressive MS, Multiple Sclerosis and Related Disorders, 2020 Oct, DOI 10.1016/j.msard.2020.102434."
+
+[[searches]]
+source = "web_search"
+query = "open access randomized trial supplementary individual participant data treatment outcome baseline covariates csv placebo; multilevel network meta-regression public IPD aggregate data dataset"
+result = "Search hits were single-trial IPD leads, protocols, simulated or synthetic examples, requester-controlled IPD statements, or method vignettes; none provided an admissible connected ML-NMR validation domain."
+
+[[candidates]]
+id = "nct00950248_ippoms_single_trial_lead"
+name = "IPPoMS idebenone primary progressive multiple sclerosis trial"
+source_kind = "clinicaltrials_gov_pubmed_open_article_identity"
+nct_id = "NCT00950248"
+pmid = "32784117"
+doi = "10.1016/j.msard.2020.102434"
+urls = [
+  "https://clinicaltrials.gov/study/NCT00950248",
+  "https://pubmed.ncbi.nlm.nih.gov/32784117/",
+]
+eligibility = "excluded"
+exclusion_reason = "The source identity is valid and potentially useful for future IPD discovery, but this is a single completed trial lead. It does not provide a connected IPD-plus-aggregate treatment network, source-bound aggregate covariate distributions, or a multinma ML-NMR reference run."
+usable_for = "future single-trial IPD provenance probing only"
+
+[[candidates]]
+id = "portfolio_wasserstein_survival_reconstruction"
+name = "wasserstein and survival/KM reconstruction portfolio assets"
+source_kind = "local_portfolio_infrastructure"
+eligibility = "excluded"
+exclusion_reason = "These assets can support curve reconstruction and survival validation design, but pseudo-IPD reconstructed from KM curves is explicitly excluded from real ML-NMR validation unless labelled non-real and kept out of the ML-NMR source-backed gate."
+usable_for = "non-certifying survival reconstruction validation"
+
+[[candidates]]
+id = "worldipd_and_ipd_availability_caches"
+name = "WorldIPD-style public IPD availability caches"
+source_kind = "local_portfolio_or_public_data_hub"
+eligibility = "excluded"
+exclusion_reason = "The located records mostly describe IPD sharing statements, requester portals, or availability metadata. They do not place public row-level randomized-trial IPD with treatment, outcome, covariates, and source identity on disk."
+usable_for = "future discovery and contact-denominator tracking"
+
+[[candidates]]
+id = "multinma_documentation_examples_rechecked"
+name = "multinma ML-NMR documentation examples"
+source_kind = "official_method_documentation"
+urls = [
+  "https://dmphillippo.github.io/multinma/articles/example_plaque_psoriasis.html",
+  "https://dmphillippo.github.io/multinma/articles/example_multiple_myeloma.html",
+]
+eligibility = "excluded"
+exclusion_reason = "The examples remain suitable reference-adapter scaffolds, but the public package examples rely on simulated, synthetic, or reconstructed inputs rather than source-backed public randomized-trial IPD rows under this repository's evidence boundary."
+usable_for = "multinma adapter design and simulated smoke tests only"
+
+[[candidate_policy]]
+candidate_class = "single_trial_public_ipd_lead"
+eligibility = "excluded_from_real_mlnmr_validation"
+reason = "A single public trial with possible row-level data can support future data-ingestion tests, but ML-NMR validation requires at least one public IPD study plus connected aggregate evidence with shared treatments, outcome, estimand, and source-bound aggregate covariate distributions."
+
+[[candidate_policy]]
+candidate_class = "protocol_only_ictrp_or_pactr"
+eligibility = "excluded_from_model_ready_mlnmr_effects"
+reason = "Protocol-only registry records can anchor registered outcomes and completeness denominators, but cannot supply IPD rows, aggregate covariate distributions, or model-ready treatment effects."

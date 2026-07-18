@@ -116,6 +116,7 @@ status = "planned"
 evidence_artifacts = [
   "validation/dependency_preflights/tier1_r_dependency_preflight.toml",
   "validation/mlnmr_source_search_2026_07_17.toml",
+  "validation/mlnmr_source_search_2026_07_18.toml",
 ]
 required_next_artifacts = [
   "public_ipd_or_aggregate_covariate_fixture",
@@ -223,6 +224,7 @@ evidence_artifacts = [
   "validation/large_scale_validation.toml",
   "validation/mlnmr_source_coverage.toml",
   "validation/mlnmr_source_search_2026_07_17.toml",
+  "validation/mlnmr_source_search_2026_07_18.toml",
   "validation/validation_status.json",
 ]
 required_next_artifacts = [
