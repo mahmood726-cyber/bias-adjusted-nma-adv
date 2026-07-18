@@ -136,7 +136,6 @@ evidence_artifacts = [
 ]
 required_next_artifacts = [
   "MBNMAdose_reference_run",
-  "JAGS_runtime_for_MBNMAdose_model_execution",
   "multi_trial_dose_response_network",
   "shared_control_covariance_handling",
 ]
@@ -155,7 +154,6 @@ evidence_artifacts = [
 ]
 required_next_artifacts = [
   "crossnma_reference_run",
-  "JAGS_runtime_for_crossnma_rjags",
   "design_bias_prior_sensitivity",
   "compatible_estimand_rct_nrs_public_fixture",
 ]
