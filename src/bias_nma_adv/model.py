@@ -119,6 +119,19 @@ class AdvancedNMAFitResult:
             coeff[idx] = val
 
 
+def _assemble_block_diagonal(mats: list[np.ndarray]) -> np.ndarray:
+    """Assemble per-study covariance blocks into one block-diagonal matrix."""
+
+    tot_size = sum(int(mat.shape[0]) for mat in mats)
+    out = np.zeros((tot_size, tot_size), dtype=float)
+    cursor = 0
+    for mat in mats:
+        size = int(mat.shape[0])
+        out[cursor : cursor + size, cursor : cursor + size] = mat
+        cursor += size
+    return out
+
+
 @dataclass(frozen=True)
 class _StudyBlock:
     study_id: str
@@ -127,6 +140,7 @@ class _StudyBlock:
     covariates: dict[str, float]
     y: np.ndarray
     v: np.ndarray
+    v_unweighted: np.ndarray
     trt_plus: tuple[str, ...]
     trt_minus: tuple[str, ...]
     baseline_events: float
@@ -410,13 +424,23 @@ class AdvancedBiasAdjustedNMAPooler:
             # 6. Fit standard REML / GLS with Prior Shrinkage and Kenward-Roger Correction
             taus_dict = {d: 0.0 for d in unique_designs}
             tau_method = "common_effect"
+            # tau2 is a heterogeneity parameter and must be estimated from sampling
+            # variance only. The ROB-inflated v is the Doi quality-effects weight and is
+            # retained for the GLS fit below, but feeding it to the REML objective makes
+            # tau2 absorb the risk-of-bias adjustment and produces a non-monotonic SE.
+            v_tau = _assemble_block_diagonal([block.v_unweighted for block in blocks])
+            if self.down_weight and not np.allclose(v_tau, v):
+                warnings_list.append(
+                    "Quality down-weighting is active: tau2 is estimated from uninflated "
+                    "sampling variances while the GLS fit uses ROB-weighted variances."
+                )
             if self.random_effects == "stratified" and y.shape[0] > x.shape[1]:
-                taus_vec = self._optimize_tau_reml_stratified(y, x, v, blocks, design_to_idx)
+                taus_vec = self._optimize_tau_reml_stratified(y, x, v_tau, blocks, design_to_idx)
                 for d, idx in design_to_idx.items():
                     taus_dict[d] = float(taus_vec[idx])
                 tau_method = "REML_stratified"
             elif self.random_effects is True and y.shape[0] > x.shape[1]:
-                tau_val = self._optimize_tau_reml(y, x, v)
+                tau_val = self._optimize_tau_reml(y, x, v_tau)
                 for d in unique_designs:
                     taus_dict[d] = tau_val
                 tau_method = "REML"
@@ -537,6 +561,7 @@ class AdvancedBiasAdjustedNMAPooler:
                             covariates=b.covariates,
                             y=b.y,
                             v=new_v,
+                            v_unweighted=b.v_unweighted,
                             trt_plus=b.trt_plus,
                             trt_minus=b.trt_minus,
                             baseline_events=b.baseline_events,
@@ -730,6 +755,7 @@ class AdvancedBiasAdjustedNMAPooler:
                     measure_type=measure_type,
                     cc=cc.get(arm.arm_id, 0.0)
                 )
+                variance_unweighted = variance
                 variance = variance / rob_weight
 
                 arm_effects.append({
@@ -737,6 +763,7 @@ class AdvancedBiasAdjustedNMAPooler:
                     "treatment_id": arm.treatment_id,
                     "mean": mean,
                     "variance": variance,
+                    "variance_unweighted": variance_unweighted,
                     "events": outcome.value,
                     "n": arm.n
                 })
@@ -759,6 +786,15 @@ class AdvancedBiasAdjustedNMAPooler:
             for idx, arm in enumerate(nonbaseline):
                 v[idx, idx] = baseline_var + arm["variance"]
 
+            baseline_var_unweighted = baseline["variance_unweighted"]
+            v_unweighted = np.full(
+                (len(nonbaseline), len(nonbaseline)), baseline_var_unweighted, dtype=float
+            )
+            for idx, arm in enumerate(nonbaseline):
+                v_unweighted[idx, idx] = (
+                    baseline_var_unweighted + arm["variance_unweighted"]
+                )
+
             blocks.append(_StudyBlock(
                 study_id=study_id,
                 design=design,
@@ -766,6 +802,7 @@ class AdvancedBiasAdjustedNMAPooler:
                 covariates=covariates,
                 y=y,
                 v=v,
+                v_unweighted=v_unweighted,
                 trt_plus=tuple(arm["treatment_id"] for arm in nonbaseline),
                 trt_minus=tuple(baseline["treatment_id"] for _ in nonbaseline),
                 baseline_events=baseline["events"],

@@ -534,3 +534,35 @@ def test_exact_binomial_rare_events():
     assert "B" in fit.treatment_effects
     assert fit.treatment_effects["B"] > 0.0
     assert fit.treatment_ses["B"] > 0.0
+
+
+def test_tau2_is_estimated_from_uninflated_variance_and_se_is_monotone_in_rob():
+    """tau2 is a property of the data, not of the ROB weight applied to it.
+
+    Regression test for two coupled defects: the ROB-inflated variance was fed to
+    the REML objective, so tau2 absorbed the risk-of-bias adjustment; a side effect
+    was a non-monotonic standard error where a heavier penalty bought a tighter
+    interval.
+    """
+
+    def fit_at(rob: float):
+        dataset = EvidenceDataset()
+        for study_id, effect in (("S1", 0.20), ("S2", 0.55), ("S3", 0.35)):
+            dataset.add_study(study_id, "rct", rob_weight=rob)
+            dataset.add_arm(study_id, "control", "A", 200)
+            dataset.add_arm(study_id, "active", "B", 200)
+            dataset.add_outcome_ad(study_id, "control", "O1", "continuous", 0.0, se=0.10)
+            dataset.add_outcome_ad(study_id, "active", "O1", "continuous", effect, se=0.10)
+        return AdvancedBiasAdjustedNMAPooler(
+            random_effects=True, down_weight=True, hksj=True
+        ).fit(dataset, "O1", reference_treatment="A")
+
+    full = fit_at(1.0)
+    penalised = fit_at(0.25)
+
+    # tau2 must not move when only the ROB weight changes.
+    assert penalised.taus == pytest.approx(full.taus)
+    # A penalty must never buy confidence.
+    assert penalised.treatment_ses["B"] >= full.treatment_ses["B"]
+    # The split is surfaced, not silent.
+    assert any("uninflated" in warning for warning in penalised.warnings)
