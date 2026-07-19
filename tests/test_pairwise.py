@@ -154,32 +154,60 @@ def test_tau2_cross_check_report_compares_estimators_without_certifying_choice()
     report = tau2_cross_check_report(y, v)
 
     by_method = {row.method: row for row in report.diagnostics}
-    assert set(by_method) == {"FE", "DL", "PM", "REML"}
+    # FE is a common-effect fit, not a tau2 estimator, and must not appear here.
+    assert set(by_method) == {"DL", "PM", "REML"}
     assert all(row.status == "passed" for row in report.diagnostics)
     assert report.primary_method == "REML"
-    assert report.tau2_min == pytest.approx(0.0)
+    # Previously 0.0 -- FE hard-sets tau2=0, which pinned tau2_min to the boundary.
+    assert report.tau2_min is not None and report.tau2_min > 0.0
     assert report.tau2_max is not None
     assert report.tau2_max > 0.0
     assert report.max_abs_estimate_delta is not None
     assert report.max_abs_se_delta is not None
-    assert report.estimate_signs == {"FE": -1, "DL": 1, "PM": 1, "REML": 1}
-    assert set(report.methods_crossing_null) == {"FE", "DL", "PM", "REML"}
+    # FE remains in the DESCRIPTIVE maps for context...
+    assert report.estimate_signs == {"DL": 1, "PM": 1, "REML": 1, "FE": -1}
+    assert set(report.methods_crossing_null) == {"DL", "PM", "REML", "FE"}
     assert any("Alternative tau2" in warning for warning in report.warnings)
-    assert any("change sign" in warning for warning in report.warnings)
+    # ...but it must not drive an ALARM. The old sign-change warning here was a
+    # pure FE artifact: FE estimated -0.002, i.e. noise the other side of zero
+    # from three tau2 estimators that all agree on +1.
+    assert not any("change sign" in warning for warning in report.warnings)
+    assert not any("Null-crossing" in warning for warning in report.warnings)
+
+    # FE is still reported, just quarantined from every aggregate.
+    assert report.common_effect_reference is not None
+    assert report.common_effect_reference.method == "FE"
+    assert report.common_effect_reference.tau2 == pytest.approx(0.0)
 
 
-def test_tau2_cross_check_warns_when_estimators_change_sign_or_null_status():
-    y = np.array([-0.3, 1.0, 1.0])
-    v = np.array([0.0001, 1.0, 1.0])
+def test_tau2_cross_check_rejects_common_effect_method_as_tau2_estimator():
+    """Seeded-defect guard: a caller must not be able to reintroduce FE."""
+    y = np.array([-0.7, -0.1, 0.2, 0.8])
+    v = np.array([0.04, 0.05, 0.06, 0.05])
+
+    with pytest.raises(PairwiseMetaError, match="common-effect method"):
+        tau2_cross_check_report(y, v, methods=("FE", "DL", "PM", "REML"))
+    with pytest.raises(PairwiseMetaError, match="common-effect method"):
+        tau2_cross_check_report(y, v, methods=("DL", "REML"), primary_method="FE")
+    with pytest.raises(PairwiseMetaError, match="common-effect method"):
+        numerical_stress_report(y, v, methods=("FE", "DL", "PM", "REML"))
+
+
+def test_tau2_cross_check_still_warns_on_genuine_estimator_sign_change():
+    """The sign alarm must survive removing FE -- proven on a real DL/PM/REML split.
+
+    DL gives -0.0079 (tau2=0.215) while PM/REML give +0.006 (tau2~0.48). No
+    common-effect fit is involved, so this is genuine estimator disagreement.
+    """
+    y = np.array([-0.812, 0.025, 0.887, 0.576, -0.565])
+    v = np.array([0.012085, 0.000616, 0.075931, 0.001391, 0.018443])
 
     report = tau2_cross_check_report(y, v)
 
-    assert report.estimate_signs["FE"] == -1
-    assert {report.estimate_signs[method] for method in ("DL", "PM", "REML")} == {1}
-    assert "FE" not in report.methods_crossing_null
-    assert {"DL", "PM", "REML"} <= set(report.methods_crossing_null)
+    assert report.estimate_signs["DL"] == -1
+    assert report.estimate_signs["PM"] == 1
+    assert report.estimate_signs["REML"] == 1
     assert any("change sign" in warning for warning in report.warnings)
-    assert any("Null-crossing status differs" in warning for warning in report.warnings)
 
 
 def test_numerical_stress_report_flags_dominant_study_and_boundary_tau2():

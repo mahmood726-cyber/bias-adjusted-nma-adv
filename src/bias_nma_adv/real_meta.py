@@ -431,6 +431,13 @@ def _pairwise_cross_check_payload(report: PairwiseTau2CrossCheckReport) -> dict[
         "methods_crossing_null": list(report.methods_crossing_null),
         "warnings": list(report.warnings),
         "diagnostics": [asdict(row) for row in report.diagnostics],
+        # FE is reported as context but is excluded from every aggregate above:
+        # it hard-sets tau2=0 and is not a tau2 estimator.
+        "common_effect_reference": (
+            asdict(report.common_effect_reference)
+            if report.common_effect_reference is not None
+            else None
+        ),
     }
 
 

@@ -22,6 +22,19 @@ class PairwiseMetaError(ValueError):
     """Raised when pairwise meta-analysis input or options are invalid."""
 
 
+#: Methods that assume homogeneity and hard-set tau2 = 0. These are NOT tau2
+#: estimators: including one in a tau2 cross-check makes ``tau2_min`` identically
+#: zero, so the "estimators disagree" and "boundary-sensitive" warnings fire on
+#: any dataset with tau2 > 0, and its narrower CI drives spurious null-crossing
+#: and sign-change alarms. A common-effect fit is still useful context, so it is
+#: reported separately rather than dropped.
+COMMON_EFFECT_METHODS: frozenset[str] = frozenset({"FE"})
+
+#: Default tau2 estimator set for cross-checks. Deliberately excludes
+#: ``COMMON_EFFECT_METHODS``.
+DEFAULT_TAU2_METHODS: tuple[str, ...] = ("DL", "PM", "REML")
+
+
 @dataclass(frozen=True)
 class PairwiseMetaResult:
     method: str
@@ -115,7 +128,12 @@ class PairwiseMethodDiagnostic:
 
 @dataclass(frozen=True)
 class PairwiseTau2CrossCheckReport:
-    """Cross-check pairwise estimates under alternative tau2 estimators."""
+    """Cross-check pairwise estimates under alternative tau2 estimators.
+
+    Only genuine tau2 estimators contribute to the aggregate heterogeneity
+    fields. A common-effect fit is reported separately in
+    ``common_effect_reference`` for context; see ``COMMON_EFFECT_METHODS``.
+    """
 
     k: int
     primary_method: str
@@ -127,6 +145,7 @@ class PairwiseTau2CrossCheckReport:
     estimate_signs: dict[str, int]
     methods_crossing_null: tuple[str, ...]
     warnings: tuple[str, ...]
+    common_effect_reference: PairwiseMethodDiagnostic | None = None
 
 
 @dataclass(frozen=True)
@@ -447,15 +466,42 @@ def tau2_cross_check_report(
     effects: np.ndarray,
     variances: np.ndarray,
     *,
-    methods: tuple[str, ...] = ("FE", "DL", "PM", "REML"),
+    methods: tuple[str, ...] = DEFAULT_TAU2_METHODS,
     primary_method: str = "REML",
     hksj: bool = False,
     hksj_floor: bool = True,
+    common_effect_method: str | None = "FE",
 ) -> PairwiseTau2CrossCheckReport:
-    """Fit multiple tau2 conventions and report deterministic differences."""
+    """Fit multiple tau2 conventions and report deterministic differences.
+
+    ``methods`` must contain only genuine tau2 estimators. Passing a
+    common-effect method raises: it hard-sets tau2 = 0, which corrupts every
+    aggregate in this report. Use ``common_effect_method`` to obtain a
+    common-effect fit as separately-reported context.
+    """
 
     y, v = _validate_effects(effects, variances)
     primary = _normalise_method(primary_method)
+
+    # Raising guard, not merely a changed default: a caller passing an explicit
+    # tuple must not be able to silently reintroduce the defect.
+    offending = tuple(
+        method for method in methods if _normalise_method(method) in COMMON_EFFECT_METHODS
+    )
+    if offending:
+        raise PairwiseMetaError(
+            f"{', '.join(sorted(set(offending)))} is a common-effect method, not a tau2 "
+            "estimator, and must not appear in 'methods' (it hard-sets tau2=0, which makes "
+            "tau2_min identically 0 and fires the disagreement/boundary/sign warnings "
+            "unconditionally). Pass it as common_effect_method= instead."
+        )
+    if _normalise_method(primary) in COMMON_EFFECT_METHODS:
+        raise PairwiseMetaError(
+            f"primary_method '{primary}' is a common-effect method, not a tau2 estimator."
+        )
+    if not methods:
+        raise PairwiseMetaError("at least one tau2 estimator is required.")
+
     diagnostics: list[PairwiseMethodDiagnostic] = []
     for method in methods:
         method_key = _normalise_method(method)
@@ -500,6 +546,36 @@ def tau2_cross_check_report(
             )
         )
 
+    # Common-effect context fit. Deliberately NOT appended to `diagnostics`, so it
+    # cannot reach tau2_min/tau2_max, estimate_signs, methods_crossing_null or any
+    # warning below.
+    common_reference: PairwiseMethodDiagnostic | None = None
+    if common_effect_method is not None:
+        common_key = _normalise_method(common_effect_method)
+        if common_key not in COMMON_EFFECT_METHODS:
+            raise PairwiseMetaError(
+                f"common_effect_method '{common_effect_method}' is not a common-effect "
+                f"method; expected one of {sorted(COMMON_EFFECT_METHODS)}."
+            )
+        try:
+            common_fit = fit_pairwise_meta(
+                y, v, method=common_key, hksj=hksj, hksj_floor=hksj_floor
+            )
+        except PairwiseMetaError as exc:
+            common_reference = PairwiseMethodDiagnostic(
+                method=common_key, status="failed", estimate=None, se=None,
+                ci_low=None, ci_high=None, tau2=None, q=None, df=None,
+                warnings=(), error=str(exc),
+            )
+        else:
+            common_reference = PairwiseMethodDiagnostic(
+                method=common_fit.method, status="passed",
+                estimate=float(common_fit.estimate), se=float(common_fit.se),
+                ci_low=float(common_fit.ci_low), ci_high=float(common_fit.ci_high),
+                tau2=float(common_fit.tau2), q=float(common_fit.q),
+                df=int(common_fit.df), warnings=tuple(common_fit.warnings), error=None,
+            )
+
     passed = [item for item in diagnostics if item.status == "passed"]
     warnings: list[str] = []
     if not any(item.method == primary and item.status == "passed" for item in diagnostics):
@@ -507,19 +583,34 @@ def tau2_cross_check_report(
     if len(passed) < 2:
         warnings.append("Fewer than two tau2 methods passed; cross-check is weak.")
 
+    # Every JUDGEMENT below (tau2_min/max, deltas, warnings) is computed over tau2
+    # estimators only -- `passed`. The common-effect fit is additionally listed in
+    # the two DESCRIPTIVE maps for context, because seeing the common-effect sign
+    # next to the random-effects ones is informative; it just must never drive an
+    # alarm. `_crossing` (tau2 estimators only) is what the warning uses.
     tau2_values = [float(item.tau2) for item in passed if item.tau2 is not None]
     estimates = [float(item.estimate) for item in passed if item.estimate is not None]
     ses = [float(item.se) for item in passed if item.se is not None]
+
+    descriptive = list(passed)
+    if common_reference is not None and common_reference.status == "passed":
+        descriptive.append(common_reference)
+
     estimate_signs = {
         item.method: _sign(float(item.estimate))
-        for item in passed
+        for item in descriptive
         if item.estimate is not None
     }
-    methods_crossing_null = tuple(
-        item.method
-        for item in passed
-        if item.ci_low is not None and item.ci_high is not None and item.ci_low <= 0.0 <= item.ci_high
-    )
+
+    def _crosses_null(item: PairwiseMethodDiagnostic) -> bool:
+        return (
+            item.ci_low is not None
+            and item.ci_high is not None
+            and item.ci_low <= 0.0 <= item.ci_high
+        )
+
+    methods_crossing_null = tuple(item.method for item in descriptive if _crosses_null(item))
+    _crossing_tau2_only = tuple(item.method for item in passed if _crosses_null(item))
     tau2_min = min(tau2_values) if tau2_values else None
     tau2_max = max(tau2_values) if tau2_values else None
     max_abs_estimate_delta = (
@@ -528,10 +619,16 @@ def tau2_cross_check_report(
     max_abs_se_delta = max(ses) - min(ses) if len(ses) >= 2 else None
     if tau2_min is not None and tau2_max is not None and tau2_max > tau2_min:
         warnings.append("Alternative tau2 estimators produce different heterogeneity estimates.")
-    nonzero_signs = {sign for sign in estimate_signs.values() if sign != 0}
+    # Sign/null-crossing alarms are computed over tau2 estimators ONLY. Including a
+    # common-effect fit here made both fire unconditionally: it hard-sets tau2=0, so
+    # its estimate and CI differ from every random-effects fit by construction.
+    tau2_signs = {
+        _sign(float(item.estimate)) for item in passed if item.estimate is not None
+    }
+    nonzero_signs = {sign for sign in tau2_signs if sign != 0}
     if len(nonzero_signs) > 1:
         warnings.append("Point estimates change sign across tau2 estimators.")
-    if methods_crossing_null and len(methods_crossing_null) < len(passed):
+    if _crossing_tau2_only and len(_crossing_tau2_only) < len(passed):
         warnings.append("Null-crossing status differs across tau2 estimators.")
 
     return PairwiseTau2CrossCheckReport(
@@ -545,6 +642,7 @@ def tau2_cross_check_report(
         estimate_signs=estimate_signs,
         methods_crossing_null=methods_crossing_null,
         warnings=tuple(warnings),
+        common_effect_reference=common_reference,
     )
 
 
@@ -560,7 +658,7 @@ def numerical_stress_report(
     effects: np.ndarray,
     variances: np.ndarray,
     *,
-    methods: tuple[str, ...] = ("FE", "DL", "PM", "REML"),
+    methods: tuple[str, ...] = DEFAULT_TAU2_METHODS,
     dominant_weight_threshold: float = 0.80,
 ) -> PairwiseNumericalStressReport:
     """Return deterministic sparse/dominant-study and tau2 stress diagnostics."""
@@ -665,7 +763,7 @@ def reml_local_minimum_diagnostic(
 def pairwise_numerical_stress_matrix(
     scenarios: dict[str, tuple[np.ndarray, np.ndarray]],
     *,
-    methods: tuple[str, ...] = ("FE", "DL", "PM", "REML"),
+    methods: tuple[str, ...] = DEFAULT_TAU2_METHODS,
     dominant_weight_threshold: float = 0.80,
     n_grid: int = 51,
 ) -> PairwiseNumericalStressMatrix:
