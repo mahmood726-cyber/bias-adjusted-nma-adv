@@ -164,13 +164,13 @@ def test_tau2_cross_check_report_compares_estimators_without_certifying_choice()
     assert report.tau2_max > 0.0
     assert report.max_abs_estimate_delta is not None
     assert report.max_abs_se_delta is not None
-    # FE remains in the DESCRIPTIVE maps for context...
-    assert report.estimate_signs == {"DL": 1, "PM": 1, "REML": 1, "FE": -1}
-    assert set(report.methods_crossing_null) == {"DL", "PM", "REML", "FE"}
+    # FE is fully quarantined: it appears in NO field of the report body.
+    assert report.estimate_signs == {"DL": 1, "PM": 1, "REML": 1}
+    assert set(report.methods_crossing_null) == {"DL", "PM", "REML"}
     assert any("Alternative tau2" in warning for warning in report.warnings)
-    # ...but it must not drive an ALARM. The old sign-change warning here was a
-    # pure FE artifact: FE estimated -0.002, i.e. noise the other side of zero
-    # from three tau2 estimators that all agree on +1.
+    # The old sign-change warning here was a pure FE artifact: FE estimated
+    # -0.002, i.e. noise the other side of zero from three tau2 estimators that
+    # all agree on +1.
     assert not any("change sign" in warning for warning in report.warnings)
     assert not any("Null-crossing" in warning for warning in report.warnings)
 

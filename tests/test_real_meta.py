@@ -256,12 +256,14 @@ def test_real_meta_benchmark_runs_frequentist_and_bayesian_models():
     assert pairwise["reml_hksj"]["hksj_q_factor"] >= 1.0
     assert pairwise["reml_hksj"]["pi_low"] < pairwise["reml_hksj"]["estimate"] < pairwise["reml_hksj"]["pi_high"]
     assert pairwise["tau2_cross_check"]["primary_method"] == "REML"
+    # FE is a common-effect fit, not a tau2 estimator; reported separately in
+    # tau2_cross_check.common_effect_reference.
     assert pairwise["tau2_cross_check"]["estimate_signs"] == {
-        "FE": -1,
         "DL": -1,
         "PM": -1,
         "REML": -1,
     }
+    assert pairwise["tau2_cross_check"]["common_effect_reference"]["method"] == "FE"
     assert set(pairwise["tau2_cross_check"]["methods_crossing_null"]) == set()
 
     bayes = result["bayesian"]

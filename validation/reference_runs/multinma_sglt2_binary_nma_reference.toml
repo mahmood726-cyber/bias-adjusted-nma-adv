@@ -20,7 +20,7 @@ notes = ["This validates one source-backed two-treatment SGLT2 binomial NMA agai
 [input_sha256]
 "validation/real_meta/sglt2_hf_primary_events.csv" = "a678cce8eb3cedaeaab77c2800ee56cb7b806134bdd262233cf56884748e13a8"
 "validation/real_meta/sglt2_hf_primary_sources.toml" = "d39cf4402f9695bc43aabc94e9678b7a2d487376b424934a794b20e674e24f4d"
-"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "53144036e8d87aa82c58176828b768c11451f0e6a6061e2e96c86f5a957dd0ba"
+"validation/real_meta/sglt2_hf_primary_benchmark.toml" = "96dd3f1fe972f85028d1f5b96be812ade679736432132bba07a41a792819f61a"
 "external/r/multinma_sglt2_binary_nma.R" = "9cc386f3a84b17a1d85e9d22c126a4e22028734777dd42e2895b216d877d841e"
 
 [output_sha256]

@@ -583,29 +583,22 @@ def tau2_cross_check_report(
     if len(passed) < 2:
         warnings.append("Fewer than two tau2 methods passed; cross-check is weak.")
 
-    # Every JUDGEMENT below (tau2_min/max, deltas, warnings) is computed over tau2
-    # estimators only -- `passed`. The common-effect fit is additionally listed in
-    # the two DESCRIPTIVE maps for context, because seeing the common-effect sign
-    # next to the random-effects ones is informative; it just must never drive an
-    # alarm. `_crossing` (tau2 estimators only) is what the warning uses.
+    # FE is FULLY quarantined: it contributes to no field of this report and is
+    # returned separately as `common_effect_reference`. A common-effect fit
+    # estimates a different estimand and hard-sets tau2 = 0, so its presence in
+    # any of these maps -- even a purely descriptive one -- invites exactly the
+    # misreading that the warnings used to make automatically.
     tau2_values = [float(item.tau2) for item in passed if item.tau2 is not None]
     estimates = [float(item.estimate) for item in passed if item.estimate is not None]
     ses = [float(item.se) for item in passed if item.se is not None]
 
-    descriptive = list(passed)
-    if common_reference is not None and common_reference.status == "passed":
-        descriptive.append(common_reference)
-
     estimate_signs = {
         item.method: _sign(float(item.estimate))
-        for item in descriptive
+        for item in passed
         if item.estimate is not None
     }
 
     methods_crossing_null = tuple(
-        item.method for item in descriptive if crosses_log_scale_null(item)
-    )
-    _crossing_tau2_only = tuple(
         item.method for item in passed if crosses_log_scale_null(item)
     )
     tau2_min = min(tau2_values) if tau2_values else None
@@ -616,16 +609,10 @@ def tau2_cross_check_report(
     max_abs_se_delta = max(ses) - min(ses) if len(ses) >= 2 else None
     if tau2_min is not None and tau2_max is not None and tau2_max > tau2_min:
         warnings.append("Alternative tau2 estimators produce different heterogeneity estimates.")
-    # Sign/null-crossing alarms are computed over tau2 estimators ONLY. Including a
-    # common-effect fit here made both fire unconditionally: it hard-sets tau2=0, so
-    # its estimate and CI differ from every random-effects fit by construction.
-    tau2_signs = {
-        _sign(float(item.estimate)) for item in passed if item.estimate is not None
-    }
-    nonzero_signs = {sign for sign in tau2_signs if sign != 0}
+    nonzero_signs = {sign for sign in estimate_signs.values() if sign != 0}
     if len(nonzero_signs) > 1:
         warnings.append("Point estimates change sign across tau2 estimators.")
-    if _crossing_tau2_only and len(_crossing_tau2_only) < len(passed):
+    if methods_crossing_null and len(methods_crossing_null) < len(passed):
         warnings.append("Null-crossing status differs across tau2 estimators.")
 
     return PairwiseTau2CrossCheckReport(

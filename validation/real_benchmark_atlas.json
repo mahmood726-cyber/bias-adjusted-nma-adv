@@ -18,7 +18,7 @@
     {
       "artifact": "validation/real_meta/sglt2_hf_primary_benchmark.toml",
       "artifact_schema_version": "real_meta_benchmark/v1",
-      "artifact_sha256": "53144036e8d87aa82c58176828b768c11451f0e6a6061e2e96c86f5a957dd0ba",
+      "artifact_sha256": "96dd3f1fe972f85028d1f5b96be812ade679736432132bba07a41a792819f61a",
       "artifact_status": "local_pass",
       "certification_effect": "none",
       "domain": "binary_pairwise_meta",

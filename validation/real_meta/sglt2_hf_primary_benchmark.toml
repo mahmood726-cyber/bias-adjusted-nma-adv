@@ -164,7 +164,7 @@ tau2_min = 0.0
 tau2_max = 0.0
 max_abs_estimate_delta = 0.0
 max_abs_se_delta = 0.0
-estimate_signs = {FE = -1, DL = -1, PM = -1, REML = -1}
+estimate_signs = {DL = -1, PM = -1, REML = -1}
 methods_crossing_null = []
 warnings = []
 
