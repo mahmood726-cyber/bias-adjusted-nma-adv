@@ -167,3 +167,49 @@ This writes the full results payload to `output/simulation_results.json`.
 1. Hartung J, Knapp G. A refined method for the meta-analysis of random effects models with unequal variances. *Stat Med*. 2001;20(24):3875-3889.
 2. Sidik K, Jonkman JN. Robust variance estimation for random effects meta-analysis. *Comput Stat Data Anal*. 2006;50(12):3681-3701.
 3. Lu G, Ades AE. Combination of direct and indirect evidence in mixed treatment comparisons. *Stat Med*. 2004;23(21):3105-3124.
+
+## Population indirectness and the target estimand
+
+Two independent knobs declare *which population* an estimate refers to. Neither
+applies a numerical adjustment.
+
+- `StudyRecord.indirectness_mechanism` - a mechanism id from
+  `src/bias_nma_adv/indirectness_policy.toml` (e.g. `tolerability_run_in`,
+  `randomised_withdrawal`). This is GRADE **indirectness of population**
+  (applicability / transportability). It is **not** the network "indirect
+  comparison" sense - for that see `node_splitting.py`. Free-text detail goes in
+  `indirectness_note`, which requires a mechanism.
+- `AdvancedBiasAdjustedNMAPooler(target_population=...)` - either
+  `enriched_as_randomised` (default) or `unselected_target`.
+
+**No downgrade by default.** If the estimand being targeted *is* the enriched
+randomised population, an enrichment mechanism such as a run-in is not a
+limitation, and the default encodes that. A downgrade is only implied when
+`unselected_target` is claimed.
+
+**The two are coupled.** Claiming `target_population="unselected_target"` while
+any study carries an `indirectness_mechanism` raises unless
+`apply_population_indirectness=True`. This prevents silently asserting the
+unselected-population estimand on enriched data.
+
+**Dual-filing.** Mechanisms with `also_rob = true` in the policy file
+(`randomised_withdrawal`, `active_run_in_placebo_is_withdrawal`) compromise
+internal validity as well as applicability, and must additionally carry
+`rob_weight < 1.0`.
+
+**No run-in efficacy penalty is implemented, by design.** Enabling
+`apply_population_indirectness` records a declared sensitivity and emits a
+warning; the point estimate is unchanged. The available evidence does not
+support a numerical delta, and asserting one would claim an effect the data do
+not show. The policy schema deliberately has no `numerical_delta` field.
+
+**Risk of bias and population indirectness are separate domains** and live in
+separate fields. `rob_weight` carries risk of bias and enters the GLS fit as a
+Doi quality-effects variance weight. `indirectness_mechanism` carries population
+applicability and has no numerical effect. Sponsorship and attrition are risk of
+bias and route through `rob_weight`; run-in and enrichment are indirectness and
+do not.
+
+**tau2 is estimated from uninflated sampling variances** even when quality
+down-weighting is active, so the heterogeneity estimate does not absorb the
+risk-of-bias adjustment.
