@@ -814,3 +814,28 @@ def test_multi_arm_tau2_offdiagonal_changes_an_end_to_end_fit():
     # sign), so the claim is "biased", not "always understated".
     assert se_a < 0.70
     assert se_b < 0.95
+
+
+def test_hksj_degenerate_df_is_declared():
+    """A t(df<=2) HKSJ interval must announce itself as degenerate.
+
+    Observed in the wild: a 4-study / 3-parameter network under
+    hksj_df="studies" gave df=1, t=12.706, and OR 0.518 (0.0001-4678). That is
+    not a conservative interval, it is an uninformative one.
+    """
+    dataset = EvidenceDataset()
+    specs = {"S1": ("A", 40, 20), "S2": ("B", 44, 25), "S3": ("C", 38, 19), "S4": ("A", 41, 22)}
+    for sid, (drug, pl, dr) in specs.items():
+        dataset.add_study(sid, "rct")
+        dataset.add_arm(sid, f"{sid}p", "Placebo", 200)
+        dataset.add_arm(sid, f"{sid}d", drug, 200)
+        dataset.add_outcome_ad(sid, f"{sid}p", "O1", "binary", float(pl))
+        dataset.add_outcome_ad(sid, f"{sid}d", "O1", "binary", float(dr))
+
+    fit = AdvancedBiasAdjustedNMAPooler(
+        hksj=True, hksj_df="studies", exact_binomial=False
+    ).fit(dataset, "O1", reference_treatment="Placebo")
+
+    if fit.df <= 2:
+        assert any("HKSJ interval is degenerate" in w for w in fit.warnings), fit.warnings
+        assert any(f"df={fit.df}" in w for w in fit.warnings)

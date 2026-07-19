@@ -597,6 +597,21 @@ class AdvancedBiasAdjustedNMAPooler:
             if self.hksj:
                 q_factor = max(1.0, q_stat / df)
                 cov = cov * q_factor
+                # HKSJ uses t(df). At df<=2 the t quantile explodes -- t(1)=12.706,
+                # t(2)=4.303 -- so the interval stops being informative rather than
+                # merely wide: a 4-study / 3-parameter network under
+                # hksj_df="studies" yields df=1 and intervals spanning several
+                # orders of magnitude (observed: OR 0.518, CI 0.0001-4678). That is
+                # a degenerate interval, not a conservative one, and it must not be
+                # reported as though it were a normal HKSJ result.
+                if df <= 2:
+                    warnings_list.append(
+                        f"HKSJ interval is degenerate: df={df} (hksj_df='{self.hksj_df}', "
+                        f"n_studies={n_studies}, n_contrasts={n_contrasts}, "
+                        f"n_params={n_params}) gives t={scipy.stats.t.ppf(0.975, df):.3f}. "
+                        "Intervals at this df are not interpretable; use "
+                        "hksj_df='contrasts', add evidence, or disable HKSJ."
+                    )
 
             # Quality-Weight Sensitivity Perturbation Analysis
             weight_sensitivity_stds = {}
