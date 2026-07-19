@@ -97,16 +97,23 @@ def test_run_in_applicability_is_context_or_indirectness_not_rob_weight():
         "rct",
         rob_weight=1.0,
         covariates={"run_in": 1.0},
-        indirectness="enriched run-in population; GRADE indirectness review only",
+        indirectness_mechanism="tolerability_run_in",
+        indirectness_note="enriched run-in population; GRADE indirectness review only",
     )
 
     study = dataset.studies["S_RUNIN"]
     assert study.rob_weight == 1.0
     assert study.covariates["run_in"] == pytest.approx(1.0)
-    assert "GRADE indirectness" in study.indirectness
+    assert study.indirectness_mechanism == "tolerability_run_in"
+    assert "GRADE indirectness" in study.indirectness_note
 
     with pytest.raises(ValidationError, match="indirectness"):
-        dataset.add_study("S_BLANK", "rct", indirectness=" ")
+        dataset.add_study(
+            "S_BLANK",
+            "rct",
+            indirectness_mechanism="tolerability_run_in",
+            indirectness_note=" ",
+        )
 
 
 def test_input_source_subset_splits_published_from_registry_first_rows():
@@ -315,7 +322,7 @@ def test_redescending_outlier_sensitivity_rejects_invalid_configuration():
 
 def test_indirectness_flag_names_estimand_without_default_numeric_penalty():
     dataset = EvidenceDataset()
-    dataset.add_study("S1", "rct", indirectness="run-in enrichment")
+    dataset.add_study("S1", "rct", indirectness_mechanism="tolerability_run_in")
     dataset.add_arm("S1", "control", "A", 100)
     dataset.add_arm("S1", "active", "B", 100)
     dataset.add_outcome_ad("S1", "control", "O1", "binary", 10)
@@ -329,7 +336,7 @@ def test_indirectness_flag_names_estimand_without_default_numeric_penalty():
     sensitivity_fit = AdvancedBiasAdjustedNMAPooler(
         hksj=False,
         random_effects=False,
-        apply_indirectness=True,
+        apply_population_indirectness=True,
         target_population="unselected_target",
     ).fit(dataset, "O1", reference_treatment="A")
 
@@ -570,7 +577,7 @@ def test_tau2_is_estimated_from_uninflated_variance_and_se_is_monotone_in_rob():
 
 def _indirectness_dataset():
     dataset = EvidenceDataset()
-    dataset.add_study("S1", "rct", indirectness="run-in enrichment")
+    dataset.add_study("S1", "rct", indirectness_mechanism="tolerability_run_in")
     dataset.add_arm("S1", "control", "A", 100)
     dataset.add_arm("S1", "active", "B", 100)
     dataset.add_outcome_ad("S1", "control", "O1", "binary", 10)
@@ -594,7 +601,7 @@ def test_unselected_target_estimand_allowed_when_downgrade_is_declared():
         hksj=False,
         random_effects=False,
         target_population="unselected_target",
-        apply_indirectness=True,
+        apply_population_indirectness=True,
     ).fit(_indirectness_dataset(), "O1", reference_treatment="A")
     assert fit.target_population == "unselected_target"
 
@@ -604,3 +611,49 @@ def test_enriched_target_estimand_is_the_default_and_never_gated():
         _indirectness_dataset(), "O1", reference_treatment="A"
     )
     assert fit.target_population == "enriched_as_randomised"
+
+
+def test_indirectness_mechanism_rejects_unregistered_value():
+    """Free text is no longer accepted: the mechanism must come from the registry."""
+
+    dataset = EvidenceDataset()
+    with pytest.raises(ValidationError, match="indirectness_mechanism must be one of"):
+        dataset.add_study("S1", "rct", indirectness_mechanism="run-in enrichment")
+
+
+def test_randomised_withdrawal_must_dual_file_to_risk_of_bias():
+    """A contaminated control is not only an applicability problem."""
+
+    dataset = EvidenceDataset()
+    with pytest.raises(ValidationError, match="dual-filed"):
+        dataset.add_study("S1", "rct", indirectness_mechanism="randomised_withdrawal")
+
+    dataset.add_study(
+        "S2", "rct", rob_weight=0.8, indirectness_mechanism="randomised_withdrawal"
+    )
+    assert dataset.studies["S2"].indirectness_mechanism == "randomised_withdrawal"
+
+
+def test_indirectness_note_requires_a_mechanism():
+    dataset = EvidenceDataset()
+    with pytest.raises(ValidationError, match="requires an indirectness_mechanism"):
+        dataset.add_study("S1", "rct", indirectness_note="some free text")
+
+
+def test_indirectness_policy_registry_is_wellformed():
+    from bias_nma_adv.data import (
+        DUAL_FILED_INDIRECTNESS_MECHANISMS,
+        INDIRECTNESS_POLICIES,
+    )
+
+    assert "tolerability_run_in" in INDIRECTNESS_POLICIES
+    assert DUAL_FILED_INDIRECTNESS_MECHANISMS == {
+        "randomised_withdrawal",
+        "active_run_in_placebo_is_withdrawal",
+    }
+    assert all(
+        policy.domain == "indirectness_population"
+        for policy in INDIRECTNESS_POLICIES.values()
+    )
+    # The registry names an estimand; it must not carry a numerical adjustment.
+    assert not any(hasattr(policy, "numerical_delta") for policy in INDIRECTNESS_POLICIES.values())

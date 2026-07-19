@@ -38,7 +38,11 @@ package-dir = { "" = "src" }
 license-files = ["LICENSE"]
 
 [tool.setuptools.package-data]
-bias_nma_adv = ["source_type_policy.toml", "study_design_policy.toml"]
+bias_nma_adv = [
+  "source_type_policy.toml",
+  "study_design_policy.toml",
+  "indirectness_policy.toml",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

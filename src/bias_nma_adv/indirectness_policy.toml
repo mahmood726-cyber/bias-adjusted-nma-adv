@@ -1,0 +1,59 @@
+schema_version = "indirectness_policy/v1"
+
+# GRADE indirectness-of-population mechanisms (applicability / transportability).
+# This is NOT the network "indirect comparison" sense - see node_splitting.py.
+#
+# domain   : the GRADE/RoB domain the mechanism belongs to.
+# also_rob : true when the mechanism ALSO compromises internal validity, so the
+#            study must additionally carry a risk-of-bias entry (rob_weight < 1.0).
+#
+# There is deliberately no numerical_delta field: these annotations name an
+# estimand, they do not adjust one. Run-in's effect on efficacy is not established.
+
+[[mechanisms]]
+id = "tolerability_run_in"
+domain = "indirectness_population"
+also_rob = false
+label = "Tolerability run-in; intolerant participants excluded pre-randomisation"
+
+[[mechanisms]]
+id = "adherence_run_in"
+domain = "indirectness_population"
+also_rob = false
+label = "Adherence run-in; non-adherent participants excluded pre-randomisation"
+
+[[mechanisms]]
+id = "placebo_run_in"
+domain = "indirectness_population"
+also_rob = false
+label = "Single-blind placebo run-in prior to randomisation"
+
+[[mechanisms]]
+id = "active_run_in"
+domain = "indirectness_population"
+also_rob = false
+label = "Active-drug run-in prior to randomisation"
+
+[[mechanisms]]
+id = "randomised_withdrawal"
+domain = "indirectness_population"
+also_rob = true
+label = "Randomised withdrawal; control arm is a withdrawal arm, not an untreated control"
+
+[[mechanisms]]
+id = "active_run_in_placebo_is_withdrawal"
+domain = "indirectness_population"
+also_rob = true
+label = "Active run-in where the randomised placebo arm constitutes drug withdrawal"
+
+[[mechanisms]]
+id = "population_restriction"
+domain = "indirectness_population"
+also_rob = false
+label = "Eligibility restriction narrowing the population relative to the target"
+
+[[mechanisms]]
+id = "other_population_indirectness"
+domain = "indirectness_population"
+also_rob = false
+label = "Other population indirectness; describe in indirectness_note"

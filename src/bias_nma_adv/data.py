@@ -76,13 +76,80 @@ EFFECT_STUDY_DESIGNS = frozenset(
     if policy.role == "effect_design"
 )
 
+INDIRECTNESS_POLICY_SCHEMA_VERSION = "indirectness_policy/v1"
+
+
+@dataclass(frozen=True)
+class IndirectnessPolicy:
+    """Policy entry for a population-indirectness mechanism."""
+
+    id: str
+    domain: str
+    also_rob: bool
+    label: str
+
+    @classmethod
+    def from_mapping(cls, raw: dict[str, object]) -> "IndirectnessPolicy":
+        mechanism_id = str(raw["id"]).strip().lower()
+        if re.match(r"^[a-z][a-z0-9_]{1,63}$", mechanism_id) is None:
+            raise ValidationError(f"invalid indirectness mechanism id: {mechanism_id!r}.")
+        domain = str(raw["domain"]).strip().lower()
+        if domain != "indirectness_population":
+            raise ValidationError(
+                f"{mechanism_id}: domain must be 'indirectness_population'."
+            )
+        also_rob = raw["also_rob"]
+        if not isinstance(also_rob, bool):
+            raise ValidationError(f"{mechanism_id}: also_rob must be a boolean.")
+        return cls(
+            id=mechanism_id,
+            domain=domain,
+            also_rob=also_rob,
+            label=str(raw["label"]).strip(),
+        )
+
+
+def load_indirectness_policies() -> dict[str, IndirectnessPolicy]:
+    """Load population-indirectness mechanism policies bundled with the package."""
+
+    policy_text = resources.files(__package__).joinpath("indirectness_policy.toml").read_text(
+        encoding="utf-8"
+    )
+    raw = tomllib.loads(policy_text)
+    if raw.get("schema_version") != INDIRECTNESS_POLICY_SCHEMA_VERSION:
+        raise ValidationError(
+            f"indirectness policy schema_version must be {INDIRECTNESS_POLICY_SCHEMA_VERSION}."
+        )
+    policies = {
+        policy.id: policy
+        for policy in (
+            IndirectnessPolicy.from_mapping(item) for item in raw.get("mechanisms", [])
+        )
+    }
+    if len(policies) != len(raw.get("mechanisms", [])):
+        raise ValidationError("indirectness policy contains duplicate mechanism ids.")
+    if not policies:
+        raise ValidationError("indirectness policy must define at least one mechanism.")
+    return policies
+
+
+INDIRECTNESS_POLICIES = load_indirectness_policies()
+ALLOWED_INDIRECTNESS_MECHANISMS = frozenset(INDIRECTNESS_POLICIES)
+DUAL_FILED_INDIRECTNESS_MECHANISMS = frozenset(
+    mechanism_id
+    for mechanism_id, policy in INDIRECTNESS_POLICIES.items()
+    if policy.also_rob
+)
+
 @dataclass(frozen=True)
 class StudyRecord:
     study_id: str
     design: str
     rob_weight: float = 1.0  # Quality score / weight in (0, 1]
     covariates: dict[str, float] = field(default_factory=dict)
-    indirectness: str | None = None
+    # GRADE indirectness of POPULATION (applicability), not network-indirect evidence.
+    indirectness_mechanism: str | None = None
+    indirectness_note: str | None = None
     source_type: str | None = None
 
     def __post_init__(self):
@@ -95,11 +162,30 @@ class StudyRecord:
         object.__setattr__(self, "design", normalized_design)
         if not (0.0 < self.rob_weight <= 1.0):
             raise ValidationError("rob_weight must be in the range (0, 1].")
-        if self.indirectness is not None:
-            indirectness = self.indirectness.strip()
-            if not indirectness:
-                raise ValidationError("indirectness must not be blank when provided.")
-            object.__setattr__(self, "indirectness", indirectness)
+        if self.indirectness_mechanism is not None:
+            mechanism = self.indirectness_mechanism.strip().lower()
+            if mechanism not in ALLOWED_INDIRECTNESS_MECHANISMS:
+                raise ValidationError(
+                    "indirectness_mechanism must be one of the configured mechanisms: "
+                    f"{sorted(ALLOWED_INDIRECTNESS_MECHANISMS)}."
+                )
+            object.__setattr__(self, "indirectness_mechanism", mechanism)
+            # Dual-filing: mechanisms that also break internal validity must carry a
+            # risk-of-bias entry too. A contaminated control is not only an
+            # applicability problem.
+            if mechanism in DUAL_FILED_INDIRECTNESS_MECHANISMS and self.rob_weight >= 1.0:
+                raise ValidationError(
+                    f"{self.study_id}: indirectness_mechanism '{mechanism}' also "
+                    "compromises internal validity and must be dual-filed with "
+                    "rob_weight < 1.0."
+                )
+        elif self.indirectness_note is not None:
+            raise ValidationError("indirectness_note requires an indirectness_mechanism.")
+        if self.indirectness_note is not None:
+            note = self.indirectness_note.strip()
+            if not note:
+                raise ValidationError("indirectness_note must not be blank when provided.")
+            object.__setattr__(self, "indirectness_note", note)
         object.__setattr__(self, "source_type", _validated_source_type(self.source_type))
 
 @dataclass(frozen=True)
@@ -155,7 +241,8 @@ class EvidenceDataset:
         design: str,
         rob_weight: float = 1.0,
         covariates: dict[str, float] | None = None,
-        indirectness: str | None = None,
+        indirectness_mechanism: str | None = None,
+        indirectness_note: str | None = None,
         source_type: str | None = None,
     ) -> None:
         covs = covariates or {}
@@ -164,7 +251,8 @@ class EvidenceDataset:
             design=design,
             rob_weight=float(rob_weight),
             covariates={k: float(v) for k, v in covs.items()},
-            indirectness=indirectness,
+            indirectness_mechanism=indirectness_mechanism,
+            indirectness_note=indirectness_note,
             source_type=source_type,
         )
 

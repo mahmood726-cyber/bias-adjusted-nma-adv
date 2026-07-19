@@ -175,7 +175,7 @@ class AdvancedBiasAdjustedNMAPooler:
         exact_binomial: str | bool = "auto",
         apply_sponsor_bias: bool = False,
         sponsor_auditor: RegistrySponsorAuditor | None = None,
-        apply_indirectness: bool = False,
+        apply_population_indirectness: bool = False,
         target_population: str = "enriched_as_randomised",
         robust_outlier_sensitivity: bool = False,
         redescending_tuning_constant: float = 4.685,
@@ -213,7 +213,7 @@ class AdvancedBiasAdjustedNMAPooler:
         self.exact_binomial = exact_binomial
         self.apply_sponsor_bias = apply_sponsor_bias
         self.sponsor_auditor = sponsor_auditor
-        self.apply_indirectness = apply_indirectness
+        self.apply_population_indirectness = apply_population_indirectness
         self.target_population = target_population
         self.robust_outlier_sensitivity = robust_outlier_sensitivity
         self.redescending_tuning_constant = float(redescending_tuning_constant)
@@ -298,24 +298,24 @@ class AdvancedBiasAdjustedNMAPooler:
         indirectness_flagged = tuple(sorted({
             block.study_id
             for block in blocks
-            if getattr(dataset.studies.get(block.study_id), "indirectness", None) is not None
+            if getattr(dataset.studies.get(block.study_id), "indirectness_mechanism", None) is not None
         }))
         if (
             self.target_population == "unselected_target"
             and indirectness_flagged
-            and not self.apply_indirectness
+            and not self.apply_population_indirectness
         ):
             raise ValidationError(
                 "target_population='unselected_target' claims the unselected-population "
                 f"estimand, but studies {list(indirectness_flagged)} carry population-"
-                "indirectness annotations and apply_indirectness=False. Either set "
-                "apply_indirectness=True to declare the downgrade explicitly, or use "
+                "indirectness annotations and apply_population_indirectness=False. Either set "
+                "apply_population_indirectness=True to declare the downgrade explicitly, or use "
                 "target_population='enriched_as_randomised'."
             )
-        if self.apply_indirectness:
+        if self.apply_population_indirectness:
             warnings_list.append(
-                "Indirectness is enabled as a declared estimand sensitivity, but no "
-                "mechanism-specific numerical delta is applied by default."
+                "Population indirectness is enabled as a declared estimand sensitivity, "
+                "but no mechanism-specific numerical delta is applied by default."
             )
         
         # Checking rank of X (with a fallback regularization standard)
