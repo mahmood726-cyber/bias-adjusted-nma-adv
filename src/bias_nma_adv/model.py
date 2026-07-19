@@ -295,6 +295,23 @@ class AdvancedBiasAdjustedNMAPooler:
         )
 
         n_contrasts = int(y.shape[0])
+        indirectness_flagged = tuple(sorted({
+            block.study_id
+            for block in blocks
+            if getattr(dataset.studies.get(block.study_id), "indirectness", None) is not None
+        }))
+        if (
+            self.target_population == "unselected_target"
+            and indirectness_flagged
+            and not self.apply_indirectness
+        ):
+            raise ValidationError(
+                "target_population='unselected_target' claims the unselected-population "
+                f"estimand, but studies {list(indirectness_flagged)} carry population-"
+                "indirectness annotations and apply_indirectness=False. Either set "
+                "apply_indirectness=True to declare the downgrade explicitly, or use "
+                "target_population='enriched_as_randomised'."
+            )
         if self.apply_indirectness:
             warnings_list.append(
                 "Indirectness is enabled as a declared estimand sensitivity, but no "

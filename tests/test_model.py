@@ -566,3 +566,41 @@ def test_tau2_is_estimated_from_uninflated_variance_and_se_is_monotone_in_rob():
     assert penalised.treatment_ses["B"] >= full.treatment_ses["B"]
     # The split is surfaced, not silent.
     assert any("uninflated" in warning for warning in penalised.warnings)
+
+
+def _indirectness_dataset():
+    dataset = EvidenceDataset()
+    dataset.add_study("S1", "rct", indirectness="run-in enrichment")
+    dataset.add_arm("S1", "control", "A", 100)
+    dataset.add_arm("S1", "active", "B", 100)
+    dataset.add_outcome_ad("S1", "control", "O1", "binary", 10)
+    dataset.add_outcome_ad("S1", "active", "O1", "binary", 20)
+    return dataset
+
+
+def test_unselected_target_estimand_requires_declared_indirectness():
+    """Claiming the unselected-population estimand on annotated studies must not be silent."""
+
+    with pytest.raises(ValidationError, match="unselected-population"):
+        AdvancedBiasAdjustedNMAPooler(
+            hksj=False,
+            random_effects=False,
+            target_population="unselected_target",
+        ).fit(_indirectness_dataset(), "O1", reference_treatment="A")
+
+
+def test_unselected_target_estimand_allowed_when_downgrade_is_declared():
+    fit = AdvancedBiasAdjustedNMAPooler(
+        hksj=False,
+        random_effects=False,
+        target_population="unselected_target",
+        apply_indirectness=True,
+    ).fit(_indirectness_dataset(), "O1", reference_treatment="A")
+    assert fit.target_population == "unselected_target"
+
+
+def test_enriched_target_estimand_is_the_default_and_never_gated():
+    fit = AdvancedBiasAdjustedNMAPooler(hksj=False, random_effects=False).fit(
+        _indirectness_dataset(), "O1", reference_treatment="A"
+    )
+    assert fit.target_population == "enriched_as_randomised"
