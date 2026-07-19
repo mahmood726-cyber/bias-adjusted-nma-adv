@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 from bias_nma_adv.copula import ClaytonCopulaJointEstimator
 
 def test_clayton_copula():
@@ -146,7 +147,7 @@ def test_registry_sponsor_auditor():
     
     # 1. Register trials
     # NIH funded, no attrition
-    auditor.register_trial_flow("NCT111", "other", randomized=1000, lost_to_follow_up=10)
+    auditor.register_trial_flow("NCT111", "nih", randomized=1000, lost_to_follow_up=10)
     # Industry funded, high attrition (10%)
     auditor.register_trial_flow("NCT222", "industry", randomized=1000, lost_to_follow_up=100)
     
@@ -177,3 +178,75 @@ def test_registry_sponsor_auditor():
     assert np.isclose(q_missing, 0.56)
 
 
+
+
+def test_sponsor_class_fails_closed_on_unrecognised_class():
+    """An ambiguous registry class must not score as clean provenance.
+
+    Previously sponsor_class was matched by exact equality against "industry",
+    so AACT's OTHER/NETWORK/UNKNOWN/AMBIG, a typo, or "" all fell through to
+    0.0 -- the BEST score. That made a trial registered with untidy metadata
+    score better than one never registered at all (which already scored 1.0).
+    """
+    from bias_nma_adv.sponsor_bias import RegistrySponsorAuditor, SponsorClassError
+
+    auditor = RegistrySponsorAuditor()
+    auditor.register_trial_flow("NCT_IND", "industry", randomized=100, lost_to_follow_up=0)
+    auditor.register_trial_flow("NCT_NIH", "nih", randomized=100, lost_to_follow_up=0)
+    for nct, raw in (
+        ("NCT_OTHER", "other"),
+        ("NCT_UNKNOWN", "unknown"),
+        ("NCT_AMBIG", "ambig"),
+        ("NCT_NETWORK", "network"),
+        ("NCT_EMPTY", ""),
+        ("NCT_TYPO", "industy"),
+    ):
+        auditor.register_trial_flow(nct, raw, randomized=100, lost_to_follow_up=0)
+
+    assert auditor.sponsor_class_status("NCT_IND") == "industry"
+    assert auditor.sponsor_class_status("NCT_NIH") == "non_industry"
+    assert auditor.sponsor_class_status("NCT_MISSING") == "unregistered"
+
+    # Only an affirmative non-industry class earns the clean score.
+    assert auditor.calculate_sponsorship_bias_score("NCT_NIH") == 0.0
+    assert auditor.calculate_sponsorship_bias_score("NCT_IND") == 1.0
+
+    for nct in ("NCT_OTHER", "NCT_UNKNOWN", "NCT_AMBIG", "NCT_NETWORK", "NCT_EMPTY", "NCT_TYPO"):
+        assert auditor.sponsor_class_status(nct) == "unrecognised", nct
+        # THE FIX: these used to be 0.0.
+        assert auditor.calculate_sponsorship_bias_score(nct) == 1.0, nct
+        # ...and the substitution is visible, not silent.
+        assert nct in auditor.unrecognised_sponsor_classes, nct
+
+    # The perverse incentive is gone: garbage metadata is no longer better than
+    # no registration at all.
+    assert auditor.calculate_sponsorship_bias_score("NCT_OTHER") == (
+        auditor.calculate_sponsorship_bias_score("NCT_MISSING")
+    )
+
+
+def test_sponsor_class_strict_mode_raises_on_unrecognised_class():
+    from bias_nma_adv.sponsor_bias import RegistrySponsorAuditor, SponsorClassError
+
+    strict = RegistrySponsorAuditor(strict=True)
+    strict.register_trial_flow("NCT_OK", "nih", randomized=100, lost_to_follow_up=0)
+    with pytest.raises(SponsorClassError, match="not a recognised class"):
+        strict.register_trial_flow("NCT_BAD", "other", randomized=100, lost_to_follow_up=0)
+
+
+def test_unrecognised_sponsor_class_downweights_quality():
+    """The fail-closed score must actually reach the quality adjustment."""
+    from bias_nma_adv.sponsor_bias import RegistrySponsorAuditor
+
+    auditor = RegistrySponsorAuditor()
+    auditor.register_trial_flow("NCT_NIH", "nih", randomized=1000, lost_to_follow_up=0)
+    auditor.register_trial_flow("NCT_OTHER", "other", randomized=1000, lost_to_follow_up=0)
+
+    clean = auditor.adjust_doi_welton_quality("NCT_NIH", 1.0)
+    ambiguous = auditor.adjust_doi_welton_quality("NCT_OTHER", 1.0)
+
+    assert clean == pytest.approx(1.0)
+    # Used to be equal to `clean`; ambiguous provenance now costs the same 20%
+    # as declared industry funding.
+    assert ambiguous == pytest.approx(0.80)
+    assert ambiguous < clean

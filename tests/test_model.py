@@ -254,7 +254,7 @@ def test_sponsor_bias_is_default_off_and_opt_in_fail_closed():
     )
 
     auditor = RegistrySponsorAuditor()
-    auditor.register_trial_flow("NCT00000001", "other", randomized=200, lost_to_follow_up=0)
+    auditor.register_trial_flow("NCT00000001", "nih", randomized=200, lost_to_follow_up=0)
     with pytest.raises(ValidationError, match="sponsor-bias adjustment requires"):
         AdvancedBiasAdjustedNMAPooler(
             hksj=False,
