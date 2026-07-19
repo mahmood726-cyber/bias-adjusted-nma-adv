@@ -132,6 +132,30 @@ def _assemble_block_diagonal(mats: list[np.ndarray]) -> np.ndarray:
     return out
 
 
+def _random_effects_block(size: int, tau2: float) -> np.ndarray:
+    """Random-effects covariance for `size` contrasts sharing one control arm.
+
+    For a multi-arm study reported as contrasts against a common baseline arm:
+
+        Var(d_ik)          = tau2
+        Cov(d_ik, d_il)    = tau2 / 2      (k != l)
+
+    The off-diagonal term is induced by the shared control arm and is the same
+    convention `multiarm._random_effects_covariance` already applies, and the
+    same one the *sampling* covariance in `_build_study_blocks` already uses
+    (its off-diagonal is the shared baseline variance). Omitting it -- i.e.
+    using `np.eye(size) * tau2` -- treats contrasts from one multi-arm study as
+    independent, which understates the covariance, biases the REML tau2 itself,
+    and double-counts the shared arm.
+
+    Equivalent to `(tau2 / 2) * (I + J)`. Reduces exactly to `[[tau2]]` when
+    size == 1, so two-arm studies are unaffected.
+    """
+
+    n = int(size)
+    return (float(tau2) / 2.0) * (np.eye(n, dtype=float) + np.ones((n, n), dtype=float))
+
+
 @dataclass(frozen=True)
 class _StudyBlock:
     study_id: str
@@ -457,7 +481,9 @@ class AdvancedBiasAdjustedNMAPooler:
                     taus_dict[d] = float(taus_vec[idx])
                 tau_method = "REML_stratified"
             elif self.random_effects is True and y.shape[0] > x.shape[1]:
-                tau_val = self._optimize_tau_reml(y, x, v_tau)
+                tau_val = self._optimize_tau_reml(
+                    y, x, v_tau, tuple(block.y.shape[0] for block in blocks)
+                )
                 for d in unique_designs:
                     taus_dict[d] = tau_val
                 tau_method = "REML"
@@ -472,7 +498,7 @@ class AdvancedBiasAdjustedNMAPooler:
             for block in blocks:
                 size = block.y.shape[0]
                 tau = taus_dict[block.design]
-                m[cursor : cursor + size, cursor : cursor + size] += np.eye(size, dtype=float) * (tau * tau)
+                m[cursor : cursor + size, cursor : cursor + size] += _random_effects_block(size, tau * tau)
                 cursor += size
 
             beta, cov = self._estimate_gls_with_shrinkage_coupled_raw(
@@ -595,7 +621,7 @@ class AdvancedBiasAdjustedNMAPooler:
                         for pb in p_blocks:
                             sz = pb.y.shape[0]
                             tau = taus_dict[pb.design]
-                            p_m[c_idx : c_idx + sz, c_idx : c_idx + sz] += np.eye(sz, dtype=float) * (tau * tau)
+                            p_m[c_idx : c_idx + sz, c_idx : c_idx + sz] += _random_effects_block(sz, tau * tau)
                             c_idx += sz
 
                         p_beta, _ = self._estimate_gls_with_shrinkage_coupled_raw(
@@ -1105,9 +1131,27 @@ class AdvancedBiasAdjustedNMAPooler:
 
         return y, x, v
 
-    def _optimize_tau_reml(self, y: np.ndarray, x: np.ndarray, v: np.ndarray) -> float:
+    def _optimize_tau_reml(
+        self,
+        y: np.ndarray,
+        x: np.ndarray,
+        v: np.ndarray,
+        block_sizes: tuple[int, ...] | None = None,
+    ) -> float:
+        """Estimate a common tau by REML.
+
+        `block_sizes` carries the per-study contrast counts so that multi-arm
+        studies get the shared-control off-diagonal (tau2/2). Without it the
+        random-effects matrix is diagonal, which biases tau2 itself -- not just
+        the SEs -- whenever any study contributes more than one contrast.
+        """
+
+        sizes = tuple(int(s) for s in block_sizes) if block_sizes else (1,) * int(v.shape[0])
+
         def obj(t):
-            m = v + np.eye(v.shape[0], dtype=float) * (t * t)
+            m = v + _assemble_block_diagonal(
+                [_random_effects_block(size, t * t) for size in sizes]
+            )
             try:
                 m_inv = np.linalg.inv(m)
             except np.linalg.LinAlgError:
@@ -1145,7 +1189,7 @@ class AdvancedBiasAdjustedNMAPooler:
                 size = block.y.shape[0]
                 d_idx = design_to_idx.get(block.design, 0)
                 tau = taus[d_idx]
-                m[cursor : cursor + size, cursor : cursor + size] += np.eye(size, dtype=float) * (tau * tau)
+                m[cursor : cursor + size, cursor : cursor + size] += _random_effects_block(size, tau * tau)
                 cursor += size
 
             try:

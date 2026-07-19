@@ -657,3 +657,63 @@ def test_indirectness_policy_registry_is_wellformed():
     )
     # The registry names an estimand; it must not carry a numerical adjustment.
     assert not any(hasattr(policy, "numerical_delta") for policy in INDIRECTNESS_POLICIES.values())
+
+
+def test_random_effects_block_encodes_shared_control_covariance():
+    """Multi-arm contrasts against a common control covary at tau2/2."""
+    from bias_nma_adv.model import _random_effects_block
+
+    # Two contrasts from one 3-arm study sharing one control arm.
+    block = _random_effects_block(2, 0.4)
+    expected = np.array([[0.4, 0.2], [0.2, 0.4]])
+    assert np.allclose(block, expected)
+    # The off-diagonal is the whole point: a diagonal-only form is the defect.
+    assert block[0, 1] == pytest.approx(0.2)
+    assert block[1, 0] == pytest.approx(0.2)
+
+    # A two-arm study is a single contrast and must be untouched.
+    assert np.allclose(_random_effects_block(1, 0.4), np.array([[0.4]]))
+    # Symmetric, and diagonal is exactly tau2 at any size.
+    big = _random_effects_block(3, 0.9)
+    assert np.allclose(big, big.T)
+    assert np.allclose(np.diag(big), 0.9)
+    assert big[0, 1] == pytest.approx(0.45)
+
+
+def test_reml_tau2_uses_shared_control_offdiagonal_for_multi_arm_blocks():
+    """REML tau2 must see the shared-control covariance, not a diagonal.
+
+    Omitting the tau2/2 off-diagonal treats the two contrasts of a 3-arm study
+    as independent replicates, which understates the covariance and so biases
+    tau2 itself -- not merely the SEs. This fixture makes that concrete:
+    the diagonal-only form returns roughly half the correct tau2.
+    """
+    pooler = AdvancedBiasAdjustedNMAPooler()
+
+    shared_baseline_var = 0.02
+    def block():
+        m = np.full((2, 2), shared_baseline_var)
+        m[0, 0] = 0.05
+        m[1, 1] = 0.05
+        return m
+
+    v = np.zeros((4, 4))
+    v[:2, :2] = block()
+    v[2:, 2:] = block()
+    x = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 0.0], [0.0, 1.0]])
+    y = np.array([0.9, -0.7, -0.8, 0.85])  # studies disagree strongly -> tau2 > 0
+
+    # Two 3-arm studies: block sizes (2, 2).
+    tau_multi = pooler._optimize_tau_reml(y, x, v, (2, 2))
+    # The defect: every contrast treated as its own independent study.
+    tau_diagonal_only = pooler._optimize_tau_reml(y, x, v, (1, 1, 1, 1))
+
+    assert tau_multi**2 == pytest.approx(2.5758204439, abs=1e-6)
+    assert tau_diagonal_only**2 == pytest.approx(1.3123827730, abs=1e-6)
+    # The correct form must not collapse onto the diagonal-only one.
+    assert tau_multi > tau_diagonal_only
+    assert abs(tau_multi - tau_diagonal_only) > 1e-3
+
+    # Default (no block_sizes) must assume all-singleton blocks, i.e. unchanged
+    # behaviour for two-arm-only networks.
+    assert pooler._optimize_tau_reml(y, x, v) == pytest.approx(tau_diagonal_only)
