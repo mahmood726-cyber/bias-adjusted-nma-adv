@@ -717,3 +717,57 @@ def test_reml_tau2_uses_shared_control_offdiagonal_for_multi_arm_blocks():
     # Default (no block_sizes) must assume all-singleton blocks, i.e. unchanged
     # behaviour for two-arm-only networks.
     assert pooler._optimize_tau_reml(y, x, v) == pytest.approx(tau_diagonal_only)
+
+
+def test_duplicate_arm_id_is_rejected_not_silently_overwritten():
+    """A duplicate arm_id used to erase an arm and reattribute its events.
+
+    Arms are a dict keyed (study_id, arm_id); outcomes are a list. So the second
+    add_arm overwrote the first while BOTH outcome rows survived -- the drug arm
+    vanished and its events were counted against placebo. It passed
+    `len(arms) >= 2` and `events <= n`, so nothing downstream noticed, and it is
+    direction-changing.
+    """
+    dataset = EvidenceDataset()
+    dataset.add_study("S1", "rct")
+    dataset.add_arm("S1", "A", "drug", 100)
+
+    with pytest.raises(ValidationError, match="already has arm_id"):
+        dataset.add_arm("S1", "A", "placebo", 100)
+
+    # The original arm must survive intact.
+    assert dataset.arms[("S1", "A")].treatment_id == "drug"
+    assert len(dataset.arms) == 1
+
+
+def test_self_comparison_is_rejected():
+    """Two arms with the same treatment_id is a self-loop, not a contrast."""
+    dataset = EvidenceDataset()
+    dataset.add_study("S1", "rct")
+    dataset.add_arm("S1", "A", "drug", 100)
+
+    with pytest.raises(ValidationError, match="self-comparison"):
+        dataset.add_arm("S1", "B", "drug", 100)
+
+    # A genuine distinct treatment is still fine.
+    dataset.add_arm("S1", "B", "placebo", 100)
+    assert len(dataset.arms) == 2
+
+
+def test_exact_binomial_path_declares_that_hksj_is_absent():
+    """q_factor=1.0 there means HKSJ is ABSENT, not that the floor bound at 1.0."""
+    dataset = EvidenceDataset()
+    for sid, (pl, dr) in {"S1": (40, 20), "S2": (44, 25), "S3": (38, 19)}.items():
+        dataset.add_study(sid, "rct")
+        dataset.add_arm(sid, f"{sid}p", "Placebo", 200)
+        dataset.add_arm(sid, f"{sid}d", "Drug", 200)
+        dataset.add_outcome_ad(sid, f"{sid}p", "O1", "binary", float(pl))
+        dataset.add_outcome_ad(sid, f"{sid}d", "O1", "binary", float(dr))
+
+    fit = AdvancedBiasAdjustedNMAPooler(hksj=True, exact_binomial=True).fit(
+        dataset, "O1", reference_treatment="Placebo"
+    )
+
+    if fit.tau_method == "exact_binomial_no_tau":
+        assert fit.q_factor == 1.0
+        assert any("HKSJ scaling is not applied" in w for w in fit.warnings), fit.warnings

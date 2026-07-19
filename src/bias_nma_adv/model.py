@@ -459,7 +459,19 @@ class AdvancedBiasAdjustedNMAPooler:
             taus_dict = {d: 0.0 for d in unique_designs}
             tau_method = "exact_binomial_no_tau"
             df = max(1, n_studies - n_params)
+            # This branch has no Q statistic to scale by, so it cannot apply the
+            # HKSJ max(1, Q/(k-1)) floor that pairwise.py and the GLS branch below
+            # both implement. q_factor is 1.0 because HKSJ is ABSENT here, not
+            # because the floor bound it to 1.0 -- those are different claims and
+            # the floor must not be quoted as a blanket property of the engine.
             q_factor = 1.0
+            if self.hksj:
+                warnings_list.append(
+                    "HKSJ scaling is not applied on the exact-binomial path "
+                    "(tau_method='exact_binomial_no_tau'): there is no Q statistic to "
+                    "scale by, so q_factor=1.0 reflects the absence of HKSJ rather than "
+                    "the max(1, Q/(k-1)) floor binding at 1.0."
+                )
             weight_sensitivity_stds = {}
         else:
             # 6. Fit standard REML / GLS with Prior Shrinkage and Kenward-Roger Correction

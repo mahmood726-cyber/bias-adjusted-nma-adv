@@ -338,3 +338,38 @@ def test_invalid_pairwise_inputs_fail_closed():
 
     with pytest.raises(PairwiseMetaError, match="method"):
         fit_pairwise_meta(np.array([0.1]), np.array([0.1]), method="magic")
+
+
+def test_null_crossing_guard_enforces_log_scale_and_positive_se():
+    """The counting site hard-codes the log-scale null; the invariant is now guarded."""
+    from bias_nma_adv.pairwise import PairwiseMethodDiagnostic, crosses_log_scale_null
+
+    def diag(**kw):
+        base = dict(
+            method="DL", status="passed", estimate=0.1, se=0.2,
+            ci_low=-0.3, ci_high=0.5, tau2=0.0, q=1.0, df=3,
+            warnings=(), error=None,
+        )
+        base.update(kw)
+        return PairwiseMethodDiagnostic(**base)
+
+    # Normal log-scale behaviour.
+    assert crosses_log_scale_null(diag()) is True
+    assert crosses_log_scale_null(diag(ci_low=0.2, ci_high=0.5)) is False
+    # Missing interval is simply not counted.
+    assert crosses_log_scale_null(diag(ci_low=None)) is False
+
+    # se <= 0 makes the count meaningless -- must raise, not silently count.
+    with pytest.raises(PairwiseMetaError, match="non-positive standard error"):
+        crosses_log_scale_null(diag(se=0.0))
+    with pytest.raises(PairwiseMetaError, match="non-positive standard error"):
+        crosses_log_scale_null(diag(se=-0.1))
+
+    # An inverted interval is incoherent and must raise.
+    with pytest.raises(PairwiseMetaError, match="inverted interval"):
+        crosses_log_scale_null(diag(ci_low=0.9, ci_high=0.1))
+
+    # A ratio-scale interval (null = 1.0) is NOT counted as crossing, which is
+    # the correct log-scale answer -- the guard cannot rescue a caller who
+    # passes the wrong scale, but it no longer inverts silently on bad SEs.
+    assert crosses_log_scale_null(diag(estimate=1.05, ci_low=0.85, ci_high=1.30)) is False

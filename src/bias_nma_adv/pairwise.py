@@ -602,15 +602,12 @@ def tau2_cross_check_report(
         if item.estimate is not None
     }
 
-    def _crosses_null(item: PairwiseMethodDiagnostic) -> bool:
-        return (
-            item.ci_low is not None
-            and item.ci_high is not None
-            and item.ci_low <= 0.0 <= item.ci_high
-        )
-
-    methods_crossing_null = tuple(item.method for item in descriptive if _crosses_null(item))
-    _crossing_tau2_only = tuple(item.method for item in passed if _crosses_null(item))
+    methods_crossing_null = tuple(
+        item.method for item in descriptive if crosses_log_scale_null(item)
+    )
+    _crossing_tau2_only = tuple(
+        item.method for item in passed if crosses_log_scale_null(item)
+    )
     tau2_min = min(tau2_values) if tau2_values else None
     tau2_max = max(tau2_values) if tau2_values else None
     max_abs_estimate_delta = (
@@ -644,6 +641,33 @@ def tau2_cross_check_report(
         warnings=tuple(warnings),
         common_effect_reference=common_reference,
     )
+
+
+def crosses_log_scale_null(item: PairwiseMethodDiagnostic) -> bool:
+    """Whether a fit's CI covers the null, on the LOG scale.
+
+    This hard-codes null = 0.0. That is consistent with the rest of the module --
+    `fit_pairwise_meta` builds CIs as `estimate -/+ critical * se`, a normal
+    approximation valid on the log scale -- but the invariant was previously
+    undocumented and unasserted at the counting site, so a caller passing
+    ratio-scale effects (where the null is 1.0) would have silently inverted
+    every significance verdict rather than failing. It also had no `se > 0`
+    guard. Both are now enforced here.
+    """
+
+    if item.ci_low is None or item.ci_high is None:
+        return False
+    if item.se is not None and not (item.se > 0.0):
+        raise PairwiseMetaError(
+            f"method '{item.method}' produced se={item.se!r}; a non-positive standard "
+            "error makes the null-crossing count meaningless."
+        )
+    if item.ci_low > item.ci_high:
+        raise PairwiseMetaError(
+            f"method '{item.method}' produced an inverted interval "
+            f"[{item.ci_low}, {item.ci_high}]."
+        )
+    return item.ci_low <= 0.0 <= item.ci_high
 
 
 def _sign(value: float) -> int:

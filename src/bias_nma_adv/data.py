@@ -258,6 +258,36 @@ class EvidenceDataset:
 
     def add_arm(self, study_id: str, arm_id: str, treatment_id: str, n: int) -> None:
         self._validate_model_ready_study(study_id)
+        # Arms are a dict keyed (study_id, arm_id) but outcomes are a LIST, so a
+        # duplicate arm_id used to OVERWRITE the arm while both outcome rows
+        # survived: the first arm was silently erased and its events reattributed
+        # to the surviving treatment. That passes `len(arms) >= 2` and
+        # `events <= n`, so nothing downstream noticed, and it is
+        # direction-changing. Fail closed instead.
+        if (study_id, arm_id) in self.arms:
+            existing = self.arms[(study_id, arm_id)]
+            raise ValidationError(
+                f"Study '{study_id}' already has arm_id '{arm_id}' "
+                f"(treatment '{existing.treatment_id}'); refusing to overwrite it with "
+                f"treatment '{treatment_id}'. Arm ids must be unique within a study."
+            )
+        # A treatment contrasted against itself is a self-loop: it enters the
+        # network as a spurious effect on a single node. Distinct doses or
+        # schedules must carry distinct treatment_ids.
+        duplicate = next(
+            (
+                arm
+                for (sid, _aid), arm in self.arms.items()
+                if sid == study_id and arm.treatment_id == treatment_id
+            ),
+            None,
+        )
+        if duplicate is not None:
+            raise ValidationError(
+                f"Study '{study_id}' already has arm '{duplicate.arm_id}' with treatment "
+                f"'{treatment_id}'; adding arm '{arm_id}' with the same treatment would "
+                "create a self-comparison. Use distinct treatment_ids for distinct arms."
+            )
         self.arms[(study_id, arm_id)] = ArmRecord(
             study_id=study_id,
             arm_id=arm_id,
