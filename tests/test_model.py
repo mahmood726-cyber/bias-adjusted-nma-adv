@@ -771,3 +771,46 @@ def test_exact_binomial_path_declares_that_hksj_is_absent():
     if fit.tau_method == "exact_binomial_no_tau":
         assert fit.q_factor == 1.0
         assert any("HKSJ scaling is not applied" in w for w in fit.warnings), fit.warnings
+
+
+def test_multi_arm_tau2_offdiagonal_changes_an_end_to_end_fit():
+    """The tau2/2 fix is not confined to the objective -- it moves a real fit.
+
+    Three 3-arm studies sharing a Placebo control, with genuine between-study
+    disagreement. Values are EVENT COUNTS (the engine reads outcome value as
+    events, not a proportion).
+    """
+    dataset = EvidenceDataset()
+    for sid, (pl, da, db) in {
+        "S1": (250, 100, 150),
+        "S2": (250, 240, 120),
+        "S3": (250, 90, 230),
+    }.items():
+        dataset.add_study(sid, "rct")
+        for suffix, treatment, events in (
+            ("p", "Placebo", pl), ("a", "DrugA", da), ("b", "DrugB", db)
+        ):
+            dataset.add_arm(sid, f"{sid}{suffix}", treatment, 500)
+            dataset.add_outcome_ad(sid, f"{sid}{suffix}", "o1", "binary", float(events))
+
+    fit = AdvancedBiasAdjustedNMAPooler(hksj=False, exact_binomial=False).fit(
+        dataset, "o1", reference_treatment="Placebo"
+    )
+
+    tau = list(fit.taus.values())[0]
+    # Data-dependent tau2, well off the optimizer's lower boundary.
+    assert tau**2 == pytest.approx(0.785630340008, abs=1e-6)
+    assert tau > 1e-3
+
+    _, se_a, _, _ = fit.contrast("DrugA", "Placebo")
+    _, se_b, _, _ = fit.contrast("DrugB", "Placebo")
+    assert se_a == pytest.approx(0.5905066699, abs=1e-6)
+    assert se_b == pytest.approx(0.7133467728, abs=1e-6)
+
+    # Recorded for contrast: the diagonal-only defect gives tau2=1.042895,
+    # se_a=0.728928, se_b=1.029143 on this same fixture -- i.e. it inflates
+    # tau2 by ~33% and DrugB's SE by ~44%. The direction of the tau2 bias is
+    # data-dependent (the objective-level fixture above shows the opposite
+    # sign), so the claim is "biased", not "always understated".
+    assert se_a < 0.70
+    assert se_b < 0.95
